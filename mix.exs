@@ -2,8 +2,10 @@ defmodule Stripe.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :stripe,
-      version: "0.2.0",
+    [ app: :stripity_stripe,
+      version: "0.3.0",
+      description: "A Stripe Library for Elixir",
+      package: package,
       elixir: "~> 1.0.5",
       deps: deps(Mix.env) ]
   end
@@ -13,12 +15,6 @@ defmodule Stripe.Mixfile do
     [mod: { Stripe, [] }]
   end
 
-  # Returns the list of dependencies in the format:
-  # { :foobar, git: "https://github.com/elixir-lang/foobar.git", tag: "0.1" }
-  #
-  # To specify particular versions, regardless of the tag, do:
-  # { :barbat, "~> 0.1", github: "elixir-lang/barbat" }
-  # Returns the list of development dependencies
   defp deps(:dev) do
     deps(:prod)
   end
@@ -32,7 +28,18 @@ defmodule Stripe.Mixfile do
     [
       {:httpoison, "~> 0.7.4" },
       {:hackney, "~> 1.3.2" }, # not included in hex version of httpoison :(
-      {:poison, "~> 1.5"}
+      {:poison, "~> 1.5"},
+      {:ex_doc, "~> 0.7", only: :dev},
+      {:earmark, ">= 0.0.0"}
     ]
   end
+
+  def package do
+    [
+      maintainers: ["Rob Conery"],
+      licenses: ["New BSD"],
+      links: %{"GitHub" => "https://github.com/robconery/stripity-stripe"}
+    ]
+  end
+
 end

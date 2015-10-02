@@ -1,0 +1,293 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stripe.InvoiceItems – stripity_stripe v0.2.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.10.0">
+    <link rel="stylesheet" href="dist/app.css" />
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="modules">
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+  <button class="sidebar-toggle">
+    <i class="icon-menu"></i>
+  </button>
+
+  
+  <a href="extra-api-reference.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        stripity_stripe
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.2.0
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+
+  <ul id="full-list" class="sidebar-fullList"></ul>
+  <div class="sidebar-noResults"></div>
+</section>
+
+<section class="content">
+  <div id="content" class="content-inner">
+
+
+      <h1>
+        Stripe.InvoiceItems
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc" class="docstring">
+          <p>The API for tacking on charges to subscriptions. See Stripe docs for more details.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create/1">create(params)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Creates an InvoiceItem for a Customer/Subscription</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete/1">delete(id)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Removes an invoice item from the upcoming invoice. Removing an invoice
+item is only possible before the invoice it’s attached to is closed</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#list/0">list()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns a list of InvoiceItems</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#retrieve/1">retrieve(id)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Retrieves the invoice item with the given ID</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update/1">update(params)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Updates the amount or description of an invoice item on an upcoming invoice.
+Updating an invoice item is only possible before the invoice it’s attached
+to is closed</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+          
+
+        </section>
+      
+
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="create/1">
+  <div class="detail-header">
+    <a href="#create/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">create(params)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Creates an InvoiceItem for a Customer/Subscription </p>
+
+  </section>
+</div>
+<div class="detail" id="delete/1">
+  <div class="detail-header">
+    <a href="#delete/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete(id)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Removes an invoice item from the upcoming invoice. Removing an invoice
+item is only possible before the invoice it’s attached to is closed.</p>
+<h2>Arguments</h2>
+<ul>
+<li><code class="inline">id</code> - <code class="inline">String</code> - (required) - The ID of the desired invoice item.
+</li>
+</ul>
+<h2>Returns</h2>
+<p>An object with the deleted invoice item’s ID and a deleted flag upon
+success. This call returns an error otherwise, such as when the invoice
+item has already been deleted.</p>
+
+  </section>
+</div>
+<div class="detail" id="list/0">
+  <div class="detail-header">
+    <a href="#list/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">list()</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Returns a list of InvoiceItems</p>
+
+  </section>
+</div>
+<div class="detail" id="retrieve/1">
+  <div class="detail-header">
+    <a href="#retrieve/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">retrieve(id)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Retrieves the invoice item with the given ID.</p>
+<h2>Arguments</h2>
+<ul>
+<li><code class="inline">id</code> - <code class="inline">String</code> - (required) - The ID of the desired invoice item.
+</li>
+</ul>
+<h2>Returns</h2>
+<p>Returns an invoice item if a valid invoice item ID was provided. Returns
+an error otherwise.</p>
+
+  </section>
+</div>
+<div class="detail" id="update/1">
+  <div class="detail-header">
+    <a href="#update/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">update(params)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Updates the amount or description of an invoice item on an upcoming invoice.
+Updating an invoice item is only possible before the invoice it’s attached
+to is closed.</p>
+<h2>Arguments</h2>
+<ul>
+<li><code class="inline">amount</code> - <code class="inline">Integer</code> - (required) - The integer amount in cents of
+the charge to be applied to the upcoming invoice. If you want to
+apply a credit to the customer’s account, pass a negative amount.
+</li>
+<li><code class="inline">description</code> - <code class="inline">String</code> - (optional), default is <code class="inline">null</code> - An arbitrary
+string which you can attach to the invoice item. The description is
+displayed in the invoice for easy tracking.
+</li>
+<li><code class="inline">metadata</code> - <code class="inline">Keyword</code> - (optional), default is <code class="inline">[]</code> - A set of
+key/value pairs that you can attach to an invoice item object. It can
+be useful for storing additional information about the invoice item in
+a structured format.
+</li>
+</ul>
+<h2>Returns</h2>
+<p>The updated invoice item object is returned upon success. Otherwise, this
+call returns an error.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+
+      
+        <footer class="footer">
+      <p>
+        <span class="line">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.10.0),
+        </span>
+        <span class="line">
+          designed by
+          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+      </p>
+    </footer>
+  </div>
+</section>
+</div>
+    <script src="dist/app.js"></script>
+  </body>
+</html>
+

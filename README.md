@@ -19,11 +19,17 @@ As I began digging things up with these other libraries it became rather apparen
 
 ## Stripe API
 
-I've tested this library against Stripe API v1 and above.
+I've tested this library against Stripe API v1 and above. [The docs are up at Hex](http://hexdocs.pm/stripity_stripe/0.2.0/extra-api-reference.html)
 
 ## Usage
 
-First, create a config folder and add a Stripe secret key:
+Install the dependency:
+
+```
+{:stripity_stripe, "~> 0.3.0"}
+```
+
+Then create a config folder and add a Stripe secret key:
 
 ```
 use Mix.Config
@@ -55,5 +61,3 @@ For optional arguments, you can send in a Keyword list that will get translated 
 ```
 
 That's the rule of thumb with this library. If there are any errors with your call, they will bubble up to you in the `{:error, message}` match.
-
-### Customers
