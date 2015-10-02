@@ -1,0 +1,2 @@
+ExUnit.start
+Stripe.start
