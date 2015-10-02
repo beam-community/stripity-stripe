@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stripe.Customers – stripity_stripe v0.2.0</title>
+    <title>Stripe.Customers – stripity_stripe v0.3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -28,7 +28,7 @@
         stripity_stripe
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.0
+        v0.3.0
       </h2>
     </div>
     
@@ -158,7 +158,6 @@ Customer ID and Subscription ID are required for this</p>
   
     <div class="summary-synopsis"><p>Retrieves a given Customer with the specified ID. Returns 404 if not found.</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.get “customer_id”</p>
 </div>
   
 </div>
@@ -231,7 +230,7 @@ Customer ID and Subscription ID are required for this</p>
   <section class="docstring">
     <p>Cancels a subscription</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.cancel_subscription “customer_id”, “subscription_id”</p>
+<pre><code class="elixir">Stripe.Customers.cancel_subscription &quot;customer_id&quot;, &quot;subscription_id&quot;</code></pre>
 
   </section>
 </div>
@@ -248,7 +247,7 @@ Customer ID and Subscription ID are required for this</p>
     <p>Changes a customer’s subscription (plan, description, etc - see Stripe API for acceptable options).
 Customer ID and Subscription ID are required for this.</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.change_subscription “customer_id”, “subscription_id”, plan: “premium”</p>
+<pre><code class="elixir">Stripe.Customers.change_subscription &quot;customer_id&quot;, &quot;subscription_id&quot;, plan: &quot;premium&quot;</code></pre>
 
   </section>
 </div>
@@ -264,18 +263,18 @@ Customer ID and Subscription ID are required for this.</p>
   <section class="docstring">
     <p>Creates a Customer with the given parameters - all of which are optional.</p>
 <h2>Example</h2>
-<p>  new_customer = [</p>
-<pre><code class="elixir">email: &quot;test@test.com&quot;,
-description: &quot;An Test Account&quot;,
-card: [
-  number: &quot;4111111111111111&quot;,
-  exp_month: 01,
-  exp_year: 2018,
-  cvc: 123,
-  name: &quot;Joe Test User&quot;
-]</code></pre>
-<p>  ]
-  {:ok, res} = Stripe.Customers.create new_customer</p>
+<pre><code class="elixir">new_customer = [
+    email: &quot;test@test.com&quot;,
+    description: &quot;An Test Account&quot;,
+    card: [
+      number: &quot;4111111111111111&quot;,
+      exp_month: 01,
+      exp_year: 2018,
+      cvc: 123,
+      name: &quot;Joe Test User&quot;
+    ]
+  ]
+  {:ok, res} = Stripe.Customers.create new_customer</code></pre>
 
   </section>
 </div>
@@ -291,7 +290,7 @@ card: [
   <section class="docstring">
     <p>Invoices a customer according to Stripe’s invoice rules. This is not the same as a charge.</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.create_invoice “customer_id”, “subscription_id”</p>
+<pre><code class="elixir">Stripe.Customers.create_invoice &quot;customer_id&quot;, &quot;subscription_id&quot;</code></pre>
 
   </section>
 </div>
@@ -307,26 +306,26 @@ card: [
   <section class="docstring">
     <p>Starts a subscription for the specified customer. Note that if you pass in the customer <em>and</em> subscription information, both will be created at the same time.</p>
 <h2>Example</h2>
-<p>  new_sub = [</p>
-<pre><code class="elixir">email: &quot;jill@test.com&quot;,
-description: &quot;Poop on the Potty&quot;,
-plan: &quot;standard&quot;,
-source: [
-  object: &quot;card&quot;,
-  number: &quot;4111111111111111&quot;,
-  exp_month: 01,
-  exp_year: 2018,
-  cvc: 123,
-  name: &quot;Jill Subscriber&quot;
-]</code></pre>
-<p>  ]
-  {:ok, sub} = Stripe.Customers.create_subscription new_sub</p>
+<pre><code class="elixir">new_sub = [
+    email: &quot;jill@test.com&quot;,
+    description: &quot;Poop on the Potty&quot;,
+    plan: &quot;standard&quot;,
+    source: [
+      object: &quot;card&quot;,
+      number: &quot;4111111111111111&quot;,
+      exp_month: 01,
+      exp_year: 2018,
+      cvc: 123,
+      name: &quot;Jill Subscriber&quot;
+    ]
+  ]
+  {:ok, sub} = Stripe.Customers.create_subscription new_sub</code></pre>
 <p>You can also just pass along the customer id and the plan name:</p>
-<p>  new_sub = [</p>
-<pre><code class="elixir">plan: &quot;standard&quot;,
-customer: &quot;customer_id&quot;</code></pre>
-<p>  ]
-  {:ok, sub} = Stripe.Customers.create_subscription new_sub</p>
+<pre><code class="elixir">new_sub = [
+    plan: &quot;standard&quot;,
+    customer: &quot;customer_id&quot;
+  ]
+  {:ok, sub} = Stripe.Customers.create_subscription new_sub</code></pre>
 
   </section>
 </div>
@@ -342,7 +341,7 @@ customer: &quot;customer_id&quot;</code></pre>
   <section class="docstring">
     <p>Creates a subscription for the specified customer.</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.create_subscription “customer_id”, “plan”</p>
+<pre><code class="elixir">Stripe.Customers.create_subscription &quot;customer_id&quot;, &quot;plan&quot;</code></pre>
 
   </section>
 </div>
@@ -358,7 +357,7 @@ customer: &quot;customer_id&quot;</code></pre>
   <section class="docstring">
     <p>Deletes a Customer with the specified ID</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.delete “customer_id”</p>
+<pre><code class="elixir">Stripe.Customers.delete &quot;customer_id&quot;</code></pre>
 
   </section>
 </div>
@@ -374,7 +373,7 @@ customer: &quot;customer_id&quot;</code></pre>
   <section class="docstring">
     <p>Retrieves a given Customer with the specified ID. Returns 404 if not found.</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.get “customer_id”</p>
+<pre><code class="elixir">Stripe.Customers.get &quot;customer_id&quot;</code></pre>
 
   </section>
 </div>
@@ -390,7 +389,7 @@ customer: &quot;customer_id&quot;</code></pre>
   <section class="docstring">
     <p>Returns a list of invoices for a given customer</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.get_invoices “customer_id”</p>
+<pre><code class="elixir">Stripe.Customers.get_invoices &quot;customer_id&quot;</code></pre>
 
   </section>
 </div>
@@ -406,7 +405,7 @@ customer: &quot;customer_id&quot;</code></pre>
   <section class="docstring">
     <p>Returns a subscription; customer_id and subscription_id are required.</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.get_subscription “customer_id”, “subscription_id”</p>
+<pre><code class="elixir">Stripe.Customers.get_subscription &quot;customer_id&quot;, &quot;subscription_id&quot;</code></pre>
 
   </section>
 </div>
@@ -422,7 +421,7 @@ customer: &quot;customer_id&quot;</code></pre>
   <section class="docstring">
     <p>Returns all subscriptions for a Customer.</p>
 <h2>Example</h2>
-<p>  Stripe.Customers.get_subscriptions “customer_id”</p>
+<pre><code class="elixir">Stripe.Customers.get_subscriptions &quot;customer_id&quot;</code></pre>
 
   </section>
 </div>
@@ -438,7 +437,7 @@ customer: &quot;customer_id&quot;</code></pre>
   <section class="docstring">
     <p>Returns a list of Customers with a default limit of 10 which you can override with <a href="#list/1"><code class="inline">list/1</code></a></p>
 <h2>Example</h2>
-<p>  {:ok, customers} = Stripe.Customers.list(20)</p>
+<pre><code class="elixir">{:ok, customers} = Stripe.Customers.list(20)</code></pre>
 
   </section>
 </div>

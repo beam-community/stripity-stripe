@@ -9,6 +9,8 @@ defmodule Stripe.Customers do
   Creates a Customer with the given parameters - all of which are optional.
 
   ## Example
+
+  ```
     new_customer = [
       email: "test@test.com",
       description: "An Test Account",
@@ -21,6 +23,8 @@ defmodule Stripe.Customers do
       ]
     ]
     {:ok, res} = Stripe.Customers.create new_customer
+  ```
+
   """
   def create(params) do
     Stripe.make_request(:post, @endpoint, params)
@@ -31,7 +35,11 @@ defmodule Stripe.Customers do
   @doc """
   Retrieves a given Customer with the specified ID. Returns 404 if not found.
   ## Example
+
+  ```
     Stripe.Customers.get "customer_id"
+  ```
+
   """
   def get(id) do
     Stripe.make_request(:get, "#{@endpoint}/#{id}")
@@ -44,7 +52,11 @@ defmodule Stripe.Customers do
   Customer ID and Subscription ID are required for this.
 
   ## Example
+
+  ```
     Stripe.Customers.change_subscription "customer_id", "subscription_id", plan: "premium"
+  ```
+
   """
   def change_subscription(id, sub_id, opts) do
     Stripe.make_request(:post, "#{@endpoint}/#{id}/subscriptions/#{sub_id}", opts)
@@ -55,6 +67,8 @@ defmodule Stripe.Customers do
   Starts a subscription for the specified customer. Note that if you pass in the customer *and* subscription information, both will be created at the same time.
 
   ## Example
+
+  ```
     new_sub = [
       email: "jill@test.com",
       description: "Poop on the Potty",
@@ -69,14 +83,18 @@ defmodule Stripe.Customers do
       ]
     ]
     {:ok, sub} = Stripe.Customers.create_subscription new_sub
+  ```
 
   You can also just pass along the customer id and the plan name:
 
+  ```
     new_sub = [
       plan: "standard",
       customer: "customer_id"
     ]
     {:ok, sub} = Stripe.Customers.create_subscription new_sub
+  ```
+
   """
   def create_subscription(opts) do
     Stripe.make_request(:post, "#{@endpoint}", opts)
@@ -87,7 +105,10 @@ defmodule Stripe.Customers do
   Creates a subscription for the specified customer.
 
   ## Example
+
+  ```
     Stripe.Customers.create_subscription "customer_id", "plan"
+  ```
   """
   def create_subscription(id, opts) do
     Stripe.make_request(:post, "#{@endpoint}/#{id}/subscriptions", opts)
@@ -98,7 +119,11 @@ defmodule Stripe.Customers do
   Returns a subscription; customer_id and subscription_id are required.
 
   ## Example
+
+  ```
     Stripe.Customers.get_subscription "customer_id", "subscription_id"
+  ```
+
   """
   def get_subcription(id, sub_id) do
     Stripe.make_request(:get, "#{@endpoint}/#{id}/subscriptions/#{sub_id}")
@@ -110,7 +135,11 @@ defmodule Stripe.Customers do
   Invoices a customer according to Stripe's invoice rules. This is not the same as a charge.
 
   ## Example
+
+  ```
     Stripe.Customers.create_invoice "customer_id", "subscription_id"
+  ```
+
   """
   def create_invoice(id, params) do
     params = Keyword.put_new params, :customer, id
@@ -122,7 +151,11 @@ defmodule Stripe.Customers do
   Returns a list of invoices for a given customer
 
   ## Example
+
+  ```
     Stripe.Customers.get_invoices "customer_id"
+  ```
+
   """
   def get_invoices(id, params \\ []) do
     params = Keyword.put_new params, :limit, 10
@@ -136,7 +169,10 @@ defmodule Stripe.Customers do
   Cancels a subscription
 
   ## Example
+
+  ```
     Stripe.Customers.cancel_subscription "customer_id", "subscription_id"
+  ```
   """
   def cancel_subscription(id, sub_id) do
     Stripe.make_request(:delete, "#{@endpoint}/#{id}/subscriptions/#{sub_id}")
@@ -149,7 +185,11 @@ defmodule Stripe.Customers do
   Returns all subscriptions for a Customer.
 
   ## Example
+
+  ```
     Stripe.Customers.get_subscriptions "customer_id"
+  ```
+
   """
   def get_subscriptions(id) do
     Stripe.make_request(:get, "#{@endpoint}/#{id}/subscriptions")
@@ -161,7 +201,10 @@ defmodule Stripe.Customers do
   Returns a list of Customers with a default limit of 10 which you can override with `list/1`
 
   ## Example
+
+  ```
     {:ok, customers} = Stripe.Customers.list(20)
+  ```
   """
   def list(limit \\ 10) do
     Stripe.make_request(:get, "#{@endpoint}?limit=#{limit}")
@@ -173,7 +216,10 @@ defmodule Stripe.Customers do
   Deletes a Customer with the specified ID
 
   ## Example
+
+  ```
     Stripe.Customers.delete "customer_id"
+  ```
   """
   def delete(id) do
     Stripe.make_request(:delete, "#{@endpoint}/#{id}")

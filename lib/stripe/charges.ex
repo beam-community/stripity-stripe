@@ -43,9 +43,9 @@ defmodule Stripe.Charges do
   Lists out charges from your account with a default limit of 10. You can override this by passing in a limit.
 
   ## Examples
-
+  ```
     {:ok, charges} = Stripe.Charges.list(100)
-
+  ```
   """
   def list(limit \\ 10) do
     Stripe.make_request(:get, "#{@endpoint}?limit=#{limit}")
@@ -57,9 +57,10 @@ defmodule Stripe.Charges do
   Updates a charge with changeable information (see the Stripe docs on what you can change)
   ## Examples
 
+  ```
     params = [description: "Changed charge"]
     {:ok, charge} = Stripe.Charges.change("charge_id", params)
-
+  ```
   """
   def change(id, params) do
     Stripe.make_request(:post, "#{@endpoint}/#{id}",params)
@@ -71,8 +72,9 @@ defmodule Stripe.Charges do
 
   ## Example
 
+  ```
       {:ok, charge} = Stripe.Charges.capture("charge_id")
-
+  ```
   """
   def capture(id) do
     Stripe.make_request(:post, "#{@endpoint}/#{id}/capture")
@@ -85,8 +87,9 @@ defmodule Stripe.Charges do
 
   ## Example
 
+  ```
       {:ok, charge} = Stripe.Charges.get("charge_id")
-
+  ```
   """
   def get(id) do
     Stripe.make_request(:get, "#{@endpoint}/#{id}")
@@ -98,8 +101,9 @@ defmodule Stripe.Charges do
 
   ## Example
 
+  ```
     {:ok, charge} = Stripe.Charges.refund("charge_id")
-
+  ```
   """
   def refund(id) do
     Stripe.make_request(:post, "#{@endpoint}/#{id}/refunds")
@@ -111,8 +115,9 @@ defmodule Stripe.Charges do
 
   ## Example
 
+  ```
     {:ok, charge} = Stripe.Charges.refund_partial("charge_id",500)
-
+  ```
   """
   def refund_partial(id, amount) do
     params = [amount: amount]

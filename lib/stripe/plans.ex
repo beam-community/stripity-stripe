@@ -9,7 +9,10 @@ defmodule Stripe.Plans do
   Creates a Plan. Note that `currency` and `interval` are required parameters, and are defaulted to "USD" and "month"
 
   ## Example
+
+  ```
     {:ok, plan} = Stripe.Plans.create [id: "test-plan", name: "Test Plan", amount: 1000, interval: "month"]
+  ```
   """
   def create(params) do
 
@@ -33,7 +36,11 @@ defmodule Stripe.Plans do
   Deletes a Plan with the specified ID.
 
   ## Example
+
+  ```
     {:ok, res} = Stripe.Plans.delete "test-plan"
+  ```
+
   """
   def delete(id) do
     Stripe.make_request(:delete, "#{@endpoint}/#{id}")
@@ -44,7 +51,10 @@ defmodule Stripe.Plans do
   Changes Plan information. See Stripe docs as to what you can change.
 
   ## Example
+
+  ```
     {:ok, plan} = Stripe.Plans.change("test-plan",[name: "Other Plan"])
+  ```
   """
   def change(id, params) do
     Stripe.make_request(:post, "#{@endpoint}/#{id}", params)

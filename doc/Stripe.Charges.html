@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stripe.Charges – stripity_stripe v0.2.0</title>
+    <title>Stripe.Charges – stripity_stripe v0.3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -28,7 +28,7 @@
         stripity_stripe
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.0
+        v0.3.0
       </h2>
     </div>
     
@@ -201,8 +201,8 @@ that can be a token or customer. See the Stripe docs for proper source specs</p>
   <section class="docstring">
     <p>Updates a charge with changeable information (see the Stripe docs on what you can change)</p>
 <h2>Examples</h2>
-<p>  params = [description: "Changed charge"]
-  {:ok, charge} = Stripe.Charges.change(“charge_id”, params)</p>
+<pre><code class="elixir">params = [description: &quot;Changed charge&quot;]
+  {:ok, charge} = Stripe.Charges.change(&quot;charge_id&quot;, params)</code></pre>
 
   </section>
 </div>
@@ -220,19 +220,19 @@ that can be a token or customer. See the Stripe docs for proper source specs</p>
 that can be a token or customer. See the Stripe docs for proper source specs.</p>
 <h2>Examples</h2>
 <pre><code class="elixir">params = [
-        source: [
-          object: &quot;card&quot;,
-          number: &quot;4111111111111111&quot;,
-          exp_month: 10,
-          exp_year: 2020,
-          country: &quot;US&quot;,
-          name: &quot;Ducky Test&quot;,
-          cvc: 123
-        ],
-        description: &quot;1000 Widgets&quot;
-      ]
+    source: [
+      object: &quot;card&quot;,
+      number: &quot;4111111111111111&quot;,
+      exp_month: 10,
+      exp_year: 2020,
+      country: &quot;US&quot;,
+      name: &quot;Ducky Test&quot;,
+      cvc: 123
+    ],
+    description: &quot;1000 Widgets&quot;
+  ]
 
-      {:ok, result} = Stripe.Charges.create 1000,params</code></pre>
+  {:ok, result} = Stripe.Charges.create 1000,params</code></pre>
 
   </section>
 </div>
@@ -264,7 +264,7 @@ that can be a token or customer. See the Stripe docs for proper source specs.</p
   <section class="docstring">
     <p>Lists out charges from your account with a default limit of 10. You can override this by passing in a limit.</p>
 <h2>Examples</h2>
-<p>  {:ok, charges} = Stripe.Charges.list(100)</p>
+<pre><code class="elixir">{:ok, charges} = Stripe.Charges.list(100)</code></pre>
 
   </section>
 </div>
@@ -280,7 +280,7 @@ that can be a token or customer. See the Stripe docs for proper source specs.</p
   <section class="docstring">
     <p>Refunds a charge completely. Use <code class="inline">refund_partial</code> if you just want to… you know… partially refund</p>
 <h2>Example</h2>
-<p>  {:ok, charge} = Stripe.Charges.refund(“charge_id”)</p>
+<pre><code class="elixir">{:ok, charge} = Stripe.Charges.refund(&quot;charge_id&quot;)</code></pre>
 
   </section>
 </div>
@@ -296,7 +296,7 @@ that can be a token or customer. See the Stripe docs for proper source specs.</p
   <section class="docstring">
     <p>Refunds a charge partially; the amount is required.</p>
 <h2>Example</h2>
-<p>  {:ok, charge} = Stripe.Charges.refund_partial(“charge_id”,500)</p>
+<pre><code class="elixir">{:ok, charge} = Stripe.Charges.refund_partial(&quot;charge_id&quot;,500)</code></pre>
 
   </section>
 </div>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stripe.Plans – stripity_stripe v0.2.0</title>
+    <title>Stripe.Plans – stripity_stripe v0.3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -28,7 +28,7 @@
         stripity_stripe
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.0
+        v0.3.0
       </h2>
     </div>
     
@@ -156,7 +156,7 @@
   <section class="docstring">
     <p>Changes Plan information. See Stripe docs as to what you can change.</p>
 <h2>Example</h2>
-<p>  {:ok, plan} = Stripe.Plans.change(“test-plan”,[name: "Other Plan"])</p>
+<pre><code class="elixir">{:ok, plan} = Stripe.Plans.change(&quot;test-plan&quot;,[name: &quot;Other Plan&quot;])</code></pre>
 
   </section>
 </div>
@@ -172,7 +172,7 @@
   <section class="docstring">
     <p>Creates a Plan. Note that <code class="inline">currency</code> and <code class="inline">interval</code> are required parameters, and are defaulted to “USD” and “month”</p>
 <h2>Example</h2>
-<p>  {:ok, plan} = Stripe.Plans.create [id: "test-plan", name: "Test Plan", amount: 1000, interval: "month"]</p>
+<pre><code class="elixir">{:ok, plan} = Stripe.Plans.create [id: &quot;test-plan&quot;, name: &quot;Test Plan&quot;, amount: 1000, interval: &quot;month&quot;]</code></pre>
 
   </section>
 </div>
@@ -188,7 +188,7 @@
   <section class="docstring">
     <p>Deletes a Plan with the specified ID.</p>
 <h2>Example</h2>
-<p>  {:ok, res} = Stripe.Plans.delete “test-plan”</p>
+<pre><code class="elixir">{:ok, res} = Stripe.Plans.delete &quot;test-plan&quot;</code></pre>
 
   </section>
 </div>
