@@ -19,7 +19,7 @@ As I began digging things up with these other libraries it became rather apparen
 
 ## Stripe API
 
-I've tested this library against Stripe API v1 and above. [The docs are up at Hex](http://hexdocs.pm/stripity_stripe/0.2.0/extra-api-reference.html)
+I've tested this library against Stripe API v1 and above. [The docs are up at Hex](http://hexdocs.pm/stripity_stripe/)
 
 ## Usage
 
