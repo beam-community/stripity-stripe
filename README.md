@@ -29,6 +29,14 @@ Install the dependency:
 {:stripity_stripe, "~> 0.3.0"}
 ```
 
+Next, add to your applications:
+
+```ex
+defp application do
+  [applications: [:stripe]]
+end
+```
+
 Then create a config folder and add a Stripe secret key:
 
 ```
