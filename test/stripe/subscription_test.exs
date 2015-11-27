@@ -2,7 +2,28 @@ defmodule Stripe.SubscriptionTest do
   use ExUnit.Case
 
   setup do
-    #create a sub with nothing but a card
+    #create test plan
+    case Stripe.Plans.create([id: "standard", name: "standard", amount: 1000]) do
+        {:ok, plan} -> assert plan.id == "standard"
+        {:error, err} -> flunk err
+    end
+    case Stripe.Plans.create([id: "premium", name: "premium", amount: 2000]) do
+      {:ok, plan} -> assert plan.id == "premium"
+      {:error, err} -> flunk err
+    end
+    #cleanup test plan
+    on_exit fn ->
+      case Stripe.Plans.delete "standard" do
+        {:ok, plan} -> assert plan.deleted
+        {:error, err} -> flunk err
+      end
+      case Stripe.Plans.delete "premium" do
+        {:ok, plan} -> assert plan.deleted
+        {:error, err} -> flunk err
+      end
+    end
+
+        #create a sub with nothing but a card
     new_sub = [
       email: "jill@test.com",
       description: "Jill Test Account",
@@ -24,6 +45,7 @@ defmodule Stripe.SubscriptionTest do
 
   end
 
+@tag disabled: false
   test "Listing subscriptions works", %{customer: customer, sub: sub} do
     case Stripe.Customers.get_subscriptions customer.id do
       {:ok, subs} -> assert subs
@@ -31,10 +53,12 @@ defmodule Stripe.SubscriptionTest do
     end
   end
 
+  @tag disabled: false
   test "A sub is created", %{customer: customer, sub: sub} do
     assert sub["id"]
   end
 
+  @tag disabled: false
   test "Retrieving the sub works", %{customer: customer, sub: sub} do
     case Stripe.Customers.get_subcription customer.id, sub["id"] do
       {:ok, found} -> assert found.id
@@ -42,13 +66,15 @@ defmodule Stripe.SubscriptionTest do
     end
   end
 
+  @tag disabled: false
   test "Changing the sub works", %{customer: customer, sub: sub} do
     case Stripe.Customers.change_subscription customer.id, sub["id"], plan: "premium" do
-      {:ok, changed} -> assert changed.plan["name"] == "Premium Plan"
+      {:ok, changed} -> assert changed.plan["name"] == "premium"
       {:error, err} -> flunk err
     end
   end
 
+  @tag disabled: false
   test "Sub cancellation works", %{customer: customer, sub: sub} do
     case Stripe.Customers.cancel_subscription customer.id, sub["id"] do
       {:ok, canceled_sub} -> assert canceled_sub.id
