@@ -6,13 +6,14 @@ defmodule Stripe.Mixfile do
       version: "0.4.0",
       description: "A Stripe Library for Elixir",
       package: package,
-      elixir: "~> 1.0.5",
+      elixir: "~> 1.1.1",
       deps: deps(Mix.env) ]
   end
 
   # Configuration for the OTP application
   def application do
-    [mod: { Stripe, [] }]
+    [mod: { Stripe, [] }
+    ]
   end
 
   defp deps(:dev) do

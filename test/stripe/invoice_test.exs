@@ -13,6 +13,7 @@ defmodule Stripe.InvoiceTest do
     end
   end
 
+  @tag disabled: true
   test "Creating an invoice", %{customer: customer} do
     sub = List.first(customer.subscriptions["data"])["id"]
     params = [subscription: sub, description: "Test Invoice"]

@@ -76,7 +76,7 @@ defmodule Stripe do
   Returns binary
   """
   def key do
-    Application.get_env(:stripe, :secret_key) ||
+    Application.get_env(:stripity_stripe, :secret_key) ||
       System.get_env "STRIPE_SECRET_KEY"
   end
 

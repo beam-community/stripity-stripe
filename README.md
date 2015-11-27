@@ -33,7 +33,7 @@ Next, add to your applications:
 
 ```ex
 defp application do
-  [applications: [:stripe]]
+  [applications: [:stripity_stripe]]
 end
 ```
 
@@ -42,13 +42,20 @@ Then create a config folder and add a Stripe secret key:
 ```
 use Mix.Config
 
-config :stripe, secret_key: "YOUR SECRET KEY"
+config :stripity_stripe, secret_key: "YOUR SECRET KEY"
 ```
 
 Then add Stripe to your supervisor tree or, to play around, make sure you start it up:
 
 ```
 Stripe.start
+```
+
+## Testing
+If you start contributing and you want to run mix test, first you need to export STRIPE_SECRET_KEY environment variable in the same shell as the one you will be running mix test in.
+```
+export STRIPE_SECRET_KEY="yourkey"
+mix test
 ```
 
 ## The API
