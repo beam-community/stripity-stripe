@@ -51,6 +51,13 @@ Then add Stripe to your supervisor tree or, to play around, make sure you start 
 Stripe.start
 ```
 
+## Testing
+If you start contributing and you want to run mix test, first you need to export STRIPE_SECRET_KEY environment variable in the same shell as the one you will be running mix test in.
+```
+export STRIPE_SECRET_KEY="yourkey"
+mix test
+```
+
 ## The API
 
 I've tried to make the API somewhat comprehensive and intuitive. If you'd like to see things in detail be sure to have a look at the tests - they show (generally) the way the API goes together.
