@@ -1,6 +1,6 @@
 defmodule Stripe.Tokens do
   @moduledoc """
-  Main API for working with Tokens at Stripe. Through this API you can .
+  API for working with Tokens at Stripe. Through this API you can create and retrieve tokens for both credit card and bank account allowing you to use them instead of a credit card number in various operations.
   """
 
   @endpoint "tokens"
