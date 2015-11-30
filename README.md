@@ -1,11 +1,12 @@
 # Stripe for Elixir
 
-An Elixir 1.0.5 library for working with Stripe. With this library you can:
+An Elixir library for working with Stripe. With this library you can:
 
  - manage Customers
  - Create, list, cancel, update and delete Subscriptions
  - Create, list, update and delete Plans
  - Create, list, and update Invoices
+ - Create and retrieve tokens for credit card and bank account
  - And yes, run charges with or without an existing Customer
 
 Why another Stripe Library? Currently there are a number of them in the Elixir world that are, well just not "done" yet. I started to fork/help but soon it became clear to me that what I wanted was:
