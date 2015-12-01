@@ -1,7 +1,9 @@
 defmodule Stripe.CustomerTest do
   use ExUnit.Case
 
-  setup do
+  setup_all do
+    Stripe.Customers.delete_all
+
     new_customer = [
       email: "test@test.com",
       description: "An Elixir Test Account",
@@ -13,36 +15,66 @@ defmodule Stripe.CustomerTest do
         name: "Joe Test User"
       ]
     ]
-    res = Stripe.Customers.create new_customer
-    case res do
-      {:ok, customer} -> {:ok, [res: customer]}
+    case Stripe.Customers.create new_customer do
+      {:ok, customer} ->
+        on_exit fn ->
+          Stripe.Customers.delete customer.id
+        end
+        {:ok, [customer: customer]}
+
       {:error, err} -> flunk err
     end
-
   end
-  test "Creating a customer with valid params succeeds", %{res: customer} do
+  
+  @tag disabled: false
+  test "Count works", %{customer: customer}  do
+    case Stripe.Customers.count do
+      {:ok, cnt} -> assert cnt == 1
+      {:error, err} -> flunk err
+    end
+  end
+  
+  @tag disabled: false
+  test "Retrieve all works", %{customer: customer} do
+    case Stripe.Customers.all do
+      {:ok, subs} ->
+        assert Enum.count(subs) == 1
+      {:error, err} -> flunk err
+    end
+  end
+  
+  @tag disabled: false
+  test "Create works", %{customer: customer} do
     assert customer.id
   end
 
-  test "Customers are listed" do
+  test "Retrieve list works" do
     {:ok, customers} = Stripe.Customers.list
     assert length(customers) > 0
   end
 
-  test "Finding a customer by id works", %{res: customer} do
+  test "Retrieve single works", %{customer: customer} do
     case Stripe.Customers.get customer.id do
       {:ok, found} -> assert found.id == customer.id
       {:error, err} -> flunk err
     end
   end
 
-  test "Deleting a customer succeeds", %{res: customer} do
+  test "Delete single works", %{customer: customer} do
     case Stripe.Customers.delete customer.id do
       {:ok, res} -> assert res.deleted
       {:error, err} -> flunk err
     end
-
   end
 
+  test "Delete all works", %{customer: customer} do
+   Helper.create_test_customer "t1@localhost"
+   Helper.create_test_customer "t2@localhost"
+   Stripe.Customers.delete_all
 
+    case Stripe.Customers.count do
+      {:ok, cnt} -> assert cnt == 0
+      {:error, err} -> flunk err
+    end
+  end
 end
