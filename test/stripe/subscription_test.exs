@@ -1,85 +1,74 @@
 defmodule Stripe.SubscriptionTest do
   use ExUnit.Case
 
-  setup do
-    #create test plan
-    case Stripe.Plans.create([id: "standard", name: "standard", amount: 1000]) do
-        {:ok, plan} -> assert plan.id == "standard"
-        {:error, err} -> flunk err
-    end
-    case Stripe.Plans.create([id: "premium", name: "premium", amount: 2000]) do
-      {:ok, plan} -> assert plan.id == "premium"
-      {:error, err} -> flunk err
-    end
-    #cleanup test plan
+  #these tests are dependent on the execution order
+  # ExUnit.configure w/ seed: 0 was set
+  setup_all do
+    Helper.create_test_plans
+    customer = Helper.create_test_customer "subscription_test@localhost"
+    {:ok, sub1} = Stripe.Subscriptions.create customer.id, "test-std"
+    {:ok, sub2} = Stripe.Subscriptions.create customer.id, "test-dlx"
+
     on_exit fn ->
-      case Stripe.Plans.delete "standard" do
-        {:ok, plan} -> assert plan.deleted
-        {:error, err} -> flunk err
-      end
-      case Stripe.Plans.delete "premium" do
-        {:ok, plan} -> assert plan.deleted
-        {:error, err} -> flunk err
-      end
+      Helper.delete_test_plans
+      Stripe.Subscriptions.cancel customer.id, sub1.id
+      Stripe.Subscriptions.cancel customer.id, sub2.id
+      Stripe.Customers.delete customer.id
     end
 
-        #create a sub with nothing but a card
-    new_sub = [
-      email: "jill@test.com",
-      description: "Jill Test Account",
-      plan: "standard",
-      source: [
-        object: "card",
-        number: "4111111111111111",
-        exp_month: 01,
-        exp_year: 2018,
-        cvc: 123,
-        name: "Jill Subscriber"
-      ]
-    ]
-
-    case Stripe.Customers.create_subscription new_sub do
-      {:ok, customer} -> {:ok, [customer: customer, sub: List.first(customer.subscriptions["data"])]}
-      {:error, err} -> flunk err
-    end
-
-  end
-
-@tag disabled: false
-  test "Listing subscriptions works", %{customer: customer, sub: sub} do
-    case Stripe.Customers.get_subscriptions customer.id do
-      {:ok, subs} -> assert subs
-      {:error, err} -> flunk err
-    end
+     {:ok, [ customer: customer, sub1: sub1, sub2: sub2 ] }
   end
 
   @tag disabled: false
-  test "A sub is created", %{customer: customer, sub: sub} do
-    assert sub["id"]
+  test "Count works", %{customer: customer, sub1: _, sub2: _}  do
+    case Stripe.Subscriptions.count customer.id do
+      {:ok, cnt} -> assert cnt == 2
+      {:error, err} -> flunk err
+    end
   end
-
+  
   @tag disabled: false
-  test "Retrieving the sub works", %{customer: customer, sub: sub} do
-    case Stripe.Customers.get_subcription customer.id, sub["id"] do
+  test "Retrieving single works", %{customer: customer, sub1: sub1, sub2: _} do
+    case Stripe.Subscriptions.get customer.id, sub1.id do
       {:ok, found} -> assert found.id
       {:error, err} -> flunk err
     end
   end
 
+    @tag disabled: false
+    test "Retrieve all works", %{customer: customer} do
+    case Stripe.Subscriptions.all customer.id do
+        {:ok, subs} ->
+            assert Enum.count(subs) == 2
+        {:error, err} -> flunk err
+    end
+  end
+
   @tag disabled: false
-  test "Changing the sub works", %{customer: customer, sub: sub} do
-    case Stripe.Customers.change_subscription customer.id, sub["id"], plan: "premium" do
-      {:ok, changed} -> assert changed.plan["name"] == "premium"
+  test "Creating works", %{customer: _, sub1: sub1, sub2: _} do
+    assert sub1.id
+  end
+
+  @tag disabled: false
+  test "Updating works", %{customer: customer, sub1: sub1, sub2: _} do
+    case Stripe.Subscriptions.change customer.id, sub1.id,  "test-dlx" do
+      {:ok, changed} -> assert changed.plan["id"] == "test-dlx"
       {:error, err} -> flunk err
     end
   end
 
   @tag disabled: false
-  test "Sub cancellation works", %{customer: customer, sub: sub} do
-    case Stripe.Customers.cancel_subscription customer.id, sub["id"] do
+  test "Cancel works", %{customer: customer, sub1: sub1, sub2: _} do
+    case Stripe.Subscriptions.cancel customer.id, sub1.id do
       {:ok, canceled_sub} -> assert canceled_sub.id
       {:error, err} -> flunk err
     end
   end
-
+  
+  @tag disabled: false
+  test "Cancel all works", %{customer: customer,  sub1: _, sub2: _} do
+    Stripe.Subscriptions.cancel_all customer.id  
+    {:ok, cnt} = Stripe.Subscriptions.count(customer.id) 
+    assert cnt == 0
+  end
 end

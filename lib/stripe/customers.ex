@@ -1,6 +1,12 @@
 defmodule Stripe.Customers do
   @moduledoc """
-  Main API for working with Customers at Stripe. Through this API you can alter subscriptions, create invoices, create and delete customers, etc.
+  Main API for working with Customers at Stripe. Through this API you can:
+  -change subscriptions
+  -create invoices
+  -create customers
+  -delete single customer
+  -delete all customer
+  -count customers
   """
 
   @endpoint "customers"
@@ -225,5 +231,58 @@ defmodule Stripe.Customers do
     Stripe.make_request(:delete, "#{@endpoint}/#{id}")
       |> Stripe.Util.handle_stripe_response
   end
+  
+  @doc """
+  Deletes all Customers
 
+  ## Example
+
+  ```
+  Stripe.Customers.delete_all
+  ```
+  """
+  def delete_all do
+    case all  do
+      {:ok, customers} ->
+        Enum.each customers, fn c -> delete(c["id"]) end
+      {:error, err} -> raise err
+    end
+  end
+
+  @max_fetch_size 100
+  @doc """
+  List all customers.
+
+  ##Example
+
+  ```
+  {:ok, customers} = Stripe.Customers.all
+  ```
+
+  """
+  def all( accum \\ [], startingAfter \\ "") do
+    case Stripe.Util.list_raw("#{@endpoint}",@max_fetch_size, startingAfter) do
+      {:ok, resp}  ->
+        case resp[:has_more] do
+          true ->
+            last_sub = List.last( resp[:data] )
+            all( resp[:data] ++ accum, last_sub["id"] )
+          false ->
+            result = resp[:data] ++ accum
+            {:ok, result}
+        end
+    end
+  end
+  
+  @doc """
+  Count total number of customers.
+
+  ## Example
+  ```
+  {:ok, count} = Stripe.Customers.count
+  ```
+  """
+  def count do
+    Stripe.Util.count "#{@endpoint}"
+  end
 end
