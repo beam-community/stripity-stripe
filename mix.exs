@@ -12,7 +12,9 @@ defmodule Stripe.Mixfile do
 
   # Configuration for the OTP application
   def application do
-    [mod: { Stripe, [] }
+    [
+      applications: [:httpoison],
+      mod: { Stripe, [] }
     ]
   end
 
