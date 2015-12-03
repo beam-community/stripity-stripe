@@ -7,6 +7,8 @@ defmodule Stripe.Customers do
   -delete single customer
   -delete all customer
   -count customers
+
+  https://stripe.com/docs/api/curl#customer_object
   """
 
   @endpoint "customers"
@@ -20,18 +22,16 @@ defmodule Stripe.Customers do
     new_customer = [
       email: "test@test.com",
       description: "An Test Account",
+      metadata:[
+        app_order_id: "ABC123"
+        app_state_x: "xyz"
+      ],
       card: [
         number: "4111111111111111",
         exp_month: 01,
         exp_year: 2018,
         cvc: 123,
         name: "Joe Test User"
-      ],
-      source: [
-        metadata:[
-            app_order_id: "ABC123"
-            app_state_x: "xyz"
-        ]
       ]
     ]
     {:ok, res} = Stripe.Customers.create new_customer
