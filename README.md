@@ -27,7 +27,7 @@ I've tested this library against Stripe API v1 and above. [The docs are up at He
 Install the dependency:
 
 ```
-{:stripity_stripe, "~> 0.3.0"}
+{:stripity_stripe, "~> 0.5.0"}
 ```
 
 Next, add to your applications:
