@@ -72,12 +72,11 @@ defmodule Stripe do
   end
 
   @doc """
-  Grabs STRIPE_SECRET_KEY from system ENV
+  Grabs STRIPE_SECRET_KEY from application variable first, then from system ENV
   Returns binary
   """
   def key do
-    Application.get_env(:stripity_stripe, :secret_key) ||
-      System.get_env "STRIPE_SECRET_KEY"
+    Application.get_env(:stripity_stripe, :secret_key) || System.get_env "STRIPE_SECRET_KEY"
   end
 
   defp url_encode_keyvalue({k, v}) do
