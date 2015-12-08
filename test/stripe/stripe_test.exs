@@ -18,7 +18,7 @@ defmodule Stripe.StripeTest do
         |> Stripe.Util.handle_stripe_response
     case res do
       {:ok, _} -> assert true
-      true -> assert false
+      {:error,err} -> flunk err
     end
   end
 end

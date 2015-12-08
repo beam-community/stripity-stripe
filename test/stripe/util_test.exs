@@ -25,7 +25,7 @@ defmodule Stripe.UtilTest do
     end
   end
   test "list_raw w/key" do
-    case Stripe.Util.list_raw "plans", Stripe.config_or_env_key do
+    case Stripe.Util.list_raw "plans", Stripe.config_or_env_key, 10, "" do
       {:ok, _} -> assert true 
       {:error, err} -> flunk err
     end
