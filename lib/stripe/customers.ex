@@ -7,6 +7,8 @@ defmodule Stripe.Customers do
   -delete single customer
   -delete all customer
   -count customers
+
+  https://stripe.com/docs/api/curl#customer_object
   """
 
   @endpoint "customers"
@@ -20,6 +22,10 @@ defmodule Stripe.Customers do
     new_customer = [
       email: "test@test.com",
       description: "An Test Account",
+      metadata:[
+        app_order_id: "ABC123"
+        app_state_x: "xyz"
+      ],
       card: [
         number: "4111111111111111",
         exp_month: 01,
@@ -71,7 +77,7 @@ defmodule Stripe.Customers do
 
   @doc """
   Starts a subscription for the specified customer. Note that if you pass in the customer *and* subscription information, both will be created at the same time.
-
+Request/response object specs: https://stripe.com/docs/api/curl#create_customer
   ## Example
 
   ```
@@ -85,7 +91,11 @@ defmodule Stripe.Customers do
         exp_month: 01,
         exp_year: 2018,
         cvc: 123,
-        name: "Jill Subscriber"
+        name: "Jill Subscriber",
+        metadata:[
+           app_order_id: "ABC123"
+           app_state_x: "xyz"
+        ]
       ]
     ]
     {:ok, sub} = Stripe.Customers.create_subscription new_sub
@@ -165,7 +175,7 @@ defmodule Stripe.Customers do
   """
   def get_invoices(id, params \\ []) do
     params = Keyword.put_new params, :limit, 10
-    params = [customer: id]
+    params = Keyword.put_new params, :customer, id
 
     Stripe.make_request(:get, "invoices", params )
       |> Stripe.Util.handle_stripe_response
@@ -271,6 +281,7 @@ defmodule Stripe.Customers do
             result = resp[:data] ++ accum
             {:ok, result}
         end
+    {:error, err} -> raise err
     end
   end
   

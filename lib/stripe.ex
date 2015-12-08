@@ -24,7 +24,7 @@ defmodule Stripe do
   @doc """
   Set our request headers for every request.
   """
-  def req_headers do
+  def req_headers(key) do
     HashDict.new
       |> Dict.put("Authorization", "Bearer #{key}")
       |> Dict.put("User-Agent",    "Stripe/v1 stripe-elixir/0.1.0")
@@ -42,46 +42,56 @@ defmodule Stripe do
   end
 
   @doc """
-  Boilerplate code to make requests.
+  Boilerplate code to make requests with a given key.
   Args:
+    * method - request method
     * endpoint - string requested API endpoint
+    * key - stripe key passed to the api
     * body - request body
+    * headers - request headers
+    * options - request options
+  Returns dict
+  """
+  def make_request_with_key( method, endpoint, key, body \\ [], headers \\ [], options \\ []) do
+    
+    rb = Stripe.URI.encode_query(body)
+    rh = req_headers( key )
+        |> Dict.merge(headers)
+        |> Dict.to_list
+
+    {:ok, response} = case method do
+                        :get     -> get(     endpoint,     rh, options)
+                        :put     -> put(     endpoint, rb, rh, options)
+                        :head    -> head(    endpoint,     rh, options)
+                        :post    -> post(    endpoint, rb, rh, options)
+                        :patch   -> patch(   endpoint, rb, rh, options)
+                        :delete  -> delete(  endpoint,     rh, options)
+                        :options -> options( endpoint,     rh, options)
+                      end
+    response.body
+  end
+  
+  @doc """
+  Boilerplate code to make requests with the key read from config or env.see config_or_env_key/0
+  Args:
+  * method - request method
+  * endpoint - string requested API endpoint
+  * key - stripe key passed to the api
+  * body - request body
+  * headers - request headers
+  * options - request options
   Returns dict
   """
   def make_request(method, endpoint, body \\ [], headers \\ [], options \\ []) do
-    # rb = Enum.map(body, &url_encode_keyvalue(&1))
-    #   |> Enum.join("&")
-    rb = Stripe.URI.encode_query(body)
-    rh = req_headers
-      |> Dict.merge(headers)
-      |> Dict.to_list
-
-
-    {:ok, response} = case method do
-      :get     -> get(     endpoint,     rh, options)
-      :put     -> put(     endpoint, rb, rh, options)
-      :head    -> head(    endpoint,     rh, options)
-      :post    -> post(    endpoint, rb, rh, options)
-      :patch   -> patch(   endpoint, rb, rh, options)
-      :delete  -> delete(  endpoint,     rh, options)
-      :options -> options( endpoint,     rh, options)
-    end
-
-
-    response.body
+    make_request_with_key( method, endpoint, config_or_env_key, body, headers, options )
   end
 
   @doc """
   Grabs STRIPE_SECRET_KEY from system ENV
   Returns binary
   """
-  def key do
+  def config_or_env_key do
     Application.get_env(:stripity_stripe, :secret_key) ||
       System.get_env "STRIPE_SECRET_KEY"
-  end
-
-  defp url_encode_keyvalue({k, v}) do
-    key = Atom.to_string(k)
-    "#{key}=#{v}"
   end
 end

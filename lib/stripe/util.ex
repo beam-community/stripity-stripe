@@ -42,23 +42,31 @@ defmodule Stripe.Util do
   end
 
   def list_raw( endpoint, limit \\ 10, startingAfter \\ "") do
+    list_raw endpoint, Stripe.config_or_env_key, limit, startingAfter
+  end
+  
+  def list_raw( endpoint, key, limit, startingAfter) do
     q = "#{endpoint}?limit=#{limit}"
 
     if String.length(startingAfter) > 0 do
       q = q ++ "&starting_after=#{startingAfter}"
     end
 
-    Stripe.make_request(:get, q )
-       |> Stripe.Util.handle_stripe_full_response
+    Stripe.make_request_with_key(:get, q, key )
+    |> Stripe.Util.handle_stripe_full_response
   end
 
   # most stripe listing endpoints allow the total count to be included without any results
   def count(endpoint) do
-    case Stripe.make_request(:get, "#{endpoint}?include[]=total_count&limit=0")
-            |> Stripe.Util.handle_stripe_full_response do
+    count endpoint, Stripe.config_or_env_key
+  end
+
+  def count(endpoint, key) do
+    case Stripe.make_request_with_key(:get, "#{endpoint}?include[]=total_count&limit=0", key)
+    |> Stripe.Util.handle_stripe_full_response do
       {:ok, res} ->
         {:ok, res[:total_count]}
       {:error, err} -> raise err
     end
-  end
+    end
 end

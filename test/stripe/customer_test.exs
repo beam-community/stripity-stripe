@@ -7,13 +7,17 @@ defmodule Stripe.CustomerTest do
     new_customer = [
       email: "test@test.com",
       description: "An Elixir Test Account",
+      metadata: [
+        app_order_id: "ABC123",
+        app_attr1: "xyz"
+       ], 
       card: [
         number: "4111111111111111",
         exp_month: 01,
         exp_year: 2018,
         cvc: 123,
         name: "Joe Test User"
-      ]
+      ]  
     ]
     case Stripe.Customers.create new_customer do
       {:ok, customer} ->
@@ -25,9 +29,16 @@ defmodule Stripe.CustomerTest do
       {:error, err} -> flunk err
     end
   end
+
+  @tag disabled: false
+  test "Metadata works", %{customer: customer}  do
+    assert customer.metadata["app_order_id"] == "ABC123"
+    assert customer.metadata["app_attr1"] == "xyz"
+  end
+  
   
   @tag disabled: false
-  test "Count works", %{customer: customer}  do
+  test "Count works", %{customer: _}  do
     case Stripe.Customers.count do
       {:ok, cnt} -> assert cnt == 1
       {:error, err} -> flunk err
@@ -35,7 +46,7 @@ defmodule Stripe.CustomerTest do
   end
   
   @tag disabled: false
-  test "Retrieve all works", %{customer: customer} do
+  test "Retrieve all works", %{customer: _} do
     case Stripe.Customers.all do
       {:ok, subs} ->
         assert Enum.count(subs) == 1
@@ -67,7 +78,7 @@ defmodule Stripe.CustomerTest do
     end
   end
 
-  test "Delete all works", %{customer: customer} do
+  test "Delete all works", %{customer: _} do
    Helper.create_test_customer "t1@localhost"
    Helper.create_test_customer "t2@localhost"
    Stripe.Customers.delete_all
