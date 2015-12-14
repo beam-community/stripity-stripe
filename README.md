@@ -63,7 +63,7 @@ mix test
 
 I've tried to make the API somewhat comprehensive and intuitive. If you'd like to see things in detail be sure to have a look at the tests - they show (generally) the way the API goes together.
 
-In general, if Stripe requires some information for a given API call, you'll find that as part of the arrity of the given function. For instance if you want to delete a Customer, you'll find that you *must* pass the id along:
+In general, if Stripe requires some information for a given API call, you'll find that as part of the arity of the given function. For instance if you want to delete a Customer, you'll find that you *must* pass the id along:
 
 ```
 {:ok, result} = Stripe.Customers.delete "some_id"
