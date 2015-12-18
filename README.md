@@ -27,7 +27,7 @@ I've tested this library against Stripe API v1 and above. [The docs are up at He
 
 Install the dependency:
 
-```
+```ex
 {:stripity_stripe, "~> 0.5.0"}
 ```
 
@@ -41,7 +41,7 @@ end
 
 Then create a config folder and add a Stripe secret key:
 
-```
+```ex
 use Mix.Config
 
 config :stripity_stripe, secret_key: "YOUR SECRET KEY"
@@ -49,7 +49,7 @@ config :stripity_stripe, secret_key: "YOUR SECRET KEY"
 
 Then add Stripe to your supervisor tree or, to play around, make sure you start it up:
 
-```
+```ex
 Stripe.start
 ```
 
@@ -64,16 +64,16 @@ mix test
 
 I've tried to make the API somewhat comprehensive and intuitive. If you'd like to see things in detail be sure to have a look at the tests - they show (generally) the way the API goes together.
 
-In general, if Stripe requires some information for a given API call, you'll find that as part of the arrity of the given function. For instance if you want to delete a Customer, you'll find that you *must* pass the id along:
+In general, if Stripe requires some information for a given API call, you'll find that as part of the arity of the given function. For instance if you want to delete a Customer, you'll find that you *must* pass the id along:
 
-```
+```ex
 {:ok, result} = Stripe.Customers.delete "some_id"
 ```
 
 For optional arguments, you can send in a Keyword list that will get translated to parameters. So if you want to update a Subscription, for instance, you must send in the `customer_id` and `subscription_id` with the list of changes:
 
-```
-#Change customer to the Premium subscription
+```ex
+# Change customer to the Premium subscription
 {:ok, result} = Stripe.Customers.change_subscription "customer_id", "sub_id", plan: "premium"
 ```
 
