@@ -5,7 +5,7 @@ defmodule Stripe.Events do
   -retrieve event from id
   -count number of events stored  currently on stripe 
 
-  https://stripe.com/docs/api/curl#customer_object
+  https://stripe.com/docs/api/curl#event_object
   """
 
   @endpoint "events"
