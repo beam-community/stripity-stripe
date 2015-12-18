@@ -78,7 +78,7 @@ For optional arguments, you can send in a Keyword list that will get translated 
 ```
 
 ```
-#Example of paging through events
+# Example of paging through events
 {:ok,events} = Stripe.Events.list key, "", 100   #2nd arg is a marker for paging
 
 case events[:has_more] do
@@ -91,4 +91,5 @@ case events[:has_more] do
     false -> events[:data]
 end
 ```
+
 That's the rule of thumb with this library. If there are any errors with your call, they will bubble up to you in the `{:error, message}` match.
