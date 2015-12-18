@@ -49,7 +49,7 @@ defmodule Stripe.Util do
     q = "#{endpoint}?limit=#{limit}"
 
     if String.length(startingAfter) > 0 do
-      q = q ++ "&starting_after=#{startingAfter}"
+      q = q <> "&starting_after=#{startingAfter}"
     end
 
     Stripe.make_request_with_key(:get, q, key )

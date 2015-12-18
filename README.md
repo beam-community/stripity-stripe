@@ -7,6 +7,7 @@ An Elixir library for working with Stripe. With this library you can:
  - Create, list, update and delete Plans
  - Create, list, and update Invoices
  - Create and retrieve tokens for credit card and bank account
+ - List and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve)
  - And yes, run charges with or without an existing Customer
 
 Why another Stripe Library? Currently there are a number of them in the Elixir world that are, well just not "done" yet. I started to fork/help but soon it became clear to me that what I wanted was:
@@ -76,4 +77,18 @@ For optional arguments, you can send in a Keyword list that will get translated 
 {:ok, result} = Stripe.Customers.change_subscription "customer_id", "sub_id", plan: "premium"
 ```
 
+```
+#Example of paging through events
+{:ok,events} = Stripe.Events.list key, "", 100   #2nd arg is a marker for paging
+
+case events[:has_more] do
+    true ->
+        # retrieve marker
+        last = List.last( events[:data] )
+        case Stripe.Events.list key, last["id"], 100 do
+            {:ok, events} -> events[:data]
+            ...
+    false -> events[:data]
+end
+```
 That's the rule of thumb with this library. If there are any errors with your call, they will bubble up to you in the `{:error, message}` match.
