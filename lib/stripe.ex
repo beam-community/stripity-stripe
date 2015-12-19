@@ -86,6 +86,24 @@ defmodule Stripe do
     make_request_with_key( method, endpoint, config_or_env_key, body, headers, options )
   end
 
+  def make_oauth_token_callback_request(body) do
+    IO.puts "=====================oauthB"
+    rb = Stripe.URI.encode_query(body)
+    rh = req_headers( "sk_test_ZQ1ofROPQQjS23vI8qQhKwi0" )
+        |> Dict.to_list
+    options = []
+    HTTPoison.request(:post, "https://connect.stripe.com/oauth/token", rb, rh, options)
+  end
+
+  def make_oauth_authorize_request(body) do
+    IO.puts "=====================authorizeA"
+    rb = Stripe.URI.encode_query(body)
+    rh = req_headers( Stripe.config_or_env_key )
+        |> Dict.to_list
+    options = []
+    HTTPoison.request(:post, "https://connect.stripe.com/oauth/authorize", rb, rh, options)    
+  end
+
   @doc """
   Grabs STRIPE_SECRET_KEY from system ENV
   Returns binary
@@ -93,5 +111,14 @@ defmodule Stripe do
   def config_or_env_key do
     Application.get_env(:stripity_stripe, :secret_key) ||
       System.get_env "STRIPE_SECRET_KEY"
+  end
+
+  @doc """
+  Grabs STRIPE_PLATFORM_CLIENT_ID from system ENV
+  Returns binary
+  """
+  def config_or_env_platform_client_id do
+    Application.get_env(:stripity_stripe, :platform_client_id) ||
+      System.get_env "STRIPE_PLATFORM_CLIENT_ID"
   end
 end
