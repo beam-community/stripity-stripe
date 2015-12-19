@@ -100,13 +100,13 @@ defmodule Stripe.Subscriptions do
 
   ```
     Stripe.Subscriptions.cancel "customer_id", "subscription_id"
+    Stripe.Subscriptions.cancel "customer_id", "subscription_id", [at_period_end: true]
   ```
   """
-  def cancel(customer_id, sub_id) do
-    Stripe.make_request(:delete, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}")
-      |> Stripe.Util.handle_stripe_response
+  def cancel(customer_id, sub_id, opts \\ []) do
+    Stripe.make_request(:delete, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", opts)
+    |> Stripe.Util.handle_stripe_response
   end
-  
   @doc """
   Cancel all subscriptions for account.
 
