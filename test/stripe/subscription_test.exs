@@ -76,6 +76,20 @@ defmodule Stripe.SubscriptionTest do
     end
   end
 
+  @tag disable: false
+  test "Change creditcards works", %{customer: c, sub2: sub2} do
+    source = [
+      object: "card",
+      number: "4012888888881881",
+      exp_year: "20",
+      exp_month: "12",
+    ]
+    case Stripe.Subscriptions.change_payment_source(c.id, sub2.id, source) do
+      {:ok, res} ->
+        assert res[:status] == "active"
+      {:error, err} -> flunk err
+    end
+  end
   @tag disabled: false
   test "Cancel all works", %{customer: customer,  sub1: _, sub2: _} do
     Stripe.Subscriptions.cancel_all customer.id
