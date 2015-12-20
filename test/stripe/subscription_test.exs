@@ -8,6 +8,7 @@ defmodule Stripe.SubscriptionTest do
     customer = Helper.create_test_customer "subscription_test@localhost"
     {:ok, sub1} = Stripe.Subscriptions.create customer.id, "test-std"
     {:ok, sub2} = Stripe.Subscriptions.create customer.id, "test-dlx"
+    {:ok, sub3} = Stripe.Subscriptions.create customer.id, "test-dlx"
 
     on_exit fn ->
       Helper.delete_test_plans
@@ -16,17 +17,17 @@ defmodule Stripe.SubscriptionTest do
       Stripe.Customers.delete customer.id
     end
 
-     {:ok, [ customer: customer, sub1: sub1, sub2: sub2 ] }
+     {:ok, [ customer: customer, sub1: sub1, sub2: sub2, sub3: sub3 ] }
   end
 
   @tag disabled: false
   test "Count works", %{customer: customer, sub1: _, sub2: _}  do
     case Stripe.Subscriptions.count customer.id do
-      {:ok, cnt} -> assert cnt == 2
+      {:ok, cnt} -> assert cnt == 3
       {:error, err} -> flunk err
     end
   end
-  
+
   @tag disabled: false
   test "Retrieving single works", %{customer: customer, sub1: sub1, sub2: _} do
     case Stripe.Subscriptions.get customer.id, sub1.id do
@@ -39,7 +40,7 @@ defmodule Stripe.SubscriptionTest do
     test "Retrieve all works", %{customer: customer} do
     case Stripe.Subscriptions.all customer.id do
         {:ok, subs} ->
-            assert Enum.count(subs) == 2
+            assert Enum.count(subs) == 3
         {:error, err} -> flunk err
     end
   end
@@ -64,11 +65,21 @@ defmodule Stripe.SubscriptionTest do
       {:error, err} -> flunk err
     end
   end
-  
+
+  @tag disabled: false
+  test "Cancel at period end works", %{customer: customer, sub3: sub3} do
+    case Stripe.Subscriptions.cancel(customer.id, sub3.id, [at_period_end: true]) do
+      {:ok, canceled_sub} ->
+        assert canceled_sub[:status] == "active"
+        assert canceled_sub[:cancel_at_period_end] == true
+      {:error, err} -> flunk err
+    end
+  end
+
   @tag disabled: false
   test "Cancel all works", %{customer: customer,  sub1: _, sub2: _} do
-    Stripe.Subscriptions.cancel_all customer.id  
-    {:ok, cnt} = Stripe.Subscriptions.count(customer.id) 
+    Stripe.Subscriptions.cancel_all customer.id
+    {:ok, cnt} = Stripe.Subscriptions.count(customer.id)
     assert cnt == 0
   end
 end
