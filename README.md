@@ -1,6 +1,6 @@
 # Stripe for Elixir
 
-An Elixir library for working with Stripe. With this library you can:
+An Elixir library for working with [Stripe](https://stripe.com/). With this library you can:
 
  - manage Customers
  - Create, list, cancel, update and delete Subscriptions
