@@ -111,7 +111,7 @@ defmodule Stripe.Customers do
   ```
   """
   def list(key, starting_after, limit) do
-    Stripe.Util.list @endpoint, key, limit, starting_after
+    Stripe.Util.list @endpoint, key, starting_after, limit
   end
 
   @doc """

@@ -45,11 +45,11 @@ defmodule Stripe.Util do
     list_raw endpoint, Stripe.config_or_env_key, limit, starting_after
   end
   
-  def list_raw( endpoint, key, limit, starting_after) do
+  def list_raw( endpoint, key, limit, starting_after)  do
     q = "#{endpoint}?limit=#{limit}"
 
-    if String.length(starting_after) > 0 do
-      q = q <> "&starting_after=#{starting_after}"
+    if  String.length(starting_after) > 0 do
+        q = q <> "&starting_after=#{starting_after}"
     end
 
     Stripe.make_request_with_key(:get, q, key )

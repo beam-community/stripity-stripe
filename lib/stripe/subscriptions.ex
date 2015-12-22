@@ -151,7 +151,7 @@ defmodule Stripe.Subscriptions do
   ```
   """
   def cancel(customer_id, sub_id, opts, key) do
-    Stripe.make_request_with_key(:delete, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key)
+    Stripe.make_request_with_key(:delete, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key, opts)
     |> Stripe.Util.handle_stripe_response
   end
   
@@ -164,8 +164,8 @@ defmodule Stripe.Subscriptions do
   Stripe.Subscriptions.cancel_all customer_id
   ```
   """
-  def cancel_all(customer_id) do
-    cancel_all customer_id, Stripe.config_or_env_key
+  def cancel_all(customer_id,opts) do
+    cancel_all customer_id, opts, Stripe.config_or_env_key
   end
 
   @doc """
@@ -176,10 +176,10 @@ defmodule Stripe.Subscriptions do
   Stripe.Subscriptions.cancel_all customer_id, key
   ```
   """
-  def cancel_all(customer_id, key) do
+  def cancel_all(customer_id, opts, key) do
     case all(customer_id, [], "", key) do
       {:ok, subs} ->
-        Enum.each subs, fn sub -> cancel(customer_id, sub["id"], key) end
+        Enum.each subs, fn sub -> cancel(customer_id, sub["id"], opts, key) end
       {:error, err} -> raise err
     end
   end

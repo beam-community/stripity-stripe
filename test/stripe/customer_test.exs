@@ -95,12 +95,6 @@ defmodule Stripe.CustomerTest do
   end
 
   @tag disabled: false
-  test "Retrieve list works" do
-    {:ok, res} = Stripe.Customers.list "", 1 
-    assert Dict.size(res[:data]) > 0
-  end
-
-  @tag disabled: false
   test "Retrieve single works", %{customer: customer, customer2: _} do
     case Stripe.Customers.get customer.id do
       {:ok, found} -> assert found.id == customer.id
@@ -117,7 +111,7 @@ defmodule Stripe.CustomerTest do
   end
 
   @tag disabled: false
-  test "Delete w/key works", %{customer: customer, customer2: customer2 } do
+  test "Delete w/key works", %{customer: _, customer2: customer2 } do
     case Stripe.Customers.delete customer2.id, Stripe.config_or_env_key do
       {:ok, res} -> assert res.deleted
       {:error, err} -> flunk err

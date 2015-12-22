@@ -13,7 +13,7 @@ defmodule Stripe.InvoicesTest do
       currency: "usd",
       subscription: sub1.id
     ]
-    {:ok, res } = Stripe.InvoiceItems.create params
+    {:ok, _ } = Stripe.InvoiceItems.create params
     on_exit fn ->
       Stripe.Subscriptions.cancel customer1.id, sub1.id
       Stripe.Customers.delete customer1.id
@@ -88,7 +88,7 @@ defmodule Stripe.InvoicesTest do
     end
   end
 
-  test "Get works", %{customer1: customer1, sub1: sub1} do
+  test "Get works", %{customer1: _, sub1: _} do
     {:ok,invoices} = Stripe.Invoices.list Stripe.config_or_env_key,"", 1
     first = Enum.at invoices[:data], 0
     case Stripe.Invoices.get first["id"] do
@@ -97,7 +97,7 @@ defmodule Stripe.InvoicesTest do
     end
   end
 
-  test "Get w/key works", %{customer1: customer1, sub1: sub1} do
+  test "Get w/key works", %{customer1: _, sub1: _} do
     {:ok,invoices} = Stripe.Invoices.list Stripe.config_or_env_key,"", 1
     first = Enum.at invoices[:data], 0
     case Stripe.Invoices.get first["id"], Stripe.config_or_env_key do

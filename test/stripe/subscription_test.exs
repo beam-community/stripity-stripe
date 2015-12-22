@@ -9,21 +9,16 @@ defmodule Stripe.SubscriptionTest do
     customer = Helper.create_test_customer "subscription_test1@localhost"
     Helper.create_test_plan "test-cancel-all"
     Helper.create_test_plan "test-dlz"
+    Helper.create_test_plan "test-dla"
     {:ok, sub1} = Stripe.Subscriptions.create customer.id, [plan: "test-std"]
     {:ok, sub2} = Stripe.Subscriptions.create customer.id, [plan: "test-dlx"]
-    {:ok, sub3} = Stripe.Subscriptions.create customer.id, [plan: "test-dlx"]
+    {:ok, sub3} = Stripe.Subscriptions.create customer.id, [plan: "test-dla"]
 
     on_exit fn ->
-      Helper.delete_test_plans
-      Helper.delete_test_plan "test-create-a"
-      Helper.delete_test_plan "test-create-b"
-      Helper.delete_test_plan "test-create-c"
-      Helper.delete_test_plan "test-create-d"
-      Helper.delete_test_plan "test-cancel-all"
-      Helper.delete_test_plan "test-dlz"
       Stripe.Subscriptions.cancel customer.id, sub1.id
       Stripe.Subscriptions.cancel customer.id, sub2.id
       Stripe.Customers.delete customer.id
+      Stripe.Plans.delete_all
     end
 
      {:ok, [ customer: customer, sub1: sub1, sub2: sub2, sub3: sub3 ] }
@@ -65,7 +60,7 @@ defmodule Stripe.SubscriptionTest do
     @tag disabled: false
     test "Retrieve all works", %{customer: customer} do
     case Stripe.Subscriptions.all customer.id do
-        {:ok, subs} -> assert Enum.count(subs) == 2
+        {:ok, subs} -> assert Enum.count(subs) == 3
         {:error, err} -> flunk err
     end
   end
@@ -73,7 +68,7 @@ defmodule Stripe.SubscriptionTest do
     @tag disabled: false
     test "Retrieve all w/key works", %{customer: customer} do
         case Stripe.Subscriptions.all customer.id, [], "", Stripe.config_or_env_key do
-        {:ok, subs} -> assert Enum.count(subs) == 2
+        {:ok, subs} -> assert Enum.count(subs) == 3
         {:error, err} -> flunk err
         end
     end
@@ -130,7 +125,7 @@ defmodule Stripe.SubscriptionTest do
 
   @tag disabled: false
   test "Cancel w/key works", %{customer: customer, sub1: _, sub2: sub2} do
-    case Stripe.Subscriptions.cancel customer.id, sub2.id, Stripe.config_or_env_key do
+    case Stripe.Subscriptions.cancel customer.id, sub2.id,[], Stripe.config_or_env_key do
       {:ok, canceled_sub} -> assert canceled_sub.id
       {:error, err} -> flunk err
     end
@@ -148,15 +143,15 @@ defmodule Stripe.SubscriptionTest do
 
   @tag disabled: false
   test "Cancel all works", %{customer: customer,  sub1: _, sub2: _} do
-    Stripe.Subscriptions.cancel_all customer.id  
+    Stripe.Subscriptions.cancel_all customer.id, []  
     {:ok, cnt} = Stripe.Subscriptions.count(customer.id) 
-     ffssert cnt == 0
+     assert cnt == 0
   end
 
   @tag disabled: false
   test "Cancel all w/key  works", %{customer: customer,  sub1: _, sub2: _} do
     Stripe.Subscriptions.create customer.id, [plan: "test-cancel-all"]
-    Stripe.Subscriptions.cancel_all customer.id, Stripe.config_or_env_key  
+    Stripe.Subscriptions.cancel_all customer.id, [],Stripe.config_or_env_key  
     {:ok, cnt} = Stripe.Subscriptions.count(customer.id) 
     assert cnt == 0
   end
