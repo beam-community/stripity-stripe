@@ -28,6 +28,7 @@ As I began digging things up with these other libraries it became rather apparen
 ## Stripe API
 
 I've tested this library against Stripe API v1 and above. [The docs are up at Hex](http://hexdocs.pm/stripity_stripe/)
+
 Works with API version 2015-10-16
 
 ## Usage
@@ -46,7 +47,7 @@ defp application do
 end
 ```
 
-Then create a config folder and add a Stripe secret key:
+Then create a config folder and add a Stripe secret key (and optional platform client id if you are using Stripe Connect):
 
 ```ex
 use Mix.Config
@@ -63,7 +64,7 @@ Stripe.start
 HTTPoison is started automatically in [Stripe.ex](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe.ex)
 
 ## Testing
-If you start contributing and you want to run mix test, first you need to export STRIPE_SECRET_KEY environment variable in the same shell as the one you will be running mix test in. All tests have the @tag disabled: false and the test runner is configured to ignore disabled: true. This helps to turn tests on/off when working in them. Most of the tests depends on the order of execution (test random seed = 0) to minize runtime. I've tried having each tests isolated but this made it take ~10 times longer.
+If you start contributing and you want to run mix test, first you need to export STRIPE_SECRET_KEY environment variable in the same shell as the one you will be running mix test in. All tests have the @tag disabled: false and the test runner is configured to ignore disabled: true. This helps to turn tests on/off when working in them. Most of the tests depends on the order of execution (test random seed = 0) to minimize runtime. I've tried having each tests isolated but this made it take ~10 times longer.
 ```
 export STRIPE_SECRET_KEY="yourkey"
 mix test
@@ -105,7 +106,7 @@ case events[:has_more] do
 end
 ```
 <a name="connect"></a>
-# [Connect](https://stripe.com/docs/connect/standalone-accounts)
+# Connect
 
 Stripe Connect allows you to provide your customers with an easy onboarding to
 their own Stripe account. This is useful when you run an ecommerce as a service platform. Each merchant can transact using their own account using your platform. Then your platform uses stripity API with their own API key obtained by the onboarding process.
@@ -155,7 +156,7 @@ resp will look like this
 
 You can then pass the "access_token" to the other API modules to act on their behalf.
 
-See a demo using the phoenix framework with the bare minimum to get this working.[Demo](https://github.com/nicrioux/stripity-phoenix-connect)
+See a demo using the phoenix framework with the bare minimum to get this working.[Demo](https://github.com/nicrioux/stripity-connect-phoenix)
 
 # Testing Connect
 The tests are currently manual as they require a unique oauth authorization code per test. You need to obtain this code maunally using the stripe connect workflow (that your user would go through using the above url).
