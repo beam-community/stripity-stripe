@@ -8,7 +8,7 @@ An Elixir library for working with [Stripe](https://stripe.com/). With this libr
  - Create, list, and update Invoices
  - Create and retrieve tokens for credit card and bank account
  - List and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve)
- - manage Accounts [Stripe connected account](https://stripe.com/connect)
+ - Create, list, update and delete Accounts
  - And yes, run charges with or without an existing Customer
 
 Why another Stripe Library? Currently there are a number of them in the Elixir world that are, well just not "done" yet. I started to fork/help but soon it became clear to me that what I wanted was:
