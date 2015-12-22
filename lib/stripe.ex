@@ -54,7 +54,6 @@ defmodule Stripe do
   Returns dict
   """
   def make_request_with_key( method, endpoint, key, body \\ [], headers \\ [], options \\ []) do
-    
     rb = Stripe.URI.encode_query(body)
     rh = req_headers( key )
         |> Dict.merge(headers)
@@ -63,7 +62,7 @@ defmodule Stripe do
     {:ok, response} = request(method, endpoint, rb, rh, options)
     response.body
   end
-  
+
   @doc """
   Boilerplate code to make requests with the key read from config or env.see config_or_env_key/0
   Args:

@@ -117,7 +117,7 @@ defmodule Stripe.TokensTest do
       {:ok, res} ->
         #Apex.ap res
         assert res.id
-        assert res.status == "paid"
+        assert res.status == "succeeded"
         assert res.paid == true
         assert res.object == "charge"
         {:error, err} -> flunk err

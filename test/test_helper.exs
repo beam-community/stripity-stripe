@@ -34,4 +34,17 @@ defmodule Helper do
     {:ok, res} = Stripe.Customers.create new_customer
     res
   end
+
+  def create_test_account(email) do
+    new_account = [
+      email: email,
+      managed: true,
+      legal_entity: [
+        type: "individual"
+      ]
+    ]
+    {:ok, res} = Stripe.Accounts.create new_account
+    res
+  end
 end
+
