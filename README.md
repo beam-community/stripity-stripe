@@ -1,4 +1,4 @@
-# Stripe for Elixir (works with API version 2015-10-16 (latest) )
+# Stripe for Elixir
 
 An Elixir library for working [Stripe](https://stripe.com/).
 
@@ -28,6 +28,7 @@ As I began digging things up with these other libraries it became rather apparen
 ## Stripe API
 
 I've tested this library against Stripe API v1 and above. [The docs are up at Hex](http://hexdocs.pm/stripity_stripe/)
+Works with API version 2015-10-16
 
 ## Usage
 
