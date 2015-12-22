@@ -2,66 +2,60 @@ defmodule Stripe.Subscriptions do
   @moduledoc """
   Main API for working with Subscriptions at Stripe. Through this API you can:
   - create
-  - update
+  - change
+  - retrieve
   - cancel
   - cancel_all
   - list all
   - count all
+
+  Supports Connect workflow by allowing to pass in any API key explicitely (vs using the one from env/config).
+
+  (API ref https://stripe.com/docs/api#subscriptions)
   """
   @endpoint "customers"
 
   @doc """
-  Starts a subscription for the specified customer. Note that if you pass in the customer *and* subscription information, both will be created at the same time.
+  Starts a subscription for the specified customer. 
 
   ## Example
 
   ```
     new_sub = [
-      email: "jill@test.com",
-      description: "Poop on the Potty",
-      plan: "standard",
-      source: [
-        object: "card",
-        number: "4111111111111111",
-        exp_month: 01,
-        exp_year: 2018,
-        cvc: 123,
-        name: "Jill Subscriber"
+      plan: plan_id,
+      metadata: [
+      ...
       ]
     ]
-    {:ok, sub} = Stripe.Subscriptions.create new_sub
+    {:ok, sub} = Stripe.Subscriptions.create customer_id, new_sub
   ```
-
-  You can also just pass along the customer id and the plan name:
-
-  ```
-    new_sub = [
-      plan: plan_id, #like "standard",
-      customer: "customer_id"
-    ]
-    {:ok, sub} = Stripe.Subscriptions.create new_sub
-  ```
-
   """
-  def create(opts) do
-    customer_id = Keyword.get opts, :customer
-    plan_id = Keyword.get opts, :plan
-    create( customer_id, plan_id )
+  def create( customer_id, opts ) do
+    create customer_id, opts, Stripe.config_or_env_key
   end
 
   @doc """
-  Creates a subscription for the specified customer.
+  Starts a subscription for the specified customer using given api key. 
 
   ## Example
 
   ```
-    Stripe.Subscriptions.create "customer_id", "plan_id"
+  new_sub = [
+    plan: plan_id,
+    metadata: [
+    ...
+    ]
+  ]
+  {:ok, sub} = Stripe.Subscriptions.create customer_id, opts, key
   ```
   """
-  def create(customer_id, plan_id) do
-    Stripe.make_request(:post, "#{@endpoint}/#{customer_id}/subscriptions", [plan: plan_id])
-      |> Stripe.Util.handle_stripe_response
+  def create(customer_id, opts, key) do
+    plan_id = Keyword.get opts, :plan
+
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}/subscriptions", key, opts)
+    |> Stripe.Util.handle_stripe_response
   end
+
 
   @doc """
   Returns a subscription; customer_id and subscription_id are required.
@@ -69,13 +63,26 @@ defmodule Stripe.Subscriptions do
   ## Example
 
   ```
-    Stripe.Customers.get_subscription "customer_id", "subscription_id"
+    {:ok, customer} = Stripe.Customers.get_subscription "customer_id", "subscription_id"
   ```
-
   """
   def get(customer_id, sub_id) do
-    Stripe.make_request(:get, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}")
-      |> Stripe.Util.handle_stripe_response
+    get customer_id, sub_id, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Returns a subscription using given api key; customer_id and subscription_id are required.
+
+  ## Example
+
+  ```
+  {:ok, sub} = Stripe.Subscriptions.get "customer_id", "subscription_id", key
+
+
+  """
+  def get(customer_id, sub_id, key) do
+    Stripe.make_request_with_key(:get, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key)
+    |> Stripe.Util.handle_stripe_response
   end
 
   @doc """
@@ -88,10 +95,38 @@ defmodule Stripe.Subscriptions do
   ```
   """
   def change(customer_id, sub_id, plan_id) do
-    Stripe.make_request(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", [plan: plan_id])
+    change customer_id, sub_id, plan_id, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Changes a customer's subscription (plan, description, etc - see Stripe API for acceptable options).
+  Customer ID and Subscription ID are required for this.
+  Using a given stripe key to apply against the account associated.
+
+  ## Example
+
+  ```
+  Stripe.Customers.change_subscription "customer_id", "subscription_id", "plan_id", key
+  ```
+  """
+  def change(customer_id, sub_id, plan_id, key) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key, [plan: plan_id])
     |> Stripe.Util.handle_stripe_response
   end
 
+  @doc """
+  Changes a customer's subscription using given api key(plan, description, etc - see Stripe API for acceptable options).
+  Customer ID, Subscription ID, opts and api key are required for this.
+
+  ## Example
+  ```
+  Stripe.Subscriptions.change "customer_id", "subscription_id", "plan_id", key
+  ```
+  """
+  def change(customer_id, sub_id, opts, key) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key, opts)
+    |> Stripe.Util.handle_stripe_response
+  end
 
   @doc """
   Cancels a subscription
@@ -102,10 +137,24 @@ defmodule Stripe.Subscriptions do
     Stripe.Subscriptions.cancel "customer_id", "subscription_id"
   ```
   """
-  def cancel(customer_id, sub_id) do
-    Stripe.make_request(:delete, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}")
-      |> Stripe.Util.handle_stripe_response
+  def cancel(customer_id, sub_id, opts \\ []) do
+    cancel customer_id, sub_id, opts, Stripe.config_or_env_key
   end
+
+  @doc """
+  Cancels a subscription with given api key.
+
+  ## Example
+
+  ```
+  Stripe.Subscriptions.cancel "customer_id", "subscription_id", key
+  ```
+  """
+  def cancel(customer_id, sub_id, opts, key) do
+    Stripe.make_request_with_key(:delete, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key)
+    |> Stripe.Util.handle_stripe_response
+  end
+  
   
   @doc """
   Cancel all subscriptions for account.
@@ -116,9 +165,21 @@ defmodule Stripe.Subscriptions do
   ```
   """
   def cancel_all(customer_id) do
-    case all(customer_id) do
+    cancel_all customer_id, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Cancel all subscriptions for account using given api key.
+
+  #Example
+  ```
+  Stripe.Subscriptions.cancel_all customer_id, key
+  ```
+  """
+  def cancel_all(customer_id, key) do
+    case all(customer_id, [], "", key) do
       {:ok, subs} ->
-        Enum.each subs, fn sub -> cancel(customer_id, sub["id"]) end
+        Enum.each subs, fn sub -> cancel(customer_id, sub["id"], key) end
       {:error, err} -> raise err
     end
   end
@@ -134,19 +195,34 @@ defmodule Stripe.Subscriptions do
   ```
 
   """
-  def all( customer_id, accum \\ [], startingAfter \\ "") do
-    case Stripe.Util.list_raw("#{@endpoint}/#{customer_id}/subscriptions",@max_fetch_size, startingAfter) do
+  def all( customer_id, accum \\ [], starting_after \\ "") do
+    all customer_id, accum, starting_after, Stripe.config_or_env_key
+  end
+
+  @doc """
+  List all subscriptions using given api key.
+
+  ##Example
+
+  ```
+  {:ok, subscriptions} = Stripe.Subscriptions.all customer_id, [], "", key
+  ```
+
+  """
+  def all( customer_id, accum, starting_after, key) do
+    case Stripe.Util.list_raw("#{@endpoint}/#{customer_id}/subscriptions", key,@max_fetch_size, starting_after) do
       {:ok, resp}  ->
         case resp[:has_more] do
           true ->
             last_sub = List.last( resp[:data] )
-            all( customer_id, resp[:data] ++ accum, last_sub["id"] )
+            all( customer_id, resp[:data] ++ accum, last_sub["id"], key )
           false ->
             result = resp[:data] ++ accum
             {:ok, result}
         end
     end
   end
+
 
   @doc """
   Count total number of subscriptions.
@@ -157,6 +233,18 @@ defmodule Stripe.Subscriptions do
   ```
   """
   def count(customer_id) do
-    Stripe.Util.count "#{@endpoint}/#{customer_id}/subscriptions"
+    count customer_id, Stripe.config_or_env_key
   end
- end
+
+  @doc """
+  Count total number of subscriptions using given api key.
+
+  ## Example
+  ```
+  {:ok, count} = Stripe.Subscriptions.count customer_id, key
+  ```
+  """
+  def count(customer_id, key) do
+    Stripe.Util.count "#{@endpoint}/#{customer_id}/subscriptions", key
+  end
+end

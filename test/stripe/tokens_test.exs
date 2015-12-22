@@ -2,7 +2,7 @@ defmodule Stripe.TokensTest do
   use ExUnit.Case
 
   @tags disabled: false
-  test "A bank account token is created"  do
+  test "Create bank account token works"  do
     params = [
       bank_account: [
         country: "US",
@@ -21,7 +21,7 @@ defmodule Stripe.TokensTest do
   end
 
   @tags disabled: false
-  test "A credit card token is created"  do
+  test "Create credit card token works"  do
     params = [
       card: [
         number: "4242424242424242",
@@ -40,7 +40,26 @@ defmodule Stripe.TokensTest do
   end
 
   @tags disabled: false
-  test "A token is retrieved by its id" do
+  test "Create credit card token w/key works"  do
+    params = [
+      card: [
+        number: "4242424242424242",
+        exp_month: 8,
+        exp_year: 2016,
+        cvc: "314"
+      ]
+    ]
+    case Stripe.Tokens.create(params, Stripe.config_or_env_key) do
+      {:ok, res} ->
+        #Apex.ap res
+        assert res.id
+        assert res.type == "card"
+      {:error, err} -> flunk err
+    end
+  end
+
+  @tags disabled: false
+  test "Get by id works" do
     {:ok, token} = Stripe.Tokens.create [
       card: [
         number: "4242424242424242",
@@ -60,7 +79,28 @@ defmodule Stripe.TokensTest do
   end
 
   @tags disabled: false
-  test "A token is used for a charge" do
+  test "Get by id w/key works" do
+    {:ok, token} = Stripe.Tokens.create [
+      card: [
+        number: "4242424242424242",
+        exp_month: 8,
+        exp_year: 2016,
+        cvc: "314"
+      ]
+    ]
+    #Apex.ap token
+    case Stripe.Tokens.get token.id, Stripe.config_or_env_key do
+      {:ok, res} ->
+        #Apex.ap res
+        assert res.id
+        assert res.type == "card"
+      {:error, err} -> flunk err
+    end
+  end
+
+
+  @tags disabled: false
+  test "Charge with token works" do
     {:ok, token} = Stripe.Tokens.create [
       card: [
         number: "4242424242424242",

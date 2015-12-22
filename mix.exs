@@ -3,7 +3,7 @@ defmodule Stripe.Mixfile do
 
   def project do
     [ app: :stripity_stripe,
-      version: "0.5.0",
+      version: "1.0.0",
       description: "A Stripe Library for Elixir",
       package: package,
       elixir: "~> 1.1.1",
@@ -39,7 +39,7 @@ defmodule Stripe.Mixfile do
 
   def package do
     [
-      maintainers: ["Rob Conery"],
+      maintainers: ["Rob Conery","Nic Rioux"],
       licenses: ["New BSD"],
       links: %{"GitHub" => "https://github.com/robconery/stripity-stripe"}
     ]

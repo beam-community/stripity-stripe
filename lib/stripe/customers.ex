@@ -8,7 +8,10 @@ defmodule Stripe.Customers do
   -delete all customer
   -count customers
 
-  https://stripe.com/docs/api/curl#customer_object
+  Supports Connect workflow by allowing to pass in any API key explicitely (vs using the one from env/config).
+
+
+  (API ref: https://stripe.com/docs/api/curl#customer_object
   """
 
   @endpoint "customers"
@@ -39,8 +42,21 @@ defmodule Stripe.Customers do
 
   """
   def create(params) do
-    Stripe.make_request(:post, @endpoint, params)
-      |> Stripe.Util.handle_stripe_response
+    create params, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Creates a Customer with the given parameters - all of which are optional.
+  Using a given stripe key to apply against the account associated.
+
+  ## Example
+  ```
+  {:ok, res} = Stripe.Customers.create new_customer, key
+  ```
+  """
+  def create(params, key) do
+    Stripe.make_request_with_key(:post, @endpoint, key, params)
+    |> Stripe.Util.handle_stripe_response
   end
 
 
@@ -49,168 +65,26 @@ defmodule Stripe.Customers do
   ## Example
 
   ```
-    Stripe.Customers.get "customer_id"
+    {:ok, cust} = Stripe.Customers.get "customer_id" 
   ```
 
   """
   def get(id) do
-    Stripe.make_request(:get, "#{@endpoint}/#{id}")
-      |> Stripe.Util.handle_stripe_response
-  end
-
-
-  @doc """
-  Changes a customer's subscription (plan, description, etc - see Stripe API for acceptable options).
-  Customer ID and Subscription ID are required for this.
-
-  ## Example
-
-  ```
-    Stripe.Customers.change_subscription "customer_id", "subscription_id", plan: "premium"
-  ```
-
-  """
-  def change_subscription(id, sub_id, opts) do
-    Stripe.make_request(:post, "#{@endpoint}/#{id}/subscriptions/#{sub_id}", opts)
-      |> Stripe.Util.handle_stripe_response
+    get id, Stripe.config_or_env_key
   end
 
   @doc """
-  Starts a subscription for the specified customer. Note that if you pass in the customer *and* subscription information, both will be created at the same time.
-Request/response object specs: https://stripe.com/docs/api/curl#create_customer
+  Retrieves a given Customer with the specified ID. Returns 404 if not found.
+  Using a given stripe key to apply against the account associated.
   ## Example
 
   ```
-    new_sub = [
-      email: "jill@test.com",
-      description: "Poop on the Potty",
-      plan: "standard",
-      source: [
-        object: "card",
-        number: "4111111111111111",
-        exp_month: 01,
-        exp_year: 2018,
-        cvc: 123,
-        name: "Jill Subscriber",
-        metadata:[
-           app_order_id: "ABC123"
-           app_state_x: "xyz"
-        ]
-      ]
-    ]
-    {:ok, sub} = Stripe.Customers.create_subscription new_sub
-  ```
-
-  You can also just pass along the customer id and the plan name:
-
-  ```
-    new_sub = [
-      plan: "standard",
-      customer: "customer_id"
-    ]
-    {:ok, sub} = Stripe.Customers.create_subscription new_sub
-  ```
-
-  """
-  def create_subscription(opts) do
-    Stripe.make_request(:post, "#{@endpoint}", opts)
-      |> Stripe.Util.handle_stripe_response
-  end
-
-  @doc """
-  Creates a subscription for the specified customer.
-
-  ## Example
-
-  ```
-    Stripe.Customers.create_subscription "customer_id", "plan"
+  {:ok, cust} = Stripe.Customers.get "customer_id", key
   ```
   """
-  def create_subscription(id, opts) do
-    Stripe.make_request(:post, "#{@endpoint}/#{id}/subscriptions", opts)
-      |> Stripe.Util.handle_stripe_response
-  end
-
-  @doc """
-  Returns a subscription; customer_id and subscription_id are required.
-
-  ## Example
-
-  ```
-    Stripe.Customers.get_subscription "customer_id", "subscription_id"
-  ```
-
-  """
-  def get_subcription(id, sub_id) do
-    Stripe.make_request(:get, "#{@endpoint}/#{id}/subscriptions/#{sub_id}")
-      |> Stripe.Util.handle_stripe_response
-  end
-
-
-  @doc """
-  Invoices a customer according to Stripe's invoice rules. This is not the same as a charge.
-
-  ## Example
-
-  ```
-    Stripe.Customers.create_invoice "customer_id", "subscription_id"
-  ```
-
-  """
-  def create_invoice(id, params) do
-    params = Keyword.put_new params, :customer, id
-    Stripe.make_request(:post, "invoices", params)
-      |> Stripe.Util.handle_stripe_response
-  end
-
-  @doc """
-  Returns a list of invoices for a given customer
-
-  ## Example
-
-  ```
-    Stripe.Customers.get_invoices "customer_id"
-  ```
-
-  """
-  def get_invoices(id, params \\ []) do
-    params = Keyword.put_new params, :limit, 10
-    params = Keyword.put_new params, :customer, id
-
-    Stripe.make_request(:get, "invoices", params )
-      |> Stripe.Util.handle_stripe_response
-  end
-
-  @doc """
-  Cancels a subscription
-
-  ## Example
-
-  ```
-    Stripe.Customers.cancel_subscription "customer_id", "subscription_id"
-  ```
-  """
-  def cancel_subscription(id, sub_id) do
-    Stripe.make_request(:delete, "#{@endpoint}/#{id}/subscriptions/#{sub_id}")
-      |> Stripe.Util.handle_stripe_response
-
-  end
-
-
-  @doc """
-  Returns all subscriptions for a Customer.
-
-  ## Example
-
-  ```
-    Stripe.Customers.get_subscriptions "customer_id"
-  ```
-
-  """
-  def get_subscriptions(id) do
-    Stripe.make_request(:get, "#{@endpoint}/#{id}/subscriptions")
-      |> Stripe.Util.handle_stripe_response
-
+  def get(id, key) do
+    Stripe.make_request_with_key(:get, "#{@endpoint}/#{id}", key)
+    |> Stripe.Util.handle_stripe_response
   end
 
   @doc """
@@ -219,14 +93,26 @@ Request/response object specs: https://stripe.com/docs/api/curl#create_customer
   ## Example
 
   ```
-    {:ok, customers} = Stripe.Customers.list(20)
+    {:ok, customers} = Stripe.Customers.list(starting_after, 20)
   ```
   """
-  def list(limit \\ 10) do
-    Stripe.make_request(:get, "#{@endpoint}?limit=#{limit}")
-      |> Stripe.Util.handle_stripe_response
+  def list(starting_after,limit \\ 10) do
+    list Stripe.config_or_env_key, "", limit
   end
 
+  @doc """
+  Returns a list of Customers with a default limit of 10 which you can override with `list/1`
+  Using a given stripe key to apply against the account associated.
+
+  ## Example
+
+  ```
+  {:ok, customers} = Stripe.Customers.list(key,starting_after,20)
+  ```
+  """
+  def list(key, starting_after, limit) do
+    Stripe.Util.list @endpoint, key, limit, starting_after
+  end
 
   @doc """
   Deletes a Customer with the specified ID
@@ -234,12 +120,26 @@ Request/response object specs: https://stripe.com/docs/api/curl#create_customer
   ## Example
 
   ```
-    Stripe.Customers.delete "customer_id"
+  {:ok, resp} =  Stripe.Customers.delete "customer_id"
   ```
   """
   def delete(id) do
-    Stripe.make_request(:delete, "#{@endpoint}/#{id}")
-      |> Stripe.Util.handle_stripe_response
+    delete id, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Deletes a Customer with the specified ID
+  Using a given stripe key to apply against the account associated.
+
+  ## Example
+
+  ```
+  {:ok, resp} = Stripe.Customers.delete "customer_id", key
+  ```
+  """
+  def delete(id,key) do
+    Stripe.make_request_with_key(:delete, "#{@endpoint}/#{id}", key)
+    |> Stripe.Util.handle_stripe_response
   end
   
   @doc """
@@ -259,6 +159,24 @@ Request/response object specs: https://stripe.com/docs/api/curl#create_customer
     end
   end
 
+  @doc """
+  Deletes all Customers
+  Using a given stripe key to apply against the account associated.
+
+  ## Example
+
+  ```
+  Stripe.Customers.delete_all key
+  ```
+  """
+  def delete_all key do
+    case all  do
+      {:ok, customers} ->
+        Enum.each customers, fn c -> delete(c["id"], key) end
+      {:error, err} -> raise err
+    end
+  end
+
   @max_fetch_size 100
   @doc """
   List all customers.
@@ -270,21 +188,35 @@ Request/response object specs: https://stripe.com/docs/api/curl#create_customer
   ```
 
   """
-  def all( accum \\ [], startingAfter \\ "") do
-    case Stripe.Util.list_raw("#{@endpoint}",@max_fetch_size, startingAfter) do
+  def all( accum \\ [], starting_after \\ "") do
+    all Stripe.config_or_env_key, accum, starting_after
+  end
+  
+  @doc """
+  List all customers.
+  Using a given stripe key to apply against the account associated.
+
+  ##Example
+
+  ```
+  {:ok, customers} = Stripe.Customers.all key, accum, starting_after
+  ```
+  """
+  def all( key, accum, starting_after) do
+    case Stripe.Util.list_raw("#{@endpoint}",key, @max_fetch_size, starting_after) do
       {:ok, resp}  ->
         case resp[:has_more] do
           true ->
             last_sub = List.last( resp[:data] )
-            all( resp[:data] ++ accum, last_sub["id"] )
+            all( key, resp[:data] ++ accum, last_sub["id"] )
           false ->
             result = resp[:data] ++ accum
             {:ok, result}
         end
-    {:error, err} -> raise err
+      {:error, err} -> raise err
     end
   end
-  
+
   @doc """
   Count total number of customers.
 
@@ -294,6 +226,19 @@ Request/response object specs: https://stripe.com/docs/api/curl#create_customer
   ```
   """
   def count do
-    Stripe.Util.count "#{@endpoint}"
+    count Stripe.config_or_env_key
+  end
+
+  @doc """
+  Count total number of customers.
+  Using a given stripe key to apply against the account associated.
+
+  ## Example
+  ```
+  {:ok, count} = Stripe.Customers.count key
+  ```
+  """
+  def count( key )do
+    Stripe.Util.count "#{@endpoint}", key
   end
 end

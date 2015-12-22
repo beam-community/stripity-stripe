@@ -8,6 +8,7 @@ defmodule Stripe do
   use HTTPoison.Base
 
   def start(_type, _args) do
+    start #start HTTPoison.Base.start inherited from use statement 
     Stripe.Supervisor.start_link
   end
 
@@ -59,15 +60,7 @@ defmodule Stripe do
         |> Dict.merge(headers)
         |> Dict.to_list
 
-    {:ok, response} = case method do
-                        :get     -> get(     endpoint,     rh, options)
-                        :put     -> put(     endpoint, rb, rh, options)
-                        :head    -> head(    endpoint,     rh, options)
-                        :post    -> post(    endpoint, rb, rh, options)
-                        :patch   -> patch(   endpoint, rb, rh, options)
-                        :delete  -> delete(  endpoint,     rh, options)
-                        :options -> options( endpoint,     rh, options)
-                      end
+    {:ok, response} = request(method, endpoint, rb, rh, options)
     response.body
   end
   
@@ -86,23 +79,27 @@ defmodule Stripe do
     make_request_with_key( method, endpoint, config_or_env_key, body, headers, options )
   end
 
-  def make_oauth_token_callback_request(body) do
-    IO.puts "=====================oauthB"
-    rb = Stripe.URI.encode_query(body)
-    rh = req_headers( "sk_test_ZQ1ofROPQQjS23vI8qQhKwi0" )
-        |> Dict.to_list
-    options = []
-    HTTPoison.request(:post, "https://connect.stripe.com/oauth/token", rb, rh, options)
-  end
 
-  def make_oauth_authorize_request(body) do
-    IO.puts "=====================authorizeA"
+  def make_oauth_token_callback_request(body) do
     rb = Stripe.URI.encode_query(body)
     rh = req_headers( Stripe.config_or_env_key )
         |> Dict.to_list
-    options = []
-    HTTPoison.request(:post, "https://connect.stripe.com/oauth/authorize", rb, rh, options)    
+        options = []
+    HTTPoison.request(:post, "#{Stripe.Connect.base_url}oauth/token", rb, rh, options)
   end
+
+  def make_oauth_deauthorize_request(stripe_user_id) do
+    rb = Stripe.URI.encode_query([
+      stripe_user_id: stripe_user_id,
+      client_id: Stripe.config_or_env_platform_client_id])
+    rh = req_headers( Stripe.config_or_env_key)
+    |> Dict.to_list
+
+    options = []
+    HTTPoison.request(:post, "#{Stripe.Connect.base_url}oauth/deauthorize", rb, rh, options)
+  end
+
+
 
   @doc """
   Grabs STRIPE_SECRET_KEY from system ENV

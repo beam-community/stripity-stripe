@@ -17,7 +17,7 @@ defmodule Stripe.InvoiceItems do
   Creates an InvoiceItem for a Customer/Subscription 
   """
   def create(params) do
-    Stripe.make_request(:post, @endpoint, params)
+    Stripe.make_request_with_key(:post, @endpoint, Stripe.config_or_env_key, params)
       |> Stripe.Util.handle_stripe_response
   end
 
