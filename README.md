@@ -4,15 +4,15 @@ An Elixir library for working [Stripe](https://stripe.com/).
 
  - Manage accounts (your own, standalone/managed via connect) [Stripe.Accounts](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/accounts.ex)
  - Manage customers [Stripe.Customers](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/customers.ex)
- - Manage Subscriptions[Stripe.Subscriptions](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/subscriptions.ex)
- - Manage plans[Stripe.Plans](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/plans.ex)
- - Manage Invoices[Stripe.Invoices](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoices.ex)
- - Manage Invoice Items[Stripe.InvoiceItems](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoice_items.ex)
- - Manage tokens for credit card and bank account[Stripe.Tokens](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/tokens.ex)
- - List and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve)[Stripe.Events](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/events.ex)
- - Manage/capture charges with or without an existing Customer[Stripe.Charges](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/charges.ex)
+ - Manage Subscriptions [Stripe.Subscriptions](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/subscriptions.ex)
+ - Manage plans [Stripe.Plans](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/plans.ex)
+ - Manage Invoices [Stripe.Invoices](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoices.ex)
+ - Manage Invoice Items [Stripe.InvoiceItems](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoice_items.ex)
+ - Manage tokens for credit card and bank account [Stripe.Tokens](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/tokens.ex)
+ - List and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve) [Stripe.Events](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/events.ex)
+ - Manage/capture charges with or without an existing Customer [Stripe.Charges](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/charges.ex)
 
-- Facilitate using the Connect API (for standalone/managed accounts)[Stripe Connect](https://stripe.com/docs/connect) by allowing you to supply your own key. The oauth callback processor (not endpoint) is supplied by this library as well as a connect button url generator. See below for [Instructions](#connect). [Stripe Connect API reference](https://stripe.com/docs/connect/reference)
+- Facilitate using the Connect API (for standalone/managed accounts) [Stripe Connect](https://stripe.com/docs/connect) by allowing you to supply your own key. The oauth callback processor (not endpoint) is supplied by this library as well as a connect button url generator. See below for [Instructions](#connect). [Stripe Connect API reference](https://stripe.com/docs/connect/reference)
 
 - All functions are available with a parameter that allow a stripe api key to be passed in and be used for the underlying request. This api key would be the one obtained by the oauth connect authorize workflow.
 
