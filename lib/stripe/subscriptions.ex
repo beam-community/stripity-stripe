@@ -184,6 +184,21 @@ defmodule Stripe.Subscriptions do
     end
   end
 
+  @doc """
+  Changes the payment source for a subscription.
+
+  #Example
+  ```
+  source = [object: "card", number: "4111111111111111", exp_month: 01, exp_year: 2018, cvc: 123]
+  Stripe.Subscriptions.change_payment_source("customer_id", "subscription_id", source)
+  ```
+  """
+  def change_payment_source(customer_id, sub_id, source) do
+    data = [source: source]
+    Stripe.make_request(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", data)
+    |> Stripe.Util.handle_stripe_response
+  end
+
   @max_fetch_size 100
   @doc """
   List all subscriptions.
