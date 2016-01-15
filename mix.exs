@@ -3,7 +3,7 @@ defmodule Stripe.Mixfile do
 
   def project do
     [ app: :stripity_stripe,
-      version: "1.0.0",
+      version: "1.0.1",
       description: "A Stripe Library for Elixir",
       package: package,
       elixir: "~> 1.1.1",
@@ -29,8 +29,8 @@ defmodule Stripe.Mixfile do
 
   defp deps(:prod) do
     [
-      {:httpoison, "~> 0.7.4" },
-      {:hackney, "~> 1.3.2" }, # not included in hex version of httpoison :(
+      {:httpoison, "~> 0.8.0" },
+      {:hackney, "~> 1.4.8" }, # not included in hex version of httpoison :(
       {:poison, "~> 1.5"},
       {:ex_doc, "~> 0.7", only: :dev},
       {:earmark, ">= 0.0.0"}
