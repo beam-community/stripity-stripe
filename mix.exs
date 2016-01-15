@@ -3,7 +3,7 @@ defmodule Stripe.Mixfile do
 
   def project do
     [ app: :stripity_stripe,
-      version: "1.0.1",
+      version: "1.1.0",
       description: "A Stripe Library for Elixir",
       package: package,
       elixir: "~> 1.1.1",
