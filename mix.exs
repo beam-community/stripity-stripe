@@ -6,7 +6,7 @@ defmodule Stripe.Mixfile do
       version: "1.1.0",
       description: "A Stripe Library for Elixir",
       package: package,
-      elixir: "~> 1.1.1",
+      elixir: "~> 1.1",
       deps: deps(Mix.env) ]
   end
 
