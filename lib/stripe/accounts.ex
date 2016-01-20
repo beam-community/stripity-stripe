@@ -71,11 +71,69 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
+  Creates an Account with the given parameters
+
+  At the bare minimum, to create and connect to a managed account, simply set
+  managed to true in the creation request, and provide a country. The country,
+  once set, cannot be changed.
+
+  https://stripe.com/docs/connect/managed-accounts
+
+  ## Example
+
+  ```
+    updated_account = [
+      email: "test@example.com",
+      managed: true,
+      tos_acceptance: [
+        date: :os.system_time(:seconds),
+        ip: "127.0.0.1"
+      ],
+      legal_entity: [
+        type: "individual",
+        dob: [
+          day: 1,
+          month: 1,
+          year: 1991
+        ],
+        first_name: "John",
+        last_name: "Doe"
+      ],
+      external_account: [
+        object: "bank_account",
+        country: "US",
+        currency: "usd",
+        routing_number: "110000000",
+        account_number: "000123456789"
+      ]
+    ]
+    {:ok, res} = Stripe.Accounts.update account_id, updated_account
+  ```
+
+  """
+  def update(id, params) do
+    update id, params, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Save as update(id, params).
+  Accepts a stripe api key (for connect workflow)
+  # Example
+  ```
+  {:ok, resp} = Stripe.Account.update(id,params,key)
+  ```
+  """
+  def update(id, params, key) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{id}", key, params)
+    |> Stripe.Util.handle_stripe_response
+  end
+
+  @doc """
   Retrieves a given Account with the specified ID. Returns 404 if not found.
   ## Example
 
   ```
-    {:ok, account} = Stripe.Accounts.get "account_id" 
+    {:ok, account} = Stripe.Accounts.get "account_id"
   ```
 
   """
@@ -109,7 +167,7 @@ defmodule Stripe.Accounts do
 
   """
   def all( accum \\ [], starting_after \\ "") do
-    all Stripe.config_or_env_key, accum, starting_after 
+    all Stripe.config_or_env_key, accum, starting_after
   end
 
   @doc """
@@ -241,7 +299,7 @@ defmodule Stripe.Accounts do
   @doc """
   Returns a list of Accounts with a default limit of 10 which you can override with `list/1`
   Accepts a stripe api key (for connect workflow)
-  
+
   ## Example
 
   ```
