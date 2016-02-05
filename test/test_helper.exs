@@ -19,6 +19,19 @@ defmodule Helper do
     Stripe.Plans.delete "test-dlx"
   end
 
+  def create_test_token do
+    params = [
+      card: [
+        number: "4242424242424242",
+        exp_month: 8,
+        exp_year: 2016,
+        cvc: "314"
+      ]
+    ]
+    {:ok, token} = Stripe.Tokens.create(params)
+    token
+  end
+
   def create_test_customer( email ) do
     new_customer = [
       email: "#{email}",
