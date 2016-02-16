@@ -36,7 +36,7 @@ Works with API version 2015-10-16
 Install the dependency:
 
 ```ex
-{:stripity_stripe, "~> 1.0.0"}
+{:stripity_stripe, "~> 1.2.0"}
 ```
 
 Next, add to your applications:
