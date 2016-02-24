@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stripe.Plans – stripity_stripe v0.3.0</title>
+    <title>Stripe.Plans – stripity_stripe v1.3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -28,7 +28,7 @@
         stripity_stripe
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.3.0
+        v1.3.0
       </h2>
     </div>
     
@@ -89,6 +89,28 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#all/2">all(accum \\ [], startingAfter \\ &quot;&quot;)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>List all plans.
+##Example</p>
+<pre><code class="elixir">{:ok, plans} = Stripe.Plans.all</code></pre>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#all/3">all(key, accum, startingAfter)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>List all plans w/ given key.
+##Example</p>
+<pre><code class="elixir">{:ok, plans} = Stripe.Plans.all key</code></pre>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#change/2">change(id, params)</a>
   </div>
   
@@ -98,10 +120,37 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#change/3">change(id, params, key)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#count/0">count()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#count/1">count(key)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#create/1">create(params)</a>
   </div>
   
     <div class="summary-synopsis"><p>Creates a Plan. Note that <code class="inline">currency</code> and <code class="inline">interval</code> are required parameters, and are defaulted to “USD” and “month”</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create/2">create(params, key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Creates a Plan using a given key. Note that <code class="inline">currency</code> and <code class="inline">interval</code> are required parameters, and are defaulted to “USD” and “month”</p>
 </div>
   
 </div>
@@ -116,10 +165,50 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#delete/2">delete(id, key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deletes a Plan with the specified ID using the given key</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_all/0">delete_all()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deletes all Plans</p>
+<h2>Example</h2>
+<pre><code class="elixir">Stripe.Plans.delete_all</code></pre>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_all/1">delete_all(key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deletes all Plans w/given key</p>
+<h2>Example</h2>
+<pre><code class="elixir">Stripe.Plans.delete_all key</code></pre>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#list/1">list(limit \\ 10)</a>
   </div>
   
     <div class="summary-synopsis"><p>Returns a list of Plans</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#list/2">list(key, limit)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns a list of Plans using the given key</p>
 </div>
   
 </div>
@@ -144,7 +233,39 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="change/2">
+          <div class="detail" id="all/2">
+  <div class="detail-header">
+    <a href="#all/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">all(accum \\ [], startingAfter \\ &quot;&quot;)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>List all plans.
+##Example</p>
+<pre><code class="elixir">{:ok, plans} = Stripe.Plans.all</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="all/3">
+  <div class="detail-header">
+    <a href="#all/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">all(key, accum, startingAfter)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>List all plans w/ given key.
+##Example</p>
+<pre><code class="elixir">{:ok, plans} = Stripe.Plans.all key</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="change/2">
   <div class="detail-header">
     <a href="#change/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
@@ -160,6 +281,45 @@
 
   </section>
 </div>
+<div class="detail" id="change/3">
+  <div class="detail-header">
+    <a href="#change/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">change(id, params, key)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="count/0">
+  <div class="detail-header">
+    <a href="#count/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">count()</span>
+      
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="count/1">
+  <div class="detail-header">
+    <a href="#count/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">count(key)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
 <div class="detail" id="create/1">
   <div class="detail-header">
     <a href="#create/1" class="detail-link" title="Link to this function">
@@ -173,6 +333,22 @@
     <p>Creates a Plan. Note that <code class="inline">currency</code> and <code class="inline">interval</code> are required parameters, and are defaulted to “USD” and “month”</p>
 <h2>Example</h2>
 <pre><code class="elixir">{:ok, plan} = Stripe.Plans.create [id: &quot;test-plan&quot;, name: &quot;Test Plan&quot;, amount: 1000, interval: &quot;month&quot;]</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="create/2">
+  <div class="detail-header">
+    <a href="#create/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">create(params, key)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Creates a Plan using a given key. Note that <code class="inline">currency</code> and <code class="inline">interval</code> are required parameters, and are defaulted to “USD” and “month”</p>
+<h2>Example</h2>
+<pre><code class="elixir">{:ok, plan} = Stripe.Plans.create [id: &quot;test-plan&quot;, name: &quot;Test Plan&quot;, amount: 1000, interval: &quot;month&quot;], key</code></pre>
 
   </section>
 </div>
@@ -192,6 +368,54 @@
 
   </section>
 </div>
+<div class="detail" id="delete/2">
+  <div class="detail-header">
+    <a href="#delete/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete(id, key)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Deletes a Plan with the specified ID using the given key.</p>
+<h2>Example</h2>
+<pre><code class="elixir">{:ok, res} = Stripe.Plans.delete &quot;test-plan&quot;, key</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="delete_all/0">
+  <div class="detail-header">
+    <a href="#delete_all/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete_all()</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Deletes all Plans</p>
+<h2>Example</h2>
+<pre><code class="elixir">Stripe.Plans.delete_all</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="delete_all/1">
+  <div class="detail-header">
+    <a href="#delete_all/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete_all(key)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Deletes all Plans w/given key</p>
+<h2>Example</h2>
+<pre><code class="elixir">Stripe.Plans.delete_all key</code></pre>
+
+  </section>
+</div>
 <div class="detail" id="list/1">
   <div class="detail-header">
     <a href="#list/1" class="detail-link" title="Link to this function">
@@ -203,6 +427,20 @@
   
   <section class="docstring">
     <p>Returns a list of Plans.</p>
+
+  </section>
+</div>
+<div class="detail" id="list/2">
+  <div class="detail-header">
+    <a href="#list/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">list(key, limit)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Returns a list of Plans using the given key.</p>
 
   </section>
 </div>

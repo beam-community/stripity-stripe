@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stripe.Customers – stripity_stripe v0.3.0</title>
+    <title>Stripe.Customers – stripity_stripe v1.3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -28,7 +28,7 @@
         stripity_stripe
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.3.0
+        v1.3.0
       </h2>
     </div>
     
@@ -67,7 +67,15 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Main API for working with Customers at Stripe. Through this API you can alter subscriptions, create invoices, create and delete customers, etc.</p>
+          <p>Main API for working with Customers at Stripe. Through this API you can:
+-change subscriptions
+-create invoices
+-create customers
+-delete single customer
+-delete all customer
+-count customers</p>
+<p>Supports Connect workflow by allowing to pass in any API key explicitely (vs using the one from env/config).</p>
+<p>(API ref: <a href="https://stripe.com/docs/api/curl#customer_object">https://stripe.com/docs/api/curl#customer_object</a></p>
 
         </section>
       
@@ -89,20 +97,39 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#cancel_subscription/2">cancel_subscription(id, sub_id)</a>
+    <a href="#all/2">all(accum \\ [], starting_after \\ &quot;&quot;)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Cancels a subscription</p>
+    <div class="summary-synopsis"><p>List all customers</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#change_subscription/3">change_subscription(id, sub_id, opts)</a>
+    <a href="#all/3">all(key, accum, starting_after)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Changes a customer’s subscription (plan, description, etc - see Stripe API for acceptable options).
-Customer ID and Subscription ID are required for this</p>
+    <div class="summary-synopsis"><p>List all customers.
+Using a given stripe key to apply against the account associated</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#count/0">count()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Count total number of customers</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#count/1">count(key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Count total number of customers.
+Using a given stripe key to apply against the account associated</p>
 </div>
   
 </div>
@@ -117,28 +144,11 @@ Customer ID and Subscription ID are required for this</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#create_invoice/2">create_invoice(id, params)</a>
+    <a href="#create/2">create(params, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Invoices a customer according to Stripe’s invoice rules. This is not the same as a charge</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#create_subscription/1">create_subscription(opts)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Starts a subscription for the specified customer. Note that if you pass in the customer <em>and</em> subscription information, both will be created at the same time</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#create_subscription/2">create_subscription(id, opts)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Creates a subscription for the specified customer</p>
+    <div class="summary-synopsis"><p>Creates a Customer with the given parameters - all of which are optional.
+Using a given stripe key to apply against the account associated</p>
 </div>
   
 </div>
@@ -148,6 +158,35 @@ Customer ID and Subscription ID are required for this</p>
   </div>
   
     <div class="summary-synopsis"><p>Deletes a Customer with the specified ID</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete/2">delete(id, key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deletes a Customer with the specified ID
+Using a given stripe key to apply against the account associated</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_all/0">delete_all()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deletes all Customers</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_all/1">delete_all(key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deletes all Customers
+Using a given stripe key to apply against the account associated</p>
 </div>
   
 </div>
@@ -163,37 +202,50 @@ Customer ID and Subscription ID are required for this</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_invoices/2">get_invoices(id, params \\ [])</a>
+    <a href="#get/2">get(id, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns a list of invoices for a given customer</p>
+    <div class="summary-synopsis"><p>Retrieves a given Customer with the specified ID. Returns 404 if not found.
+Using a given stripe key to apply against the account associated.</p>
+<h2>Example</h2>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_subcription/2">get_subcription(id, sub_id)</a>
+    <a href="#list/2">list(starting_after, limit \\ 10)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns a subscription; customer_id and subscription_id are required</p>
+    <div class="summary-synopsis"><p>Returns a list of Customers with a default limit of 10 which you can override with <code class="inline">list/1</code></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_subscriptions/1">get_subscriptions(id)</a>
+    <a href="#list/3">list(key, starting_after, limit)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns all subscriptions for a Customer</p>
+    <div class="summary-synopsis"><p>Returns a list of Customers with a default limit of 10 which you can override with <code class="inline">list/1</code>
+Using a given stripe key to apply against the account associated</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#list/1">list(limit \\ 10)</a>
+    <a href="#update/2">update(customer_id, params)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns a list of Customers with a default limit of 10 which you can override with <a href="#list/1"><code class="inline">list/1</code></a></p>
+    <div class="summary-synopsis"><p>Updates a Customer with the given parameters - all of which are optional</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update/3">update(customer_id, params, key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Updates a Customer with the given parameters - all of which are optional.
+Using a given stripe key to apply against the account associated</p>
 </div>
   
 </div>
@@ -218,36 +270,69 @@ Customer ID and Subscription ID are required for this</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="cancel_subscription/2">
+          <div class="detail" id="all/2">
   <div class="detail-header">
-    <a href="#cancel_subscription/2" class="detail-link" title="Link to this function">
+    <a href="#all/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">cancel_subscription(id, sub_id)</span>
+    <span class="signature">all(accum \\ [], starting_after \\ &quot;&quot;)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Cancels a subscription</p>
-<h2>Example</h2>
-<pre><code class="elixir">Stripe.Customers.cancel_subscription &quot;customer_id&quot;, &quot;subscription_id&quot;</code></pre>
+    <p>List all customers.</p>
+<p>##Example</p>
+<pre><code class="elixir">{:ok, customers} = Stripe.Customers.all</code></pre>
 
   </section>
 </div>
-<div class="detail" id="change_subscription/3">
+<div class="detail" id="all/3">
   <div class="detail-header">
-    <a href="#change_subscription/3" class="detail-link" title="Link to this function">
+    <a href="#all/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">change_subscription(id, sub_id, opts)</span>
+    <span class="signature">all(key, accum, starting_after)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Changes a customer’s subscription (plan, description, etc - see Stripe API for acceptable options).
-Customer ID and Subscription ID are required for this.</p>
+    <p>List all customers.
+Using a given stripe key to apply against the account associated.</p>
+<p>##Example</p>
+<pre><code class="elixir">{:ok, customers} = Stripe.Customers.all key, accum, starting_after</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="count/0">
+  <div class="detail-header">
+    <a href="#count/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">count()</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Count total number of customers.</p>
 <h2>Example</h2>
-<pre><code class="elixir">Stripe.Customers.change_subscription &quot;customer_id&quot;, &quot;subscription_id&quot;, plan: &quot;premium&quot;</code></pre>
+<pre><code class="elixir">{:ok, count} = Stripe.Customers.count</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="count/1">
+  <div class="detail-header">
+    <a href="#count/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">count(key)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Count total number of customers.
+Using a given stripe key to apply against the account associated.</p>
+<h2>Example</h2>
+<pre><code class="elixir">{:ok, count} = Stripe.Customers.count key</code></pre>
 
   </section>
 </div>
@@ -266,6 +351,10 @@ Customer ID and Subscription ID are required for this.</p>
 <pre><code class="elixir">new_customer = [
     email: &quot;test@test.com&quot;,
     description: &quot;An Test Account&quot;,
+    metadata:[
+      app_order_id: &quot;ABC123&quot;
+      app_state_x: &quot;xyz&quot;
+    ],
     card: [
       number: &quot;4111111111111111&quot;,
       exp_month: 01,
@@ -278,70 +367,20 @@ Customer ID and Subscription ID are required for this.</p>
 
   </section>
 </div>
-<div class="detail" id="create_invoice/2">
+<div class="detail" id="create/2">
   <div class="detail-header">
-    <a href="#create_invoice/2" class="detail-link" title="Link to this function">
+    <a href="#create/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">create_invoice(id, params)</span>
+    <span class="signature">create(params, key)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Invoices a customer according to Stripe’s invoice rules. This is not the same as a charge.</p>
+    <p>Creates a Customer with the given parameters - all of which are optional.
+Using a given stripe key to apply against the account associated.</p>
 <h2>Example</h2>
-<pre><code class="elixir">Stripe.Customers.create_invoice &quot;customer_id&quot;, &quot;subscription_id&quot;</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="create_subscription/1">
-  <div class="detail-header">
-    <a href="#create_subscription/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">create_subscription(opts)</span>
-      
-  </div>
-  
-  <section class="docstring">
-    <p>Starts a subscription for the specified customer. Note that if you pass in the customer <em>and</em> subscription information, both will be created at the same time.</p>
-<h2>Example</h2>
-<pre><code class="elixir">new_sub = [
-    email: &quot;jill@test.com&quot;,
-    description: &quot;Poop on the Potty&quot;,
-    plan: &quot;standard&quot;,
-    source: [
-      object: &quot;card&quot;,
-      number: &quot;4111111111111111&quot;,
-      exp_month: 01,
-      exp_year: 2018,
-      cvc: 123,
-      name: &quot;Jill Subscriber&quot;
-    ]
-  ]
-  {:ok, sub} = Stripe.Customers.create_subscription new_sub</code></pre>
-<p>You can also just pass along the customer id and the plan name:</p>
-<pre><code class="elixir">new_sub = [
-    plan: &quot;standard&quot;,
-    customer: &quot;customer_id&quot;
-  ]
-  {:ok, sub} = Stripe.Customers.create_subscription new_sub</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="create_subscription/2">
-  <div class="detail-header">
-    <a href="#create_subscription/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">create_subscription(id, opts)</span>
-      
-  </div>
-  
-  <section class="docstring">
-    <p>Creates a subscription for the specified customer.</p>
-<h2>Example</h2>
-<pre><code class="elixir">Stripe.Customers.create_subscription &quot;customer_id&quot;, &quot;plan&quot;</code></pre>
+<pre><code class="elixir">{:ok, res} = Stripe.Customers.create new_customer, key</code></pre>
 
   </section>
 </div>
@@ -357,7 +396,57 @@ Customer ID and Subscription ID are required for this.</p>
   <section class="docstring">
     <p>Deletes a Customer with the specified ID</p>
 <h2>Example</h2>
-<pre><code class="elixir">Stripe.Customers.delete &quot;customer_id&quot;</code></pre>
+<pre><code class="elixir">{:ok, resp} =  Stripe.Customers.delete &quot;customer_id&quot;</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="delete/2">
+  <div class="detail-header">
+    <a href="#delete/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete(id, key)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Deletes a Customer with the specified ID
+Using a given stripe key to apply against the account associated.</p>
+<h2>Example</h2>
+<pre><code class="elixir">{:ok, resp} = Stripe.Customers.delete &quot;customer_id&quot;, key</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="delete_all/0">
+  <div class="detail-header">
+    <a href="#delete_all/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete_all()</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Deletes all Customers</p>
+<h2>Example</h2>
+<pre><code class="elixir">Stripe.Customers.delete_all</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="delete_all/1">
+  <div class="detail-header">
+    <a href="#delete_all/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete_all(key)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Deletes all Customers
+Using a given stripe key to apply against the account associated.</p>
+<h2>Example</h2>
+<pre><code class="elixir">Stripe.Customers.delete_all key</code></pre>
 
   </section>
 </div>
@@ -373,71 +462,94 @@ Customer ID and Subscription ID are required for this.</p>
   <section class="docstring">
     <p>Retrieves a given Customer with the specified ID. Returns 404 if not found.</p>
 <h2>Example</h2>
-<pre><code class="elixir">Stripe.Customers.get &quot;customer_id&quot;</code></pre>
+<pre><code class="elixir">{:ok, cust} = Stripe.Customers.get &quot;customer_id&quot;</code></pre>
 
   </section>
 </div>
-<div class="detail" id="get_invoices/2">
+<div class="detail" id="get/2">
   <div class="detail-header">
-    <a href="#get_invoices/2" class="detail-link" title="Link to this function">
+    <a href="#get/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_invoices(id, params \\ [])</span>
+    <span class="signature">get(id, key)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Returns a list of invoices for a given customer</p>
+    <p>Retrieves a given Customer with the specified ID. Returns 404 if not found.
+Using a given stripe key to apply against the account associated.</p>
 <h2>Example</h2>
-<pre><code class="elixir">Stripe.Customers.get_invoices &quot;customer_id&quot;</code></pre>
+<pre><code class="elixir">{:ok, cust} = Stripe.Customers.get &quot;customer_id&quot;, key</code></pre>
 
   </section>
 </div>
-<div class="detail" id="get_subcription/2">
+<div class="detail" id="list/2">
   <div class="detail-header">
-    <a href="#get_subcription/2" class="detail-link" title="Link to this function">
+    <a href="#list/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_subcription(id, sub_id)</span>
+    <span class="signature">list(starting_after, limit \\ 10)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Returns a subscription; customer_id and subscription_id are required.</p>
+    <p>Returns a list of Customers with a default limit of 10 which you can override with <code class="inline">list/1</code></p>
 <h2>Example</h2>
-<pre><code class="elixir">Stripe.Customers.get_subscription &quot;customer_id&quot;, &quot;subscription_id&quot;</code></pre>
+<pre><code class="elixir">{:ok, customers} = Stripe.Customers.list(starting_after, 20)</code></pre>
 
   </section>
 </div>
-<div class="detail" id="get_subscriptions/1">
+<div class="detail" id="list/3">
   <div class="detail-header">
-    <a href="#get_subscriptions/1" class="detail-link" title="Link to this function">
+    <a href="#list/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_subscriptions(id)</span>
+    <span class="signature">list(key, starting_after, limit)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Returns all subscriptions for a Customer.</p>
+    <p>Returns a list of Customers with a default limit of 10 which you can override with <code class="inline">list/1</code>
+Using a given stripe key to apply against the account associated.</p>
 <h2>Example</h2>
-<pre><code class="elixir">Stripe.Customers.get_subscriptions &quot;customer_id&quot;</code></pre>
+<pre><code class="elixir">{:ok, customers} = Stripe.Customers.list(key,starting_after,20)</code></pre>
 
   </section>
 </div>
-<div class="detail" id="list/1">
+<div class="detail" id="update/2">
   <div class="detail-header">
-    <a href="#list/1" class="detail-link" title="Link to this function">
+    <a href="#update/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">list(limit \\ 10)</span>
+    <span class="signature">update(customer_id, params)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Returns a list of Customers with a default limit of 10 which you can override with <a href="#list/1"><code class="inline">list/1</code></a></p>
+    <p>Updates a Customer with the given parameters - all of which are optional.</p>
 <h2>Example</h2>
-<pre><code class="elixir">{:ok, customers} = Stripe.Customers.list(20)</code></pre>
+<pre><code class="elixir">new_fields = [
+    email: &quot;new_email@test.com&quot;,
+    description: &quot;New description&quot;,
+  ]
+  {:ok, res} = Stripe.Customers.update(customer_id, new_fields)</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="update/3">
+  <div class="detail-header">
+    <a href="#update/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">update(customer_id, params, key)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Updates a Customer with the given parameters - all of which are optional.
+Using a given stripe key to apply against the account associated.</p>
+<h2>Example</h2>
+<pre><code class="elixir">{:ok, res} = Stripe.Customers.update(customer_id, new_fields, key)</code></pre>
 
   </section>
 </div>
