@@ -26,7 +26,7 @@ defmodule Stripe.Util do
 
   def handle_stripe_response(res) do
     cond do
-      res["error"] -> {:error, res["error"]["message"]}
+      res["error"] -> {:error, res}
       res["data"] -> {:ok, Enum.map(res["data"], &Stripe.Util.string_map_to_atoms &1)}
       true -> {:ok, Stripe.Util.string_map_to_atoms res}
     end
@@ -36,7 +36,7 @@ defmodule Stripe.Util do
   # this is useful to access top-level properties
   def handle_stripe_full_response(res) do
     cond do
-      res["error"] -> {:error, res["error"]["message"]}
+      res["error"] -> {:error, res}
       true -> {:ok, Stripe.Util.string_map_to_atoms res}
     end
   end
@@ -44,7 +44,7 @@ defmodule Stripe.Util do
   def list_raw( endpoint, limit \\ 10, starting_after \\ "") do
     list_raw endpoint, Stripe.config_or_env_key, limit, starting_after
   end
-  
+
   def list_raw( endpoint, key, limit, starting_after)  do
     q = "#{endpoint}?limit=#{limit}"
 

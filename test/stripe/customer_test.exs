@@ -11,14 +11,14 @@ defmodule Stripe.CustomerTest do
       metadata: [
         app_order_id: "ABC123",
         app_attr1: "xyz"
-       ], 
+       ],
       card: [
         number: "4111111111111111",
         exp_month: 01,
         exp_year: 2018,
         cvc: 123,
         name: "Joe Test User"
-      ]  
+      ]
     ]
     case Stripe.Customers.create new_customer do
       {:ok, customer} ->
@@ -36,7 +36,7 @@ defmodule Stripe.CustomerTest do
     assert customer.metadata["app_order_id"] == "ABC123"
     assert customer.metadata["app_attr1"] == "xyz"
   end
-  
+
   @tag disabled: false
   test "Count works", %{customer: _, customer2: _}  do
     case Stripe.Customers.count do
@@ -49,6 +49,24 @@ defmodule Stripe.CustomerTest do
   test "Count w/key works", %{customer: _, customer2: _}  do
     case Stripe.Customers.count Stripe.config_or_env_key do
       {:ok, cnt} -> assert cnt == 2
+      {:error, err} -> flunk err
+    end
+  end
+
+  @tag disabled: false
+  test "Update w/key works", %{customer: customer} do
+    new_params = [description: "new description"]
+    case Stripe.Customers.update(customer.id, new_params, Stripe.config_or_env_key) do
+      {:ok, res} -> assert res.description == "new description"
+      {:error, err} -> flunk err
+    end
+  end
+
+  @tag disabled: false
+  test "Update works", %{customer: customer} do
+    new_params = [description: "new description"]
+    case Stripe.Customers.update(customer.id, new_params) do
+      {:ok, res} -> assert res.description == "new description"
       {:error, err} -> flunk err
     end
   end
@@ -70,7 +88,7 @@ defmodule Stripe.CustomerTest do
       {:error, err} -> flunk err
     end
   end
-  
+
   @tag disabled: false
   test "Retrieve all works", %{customer: _, customer2: _} do
     case Stripe.Customers.all [],"" do

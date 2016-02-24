@@ -5,11 +5,15 @@ defmodule Stripe.CardTest do
     Stripe.Customers.delete_all
     customer = Helper.create_test_customer "customer_test1@localhost"
 
+	  on_exit fn ->
+      Stripe.Customers.delete customer.id
+    end
+
     new_card = [
       source: [
         object: "card",
         number: "4111111111111111",
-        cvc: 123, 
+        cvc: 123,
         exp_month: 12,
         exp_year: 2020,
         metadata: [
@@ -20,8 +24,8 @@ defmodule Stripe.CardTest do
     new_card2 = [
       source: [
         object: "card",
-        number: "6011111111111117",
-        cvc: 123, 
+        number: "4242424242424242",
+        cvc: 123,
         exp_month: 12,
         exp_year: 2020,
         metadata: [
@@ -47,7 +51,7 @@ defmodule Stripe.CardTest do
   test "Metadata works", %{customer: _, card: card, card2: _}  do
     assert card.metadata["test_field"] == "test val"
   end
-  
+
   @tag disabled: false
   test "Count works", %{customer: customer, card: _, card2: _}  do
     case Stripe.Cards.count :customer, customer.id do
@@ -81,7 +85,7 @@ defmodule Stripe.CardTest do
       {:error, err} -> flunk err
     end
   end
-  
+
   @tag disabled: false
   test "Retrieve all works", %{customer: customer, card: _, card2: _} do
     case Stripe.Cards.all :customer, customer.id, [],"" do
@@ -103,6 +107,34 @@ defmodule Stripe.CardTest do
   @tag disabled: false
   test "Create works", %{customer: _, card: card, card2: _} do
     assert card.id
+  end
+
+  @tag disabled: false
+  test "Create w/opts  works", %{customer: customer} do
+    token = Helper.create_test_token
+    opts = [
+      source: token.id
+    ]
+    case Stripe.Cards.create :customer, customer.id, opts do
+      {:ok, card}   ->
+		assert card.customer == customer.id
+		assert card.id
+      {:error, err} -> flunk err
+    end
+  end
+
+  @tag disabled: false
+  test "Create w/opts w/key works", %{customer: customer} do
+    token = Helper.create_test_token
+    opts = [
+      source: token.id
+    ]
+    case Stripe.Cards.create :customer, customer.id, opts, Stripe.config_or_env_key do
+      {:ok, card}   ->
+		assert card.customer == customer.id
+		assert card.id
+      {:error, err} -> flunk err
+    end
   end
 
   @tag disabled: false

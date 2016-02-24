@@ -65,7 +65,7 @@ defmodule Stripe.Customers do
   ## Example
 
   ```
-    {:ok, cust} = Stripe.Customers.get "customer_id" 
+    {:ok, cust} = Stripe.Customers.get "customer_id"
   ```
 
   """
@@ -86,6 +86,41 @@ defmodule Stripe.Customers do
     Stripe.make_request_with_key(:get, "#{@endpoint}/#{id}", key)
     |> Stripe.Util.handle_stripe_response
   end
+
+
+  @doc """
+  Updates a Customer with the given parameters - all of which are optional.
+
+  ## Example
+
+  ```
+    new_fields = [
+      email: "new_email@test.com",
+      description: "New description",
+    ]
+    {:ok, res} = Stripe.Customers.update(customer_id, new_fields)
+  ```
+
+  """
+  def update(customer_id, params) do
+    update(customer_id, params, Stripe.config_or_env_key)
+  end
+
+  @doc """
+  Updates a Customer with the given parameters - all of which are optional.
+  Using a given stripe key to apply against the account associated.
+
+  ## Example
+  ```
+  {:ok, res} = Stripe.Customers.update(customer_id, new_fields, key)
+  ```
+  """
+  def update(customer_id, params, key) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}", key, params)
+    |> Stripe.Util.handle_stripe_response
+  end
+
+
 
   @doc """
   Returns a list of Customers with a default limit of 10 which you can override with `list/1`
@@ -141,7 +176,7 @@ defmodule Stripe.Customers do
     Stripe.make_request_with_key(:delete, "#{@endpoint}/#{id}", key)
     |> Stripe.Util.handle_stripe_response
   end
-  
+
   @doc """
   Deletes all Customers
 
@@ -191,7 +226,7 @@ defmodule Stripe.Customers do
   def all( accum \\ [], starting_after \\ "") do
     all Stripe.config_or_env_key, accum, starting_after
   end
-  
+
   @doc """
   List all customers.
   Using a given stripe key to apply against the account associated.
