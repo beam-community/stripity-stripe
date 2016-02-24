@@ -8,7 +8,7 @@ defmodule Stripe do
   use HTTPoison.Base
 
   def start(_type, _args) do
-    start #start HTTPoison.Base.start inherited from use statement 
+    start #start HTTPoison.Base.start inherited from use statement
     Stripe.Supervisor.start_link
   end
 
@@ -105,8 +105,7 @@ defmodule Stripe do
   Returns binary
   """
   def config_or_env_key do
-    Application.get_env(:stripity_stripe, :secret_key) ||
-      System.get_env "STRIPE_SECRET_KEY"
+    Application.get_env(:stripity_stripe, :secret_key) || System.get_env "STRIPE_SECRET_KEY"
   end
 
   @doc """
@@ -114,7 +113,6 @@ defmodule Stripe do
   Returns binary
   """
   def config_or_env_platform_client_id do
-    Application.get_env(:stripity_stripe, :platform_client_id) ||
-      System.get_env "STRIPE_PLATFORM_CLIENT_ID"
+    Application.get_env(:stripity_stripe, :platform_client_id) || System.get_env "STRIPE_PLATFORM_CLIENT_ID"
   end
 end
