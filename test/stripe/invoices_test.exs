@@ -106,4 +106,19 @@ defmodule Stripe.InvoicesTest do
       err -> flunk err
     end
   end
+
+  @tag disabled: false
+  test "Upcoming works", %{customer1: customer1, sub1: sub1} do
+    {:ok, upcoming_invoice} = Stripe.Invoices.upcoming customer1.id, [subscription: sub1.id]
+    assert upcoming_invoice[:object] == "invoice"
+    assert upcoming_invoice[:customer] == customer1.id
+    assert upcoming_invoice[:subscription] == sub1.id
+  end
+
+  @tag disabled: false
+  test "Upcoming w/key works", %{customer1: customer1} do
+    {:ok, upcoming_invoice} = Stripe.Invoices.upcoming customer1.id, nil, Stripe.config_or_env_key
+    assert upcoming_invoice[:object] == "invoice"
+    assert upcoming_invoice[:customer] == customer1.id
+  end
 end
