@@ -153,4 +153,35 @@
     Stripe.make_request_with_key(:post, "invoices", key, params)
     |> Stripe.Util.handle_stripe_response
   end
+
+  @doc """
+  Retrieve the upcoming invoice for a customer that will show you all the charges that are pending, including subscription renewal charges, invoice item charges, etc.
+  It will also show you any discount that is applicable to the customer. NOTE: this is a preview, not a created invoice
+
+  ## Example
+
+  ```
+  {:ok, upcoming_invoice} = Stripe.Invoices.upcoming "customer_id", [subscription: "sub_id"]
+  ```
+  """
+  def upcoming(customer_id, params) do
+    upcoming customer_id, params, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Retrieve the upcoming invoice for a customer that will show you all the charges that are pending, including subscription renewal charges, invoice item charges, etc.
+  It will also show you any discount that is applicable to the customer. NOTE: this is a preview, not a created invoice
+  Using a given stripe key to apply against the account associated.
+
+  ## Example
+
+  ```
+  {:ok, upcoming_invoice} = Stripe.Invoices.upcoming "customer_id", [subscription: "sub_id"], "key"
+  ```
+  """
+  def upcoming(customer_id, params, key) do
+    params = Keyword.put_new params || [], :customer, customer_id
+    Stripe.make_request_with_key(:get, "#{@endpoint}/upcoming", key, params)
+    |> Stripe.Util.handle_stripe_response
+  end
 end
