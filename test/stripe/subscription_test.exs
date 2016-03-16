@@ -150,23 +150,22 @@ defmodule Stripe.SubscriptionTest do
       exp_month: "12",
     ]
     case Stripe.Subscriptions.change_payment_source(c.id, sub2.id, source) do
-      {:ok, res} ->
-        assert res[:status] == "active"
-      {:error, err} -> flunk err
+      {:ok, res} -> assert res[:status] == "active"
+      {:error, err} -> flunk err.message
     end
   end
   @tag disabled: false
   test "Cancel all works", %{customer: customer,  sub1: _, sub2: _} do
-    Stripe.Subscriptions.cancel_all customer.id, []  
-    {:ok, cnt} = Stripe.Subscriptions.count(customer.id) 
+    Stripe.Subscriptions.cancel_all customer.id, []
+    {:ok, cnt} = Stripe.Subscriptions.count(customer.id)
      assert cnt == 0
   end
 
   @tag disabled: false
   test "Cancel all w/key  works", %{customer: customer,  sub1: _, sub2: _} do
     Stripe.Subscriptions.create customer.id, [plan: "test-cancel-all"]
-    Stripe.Subscriptions.cancel_all customer.id, [],Stripe.config_or_env_key  
-    {:ok, cnt} = Stripe.Subscriptions.count(customer.id) 
+    Stripe.Subscriptions.cancel_all customer.id, [],Stripe.config_or_env_key
+    {:ok, cnt} = Stripe.Subscriptions.count(customer.id)
     assert cnt == 0
   end
 end
