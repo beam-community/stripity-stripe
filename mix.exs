@@ -30,7 +30,7 @@ defmodule Stripe.Mixfile do
   defp deps(:prod) do
     [
       {:httpoison, "~> 0.8.2" },
-      {:poison, "~> 2.1.0", optional: true},
+      {:poison, "~> 1.5 or ~> 2.1.0", optional: true},
       {:ex_doc, "~> 0.7", only: :dev},
       {:earmark, ">= 0.0.0", only: :dev}
     ]
