@@ -116,6 +116,30 @@ defmodule Stripe.SubscriptionTest do
   end
 
   @tag disabled: false
+  test "Change w/options works", %{customer: customer, sub1: sub1, sub2: _} do
+    opts = [
+      quantity: 42
+    ]
+
+    case Stripe.Subscriptions.change customer.id, sub1.id, opts do
+      {:ok, changed} -> assert changed.quantity == 42
+      {:error, err} -> flunk err
+    end
+  end
+
+  @tag disabled: false
+  test "Change w/options w/key works", %{customer: customer, sub1: _, sub2: sub2} do
+    opts = [
+      quantity: 42
+    ]
+
+    case Stripe.Subscriptions.change customer.id, sub2.id, opts, Stripe.config_or_env_key do
+      {:ok, changed} -> assert changed.quantity == 42
+      {:error, err} -> flunk err
+    end
+  end
+
+  @tag disabled: false
   test "Cancel works", %{customer: customer, sub1: sub1, sub2: _} do
     case Stripe.Subscriptions.cancel customer.id, sub1.id do
       {:ok, canceled_sub} -> assert canceled_sub.id
