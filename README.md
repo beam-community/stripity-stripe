@@ -1,4 +1,5 @@
-# Stripe for Elixir
+# Stripe for Elixir [![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe)
+====================================================
 
 An Elixir library for working [Stripe](https://stripe.com/).
 
@@ -165,4 +166,3 @@ First, log in your account. Then go to url
 https://dashboard.stripe.com/account/applications/settings
 
 Create a connect standalone account. Grab your development client_id. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to Stripe.Connect.oauth_token_callback or Stripe.Connect.get_token.
-
