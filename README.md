@@ -165,3 +165,12 @@ First, log in your account. Then go to url
 https://dashboard.stripe.com/account/applications/settings
 
 Create a connect standalone account. Grab your development client_id. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to Stripe.Connect.oauth_token_callback or Stripe.Connect.get_token.
+
+
+## Contributing
+
+Feedback, feature requests, and fixes are welcomed and encouraged.  Please make appropriate use of [Issues](https://github.com/robconery/stripity-stripe/issues) and [Pull Requests](https://github.com/robconery/stripity-stripe/pulls).  All code should have accompanying tests.
+
+## License
+
+Please see [LICENSE](LICENSE) for licensing details.
