@@ -26,10 +26,10 @@ defmodule Stripe do
   Set our request headers for every request.
   """
   def req_headers(key) do
-    HashDict.new
-      |> Dict.put("Authorization", "Bearer #{key}")
-      |> Dict.put("User-Agent",    "Stripe/v1 stripe-elixir/0.1.0")
-      |> Dict.put("Content-Type",  "application/x-www-form-urlencoded")
+    Map.new
+      |> Map.put("Authorization", "Bearer #{key}")
+      |> Map.put("User-Agent",    "Stripe/v1 stripe-elixir/0.1.0")
+      |> Map.put("Content-Type",  "application/x-www-form-urlencoded")
   end
 
   @doc """
