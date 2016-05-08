@@ -1,5 +1,4 @@
-# Stripe for Elixir [![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Inline docs](http://inch-ci.org/github/robconery/stripity-stripe.svg)](http://inch-ci.org/github/robconery/stripity-stripe) [![Coverage Status](https://coveralls.io/repos/github/robconery/stripity-stripe/badge.svg?branch=master)](https://coveralls.io/github/robconery/stripity-stripe?branch=master)
----------------------------------------------------------------------------
+# Stripe for Elixir [![Build Status](https://travis-ci.org/robconery/stripity-stripe.svg?branch=master)](https://travis-ci.org/robconery/stripity-stripe) [![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Inline docs](http://inch-ci.org/github/robconery/stripity-stripe.svg)](http://inch-ci.org/github/robconery/stripity-stripe) [![Coverage Status](https://coveralls.io/repos/github/robconery/stripity-stripe/badge.svg?branch=master)](https://coveralls.io/github/robconery/stripity-stripe?branch=master)
 
 An Elixir library for working [Stripe](https://stripe.com/).
 
@@ -166,3 +165,12 @@ First, log in your account. Then go to url
 https://dashboard.stripe.com/account/applications/settings
 
 Create a connect standalone account. Grab your development client_id. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to Stripe.Connect.oauth_token_callback or Stripe.Connect.get_token.
+
+
+## Contributing
+
+Feedback, feature requests, and fixes are welcomed and encouraged.  Please make appropriate use of [Issues](https://github.com/robconery/stripity-stripe/issues) and [Pull Requests](https://github.com/robconery/stripity-stripe/pulls).  All code should have accompanying tests.
+
+## License
+
+Please see [LICENSE](LICENSE) for licensing details.

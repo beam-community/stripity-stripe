@@ -13,19 +13,19 @@ defmodule Stripe.UtilTest do
 
   test "Count" do
     case Stripe.Util.count "plans" do
-      {:ok, cnt} -> assert cnt == 2 
+      {:ok, cnt} -> assert cnt == 2
       {:error, err} -> flunk err
     end
   end
   test "Count w/key" do
     case Stripe.Util.count "plans", Stripe.config_or_env_key do
-      {:ok, cnt} -> assert cnt == 2 
+      {:ok, cnt} -> assert cnt == 2
       {:error, err} -> flunk err
     end
   end
   test "list_raw" do
     case Stripe.Util.list_raw "plans" do
-      {:ok, plans} -> assert plans 
+      {:ok, plans} -> assert plans
       {:error, err} -> flunk err
     end
   end
@@ -48,8 +48,8 @@ defmodule Stripe.UtilTest do
   @tag disabled: false
   test "list w/key works" do
     case Stripe.Util.list "plans", Stripe.config_or_env_key,  "", 2  do
-      {:ok, resp} -> assert Dict.size( resp[:data]) == 2 
+      {:ok, resp} -> assert Dict.size( resp[:data]) == 2
       {:error, err} -> flunk err
     end
-   end
+  end
 end
