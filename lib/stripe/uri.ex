@@ -37,8 +37,8 @@ defmodule Stripe.URI do
       Enumerable.impl_for(value) ->
         pair(to_string(key), [], value)
       true ->
-        param_name = key |> to_string |> URI.encode
-        param_value = value |> to_string |> URI.encode
+        param_name = key |> to_string |> URI.encode_www_form
+        param_value = value |> to_string |> URI.encode_www_form
 
         "#{param_name}=#{param_value}"
     end
@@ -57,7 +57,7 @@ defmodule Stripe.URI do
 
   defp build_key(root, parents) do
     path = Enum.map_join parents, "", fn x ->
-      param = x |> to_string |> URI.encode
+      param = x |> to_string |> URI.encode_www_form
       "[#{param}]"
     end
 
