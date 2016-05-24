@@ -70,8 +70,21 @@ defmodule Stripe.Charges do
     {:ok, charges} = Stripe.Charges.list(100)
   ```
   """
-  def list(limit \\ 10) do
+  def list(params \\ [])
+  def list(limit) when is_integer(limit) do
     list Stripe.config_or_env_key, limit
+  end
+  @doc """
+  Lists charges from your account. Optionally pass parameters that are accepted through the Stripe
+  API.
+
+  ## Examples
+  ```
+    {:ok, charges} = Stripe.Charges.list(limit: 100)
+  ```
+  """
+  def list(params) do
+    list(Stripe.config_or_env_key, params)
   end
 
   @doc """
@@ -83,8 +96,21 @@ defmodule Stripe.Charges do
   {:ok, charges} = Stripe.Charges.list(key, 100)
   ```
   """
-  def list(key, limit) do
+  def list(key, limit) when is_integer(limit) do
     Stripe.make_request_with_key(:get, "#{@endpoint}?limit=#{limit}", key)
+    |> Stripe.Util.handle_stripe_response
+  end
+  @doc """
+  Lists charges from your account. Optionally pass parameters that are accepted through the Stripe
+  API. Using a given stripe key to apply against the account associated.
+
+  ## Examples
+  ```
+    {:ok, charges} = Stripe.Charges.list(limit: 100)
+  ```
+  """
+  def list(key, params) do
+    Stripe.make_request_with_key(:get, "#{@endpoint}", key, %{}, %{}, [params: params])
     |> Stripe.Util.handle_stripe_response
   end
 
