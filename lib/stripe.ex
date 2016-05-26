@@ -15,7 +15,6 @@ defmodule Stripe do
   """
 
   # Let's build on top of HTTPoison
-  use Application
   use HTTPoison.Base
 
   defmodule MissingSecretKeyError do
@@ -28,10 +27,6 @@ defmodule Stripe do
     """
   end
 
-  def start(_type, _args) do
-    start #start HTTPoison.Base.start inherited from use statement
-    Stripe.Supervisor.start_link
-  end
 
   @doc """
   Grabs STRIPE_SECRET_KEY from system ENV
