@@ -91,6 +91,19 @@ defmodule Stripe.Subscriptions do
 
   ## Example
   ```
+  Stripe.Subscriptions.change "customer_id", "subscription_id", [plan: "plan_id"]
+  ```
+  """
+  def change(customer_id, sub_id, opts) when is_list(opts) do
+    change customer_id, sub_id, opts, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Changes a customer's subscription plan.
+  Customer ID and Subscription ID are required for this.
+
+  ## Example
+  ```
   Stripe.Subscriptions.change "customer_id", "subscription_id", "plan_id"
   ```
   """
@@ -106,11 +119,25 @@ defmodule Stripe.Subscriptions do
   ## Example
 
   ```
-  Stripe.Customers.change_subscription "customer_id", "subscription_id", "plan_id", key
+  Stripe.Customers.change_subscription "customer_id", "subscription_id", [plan: "plan_id"], key
   ```
   """
-  def change(customer_id, sub_id, plan_id, key) do
-    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key, [plan: plan_id])
+  def change(customer_id, sub_id, opts, key) when is_list(opts) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key, opts)
+    |> Stripe.Util.handle_stripe_response
+  end
+
+  @doc """
+  Changes a customer's subscription using given api key(plan, description, etc - see Stripe API for acceptable options).
+  Customer ID, Subscription ID, opts and api key are required for this.
+
+  ## Example
+  ```
+  Stripe.Subscriptions.change "customer_id", "subscription_id", [plan: "plan_id"], key
+  ```
+  """
+  def change(customer_id, sub_id, opts, key) when is_list(opts) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key, opts)
     |> Stripe.Util.handle_stripe_response
   end
 
@@ -123,8 +150,8 @@ defmodule Stripe.Subscriptions do
   Stripe.Subscriptions.change "customer_id", "subscription_id", "plan_id", key
   ```
   """
-  def change(customer_id, sub_id, opts, key) do
-    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key, opts)
+  def change(customer_id, sub_id, plan_id, key) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", key, [plan: plan_id])
     |> Stripe.Util.handle_stripe_response
   end
 
