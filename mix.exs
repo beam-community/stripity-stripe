@@ -3,7 +3,7 @@ defmodule Stripe.Mixfile do
 
   def project do
     [ app: :stripity_stripe,
-      version: "1.4.0",
+      version: "1.4.1",
       description: description,
       package: package,
       elixir: "~> 1.1",
@@ -18,7 +18,7 @@ defmodule Stripe.Mixfile do
         "vcr.check": :test,
         "vcr.show": :test
       ],
-      deps: deps(Mix.env) ]
+      deps: deps ]
   end
 
   # Configuration for the OTP application
@@ -28,15 +28,7 @@ defmodule Stripe.Mixfile do
     ]
   end
 
-  defp deps(:dev) do
-    deps(:prod)
-  end
-
-  defp deps(:test) do
-    deps(:dev)
-  end
-
-  defp deps(:prod) do
+  defp deps do
     [
       {:httpoison, "~> 0.8.2" },
       {:poison, "~> 1.5 or ~> 2.1.0", optional: true},
