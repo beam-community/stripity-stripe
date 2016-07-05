@@ -47,13 +47,21 @@ defp application do
 end
 ```
 
-Then create a config folder and add a Stripe secret key (and optional platform client id if you are using Stripe Connect):
+## Configuration
+
+To make API calls, it is necessary to configure your Stripe secret key (and optional platform client id if you are using Stripe Connect):
 
 ```ex
 use Mix.Config
 
 config :stripity_stripe, secret_key: "YOUR SECRET KEY"
 config :stripity_stripe, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
+```
+
+To customize the underlying HTTPoison library, you may optionally add an `:httpoison_options` key to the stripity_stripe configuration.  For a full list of configuration options, please refer to the [HTTPoison documentation](https://github.com/edgurgel/httpoison).
+
+```ex
+config :stripity_stripe, httpoison_options: [timeout: 10000, recv_timeout: 10000, proxy: {"proxy.mydomain.com", 8080}]
 ```
 
 ## Testing
@@ -99,6 +107,7 @@ case events[:has_more] do
     false -> events[:data]
 end
 ```
+
 <a name="connect"></a>
 # Connect
 

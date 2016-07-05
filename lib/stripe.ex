@@ -91,6 +91,7 @@ defmodule Stripe do
         |> Map.merge(headers)
         |> Map.to_list
 
+    options = Keyword.merge(httpoison_request_options(), options)
     {:ok, response} = request(method, endpoint, rb, rh, options)
     response.body
   end
@@ -114,9 +115,10 @@ defmodule Stripe do
   """
   def make_oauth_token_callback_request(body) do
     rb = Stripe.URI.encode_query(body)
-    rh = req_headers( Stripe.config_or_env_key )
-        |> Map.to_list
-        options = []
+    rh = req_headers(Stripe.config_or_env_key)
+      |> Map.to_list
+
+    options = httpoison_request_options()
     HTTPoison.request(:post, "#{Stripe.Connect.base_url}oauth/token", rb, rh, options)
   end
 
@@ -127,9 +129,9 @@ defmodule Stripe do
       stripe_user_id: stripe_user_id,
       client_id: Stripe.config_or_env_platform_client_id])
     rh = req_headers( Stripe.config_or_env_key)
-    |> Map.to_list
+      |> Map.to_list
 
-    options = []
+    options = httpoison_request_options()
     HTTPoison.request(:post, "#{Stripe.Connect.base_url}oauth/deauthorize", rb, rh, options)
   end
 
@@ -141,4 +143,7 @@ defmodule Stripe do
     end
   end
 
+  defp httpoison_request_options() do
+    Application.get_env(:stripity_stripe, :httpoison_options, [])
+  end
 end
