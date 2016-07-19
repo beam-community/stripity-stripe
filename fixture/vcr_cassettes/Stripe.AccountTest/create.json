@@ -1,0 +1,36 @@
+[
+  {
+    "request": {
+      "body": "[{\"email\":\"test@example.com\",\"managed\":true,\"tos_acceptance\":[{\"date\":1468919203,\"ip\":\"127.0.0.1\"}],\"legal_entity\":[{\"type\":\"individual\",\"address\":[{\"city\":\"Los Angeles\",\"country\":\"US\",\"line1\":\"1st Ave\",\"postal_code\":\"910000\",\"state\":\"CA\"}],\"dob\":[{\"day\":1,\"month\":1,\"year\":1991}],\"first_name\":\"John\",\"last_name\":\"Doe\"}],\"external_account\":[{\"object\":\"bank_account\",\"country\":\"US\",\"currency\":\"usd\",\"routing_number\":\"110000000\",\"account_number\":\"000123456789\"}]}]",
+      "headers": {
+        "Authorization": "Bearer sk_test_Gwo3dv3LVt9d51pEppopW08N",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/accounts"
+    },
+    "response": {
+      "body": "{\"id\":\"acct_1032D82eZvKYlo2C\",\"object\":\"account\",\"business_logo\":null,\"business_name\":\"Stripe.com\",\"business_url\":null,\"charges_enabled\":false,\"country\":\"US\",\"debit_negative_balances\":true,\"decline_charge_on\":{\"avs_failure\":false,\"cvc_failure\":false},\"default_currency\":\"usd\",\"details_submitted\":false,\"display_name\":\"Stripe.com\",\"email\":\"site@stripe.com\",\"external_accounts\":{\"object\":\"list\",\"data\":[],\"has_more\":false,\"total_count\":0,\"url\":\"/v1/accounts/acct_1032D82eZvKYlo2C/external_accounts\"},\"legal_entity\":{\"address\":{\"city\":null,\"country\":\"US\",\"line1\":null,\"line2\":null,\"postal_code\":null,\"state\":null},\"business_name\":null,\"business_tax_id_provided\":false,\"dob\":{\"day\":null,\"month\":null,\"year\":null},\"first_name\":null,\"last_name\":null,\"personal_id_number_provided\":false,\"ssn_last_4_provided\":false,\"type\":null,\"verification\":{\"details\":null,\"details_code\":\"failed_other\",\"document\":null,\"status\":\"unverified\"}},\"managed\":true,\"product_description\":null,\"statement_descriptor\":null,\"support_email\":null,\"support_phone\":null,\"timezone\":\"US/Pacific\",\"tos_acceptance\":{\"date\":null,\"ip\":null,\"user_agent\":null},\"transfer_schedule\":{\"delay_days\":7,\"interval\":\"daily\"},\"transfers_enabled\":false,\"verification\":{\"disabled_reason\":\"fields_needed\",\"due_by\":null,\"fields_needed\":[\"business_url\",\"external_account\",\"product_description\",\"support_phone\",\"tos_acceptance.date\",\"tos_acceptance.ip\"]}}",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Sun, 08 May 2016 22:32:01 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "2113",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8Pq7FGmOlNM4Vb",
+        "Stripe-Version": "2015-01-11",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

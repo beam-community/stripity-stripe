@@ -2,10 +2,6 @@ defmodule Stripe.ConnectTest do
   use ExUnit.Case
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
-  setup_all do
-    HTTPoison.start
-  end
-
   @tag disabled: false
   test "Generate button url works" do
     use_cassette "stripe_connect_button" do

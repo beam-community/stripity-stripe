@@ -3,8 +3,6 @@ defmodule Stripe.ChargeTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup do
-    HTTPoison.start
-    
     params = [
       source: [
         object: "card",

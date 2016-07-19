@@ -3,10 +3,6 @@ defmodule Stripe.StripeTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
   import Mock
 
-  setup_all do
-    HTTPoison.start
-  end
-
   test "process_url for v1" do
     assert Stripe.process_url("payment") == "https://api.stripe.com/v1/payment"
   end

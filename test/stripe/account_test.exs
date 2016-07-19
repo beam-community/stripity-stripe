@@ -1,86 +1,66 @@
 defmodule Stripe.AccountTest do
   use ExUnit.Case
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup_all do
-    Stripe.Accounts.delete_all
-
     new_account = [
       email: "test@example.com",
       managed: true,
-      tos_acceptance: [
-        date: :os.system_time(:seconds),
-        ip: "127.0.0.1"
-      ],
       legal_entity: [
-        type: "individual",
-        address: [
-          city: "Los Angeles",
-          country: "US",
-          line1: "1st Ave",
-          postal_code: "910000",
-          state: "CA"
-        ],
-        dob: [
-          day: 1,
-          month: 1,
-          year: 1991
-        ],
-        first_name: "John",
-        last_name: "Doe"
-      ],
-      external_account: [
-        object: "bank_account",
-        country: "US",
-        currency: "usd",
-        routing_number: "110000000",
-        account_number: "000123456789"
+        type: "individual"
       ]
     ]
-    case Stripe.Accounts.create new_account do
-      {:ok, account} ->
-        on_exit fn ->
-          Stripe.Accounts.delete account.id
-        end
-        {:ok, [account: account]}
 
-      {:error, err} -> flunk err
-    end
+    { :ok, account } =
+      use_cassette "Stripe.AccountTest/create" do
+        Stripe.Accounts.create(new_account)
+      end
+
+    { :ok, %{ account: account } }
   end
 
   @tag disabled: false
-  test "Create works", %{account: account} do
+  test "Creating an account", %{account: account} do
     assert account.id
   end
 
   @tag disabled: false
-  test "Retrieve list works" do
-    {:ok, accounts} = Stripe.Accounts.list
-    assert length(accounts) > 0
+  test "Retrieving a list of accounts" do
+    { :ok, accounts } =
+      use_cassette "Stripe.AccountTest/list" do
+        Stripe.Accounts.list
+      end
+
+    assert length(accounts) == 2
   end
 
   @tag disabled: false
-  test "Retrieve single works", %{account: account} do
-    case Stripe.Accounts.get account.id do
-      {:ok, found} -> assert found.id == account.id
-      {:error, err} -> flunk err
-    end
+  test "Retrieving an account", %{account: account} do
+    { :ok, found_account } =
+      use_cassette "Stripe.AccountTest/get" do
+        Stripe.Accounts.get(account.id)
+      end
+
+    assert found_account.id == account.id
   end
 
-  test "Delete single works", %{account: account} do
-    case Stripe.Accounts.delete account.id do
-      {:ok, res} -> assert res.deleted
-      {:error, err} -> flunk err
-    end
+  @tag disabled: false
+  test "Deleting an account", %{account: account} do
+    { :ok, deleted_account } =
+      use_cassette "Stripe.AccountTest/delete" do
+        Stripe.Accounts.delete(account.id)
+      end
+
+    assert deleted_account.id == account.id
+    assert deleted_account.deleted
   end
 
-  test "Delete all works", %{account: _} do
-   Helper.create_test_account "test1@example.com"
-   Helper.create_test_account "test2@example.com"
-   Stripe.Accounts.delete_all
-
-    case Stripe.Accounts.count do
-      {:ok, cnt} -> assert cnt == 0
-      {:error, err} -> flunk err
+  @tag disabled: false
+  test "Deleting all accounts" do
+    use_cassette "Stripe.AccountTest/delete_all" do
+      Stripe.Accounts.delete_all
     end
+
+    assert { :ok, 0 } == Stripe.Accounts.count
   end
 end
