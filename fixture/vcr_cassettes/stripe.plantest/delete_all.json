@@ -16,7 +16,7 @@
       "body": "{\n  \"object\": \"list\",\n  \"data\": [],\n  \"has_more\": false,\n  \"url\": \"/v1/plans\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 08:09:49 GMT",
+        "Date": "Wed, 20 Jul 2016 09:46:53 GMT",
         "Content-Type": "application/json",
         "Content-Length": "80",
         "Connection": "keep-alive",
@@ -25,7 +25,41 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qxh4frREBQU4p",
+        "Request-Id": "req_8qzGF9UOXKgtO0",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans?include[]=total_count&limit=0"
+    },
+    "response": {
+      "body": "{\n  \"object\": \"list\",\n  \"data\": [],\n  \"has_more\": false,\n  \"total_count\": 0,\n  \"url\": \"/v1/plans\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 09:46:53 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "100",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8qzGzdZ0b4aDpB",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
