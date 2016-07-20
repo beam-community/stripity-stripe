@@ -4,7 +4,7 @@ defmodule Stripe.TokensTest do
 
   @tags disabled: false
   test "Create bank account token works"  do
-    use_cassette "Stripe.TokensTest/bank_account" do
+    use_cassette "Stripe.TokensTest/bank_account", match_requests_on: [:query, :request_body] do
       params = [
         bank_account: [
           country: "US",
@@ -25,7 +25,7 @@ defmodule Stripe.TokensTest do
 
   @tags disabled: false
   test "Create credit card token works"  do
-    use_cassette "Stripe.TokensTest/credit_card" do
+    use_cassette "Stripe.TokensTest/credit_card", match_requests_on: [:query, :request_body] do
       params = [
         card: [
           number: "4242424242424242",
@@ -45,8 +45,8 @@ defmodule Stripe.TokensTest do
   end
 
   @tags disabled: false
-  test "Create credit card token w/key works"  do
-    use_cassette "Stripe.TokensTest/credit_card_with_key" do
+  test "Create credit card token w/key works" do
+    use_cassette "Stripe.TokensTest/credit_card_with_key", match_requests_on: [:query, :request_body] do
       params = [
         card: [
           number: "4242424242424242",
@@ -67,7 +67,7 @@ defmodule Stripe.TokensTest do
 
   @tags disabled: false
   test "Get by id works" do
-    use_cassette "Stripe.TokensTest/get_by_id" do
+    use_cassette "Stripe.TokensTest/get", match_requests_on: [:query, :request_body] do
       {:ok, token} = Stripe.Tokens.create [
         card: [
           number: "4242424242424242",
@@ -89,7 +89,7 @@ defmodule Stripe.TokensTest do
 
   @tags disabled: false
   test "Get by id w/key works" do
-    use_cassette "Stripe.TokensTest/get_by_id_with_key" do
+    use_cassette "Stripe.TokensTest/get_with_key", match_requests_on: [:query, :request_body] do
       {:ok, token} = Stripe.Tokens.create [
         card: [
           number: "4242424242424242",
@@ -112,7 +112,7 @@ defmodule Stripe.TokensTest do
 
   @tags disabled: false
   test "Charge with token works" do
-    use_cassette "Stripe.TokensTest/chardge_with_token" do
+    use_cassette "Stripe.TokensTest/charge_with_token", match_requests_on: [:query, :request_body] do
       {:ok, token} = Stripe.Tokens.create [
         card: [
           number: "4242424242424242",

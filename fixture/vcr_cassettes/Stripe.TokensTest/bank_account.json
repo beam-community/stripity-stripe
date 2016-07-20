@@ -13,10 +13,10 @@
       "url": "https://api.stripe.com/v1/tokens"
     },
     "response": {
-      "body": "{\n  \"id\": \"btok_8qo2naVrf6agYK\",\n  \"object\": \"token\",\n  \"bank_account\": {\n    \"id\": \"ba_8qo2eTNx1uADGY\",\n    \"object\": \"bank_account\",\n    \"account_holder_name\": null,\n    \"account_holder_type\": null,\n    \"bank_name\": \"STRIPE TEST BANK\",\n    \"country\": \"US\",\n    \"currency\": \"usd\",\n    \"fingerprint\": \"Emgj2Bg37zdftt10\",\n    \"last4\": \"6789\",\n    \"routing_number\": \"110000000\",\n    \"status\": \"new\"\n  },\n  \"client_ip\": \"46.30.167.251\",\n  \"created\": 1468966223,\n  \"livemode\": false,\n  \"type\": \"bank_account\",\n  \"used\": false\n}\n",
+      "body": "{\n  \"id\": \"btok_8qzty104qYao5x\",\n  \"object\": \"token\",\n  \"bank_account\": {\n    \"id\": \"ba_8qztLMiicxzypR\",\n    \"object\": \"bank_account\",\n    \"account_holder_name\": null,\n    \"account_holder_type\": null,\n    \"bank_name\": \"STRIPE TEST BANK\",\n    \"country\": \"US\",\n    \"currency\": \"usd\",\n    \"fingerprint\": \"Emgj2Bg37zdftt10\",\n    \"last4\": \"6789\",\n    \"routing_number\": \"110000000\",\n    \"status\": \"new\"\n  },\n  \"client_ip\": \"46.30.167.251\",\n  \"created\": 1469010325,\n  \"livemode\": false,\n  \"type\": \"bank_account\",\n  \"used\": false\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Tue, 19 Jul 2016 22:10:23 GMT",
+        "Date": "Wed, 20 Jul 2016 10:25:25 GMT",
         "Content-Type": "application/json",
         "Content-Length": "524",
         "Connection": "keep-alive",
@@ -25,7 +25,7 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qo28kcogOyvls",
+        "Request-Id": "req_8qztYc21H8zdkP",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },

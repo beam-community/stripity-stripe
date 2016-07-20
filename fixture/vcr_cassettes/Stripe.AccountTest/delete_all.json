@@ -1,32 +1,100 @@
 [
   {
     "request": {
+      "body": "email=test1%40example.com&managed=true&legal_entity[type]=individual",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/accounts"
+    },
+    "response": {
+      "body": "{\n  \"id\": \"acct_18ZIJ7Hj150sUFh2\",\n  \"object\": \"account\",\n  \"business_logo\": null,\n  \"business_name\": null,\n  \"business_url\": null,\n  \"charges_enabled\": true,\n  \"country\": \"US\",\n  \"debit_negative_balances\": false,\n  \"decline_charge_on\": {\n    \"avs_failure\": false,\n    \"cvc_failure\": false\n  },\n  \"default_currency\": \"usd\",\n  \"details_submitted\": false,\n  \"display_name\": null,\n  \"email\": \"test1@example.com\",\n  \"external_accounts\": {\n    \"object\": \"list\",\n    \"data\": [],\n    \"has_more\": false,\n    \"total_count\": 0,\n    \"url\": \"/v1/accounts/acct_18ZIJ7Hj150sUFh2/external_accounts\"\n  },\n  \"keys\": {\n    \"secret\": \"sk_test_vmz18zfM0H6y1gMTfVpX0ZWE\",\n    \"publishable\": \"pk_test_gLTKsVXNcEwzSvp43schS1YC\"\n  },\n  \"legal_entity\": {\n    \"address\": {\n      \"city\": null,\n      \"country\": \"US\",\n      \"line1\": null,\n      \"line2\": null,\n      \"postal_code\": null,\n      \"state\": null\n    },\n    \"business_name\": null,\n    \"business_tax_id_provided\": false,\n    \"dob\": {\n      \"day\": null,\n      \"month\": null,\n      \"year\": null\n    },\n    \"first_name\": null,\n    \"last_name\": null,\n    \"personal_id_number_provided\": false,\n    \"ssn_last_4_provided\": false,\n    \"type\": \"individual\",\n    \"verification\": {\n      \"details\": null,\n      \"details_code\": null,\n      \"document\": null,\n      \"status\": \"unverified\"\n    }\n  },\n  \"managed\": true,\n  \"metadata\": {},\n  \"product_description\": null,\n  \"statement_descriptor\": null,\n  \"support_email\": null,\n  \"support_phone\": null,\n  \"timezone\": \"Etc/UTC\",\n  \"tos_acceptance\": {\n    \"date\": null,\n    \"ip\": null,\n    \"user_agent\": null\n  },\n  \"transfer_schedule\": {\n    \"delay_days\": 2,\n    \"interval\": \"daily\"\n  },\n  \"transfers_enabled\": false,\n  \"verification\": {\n    \"disabled_reason\": \"fields_needed\",\n    \"due_by\": null,\n    \"fields_needed\": [\n      \"external_account\",\n      \"legal_entity.dob.day\",\n      \"legal_entity.dob.month\",\n      \"legal_entity.dob.year\",\n      \"legal_entity.first_name\",\n      \"legal_entity.last_name\",\n      \"tos_acceptance.date\",\n      \"tos_acceptance.ip\"\n    ]\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:52:06 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "2035",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r0JNi806rdpBX",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "email=test2%40example.com&managed=true&legal_entity[type]=individual",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/accounts"
+    },
+    "response": {
+      "body": "{\n  \"id\": \"acct_18ZIJ9HSJaYxUYg6\",\n  \"object\": \"account\",\n  \"business_logo\": null,\n  \"business_name\": null,\n  \"business_url\": null,\n  \"charges_enabled\": true,\n  \"country\": \"US\",\n  \"debit_negative_balances\": false,\n  \"decline_charge_on\": {\n    \"avs_failure\": false,\n    \"cvc_failure\": false\n  },\n  \"default_currency\": \"usd\",\n  \"details_submitted\": false,\n  \"display_name\": null,\n  \"email\": \"test2@example.com\",\n  \"external_accounts\": {\n    \"object\": \"list\",\n    \"data\": [],\n    \"has_more\": false,\n    \"total_count\": 0,\n    \"url\": \"/v1/accounts/acct_18ZIJ9HSJaYxUYg6/external_accounts\"\n  },\n  \"keys\": {\n    \"secret\": \"sk_test_fIT1lWvlMdEXc6vyz9I3rpQE\",\n    \"publishable\": \"pk_test_HQc50ClVsz0Lax84ZwAbdQBq\"\n  },\n  \"legal_entity\": {\n    \"address\": {\n      \"city\": null,\n      \"country\": \"US\",\n      \"line1\": null,\n      \"line2\": null,\n      \"postal_code\": null,\n      \"state\": null\n    },\n    \"business_name\": null,\n    \"business_tax_id_provided\": false,\n    \"dob\": {\n      \"day\": null,\n      \"month\": null,\n      \"year\": null\n    },\n    \"first_name\": null,\n    \"last_name\": null,\n    \"personal_id_number_provided\": false,\n    \"ssn_last_4_provided\": false,\n    \"type\": \"individual\",\n    \"verification\": {\n      \"details\": null,\n      \"details_code\": null,\n      \"document\": null,\n      \"status\": \"unverified\"\n    }\n  },\n  \"managed\": true,\n  \"metadata\": {},\n  \"product_description\": null,\n  \"statement_descriptor\": null,\n  \"support_email\": null,\n  \"support_phone\": null,\n  \"timezone\": \"Etc/UTC\",\n  \"tos_acceptance\": {\n    \"date\": null,\n    \"ip\": null,\n    \"user_agent\": null\n  },\n  \"transfer_schedule\": {\n    \"delay_days\": 2,\n    \"interval\": \"daily\"\n  },\n  \"transfers_enabled\": false,\n  \"verification\": {\n    \"disabled_reason\": \"fields_needed\",\n    \"due_by\": null,\n    \"fields_needed\": [\n      \"external_account\",\n      \"legal_entity.dob.day\",\n      \"legal_entity.dob.month\",\n      \"legal_entity.dob.year\",\n      \"legal_entity.first_name\",\n      \"legal_entity.last_name\",\n      \"tos_acceptance.date\",\n      \"tos_acceptance.ip\"\n    ]\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:52:07 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "2035",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r0JOObKkUwBKX",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer sk_test_Gwo3dv3LVt9d51pEppopW08N",
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
       "method": "get",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/accounts"
+      "url": "https://api.stripe.com/v1/accounts?limit=100"
     },
     "response": {
-      "body": "{\"object\":\"list\",\"url\":\"/v1/accounts\",\"has_more\":false,\"data\":[{\"id\":\"acct_1032D82eZvKYlo2C\",\"object\":\"account\",\"business_logo\":null,\"business_name\":\"Stripe.com\",\"business_url\":null,\"charges_enabled\":false,\"country\":\"US\",\"debit_negative_balances\":true,\"decline_charge_on\":{\"avs_failure\":false,\"cvc_failure\":false},\"default_currency\":\"usd\",\"details_submitted\":false,\"display_name\":\"Stripe.com\",\"email\":\"site@stripe.com\",\"external_accounts\":{\"object\":\"list\",\"data\":[],\"has_more\":false,\"total_count\":0,\"url\":\"/v1/accounts/acct_1032D82eZvKYlo2C/external_accounts\"},\"legal_entity\":{\"address\":{\"city\":null,\"country\":\"US\",\"line1\":null,\"line2\":null,\"postal_code\":null,\"state\":null},\"business_name\":null,\"business_tax_id_provided\":false,\"dob\":{\"day\":null,\"month\":null,\"year\":null},\"first_name\":null,\"last_name\":null,\"personal_id_number_provided\":false,\"ssn_last_4_provided\":false,\"type\":null,\"verification\":{\"details\":null,\"details_code\":\"failed_other\",\"document\":null,\"status\":\"unverified\"}},\"managed\":false,\"product_description\":null,\"statement_descriptor\":null,\"support_email\":null,\"support_phone\":null,\"timezone\":\"US/Pacific\",\"tos_acceptance\":{\"date\":null,\"ip\":null,\"user_agent\":null},\"transfer_schedule\":{\"delay_days\":7,\"interval\":\"daily\"},\"transfers_enabled\":false,\"verification\":{\"disabled_reason\":\"fields_needed\",\"due_by\":null,\"fields_needed\":[\"business_url\",\"external_account\",\"product_description\",\"support_phone\",\"tos_acceptance.date\",\"tos_acceptance.ip\"]}},{\"id\":\"acct_1042D82eZvKYlo2C\",\"object\":\"account\",\"business_logo\":null,\"business_name\":\"Apple.com\",\"business_url\":null,\"charges_enabled\":false,\"country\":\"US\",\"debit_negative_balances\":true,\"decline_charge_on\":{\"avs_failure\":false,\"cvc_failure\":false},\"default_currency\":\"usd\",\"details_submitted\":false,\"display_name\":\"Apple.com\",\"email\":\"site2@stripe.com\",\"external_accounts\":{\"object\":\"list\",\"data\":[],\"has_more\":false,\"total_count\":0,\"url\":\"/v1/accounts/acct_1042D82eZvKYlo2C/external_accounts\"},\"legal_entity\":{\"address\":{\"city\":null,\"country\":\"US\",\"line1\":null,\"line2\":null,\"postal_code\":null,\"state\":null},\"business_name\":null,\"business_tax_id_provided\":false,\"dob\":{\"day\":null,\"month\":null,\"year\":null},\"first_name\":null,\"last_name\":null,\"personal_id_number_provided\":false,\"ssn_last_4_provided\":false,\"type\":null,\"verification\":{\"details\":null,\"details_code\":\"failed_other\",\"document\":null,\"status\":\"unverified\"}},\"managed\":false,\"product_description\":null,\"statement_descriptor\":null,\"support_email\":null,\"support_phone\":null,\"timezone\":\"US/Pacific\",\"tos_acceptance\":{\"date\":null,\"ip\":null,\"user_agent\":null},\"transfer_schedule\":{\"delay_days\":7,\"interval\":\"daily\"},\"transfers_enabled\":false,\"verification\":{\"disabled_reason\":\"fields_needed\",\"due_by\":null,\"fields_needed\":[\"business_url\",\"external_account\",\"product_description\",\"support_phone\",\"tos_acceptance.date\",\"tos_acceptance.ip\"]}}]}",
+      "body": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"id\": \"acct_18ZIJ9HSJaYxUYg6\",\n      \"object\": \"account\",\n      \"business_logo\": null,\n      \"business_name\": null,\n      \"business_url\": null,\n      \"charges_enabled\": true,\n      \"country\": \"US\",\n      \"debit_negative_balances\": false,\n      \"decline_charge_on\": {\n        \"avs_failure\": false,\n        \"cvc_failure\": false\n      },\n      \"default_currency\": \"usd\",\n      \"details_submitted\": false,\n      \"display_name\": null,\n      \"email\": \"test2@example.com\",\n      \"external_accounts\": {\n        \"object\": \"list\",\n        \"data\": [],\n        \"has_more\": false,\n        \"total_count\": 0,\n        \"url\": \"/v1/accounts/acct_18ZIJ9HSJaYxUYg6/external_accounts\"\n      },\n      \"legal_entity\": {\n        \"address\": {\n          \"city\": null,\n          \"country\": \"US\",\n          \"line1\": null,\n          \"line2\": null,\n          \"postal_code\": null,\n          \"state\": null\n        },\n        \"business_name\": null,\n        \"business_tax_id_provided\": false,\n        \"dob\": {\n          \"day\": null,\n          \"month\": null,\n          \"year\": null\n        },\n        \"first_name\": null,\n        \"last_name\": null,\n        \"personal_id_number_provided\": false,\n        \"ssn_last_4_provided\": false,\n        \"type\": \"individual\",\n        \"verification\": {\n          \"details\": null,\n          \"details_code\": null,\n          \"document\": null,\n          \"status\": \"unverified\"\n        }\n      },\n      \"managed\": true,\n      \"metadata\": {},\n      \"product_description\": null,\n      \"statement_descriptor\": null,\n      \"support_email\": null,\n      \"support_phone\": null,\n      \"timezone\": \"Etc/UTC\",\n      \"tos_acceptance\": {\n        \"date\": null,\n        \"ip\": null,\n        \"user_agent\": null\n      },\n      \"transfer_schedule\": {\n        \"delay_days\": 2,\n        \"interval\": \"daily\"\n      },\n      \"transfers_enabled\": false,\n      \"verification\": {\n        \"disabled_reason\": \"fields_needed\",\n        \"due_by\": null,\n        \"fields_needed\": [\n          \"external_account\",\n          \"legal_entity.dob.day\",\n          \"legal_entity.dob.month\",\n          \"legal_entity.dob.year\",\n          \"legal_entity.first_name\",\n          \"legal_entity.last_name\",\n          \"tos_acceptance.date\",\n          \"tos_acceptance.ip\"\n        ]\n      }\n    },\n    {\n      \"id\": \"acct_18ZIJ7Hj150sUFh2\",\n      \"object\": \"account\",\n      \"business_logo\": null,\n      \"business_name\": null,\n      \"business_url\": null,\n      \"charges_enabled\": true,\n      \"country\": \"US\",\n      \"debit_negative_balances\": false,\n      \"decline_charge_on\": {\n        \"avs_failure\": false,\n        \"cvc_failure\": false\n      },\n      \"default_currency\": \"usd\",\n      \"details_submitted\": false,\n      \"display_name\": null,\n      \"email\": \"test1@example.com\",\n      \"external_accounts\": {\n        \"object\": \"list\",\n        \"data\": [],\n        \"has_more\": false,\n        \"total_count\": 0,\n        \"url\": \"/v1/accounts/acct_18ZIJ7Hj150sUFh2/external_accounts\"\n      },\n      \"legal_entity\": {\n        \"address\": {\n          \"city\": null,\n          \"country\": \"US\",\n          \"line1\": null,\n          \"line2\": null,\n          \"postal_code\": null,\n          \"state\": null\n        },\n        \"business_name\": null,\n        \"business_tax_id_provided\": false,\n        \"dob\": {\n          \"day\": null,\n          \"month\": null,\n          \"year\": null\n        },\n        \"first_name\": null,\n        \"last_name\": null,\n        \"personal_id_number_provided\": false,\n        \"ssn_last_4_provided\": false,\n        \"type\": \"individual\",\n        \"verification\": {\n          \"details\": null,\n          \"details_code\": null,\n          \"document\": null,\n          \"status\": \"unverified\"\n        }\n      },\n      \"managed\": true,\n      \"metadata\": {},\n      \"product_description\": null,\n      \"statement_descriptor\": null,\n      \"support_email\": null,\n      \"support_phone\": null,\n      \"timezone\": \"Etc/UTC\",\n      \"tos_acceptance\": {\n        \"date\": null,\n        \"ip\": null,\n        \"user_agent\": null\n      },\n      \"transfer_schedule\": {\n        \"delay_days\": 2,\n        \"interval\": \"daily\"\n      },\n      \"transfers_enabled\": false,\n      \"verification\": {\n        \"disabled_reason\": \"fields_needed\",\n        \"due_by\": null,\n        \"fields_needed\": [\n          \"external_account\",\n          \"legal_entity.dob.day\",\n          \"legal_entity.dob.month\",\n          \"legal_entity.dob.year\",\n          \"legal_entity.first_name\",\n          \"legal_entity.last_name\",\n          \"tos_acceptance.date\",\n          \"tos_acceptance.ip\"\n        ]\n      }\n    },\n    {\n      \"id\": \"acct_18ZIF7JyIJHSFpeM\",\n      \"object\": \"account\",\n      \"business_logo\": null,\n      \"business_name\": null,\n      \"business_url\": null,\n      \"charges_enabled\": true,\n      \"country\": \"US\",\n      \"default_currency\": \"usd\",\n      \"details_submitted\": false,\n      \"display_name\": null,\n      \"email\": \"bob1@nanana.com\",\n      \"managed\": false,\n      \"metadata\": {},\n      \"statement_descriptor\": null,\n      \"support_email\": null,\n      \"support_phone\": null,\n      \"timezone\": \"Etc/UTC\",\n      \"transfers_enabled\": false\n    }\n  ],\n  \"has_more\": false,\n  \"url\": \"/v1/accounts\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Sun, 08 May 2016 22:32:02 GMT",
+        "Date": "Wed, 20 Jul 2016 10:52:08 GMT",
         "Content-Type": "application/json",
-        "Content-Length": "25681",
+        "Content-Length": "5135",
         "Connection": "keep-alive",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8Pq7HHACZgotx1",
-        "Stripe-Version": "2015-01-11",
+        "Request-Id": "req_8r0J0qloPJHgXn",
+        "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,
@@ -37,30 +105,31 @@
     "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer sk_test_Gwo3dv3LVt9d51pEppopW08N",
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
       "method": "delete",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/accounts/acct_1032D82eZvKYlo2C"
+      "url": "https://api.stripe.com/v1/accounts/acct_18ZIJ9HSJaYxUYg6"
     },
     "response": {
-      "body": "{\"deleted\":true,\"id\":\"acct_1032D82eZvKYlo2C\"}",
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"acct_18ZIJ9HSJaYxUYg6\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Sun, 08 May 2016 22:32:03 GMT",
+        "Date": "Wed, 20 Jul 2016 10:52:09 GMT",
         "Content-Type": "application/json",
-        "Content-Length": "2113",
+        "Content-Length": "55",
         "Connection": "keep-alive",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8Pq7OhL6dpLzN2",
-        "Stripe-Version": "2015-01-11",
+        "Request-Id": "req_8r0JauyqnyUn5X",
+        "Stripe-Account": "acct_18ZIJ9HSJaYxUYg6",
+        "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,
@@ -71,30 +140,31 @@
     "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer sk_test_Gwo3dv3LVt9d51pEppopW08N",
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
       "method": "delete",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/accounts/acct_1042D82eZvKYlo2C"
+      "url": "https://api.stripe.com/v1/accounts/acct_18ZIJ7Hj150sUFh2"
     },
     "response": {
-      "body": "{\"deleted\":true,\"id\":\"acct_1042D82eZvKYlo2C\"}",
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"acct_18ZIJ7Hj150sUFh2\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Sun, 08 May 2016 22:32:03 GMT",
+        "Date": "Wed, 20 Jul 2016 10:52:10 GMT",
         "Content-Type": "application/json",
-        "Content-Length": "2113",
+        "Content-Length": "55",
         "Connection": "keep-alive",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8Pq7OhL6dpLzN2",
-        "Stripe-Version": "2015-01-11",
+        "Request-Id": "req_8r0JWxsdhgYttN",
+        "Stripe-Account": "acct_18ZIJ7Hj150sUFh2",
+        "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,
@@ -105,7 +175,41 @@
     "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer sk_test_Gwo3dv3LVt9d51pEppopW08N",
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/accounts/acct_18ZIF7JyIJHSFpeM"
+    },
+    "response": {
+      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"This application is not authorized to edit this account.\"\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:52:10 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "132",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r0JtO7u4szheL",
+        "Stripe-Account": "acct_18ZIF7JyIJHSFpeM",
+        "Stripe-Version": "2016-07-06"
+      },
+      "status_code": 401,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
@@ -115,24 +219,24 @@
       "url": "https://api.stripe.com/v1/accounts?include[]=total_count&limit=0"
     },
     "response": {
-      "body": "{\"total_count\":0}",
+      "body": "{\n  \"object\": \"list\",\n  \"data\": [],\n  \"has_more\": false,\n  \"total_count\": 0,\n  \"url\": \"/v1/accounts\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Sun, 08 May 2016 22:32:02 GMT",
+        "Date": "Wed, 20 Jul 2016 10:52:11 GMT",
         "Content-Type": "application/json",
-        "Content-Length": "25681",
+        "Content-Length": "653",
         "Connection": "keep-alive",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8Pq7HHACZgotx1",
-        "Stripe-Version": "2015-01-11",
+        "Request-Id": "req_8r0JIYbgXwMcHw",
+        "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,
       "type": "ok"
     }
-  },
+  }
 ]
