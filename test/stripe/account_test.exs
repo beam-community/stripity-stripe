@@ -3,7 +3,7 @@ defmodule Stripe.AccountTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup_all do
-    use_cassette "Stripe.AccountTest/setup", match_requests_on: [:query, :request_body] do
+    use_cassette "account_test/setup", match_requests_on: [:query, :request_body] do
       Stripe.Accounts.delete_all
 
       new_account = [
@@ -13,7 +13,7 @@ defmodule Stripe.AccountTest do
       case Stripe.Accounts.create new_account do
         {:ok, account} ->
         on_exit fn ->
-          use_cassette "Stripe.AccountTest/teardown", match_requests_on: [:query, :request_body] do
+          use_cassette "account_test/teardown", match_requests_on: [:query, :request_body] do
             Stripe.Accounts.delete account.id
           end
         end
@@ -31,7 +31,7 @@ defmodule Stripe.AccountTest do
 
   @tag disabled: false
   test "Retrieve list works" do
-    use_cassette "Stripe.AccountTest/list", match_requests_on: [:query, :request_body] do
+    use_cassette "account_test/list", match_requests_on: [:query, :request_body] do
       {:ok, accounts} = Stripe.Accounts.list
       assert length(accounts) > 0
     end
@@ -39,7 +39,7 @@ defmodule Stripe.AccountTest do
 
   @tag disabled: false
   test "Retrieve single works", %{account: account} do
-    use_cassette "Stripe.AccountTest/get", match_requests_on: [:query, :request_body] do
+    use_cassette "account_test/get", match_requests_on: [:query, :request_body] do
       case Stripe.Accounts.get account.id do
         {:ok, found} -> assert found.id == account.id
         {:error, err} -> flunk err
@@ -48,7 +48,7 @@ defmodule Stripe.AccountTest do
   end
 
   test "Delete single works", %{account: account} do
-    use_cassette "Stripe.AccountTest/delete", match_requests_on: [:query, :request_body] do
+    use_cassette "account_test/delete", match_requests_on: [:query, :request_body] do
       case Stripe.Accounts.delete account.id do
         {:ok, res} -> assert res.deleted
         {:error, err} -> flunk err
@@ -57,7 +57,7 @@ defmodule Stripe.AccountTest do
   end
 
   test "Delete all works", %{account: _} do
-    use_cassette "Stripe.AccountTest/delete_all", match_requests_on: [:query, :request_body] do
+    use_cassette "account_test/delete_all", match_requests_on: [:query, :request_body] do
       Helper.create_test_account "test1@example.com"
       Helper.create_test_account "test2@example.com"
       Stripe.Accounts.delete_all

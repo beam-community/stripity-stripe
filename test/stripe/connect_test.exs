@@ -4,7 +4,7 @@ defmodule Stripe.ConnectTest do
 
   @tag disabled: false
   test "Generate button url works" do
-    use_cassette "Stripe.ConnectTest/generate_button_url", match_requests_on: [:query, :request_body] do
+    use_cassette "connect_test/generate_button_url", match_requests_on: [:query, :request_body] do
       url = Stripe.Connect.generate_button_url "csrf_token"
 
       assert String.ends_with? url, "&state=csrf_token"
