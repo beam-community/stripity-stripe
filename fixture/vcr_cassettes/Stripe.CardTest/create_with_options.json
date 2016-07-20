@@ -13,10 +13,10 @@
       "url": "https://api.stripe.com/v1/tokens"
     },
     "response": {
-      "body": "{\n  \"id\": \"tok_8qnORq83HJJ3dZ\",\n  \"object\": \"token\",\n  \"card\": {\n    \"id\": \"card_8qnO3pggo4hZwr\",\n    \"object\": \"card\",\n    \"address_city\": null,\n    \"address_country\": null,\n    \"address_line1\": null,\n    \"address_line1_check\": null,\n    \"address_line2\": null,\n    \"address_state\": null,\n    \"address_zip\": null,\n    \"address_zip_check\": null,\n    \"brand\": \"Visa\",\n    \"country\": \"US\",\n    \"cvc_check\": \"unchecked\",\n    \"dynamic_last4\": null,\n    \"exp_month\": 8,\n    \"exp_year\": 2016,\n    \"fingerprint\": \"Z2LAyLacsJwp6DT4\",\n    \"funding\": \"credit\",\n    \"last4\": \"4242\",\n    \"metadata\": {},\n    \"name\": null,\n    \"tokenization_method\": null\n  },\n  \"client_ip\": \"46.30.167.251\",\n  \"created\": 1468963849,\n  \"livemode\": false,\n  \"type\": \"card\",\n  \"used\": false\n}\n",
+      "body": "{\n  \"id\": \"tok_8qzPZFgxSRQlAc\",\n  \"object\": \"token\",\n  \"card\": {\n    \"id\": \"card_8qzPayuIDElLKX\",\n    \"object\": \"card\",\n    \"address_city\": null,\n    \"address_country\": null,\n    \"address_line1\": null,\n    \"address_line1_check\": null,\n    \"address_line2\": null,\n    \"address_state\": null,\n    \"address_zip\": null,\n    \"address_zip_check\": null,\n    \"brand\": \"Visa\",\n    \"country\": \"US\",\n    \"cvc_check\": \"unchecked\",\n    \"dynamic_last4\": null,\n    \"exp_month\": 8,\n    \"exp_year\": 2016,\n    \"fingerprint\": \"Z2LAyLacsJwp6DT4\",\n    \"funding\": \"credit\",\n    \"last4\": \"4242\",\n    \"metadata\": {},\n    \"name\": null,\n    \"tokenization_method\": null\n  },\n  \"client_ip\": \"46.30.167.251\",\n  \"created\": 1469008544,\n  \"livemode\": false,\n  \"type\": \"card\",\n  \"used\": false\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Tue, 19 Jul 2016 21:30:49 GMT",
+        "Date": "Wed, 20 Jul 2016 09:55:44 GMT",
         "Content-Type": "application/json",
         "Content-Length": "760",
         "Connection": "keep-alive",
@@ -25,7 +25,7 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qnO4ZQgre6OMe",
+        "Request-Id": "req_8qzPgxPr38wyHg",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
@@ -35,7 +35,7 @@
   },
   {
     "request": {
-      "body": "source=tok_8qnORq83HJJ3dZ",
+      "body": "source=tok_8qzPZFgxSRQlAc",
       "headers": {
         "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -44,13 +44,13 @@
       "method": "post",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/customers/cus_8qn6Tv64jZVuyM/sources"
+      "url": "https://api.stripe.com/v1/customers/cus_8qzPumFT04R9AQ/sources"
     },
     "response": {
-      "body": "{\n  \"id\": \"card_8qnO3pggo4hZwr\",\n  \"object\": \"card\",\n  \"address_city\": null,\n  \"address_country\": null,\n  \"address_line1\": null,\n  \"address_line1_check\": null,\n  \"address_line2\": null,\n  \"address_state\": null,\n  \"address_zip\": null,\n  \"address_zip_check\": null,\n  \"brand\": \"Visa\",\n  \"country\": \"US\",\n  \"customer\": \"cus_8qn6Tv64jZVuyM\",\n  \"cvc_check\": \"pass\",\n  \"dynamic_last4\": null,\n  \"exp_month\": 8,\n  \"exp_year\": 2016,\n  \"fingerprint\": \"Z2LAyLacsJwp6DT4\",\n  \"funding\": \"credit\",\n  \"last4\": \"4242\",\n  \"metadata\": {},\n  \"name\": null,\n  \"tokenization_method\": null\n}\n",
+      "body": "{\n  \"id\": \"card_8qzPayuIDElLKX\",\n  \"object\": \"card\",\n  \"address_city\": null,\n  \"address_country\": null,\n  \"address_line1\": null,\n  \"address_line1_check\": null,\n  \"address_line2\": null,\n  \"address_state\": null,\n  \"address_zip\": null,\n  \"address_zip_check\": null,\n  \"brand\": \"Visa\",\n  \"country\": \"US\",\n  \"customer\": \"cus_8qzPumFT04R9AQ\",\n  \"cvc_check\": \"pass\",\n  \"dynamic_last4\": null,\n  \"exp_month\": 8,\n  \"exp_year\": 2016,\n  \"fingerprint\": \"Z2LAyLacsJwp6DT4\",\n  \"funding\": \"credit\",\n  \"last4\": \"4242\",\n  \"metadata\": {},\n  \"name\": null,\n  \"tokenization_method\": null\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Tue, 19 Jul 2016 21:30:49 GMT",
+        "Date": "Wed, 20 Jul 2016 09:55:45 GMT",
         "Content-Type": "application/json",
         "Content-Length": "567",
         "Connection": "keep-alive",
@@ -59,7 +59,7 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qnOT5a0KEAIVD",
+        "Request-Id": "req_8qzPSb5NytV79O",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },

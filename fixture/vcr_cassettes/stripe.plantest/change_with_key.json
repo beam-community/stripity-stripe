@@ -13,10 +13,10 @@
       "url": "https://api.stripe.com/v1/plans/test-plan"
     },
     "response": {
-      "body": "{\n  \"id\": \"test-plan\",\n  \"object\": \"plan\",\n  \"amount\": 1000,\n  \"created\": 1469008008,\n  \"currency\": \"usd\",\n  \"interval\": \"month\",\n  \"interval_count\": 1,\n  \"livemode\": false,\n  \"metadata\": {},\n  \"name\": \"Other Plan2\",\n  \"statement_descriptor\": null,\n  \"trial_period_days\": null\n}\n",
+      "body": "{\n  \"id\": \"test-plan\",\n  \"object\": \"plan\",\n  \"amount\": 1000,\n  \"created\": 1469008077,\n  \"currency\": \"usd\",\n  \"interval\": \"month\",\n  \"interval_count\": 1,\n  \"livemode\": false,\n  \"metadata\": {},\n  \"name\": \"Other Plan2\",\n  \"statement_descriptor\": null,\n  \"trial_period_days\": null\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 09:46:49 GMT",
+        "Date": "Wed, 20 Jul 2016 09:47:59 GMT",
         "Content-Type": "application/json",
         "Content-Length": "279",
         "Connection": "keep-alive",
@@ -25,7 +25,7 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qzGo6BDV975zA",
+        "Request-Id": "req_8qzHJr5T3TxH6v",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },

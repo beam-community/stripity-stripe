@@ -16,7 +16,7 @@
       "body": "{\n  \"deleted\": true,\n  \"id\": \"test-plan\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 09:46:51 GMT",
+        "Date": "Wed, 20 Jul 2016 09:48:00 GMT",
         "Content-Type": "application/json",
         "Content-Length": "43",
         "Connection": "keep-alive",
@@ -25,7 +25,7 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qzGMQ19c7IzIw",
+        "Request-Id": "req_8qzHNxwelBombO",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },

@@ -16,7 +16,7 @@
       "body": "{\n  \"object\": \"list\",\n  \"data\": [],\n  \"has_more\": false,\n  \"url\": \"/v1/plans\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 09:46:52 GMT",
+        "Date": "Wed, 20 Jul 2016 09:48:01 GMT",
         "Content-Type": "application/json",
         "Content-Length": "80",
         "Connection": "keep-alive",
@@ -25,7 +25,7 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qzGvvdjWBrhxl",
+        "Request-Id": "req_8qzHJ2AYdmTLUR",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },

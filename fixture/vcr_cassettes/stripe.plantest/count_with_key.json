@@ -13,10 +13,10 @@
       "url": "https://api.stripe.com/v1/plans?include[]=total_count&limit=0"
     },
     "response": {
-      "body": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"id\": \"test-plan2\",\n      \"object\": \"plan\",\n      \"amount\": 1000,\n      \"created\": 1469008008,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"interval_count\": 1,\n      \"livemode\": false,\n      \"metadata\": {},\n      \"name\": \"Test Plan 2\",\n      \"statement_descriptor\": null,\n      \"trial_period_days\": null\n    }\n  ],\n  \"has_more\": true,\n  \"total_count\": 2,\n  \"url\": \"/v1/plans\"\n}\n",
+      "body": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"id\": \"test-plan2\",\n      \"object\": \"plan\",\n      \"amount\": 1000,\n      \"created\": 1469008078,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"interval_count\": 1,\n      \"livemode\": false,\n      \"metadata\": {},\n      \"name\": \"Test Plan 2\",\n      \"statement_descriptor\": null,\n      \"trial_period_days\": null\n    }\n  ],\n  \"has_more\": true,\n  \"total_count\": 2,\n  \"url\": \"/v1/plans\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 09:46:49 GMT",
+        "Date": "Wed, 20 Jul 2016 09:47:58 GMT",
         "Content-Type": "application/json",
         "Content-Length": "438",
         "Connection": "keep-alive",
@@ -25,7 +25,7 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qzGfqzSFHxlO1",
+        "Request-Id": "req_8qzHgHYrFIv35U",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
