@@ -50,7 +50,7 @@ defmodule Stripe.URI do
         Enumerable.impl_for(value) ->
           pair(root, parents ++ [key], value)
         true ->
-          build_key(root, parents ++ [key]) <> to_string(value)
+          build_key(root, parents ++ [key]) <> URI.encode_www_form(to_string(value))
       end
     end
   end
