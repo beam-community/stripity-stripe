@@ -8,7 +8,9 @@ defmodule Stripe.UtilTest do
       Helper.create_test_plans
 
       on_exit fn ->
-        Stripe.Plans.delete_all
+        use_cassette "Stripe.UtilTest/teardown" do
+          Stripe.Plans.delete_all
+        end
       end
       :ok
     end

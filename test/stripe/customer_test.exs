@@ -25,7 +25,9 @@ defmodule Stripe.CustomerTest do
       case Stripe.Customers.create new_customer do
         {:ok, customer} ->
         on_exit fn ->
-          Stripe.Customers.delete customer.id
+          use_cassette "Stripe.CustomerTest/teardown" do
+            Stripe.Customers.delete customer.id
+          end
         end
         {:ok, [customer: customer, customer2: customer2]}
 
