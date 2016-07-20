@@ -10,13 +10,13 @@
       "method": "delete",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/customers/cus_8qxgjYdnnW8YVX"
+      "url": "https://api.stripe.com/v1/customers/cus_8qzhhSlbS8gmX8"
     },
     "response": {
-      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"No such customer: cus_8qxgjYdnnW8YVX\",\n    \"param\": \"id\"\n  }\n}\n",
+      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"No such customer: cus_8qzhhSlbS8gmX8\",\n    \"param\": \"id\"\n  }\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 08:48:24 GMT",
+        "Date": "Wed, 20 Jul 2016 10:13:32 GMT",
         "Content-Type": "application/json",
         "Content-Length": "131",
         "Connection": "keep-alive",
@@ -25,7 +25,7 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qyKqi5Pbe8q1F",
+        "Request-Id": "req_8qzh2FHBZimGSz",
         "Stripe-Version": "2016-07-06"
       },
       "status_code": 404,

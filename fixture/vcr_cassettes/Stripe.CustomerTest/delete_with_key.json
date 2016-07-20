@@ -10,25 +10,26 @@
       "method": "delete",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/customers/cus_8qxgjYdnnW8YVX"
+      "url": "https://api.stripe.com/v1/customers/cus_8qzhtB0JUAv0eu"
     },
     "response": {
-      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"No such customer: cus_8qxgjYdnnW8YVX\",\n    \"param\": \"id\"\n  }\n}\n",
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"cus_8qzhtB0JUAv0eu\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 08:09:24 GMT",
+        "Date": "Wed, 20 Jul 2016 10:13:28 GMT",
         "Content-Type": "application/json",
-        "Content-Length": "131",
+        "Content-Length": "52",
         "Connection": "keep-alive",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qxhigPAAH6O5G",
-        "Stripe-Version": "2016-07-06"
+        "Request-Id": "req_8qzhRSqv57A5Zc",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
-      "status_code": 404,
+      "status_code": 200,
       "type": "ok"
     }
   }

@@ -1,40 +1,6 @@
 [
   {
     "request": {
-      "body": "",
-      "headers": {
-        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
-      },
-      "method": "get",
-      "options": [],
-      "request_body": "",
-      "url": "https://api.stripe.com/v1/customers?limit=100"
-    },
-    "response": {
-      "body": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"id\": \"cus_8qxhvQyaKFZC0E\",\n      \"object\": \"customer\",\n      \"account_balance\": 0,\n      \"created\": 1469002166,\n      \"currency\": null,\n      \"default_source\": \"card_8qxhnOYa7JHYZ9\",\n      \"delinquent\": false,\n      \"description\": \"Test Account\",\n      \"discount\": null,\n      \"email\": \"t1@localhost\",\n      \"livemode\": false,\n      \"metadata\": {},\n      \"shipping\": null,\n      \"sources\": {\n        \"object\": \"list\",\n        \"data\": [\n          {\n            \"id\": \"card_8qxhnOYa7JHYZ9\",\n            \"object\": \"card\",\n            \"address_city\": null,\n            \"address_country\": null,\n            \"address_line1\": null,\n            \"address_line1_check\": null,\n            \"address_line2\": null,\n            \"address_state\": null,\n            \"address_zip\": null,\n            \"address_zip_check\": null,\n            \"brand\": \"Visa\",\n            \"country\": \"US\",\n            \"customer\": \"cus_8qxhvQyaKFZC0E\",\n            \"cvc_check\": \"pass\",\n            \"dynamic_last4\": null,\n            \"exp_month\": 1,\n            \"exp_year\": 2018,\n            \"fingerprint\": \"Ze2h9CyiqlKZzGuV\",\n            \"funding\": \"unknown\",\n            \"last4\": \"1111\",\n            \"metadata\": {},\n            \"name\": \"Joe Test User\",\n            \"tokenization_method\": null\n          }\n        ],\n        \"has_more\": false,\n        \"total_count\": 1,\n        \"url\": \"/v1/customers/cus_8qxhvQyaKFZC0E/sources\"\n      },\n      \"subscriptions\": {\n        \"object\": \"list\",\n        \"data\": [],\n        \"has_more\": false,\n        \"total_count\": 0,\n        \"url\": \"/v1/customers/cus_8qxhvQyaKFZC0E/subscriptions\"\n      }\n    }\n  ],\n  \"has_more\": false,\n  \"url\": \"/v1/customers\"\n}\n",
-      "headers": {
-        "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 08:09:27 GMT",
-        "Content-Type": "application/json",
-        "Content-Length": "1698",
-        "Connection": "keep-alive",
-        "Access-Control-Allow-Credentials": "true",
-        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Max-Age": "300",
-        "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qxhZq7Kolki0h",
-        "Stripe-Version": "2016-07-06",
-        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
-      },
-      "status_code": 200,
-      "type": "ok"
-    }
-  },
-  {
-    "request": {
       "body": "email=t1%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe Test User",
       "headers": {
         "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
@@ -47,10 +13,10 @@
       "url": "https://api.stripe.com/v1/customers"
     },
     "response": {
-      "body": "{\n  \"id\": \"cus_8qxhvQyaKFZC0E\",\n  \"object\": \"customer\",\n  \"account_balance\": 0,\n  \"created\": 1469002166,\n  \"currency\": null,\n  \"default_source\": \"card_8qxhnOYa7JHYZ9\",\n  \"delinquent\": false,\n  \"description\": \"Test Account\",\n  \"discount\": null,\n  \"email\": \"t1@localhost\",\n  \"livemode\": false,\n  \"metadata\": {},\n  \"shipping\": null,\n  \"sources\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"card_8qxhnOYa7JHYZ9\",\n        \"object\": \"card\",\n        \"address_city\": null,\n        \"address_country\": null,\n        \"address_line1\": null,\n        \"address_line1_check\": null,\n        \"address_line2\": null,\n        \"address_state\": null,\n        \"address_zip\": null,\n        \"address_zip_check\": null,\n        \"brand\": \"Visa\",\n        \"country\": \"US\",\n        \"customer\": \"cus_8qxhvQyaKFZC0E\",\n        \"cvc_check\": \"pass\",\n        \"dynamic_last4\": null,\n        \"exp_month\": 1,\n        \"exp_year\": 2018,\n        \"fingerprint\": \"Ze2h9CyiqlKZzGuV\",\n        \"funding\": \"unknown\",\n        \"last4\": \"1111\",\n        \"metadata\": {},\n        \"name\": \"Joe Test User\",\n        \"tokenization_method\": null\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/customers/cus_8qxhvQyaKFZC0E/sources\"\n  },\n  \"subscriptions\": {\n    \"object\": \"list\",\n    \"data\": [],\n    \"has_more\": false,\n    \"total_count\": 0,\n    \"url\": \"/v1/customers/cus_8qxhvQyaKFZC0E/subscriptions\"\n  }\n}\n",
+      "body": "{\n  \"id\": \"cus_8qzhYaY336jV8y\",\n  \"object\": \"customer\",\n  \"account_balance\": 0,\n  \"created\": 1469009610,\n  \"currency\": null,\n  \"default_source\": \"card_8qzhze8jQKS5cq\",\n  \"delinquent\": false,\n  \"description\": \"Test Account\",\n  \"discount\": null,\n  \"email\": \"t1@localhost\",\n  \"livemode\": false,\n  \"metadata\": {},\n  \"shipping\": null,\n  \"sources\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"card_8qzhze8jQKS5cq\",\n        \"object\": \"card\",\n        \"address_city\": null,\n        \"address_country\": null,\n        \"address_line1\": null,\n        \"address_line1_check\": null,\n        \"address_line2\": null,\n        \"address_state\": null,\n        \"address_zip\": null,\n        \"address_zip_check\": null,\n        \"brand\": \"Visa\",\n        \"country\": \"US\",\n        \"customer\": \"cus_8qzhYaY336jV8y\",\n        \"cvc_check\": \"pass\",\n        \"dynamic_last4\": null,\n        \"exp_month\": 1,\n        \"exp_year\": 2018,\n        \"fingerprint\": \"Ze2h9CyiqlKZzGuV\",\n        \"funding\": \"unknown\",\n        \"last4\": \"1111\",\n        \"metadata\": {},\n        \"name\": \"Joe Test User\",\n        \"tokenization_method\": null\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/customers/cus_8qzhYaY336jV8y/sources\"\n  },\n  \"subscriptions\": {\n    \"object\": \"list\",\n    \"data\": [],\n    \"has_more\": false,\n    \"total_count\": 0,\n    \"url\": \"/v1/customers/cus_8qzhYaY336jV8y/subscriptions\"\n  }\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 08:09:26 GMT",
+        "Date": "Wed, 20 Jul 2016 10:13:30 GMT",
         "Content-Type": "application/json",
         "Content-Length": "1391",
         "Connection": "keep-alive",
@@ -59,7 +25,75 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qxhFqBjOhJQcf",
+        "Request-Id": "req_8qzhRQ6O84gPDr",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "email=t2%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe Test User",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers"
+    },
+    "response": {
+      "body": "{\n  \"id\": \"cus_8qzh1T3evmRqDV\",\n  \"object\": \"customer\",\n  \"account_balance\": 0,\n  \"created\": 1469009610,\n  \"currency\": null,\n  \"default_source\": \"card_8qzhLMSwrnhvEz\",\n  \"delinquent\": false,\n  \"description\": \"Test Account\",\n  \"discount\": null,\n  \"email\": \"t2@localhost\",\n  \"livemode\": false,\n  \"metadata\": {},\n  \"shipping\": null,\n  \"sources\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"card_8qzhLMSwrnhvEz\",\n        \"object\": \"card\",\n        \"address_city\": null,\n        \"address_country\": null,\n        \"address_line1\": null,\n        \"address_line1_check\": null,\n        \"address_line2\": null,\n        \"address_state\": null,\n        \"address_zip\": null,\n        \"address_zip_check\": null,\n        \"brand\": \"Visa\",\n        \"country\": \"US\",\n        \"customer\": \"cus_8qzh1T3evmRqDV\",\n        \"cvc_check\": \"pass\",\n        \"dynamic_last4\": null,\n        \"exp_month\": 1,\n        \"exp_year\": 2018,\n        \"fingerprint\": \"Ze2h9CyiqlKZzGuV\",\n        \"funding\": \"unknown\",\n        \"last4\": \"1111\",\n        \"metadata\": {},\n        \"name\": \"Joe Test User\",\n        \"tokenization_method\": null\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/customers/cus_8qzh1T3evmRqDV/sources\"\n  },\n  \"subscriptions\": {\n    \"object\": \"list\",\n    \"data\": [],\n    \"has_more\": false,\n    \"total_count\": 0,\n    \"url\": \"/v1/customers/cus_8qzh1T3evmRqDV/subscriptions\"\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:13:30 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "1391",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8qzhSDDaEjbM38",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers?limit=100"
+    },
+    "response": {
+      "body": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"id\": \"cus_8qzh1T3evmRqDV\",\n      \"object\": \"customer\",\n      \"account_balance\": 0,\n      \"created\": 1469009610,\n      \"currency\": null,\n      \"default_source\": \"card_8qzhLMSwrnhvEz\",\n      \"delinquent\": false,\n      \"description\": \"Test Account\",\n      \"discount\": null,\n      \"email\": \"t2@localhost\",\n      \"livemode\": false,\n      \"metadata\": {},\n      \"shipping\": null,\n      \"sources\": {\n        \"object\": \"list\",\n        \"data\": [\n          {\n            \"id\": \"card_8qzhLMSwrnhvEz\",\n            \"object\": \"card\",\n            \"address_city\": null,\n            \"address_country\": null,\n            \"address_line1\": null,\n            \"address_line1_check\": null,\n            \"address_line2\": null,\n            \"address_state\": null,\n            \"address_zip\": null,\n            \"address_zip_check\": null,\n            \"brand\": \"Visa\",\n            \"country\": \"US\",\n            \"customer\": \"cus_8qzh1T3evmRqDV\",\n            \"cvc_check\": \"pass\",\n            \"dynamic_last4\": null,\n            \"exp_month\": 1,\n            \"exp_year\": 2018,\n            \"fingerprint\": \"Ze2h9CyiqlKZzGuV\",\n            \"funding\": \"unknown\",\n            \"last4\": \"1111\",\n            \"metadata\": {},\n            \"name\": \"Joe Test User\",\n            \"tokenization_method\": null\n          }\n        ],\n        \"has_more\": false,\n        \"total_count\": 1,\n        \"url\": \"/v1/customers/cus_8qzh1T3evmRqDV/sources\"\n      },\n      \"subscriptions\": {\n        \"object\": \"list\",\n        \"data\": [],\n        \"has_more\": false,\n        \"total_count\": 0,\n        \"url\": \"/v1/customers/cus_8qzh1T3evmRqDV/subscriptions\"\n      }\n    },\n    {\n      \"id\": \"cus_8qzhYaY336jV8y\",\n      \"object\": \"customer\",\n      \"account_balance\": 0,\n      \"created\": 1469009610,\n      \"currency\": null,\n      \"default_source\": \"card_8qzhze8jQKS5cq\",\n      \"delinquent\": false,\n      \"description\": \"Test Account\",\n      \"discount\": null,\n      \"email\": \"t1@localhost\",\n      \"livemode\": false,\n      \"metadata\": {},\n      \"shipping\": null,\n      \"sources\": {\n        \"object\": \"list\",\n        \"data\": [\n          {\n            \"id\": \"card_8qzhze8jQKS5cq\",\n            \"object\": \"card\",\n            \"address_city\": null,\n            \"address_country\": null,\n            \"address_line1\": null,\n            \"address_line1_check\": null,\n            \"address_line2\": null,\n            \"address_state\": null,\n            \"address_zip\": null,\n            \"address_zip_check\": null,\n            \"brand\": \"Visa\",\n            \"country\": \"US\",\n            \"customer\": \"cus_8qzhYaY336jV8y\",\n            \"cvc_check\": \"pass\",\n            \"dynamic_last4\": null,\n            \"exp_month\": 1,\n            \"exp_year\": 2018,\n            \"fingerprint\": \"Ze2h9CyiqlKZzGuV\",\n            \"funding\": \"unknown\",\n            \"last4\": \"1111\",\n            \"metadata\": {},\n            \"name\": \"Joe Test User\",\n            \"tokenization_method\": null\n          }\n        ],\n        \"has_more\": false,\n        \"total_count\": 1,\n        \"url\": \"/v1/customers/cus_8qzhYaY336jV8y/sources\"\n      },\n      \"subscriptions\": {\n        \"object\": \"list\",\n        \"data\": [],\n        \"has_more\": false,\n        \"total_count\": 0,\n        \"url\": \"/v1/customers/cus_8qzhYaY336jV8y/subscriptions\"\n      }\n    }\n  ],\n  \"has_more\": false,\n  \"url\": \"/v1/customers\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:13:31 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "3310",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8qzhTY9s8K75he",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
@@ -78,13 +112,13 @@
       "method": "delete",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/customers/cus_8qxhvQyaKFZC0E"
+      "url": "https://api.stripe.com/v1/customers/cus_8qzh1T3evmRqDV"
     },
     "response": {
-      "body": "{\n  \"deleted\": true,\n  \"id\": \"cus_8qxhvQyaKFZC0E\"\n}\n",
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"cus_8qzh1T3evmRqDV\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 08:09:27 GMT",
+        "Date": "Wed, 20 Jul 2016 10:13:31 GMT",
         "Content-Type": "application/json",
         "Content-Length": "52",
         "Connection": "keep-alive",
@@ -93,7 +127,75 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8qxhLkVr5ABDYU",
+        "Request-Id": "req_8qzhQi9lNkxQv6",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers/cus_8qzhYaY336jV8y"
+    },
+    "response": {
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"cus_8qzhYaY336jV8y\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:13:32 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "52",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8qzhRaCILBTMen",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers?include[]=total_count&limit=0"
+    },
+    "response": {
+      "body": "{\n  \"object\": \"list\",\n  \"data\": [],\n  \"has_more\": false,\n  \"total_count\": 0,\n  \"url\": \"/v1/customers\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:13:32 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "104",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8qzhuWkt5vm7pn",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
