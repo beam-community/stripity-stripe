@@ -195,7 +195,7 @@ defmodule Stripe.Subscriptions do
   """
   def change_payment_source(customer_id, sub_id, source) do
     data = [source: source]
-    Stripe.make_request(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", data)
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{customer_id}/subscriptions/#{sub_id}", Stripe.config_or_env_key, data)
     |> Stripe.Util.handle_stripe_response
   end
 
