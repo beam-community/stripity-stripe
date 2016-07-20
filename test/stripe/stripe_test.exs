@@ -3,10 +3,6 @@ defmodule Stripe.StripeTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
   import Mock
 
-  setup_all do
-    HTTPoison.start
-  end
-
   test "process_url for v1" do
     assert Stripe.process_url("payment") == "https://api.stripe.com/v1/payment"
   end
@@ -20,7 +16,7 @@ defmodule Stripe.StripeTest do
   end
 
   test "make_request_with_key fails when no key is supplied on stripe request" do
-    use_cassette "invalid_key_request" do
+    use_cassette "Stripe.StripeTest/invalid_key_request", match_requests_on: [:query, :request_body] do
       res = Stripe.make_request_with_key(
         :get,"plans?limit=0&include[]=total_count","")
               |> Stripe.Util.handle_stripe_response
@@ -32,9 +28,9 @@ defmodule Stripe.StripeTest do
   end
 
   test "make_request_with_key works when valid key is supplied" do
-    use_cassette "valid_key_request" do
+    use_cassette "Stripe.StripeTest/valid_key_request", match_requests_on: [:query, :request_body] do
       res = Stripe.make_request_with_key(
-        :get,"plans?limit=0&include[]=total_count", "valid_key")
+        :get,"plans?limit=0&include[]=total_count", "qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw")
           |> Stripe.Util.handle_stripe_response
       case res do
         {:ok, _} -> assert true
