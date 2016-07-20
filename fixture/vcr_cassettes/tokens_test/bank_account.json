@@ -3,7 +3,7 @@
     "request": {
       "body": "bank_account[country]=US&bank_account[currency]=usd&bank_account[routing_number]=110000000&bank_account[account_number]=000123456789",
       "headers": {
-        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },

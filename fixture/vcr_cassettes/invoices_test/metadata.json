@@ -3,7 +3,7 @@
     "request": {
       "body": "customer=cus_8r2jCf6wk8YLyU&subscription=sub_8r2j78r42DD6xb&metadata[app_order_id]=ABC123&metadata[app_attr1]=xyz",
       "headers": {
-        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },

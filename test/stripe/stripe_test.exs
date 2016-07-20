@@ -30,7 +30,7 @@ defmodule Stripe.StripeTest do
   test "make_request_with_key works when valid key is supplied" do
     use_cassette "stripe_test/valid_key_request", match_requests_on: [:query, :request_body] do
       res = Stripe.make_request_with_key(
-        :get,"plans?limit=0&include[]=total_count", "qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw")
+        :get,"plans?limit=0&include[]=total_count", "non_empty_secret_key_string")
           |> Stripe.Util.handle_stripe_response
       case res do
         {:ok, _} -> assert true

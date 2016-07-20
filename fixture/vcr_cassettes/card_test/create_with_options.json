@@ -3,7 +3,7 @@
     "request": {
       "body": "card[number]=4242424242424242&card[exp_month]=8&card[exp_year]=2016&card[cvc]=314",
       "headers": {
-        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
@@ -37,7 +37,7 @@
     "request": {
       "body": "source=tok_8r2jvUooNRPIod",
       "headers": {
-        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
