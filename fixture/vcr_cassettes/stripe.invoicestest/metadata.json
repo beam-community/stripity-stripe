@@ -1,0 +1,36 @@
+[
+  {
+    "request": {
+      "body": "customer=cus_8qzl1qnycs35We&subscription=sub_8qzlWdPWQPzgQ6&metadata[app_order_id]=ABC123&metadata[app_attr1]=xyz",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/invoices"
+    },
+    "response": {
+      "body": "{\n  \"id\": \"in_8qzlOVZ9OaRtr6\",\n  \"object\": \"invoice\",\n  \"amount_due\": 10,\n  \"application_fee\": null,\n  \"attempt_count\": 0,\n  \"attempted\": false,\n  \"charge\": null,\n  \"closed\": false,\n  \"currency\": \"usd\",\n  \"customer\": \"cus_8qzl1qnycs35We\",\n  \"date\": 1469009880,\n  \"description\": null,\n  \"discount\": null,\n  \"ending_balance\": null,\n  \"forgiven\": false,\n  \"lines\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"ii_8qzlTlg8SbCuJ4\",\n        \"object\": \"line_item\",\n        \"amount\": 10,\n        \"currency\": \"usd\",\n        \"description\": null,\n        \"discountable\": true,\n        \"livemode\": false,\n        \"metadata\": {},\n        \"period\": {\n          \"start\": 1469009879,\n          \"end\": 1469009879\n        },\n        \"plan\": null,\n        \"proration\": false,\n        \"quantity\": null,\n        \"subscription\": \"sub_8qzlWdPWQPzgQ6\",\n        \"type\": \"invoiceitem\"\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/invoices/in_8qzlOVZ9OaRtr6/lines\"\n  },\n  \"livemode\": false,\n  \"metadata\": {\n    \"app_order_id\": \"ABC123\",\n    \"app_attr1\": \"xyz\"\n  },\n  \"next_payment_attempt\": 1469013480,\n  \"paid\": false,\n  \"period_end\": 1469009880,\n  \"period_start\": 1469009878,\n  \"receipt_number\": null,\n  \"starting_balance\": 0,\n  \"statement_descriptor\": null,\n  \"subscription\": \"sub_8qzlWdPWQPzgQ6\",\n  \"subtotal\": 10,\n  \"tax\": null,\n  \"tax_percent\": null,\n  \"total\": 10,\n  \"webhooks_delivered_at\": null\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:18:00 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "1426",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8qzlV0DV1zLd7L",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

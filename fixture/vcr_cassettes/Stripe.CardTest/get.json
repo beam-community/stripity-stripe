@@ -1,0 +1,36 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers/cus_8qzPumFT04R9AQ/sources/card_8qzPK95xq2Q9NB"
+    },
+    "response": {
+      "body": "{\n  \"id\": \"card_8qzPK95xq2Q9NB\",\n  \"object\": \"card\",\n  \"address_city\": null,\n  \"address_country\": null,\n  \"address_line1\": null,\n  \"address_line1_check\": null,\n  \"address_line2\": null,\n  \"address_state\": null,\n  \"address_zip\": null,\n  \"address_zip_check\": null,\n  \"brand\": \"Visa\",\n  \"country\": \"US\",\n  \"customer\": \"cus_8qzPumFT04R9AQ\",\n  \"cvc_check\": \"pass\",\n  \"dynamic_last4\": null,\n  \"exp_month\": 12,\n  \"exp_year\": 2020,\n  \"fingerprint\": \"Ze2h9CyiqlKZzGuV\",\n  \"funding\": \"unknown\",\n  \"last4\": \"1111\",\n  \"metadata\": {\n    \"test_field\": \"test val\"\n  },\n  \"name\": null,\n  \"tokenization_method\": null\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 09:55:47 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "601",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8qzP5DRViooxJ9",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

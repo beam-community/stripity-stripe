@@ -1,0 +1,35 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer ",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans?limit=0&include[]=total_count"
+    },
+    "response": {
+      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"You did not provide an API key, though you did set your Authorization header to \\\"Bearer\\\". Using Bearer auth, your Authorization header should look something like 'Authorization: Bearer YOUR_SECRET_KEY'. See https://stripe.com/docs/api#authentication for details, or we can help at https://support.stripe.com/.\"\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:22:19 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "387",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Stripe-Version": "2016-07-06",
+        "Www-Authenticate": "Basic realm=\"Stripe\""
+      },
+      "status_code": 401,
+      "type": "ok"
+    }
+  }
+]

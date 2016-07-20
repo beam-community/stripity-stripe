@@ -1,0 +1,34 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/accounts/acct_18ZIJ3EW8n5GmXtj"
+    },
+    "response": {
+      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"The provided key '****************************Jqkw' does not have access to account 'acct_18ZIJ3EW8n5GmXtj' (or that account does not exist). Application access may have been revoked.\"\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 10:52:11 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "259",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Stripe-Version": "2016-07-06"
+      },
+      "status_code": 401,
+      "type": "ok"
+    }
+  }
+]

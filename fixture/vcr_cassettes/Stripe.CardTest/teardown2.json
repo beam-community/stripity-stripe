@@ -1,0 +1,35 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers/cus_8qzPumFT04R9AQ/sources/card_8qzPK95xq2Q9NB"
+    },
+    "response": {
+      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"No such source: card_8qzPK95xq2Q9NB\",\n    \"param\": \"id\"\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 09:56:49 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "130",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8qzQJRSsUdYmBG",
+        "Stripe-Version": "2016-07-06"
+      },
+      "status_code": 404,
+      "type": "ok"
+    }
+  }
+]
