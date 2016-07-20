@@ -91,8 +91,7 @@ defmodule Stripe.Plans do
   ```
   """
   def change(id, params) do
-    Stripe.make_request(:post, "#{@endpoint}/#{id}", params)
-      |> Stripe.Util.handle_stripe_response
+    change(id, params, Stripe.config_or_env_key)
   end
 
   def change(id, params, key) do
