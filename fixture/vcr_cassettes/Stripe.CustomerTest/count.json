@@ -1,0 +1,36 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers?include[]=total_count&limit=0"
+    },
+    "response": {
+      "body": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"id\": \"cus_8r2jIKv0rI7O1w\",\n      \"object\": \"customer\",\n      \"account_balance\": 0,\n      \"created\": 1469020895,\n      \"currency\": null,\n      \"default_source\": \"card_8r2jDbj4FRPZ4k\",\n      \"delinquent\": false,\n      \"description\": \"An Elixir Test Account\",\n      \"discount\": null,\n      \"email\": \"test@test.com\",\n      \"livemode\": false,\n      \"metadata\": {\n        \"app_order_id\": \"ABC123\",\n        \"app_attr1\": \"xyz\"\n      },\n      \"shipping\": null,\n      \"sources\": {\n        \"object\": \"list\",\n        \"data\": [\n          {\n            \"id\": \"card_8r2jDbj4FRPZ4k\",\n            \"object\": \"card\",\n            \"address_city\": null,\n            \"address_country\": null,\n            \"address_line1\": null,\n            \"address_line1_check\": null,\n            \"address_line2\": null,\n            \"address_state\": null,\n            \"address_zip\": null,\n            \"address_zip_check\": null,\n            \"brand\": \"Visa\",\n            \"country\": \"US\",\n            \"customer\": \"cus_8r2jIKv0rI7O1w\",\n            \"cvc_check\": \"pass\",\n            \"dynamic_last4\": null,\n            \"exp_month\": 1,\n            \"exp_year\": 2018,\n            \"fingerprint\": \"Ze2h9CyiqlKZzGuV\",\n            \"funding\": \"unknown\",\n            \"last4\": \"1111\",\n            \"metadata\": {},\n            \"name\": \"Joe Test User\",\n            \"tokenization_method\": null\n          }\n        ],\n        \"has_more\": false,\n        \"total_count\": 1,\n        \"url\": \"/v1/customers/cus_8r2jIKv0rI7O1w/sources\"\n      },\n      \"subscriptions\": {\n        \"object\": \"list\",\n        \"data\": [],\n        \"has_more\": false,\n        \"total_count\": 0,\n        \"url\": \"/v1/customers/cus_8r2jIKv0rI7O1w/subscriptions\"\n      }\n    }\n  ],\n  \"has_more\": true,\n  \"total_count\": 2,\n  \"url\": \"/v1/customers\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:36 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "1796",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2jRTZyITfPXM",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "request": {
+      "body": "customer=cus_8r2jCf6wk8YLyU&subscription=sub_8r2j78r42DD6xb",
+      "headers": {
+        "Authorization": "Bearer qr0yuBikLRa5yJkMGuEO4DNblKhEJqkw",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/invoices/upcoming"
+    },
+    "response": {
+      "body": "{\n  \"object\": \"invoice\",\n  \"amount_due\": 100,\n  \"application_fee\": null,\n  \"attempt_count\": 0,\n  \"attempted\": false,\n  \"charge\": null,\n  \"closed\": false,\n  \"currency\": \"usd\",\n  \"customer\": \"cus_8r2jCf6wk8YLyU\",\n  \"date\": 1471699324,\n  \"description\": null,\n  \"discount\": null,\n  \"ending_balance\": null,\n  \"forgiven\": false,\n  \"lines\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"sub_8r2j78r42DD6xb\",\n        \"object\": \"line_item\",\n        \"amount\": 100,\n        \"currency\": \"usd\",\n        \"description\": null,\n        \"discountable\": true,\n        \"livemode\": false,\n        \"metadata\": {},\n        \"period\": {\n          \"start\": 1471699324,\n          \"end\": 1474377724\n        },\n        \"plan\": {\n          \"id\": \"test-std\",\n          \"object\": \"plan\",\n          \"amount\": 100,\n          \"created\": 1469020923,\n          \"currency\": \"usd\",\n          \"interval\": \"month\",\n          \"interval_count\": 1,\n          \"livemode\": false,\n          \"metadata\": {},\n          \"name\": \"Test Plan Standard\",\n          \"statement_descriptor\": null,\n          \"trial_period_days\": null\n        },\n        \"proration\": false,\n        \"quantity\": 1,\n        \"subscription\": null,\n        \"type\": \"subscription\"\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/invoices/upcoming/lines?customer=cus_8r2jCf6wk8YLyU\\u0026subscription=sub_8r2j78r42DD6xb\"\n  },\n  \"livemode\": false,\n  \"metadata\": {},\n  \"next_payment_attempt\": 1471702924,\n  \"paid\": false,\n  \"period_end\": 1471699324,\n  \"period_start\": 1469020924,\n  \"receipt_number\": null,\n  \"starting_balance\": 0,\n  \"statement_descriptor\": null,\n  \"subscription\": \"sub_8r2j78r42DD6xb\",\n  \"subtotal\": 100,\n  \"tax\": null,\n  \"tax_percent\": null,\n  \"total\": 100,\n  \"webhooks_delivered_at\": null\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:22:13 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "1767",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2jmruFZjSHUO",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
