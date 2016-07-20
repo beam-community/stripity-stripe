@@ -6,6 +6,7 @@ otp_release:
 sudo: false
 env:
   - MIX_ENV=test
+  - STRIPE_SECRET_KEY=non_empty_key
 script: mix coveralls.travis
 after_script:
   - mix inch.report
