@@ -29,8 +29,7 @@ defmodule Stripe.Mixfile do
 
   defp deps(:prod) do
     [
-      {:httpoison, "~> 0.8.0" },
-      {:hackney, "~> 1.4.4" }, # not included in hex version of httpoison :(
+      {:httpoison, "~> 0.9.0"},
       {:poison, "~> 1.5"},
       {:ex_doc, "~> 0.7", only: :dev},
       {:earmark, ">= 0.0.0"}
