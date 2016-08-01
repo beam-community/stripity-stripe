@@ -13,9 +13,8 @@ defmodule Stripe.TokensTest do
     ]
     case Stripe.Tokens.create(params) do
       {:ok, res} ->
-        #Apex.ap res
         assert res.id
-      assert res.type == "bank_account"
+        assert res.type == "bank_account"
       {:error, err} -> flunk err
     end
   end
@@ -32,7 +31,6 @@ defmodule Stripe.TokensTest do
     ]
     case Stripe.Tokens.create(params) do
       {:ok, res} ->
-        #Apex.ap res
         assert res.id
         assert res.type == "card"
       {:error, err} -> flunk err
@@ -51,7 +49,6 @@ defmodule Stripe.TokensTest do
     ]
     case Stripe.Tokens.create(params, Stripe.config_or_env_key) do
       {:ok, res} ->
-        #Apex.ap res
         assert res.id
         assert res.type == "card"
       {:error, err} -> flunk err
@@ -68,10 +65,9 @@ defmodule Stripe.TokensTest do
         cvc: "314"
       ]
     ]
-    #Apex.ap token
+
     case Stripe.Tokens.get token.id do
       {:ok, res} ->
-        #Apex.ap res
         assert res.id
         assert res.type == "card"
         {:error, err} -> flunk err
@@ -88,10 +84,9 @@ defmodule Stripe.TokensTest do
         cvc: "314"
       ]
     ]
-    #Apex.ap token
+
     case Stripe.Tokens.get token.id, Stripe.config_or_env_key do
       {:ok, res} ->
-        #Apex.ap res
         assert res.id
         assert res.type == "card"
       {:error, err} -> flunk err
@@ -109,13 +104,12 @@ defmodule Stripe.TokensTest do
         cvc: "314"
       ]
     ]
-    #Apex.ap token
+
     params = [
       source: token.id
     ]
     case Stripe.Charges.create 100, params do
       {:ok, res} ->
-        #Apex.ap res
         assert res.id
         assert res.status == "succeeded"
         assert res.paid == true

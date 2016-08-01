@@ -39,7 +39,7 @@ defmodule Stripe.EventsTest do
   test "List works" do
     case Stripe.Events.list "",5 do
       {:ok, events} ->
-        assert Dict.size(events[:data]) > 0
+        assert length(events[:data]) > 0
       {:error, err} -> flunk err
     end
   end
@@ -47,7 +47,7 @@ defmodule Stripe.EventsTest do
   @tag disabled: false
   test "List w/key works" do
     case Stripe.Events.list Stripe.config_or_env_key,"", 5 do
-      {:ok, events} -> assert Dict.size(events[:data]) > 0
+      {:ok, events} -> assert length(events[:data]) > 0
       {:error, err} -> flunk err
     end
   end
@@ -60,13 +60,13 @@ defmodule Stripe.EventsTest do
       true ->
         last = List.last( events[:data] )
         case Stripe.Events.list Stripe.config_or_env_key,last["id"], 1 do
-          {:ok, events} -> assert Dict.size(events[:data]) > 0
+          {:ok, events} -> assert length(events[:data]) > 0
           {:error,err} -> flunk err
         end
       false -> flunk "should have had more than 1 page. Check setup to make sure theres enough events for the test to run properly (5+)"
     end
   end
-  
+
   @tag disabled: false
   test "Get works" do
     {:ok, events} = Stripe.Events.list "",1

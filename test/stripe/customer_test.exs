@@ -1,6 +1,5 @@
 defmodule Stripe.CustomerTest do
   use ExUnit.Case
-  use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   setup_all do
     Stripe.Customers.delete_all
@@ -76,7 +75,7 @@ defmodule Stripe.CustomerTest do
   test "List works", %{customer: _, customer2: _}  do
     case Stripe.Customers.list "", 1 do
       {:ok, res} ->
-        assert Dict.size(res[:data]) == 1
+        assert length(res[:data]) == 1
       {:error, err} -> flunk err
     end
   end
@@ -85,7 +84,7 @@ defmodule Stripe.CustomerTest do
   test "List w/key works", %{customer: _, customer2: _}  do
     case Stripe.Customers.list Stripe.config_or_env_key,"", 1 do
       {:ok, res} ->
-        assert Dict.size(res[:data]) == 1
+        assert length(res[:data]) == 1
       {:error, err} -> flunk err
     end
   end
@@ -94,7 +93,7 @@ defmodule Stripe.CustomerTest do
   test "Retrieve all works", %{customer: _, customer2: _} do
     case Stripe.Customers.all [],"" do
       {:ok, custs} ->
-         assert Dict.size(custs) > 0
+         assert length(custs) > 0
       {:error, err} -> flunk err
     end
   end
@@ -103,7 +102,7 @@ defmodule Stripe.CustomerTest do
   test "Retrieve w/key all works", %{customer: _, customer2: _} do
     case Stripe.Customers.all Stripe.config_or_env_key, [], "" do
       {:ok, custs} ->
-       assert Dict.size(custs) > 0
+       assert length(custs) > 0
       {:error, err} -> flunk err
     end
   end

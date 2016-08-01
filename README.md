@@ -36,7 +36,7 @@ Works with API version 2015-10-16
 Install the dependency:
 
 ```ex
-{:stripity_stripe, "~> 1.4.0"}
+{:stripity_stripe, "~> 1.4.1"}
 ```
 
 Next, add to your applications:
@@ -63,6 +63,9 @@ If you start contributing and you want to run mix test, first you need to export
 export STRIPE_SECRET_KEY="yourkey"
 mix test
 ```
+
+Also take note that account tests only will pass if you [set up your stripe test account as a platform](https://dashboard.stripe.com/account/applications/settings).
+
 
 ## The API
 
