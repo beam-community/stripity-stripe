@@ -1,6 +1,5 @@
 defmodule Stripe.StripeTest do
   use ExUnit.Case
-  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
   import Mock
 
   setup_all do
@@ -20,26 +19,22 @@ defmodule Stripe.StripeTest do
   end
 
   test "make_request_with_key fails when no key is supplied on stripe request" do
-    use_cassette "invalid_key_request" do
-      res = Stripe.make_request_with_key(
-        :get,"plans?limit=0&include[]=total_count","")
-              |> Stripe.Util.handle_stripe_response
-      case res do
-          {:error, err} -> assert String.contains? err["error"]["message"], "YOUR_SECRET_KEY"
-          true -> assert false
-      end
+    res = Stripe.make_request_with_key(
+      :get,"plans?limit=0&include[]=total_count","")
+            |> Stripe.Util.handle_stripe_response
+    case res do
+        {:error, err} -> assert String.contains? err["error"]["message"], "YOUR_SECRET_KEY"
+        true -> assert false
     end
   end
 
   test "make_request_with_key works when valid key is supplied" do
-    use_cassette "valid_key_request" do
-      res = Stripe.make_request_with_key(
-        :get,"plans?limit=0&include[]=total_count", "valid_key")
-          |> Stripe.Util.handle_stripe_response
-      case res do
-        {:ok, _} -> assert true
-        {:error, err} -> flunk err["error"]["message"]
-      end
+    res = Stripe.make_request_with_key(
+      :get,"plans?limit=0&include[]=total_count", "valid_key")
+        |> Stripe.Util.handle_stripe_response
+    case res do
+      {:ok, _} -> assert(true == true)
+      {:error, err} -> flunk err["error"]["message"]
     end
   end
 
