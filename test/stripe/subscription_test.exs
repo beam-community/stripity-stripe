@@ -21,7 +21,7 @@ defmodule Stripe.SubscriptionTest do
       Stripe.Plans.delete_all
     end
 
-     {:ok, [ customer: customer, sub1: sub1, sub2: sub2, sub3: sub3 ] }
+    {:ok, [ customer: customer, sub1: sub1, sub2: sub2, sub3: sub3 ] }
   end
 
   @tag disabled: false
@@ -124,14 +124,6 @@ defmodule Stripe.SubscriptionTest do
   end
 
   @tag disabled: false
-  test "Cancel w/key works", %{customer: customer, sub1: _, sub2: sub2} do
-    case Stripe.Subscriptions.cancel customer.id, sub2.id,[], Stripe.config_or_env_key do
-      {:ok, canceled_sub} -> assert canceled_sub.id
-      {:error, err} -> flunk err
-    end
-  end
-
-  @tag disabled: false
   test "Cancel at period end works", %{customer: customer, sub3: sub3} do
     case Stripe.Subscriptions.cancel(customer.id, sub3.id, [at_period_end: true]) do
           {:ok, canceled_sub} ->
@@ -151,9 +143,18 @@ defmodule Stripe.SubscriptionTest do
     ]
     case Stripe.Subscriptions.change_payment_source(c.id, sub2.id, source) do
       {:ok, res} -> assert res[:status] == "active"
-      {:error, err} -> flunk err.message
+      {:error, err} -> flunk err["error"]["message"]
     end
   end
+
+  @tag disabled: false
+  test "Cancel w/key works", %{customer: customer, sub1: _, sub2: sub2} do
+    case Stripe.Subscriptions.cancel customer.id, sub2.id,[], Stripe.config_or_env_key do
+      {:ok, canceled_sub} -> assert canceled_sub.id
+      {:error, err} -> flunk err
+    end
+  end
+
   @tag disabled: false
   test "Cancel all works", %{customer: customer,  sub1: _, sub2: _} do
     Stripe.Subscriptions.cancel_all customer.id, []

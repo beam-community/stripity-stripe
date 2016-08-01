@@ -30,11 +30,11 @@ defmodule Stripe.StripeTest do
 
   test "make_request_with_key works when valid key is supplied" do
     res = Stripe.make_request_with_key(
-      :get,"plans?limit=0&include[]=total_count", "valid_key")
+      :get,"plans?limit=0&include[]=total_count", Stripe.config_or_env_key)
         |> Stripe.Util.handle_stripe_response
     case res do
       {:ok, _} -> assert(true == true)
-      {:error, err} -> flunk err["error"]["message"]
+      {:error, err} -> inspect(err) |> flunk
     end
   end
 

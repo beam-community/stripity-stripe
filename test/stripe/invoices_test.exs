@@ -39,8 +39,8 @@ defmodule Stripe.InvoicesTest do
       {:error, err} -> flunk err
     end
   end
-  
-  
+
+
   @tag disabled: false
   test "Count works", %{}  do
     case Stripe.Invoices.count do
@@ -61,7 +61,7 @@ defmodule Stripe.InvoicesTest do
   test "List works", %{}  do
     case Stripe.Invoices.list "",1 do
       {:ok, res} ->
-        assert Dict.size(res[:data]) == 1
+        assert length(res[:data]) == 1
       {:error, err} -> flunk err
     end
   end
@@ -69,7 +69,7 @@ defmodule Stripe.InvoicesTest do
   @tag disabled: false
   test "List w/key works", %{}  do
     case Stripe.Invoices.list Stripe.config_or_env_key, "", 1 do
-      {:ok, lst} -> assert Dict.size(lst[:data]) == 1
+      {:ok, lst} -> assert length(lst[:data]) == 1
       {:error, err} -> flunk err
     end
   end
@@ -81,7 +81,7 @@ defmodule Stripe.InvoicesTest do
       true ->
         last = List.last( invoices[:data] )
         case Stripe.Invoices.list Stripe.config_or_env_key,last["id"], 1 do
-          {:ok, invoices} -> assert Dict.size(invoices[:data]) > 0
+          {:ok, invoices} -> assert length(invoices[:data]) > 0
           {:error,err} -> flunk err
         end
       _ -> flunk "should have had more than 1 page. Check setup to make sure theres enough invoices for the test to run properly (5+)"

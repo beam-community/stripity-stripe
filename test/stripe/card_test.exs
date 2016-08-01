@@ -72,7 +72,7 @@ defmodule Stripe.CardTest do
   test "List works", %{customer: customer, card: _, card2: _}  do
     case Stripe.Cards.list :customer, customer.id, "", 1 do
       {:ok, res} ->
-        assert Dict.size(res[:data]) == 1
+        assert length(res[:data]) == 1
       {:error, err} -> flunk err
     end
   end
@@ -81,7 +81,7 @@ defmodule Stripe.CardTest do
   test "List w/key works", %{customer: customer, card: _, card2: _}  do
     case Stripe.Cards.list :customer, customer.id, Stripe.config_or_env_key,"", 1 do
       {:ok, res} ->
-        assert Dict.size(res[:data]) == 1
+        assert length(res[:data]) == 1
       {:error, err} -> flunk err
     end
   end
@@ -90,7 +90,7 @@ defmodule Stripe.CardTest do
   test "Retrieve all works", %{customer: customer, card: _, card2: _} do
     case Stripe.Cards.all :customer, customer.id, [],"" do
       {:ok, cards} ->
-         assert Dict.size(cards) > 0
+         assert length(cards) > 0
       {:error, err} -> flunk err
     end
   end
@@ -99,7 +99,7 @@ defmodule Stripe.CardTest do
   test "Retrieve w/key all works", %{customer: customer, card: _, card2: _} do
     case Stripe.Cards.all :customer, customer.id, Stripe.config_or_env_key, [], "" do
       {:ok, cards} ->
-       assert Dict.size(cards) > 0
+       assert length(cards) > 0
       {:error, err} -> flunk err
     end
   end

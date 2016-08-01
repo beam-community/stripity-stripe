@@ -40,7 +40,7 @@ defmodule Stripe.UtilTest do
   test "list works" do
     case Stripe.Util.list "plans" do
       {:ok, resp} ->
-        assert Dict.size(resp[:data]) == 2
+        assert length(resp[:data]) == 2
       {:error, err} -> flunk err
     end
   end
@@ -48,7 +48,7 @@ defmodule Stripe.UtilTest do
   @tag disabled: false
   test "list w/key works" do
     case Stripe.Util.list "plans", Stripe.config_or_env_key,  "", 2  do
-      {:ok, resp} -> assert Dict.size( resp[:data]) == 2
+      {:ok, resp} -> assert length(resp[:data]) == 2
       {:error, err} -> flunk err
     end
   end

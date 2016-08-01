@@ -17,7 +17,7 @@ defmodule Stripe.AccountTest do
           city: "Los Angeles",
           country: "US",
           line1: "1st Ave",
-          postal_code: "910000",
+          postal_code: "90001",
           state: "CA"
         ],
         dob: [
@@ -43,7 +43,7 @@ defmodule Stripe.AccountTest do
         end
         {:ok, [account: account]}
 
-      {:error, err} -> flunk err
+      {:error, err} -> inspect(err) |> flunk
     end
   end
 
