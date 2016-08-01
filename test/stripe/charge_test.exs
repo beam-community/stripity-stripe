@@ -1,7 +1,10 @@
 defmodule Stripe.ChargeTest do
   use ExUnit.Case
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup do
+    HTTPoison.start
+    
     params = [
       source: [
         object: "card",
@@ -18,95 +21,121 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Create with card works", %{params: params} do
-    case Stripe.Charges.create(1000,params) do
-      {:ok, res} -> assert res.id
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_create" do
+      case Stripe.Charges.create(1000,params) do
+        {:ok, res} -> assert res.id
+        {:error, err} -> flunk err
+      end
     end
   end
 
   test "Create with card, w/key works", %{params: params} do
-    case Stripe.Charges.create(1000,params, Stripe.config_or_env_key) do
-      {:ok, res} -> assert res.id
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_create_w_key" do
+      case Stripe.Charges.create(1000,params, Stripe.config_or_env_key) do
+        {:ok, res} -> assert res.id
+        {:error, err} -> flunk err
+      end
     end
-end
+  end
   test "List works" do
-    case Stripe.Charges.list() do
-      {:ok, charges} -> assert length(charges) > 0
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_list" do
+      case Stripe.Charges.list() do
+        {:ok, charges} -> assert length(charges) > 0
+        {:error, err} -> flunk err
+      end
     end
   end
 
   test "List w/key works" do
-    case Stripe.Charges.list Stripe.config_or_env_key, 1 do
-      {:ok, charges} -> assert length(charges) > 0
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_list_w_keys" do
+      case Stripe.Charges.list Stripe.config_or_env_key, 1 do
+        {:ok, charges} -> assert length(charges) > 0
+        {:error, err} -> flunk err
+      end
     end
-end
+  end
+
   test "Get works" do
-    {:ok,[first | _]} = Stripe.Charges.list()
-    case Stripe.Charges.get(first.id) do
-      {:ok, charge} -> assert charge.id == first.id
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_get" do
+      {:ok,[first | _]} = Stripe.Charges.list()
+      case Stripe.Charges.get(first.id) do
+        {:ok, charge} -> assert charge.id == first.id
+        {:error, err} -> flunk err
+      end
     end
   end
 
   test "Get w/key works" do
-    {:ok,[first | _]} = Stripe.Charges.list Stripe.config_or_env_key, 1
-    case Stripe.Charges.get(first.id, Stripe.config_or_env_key) do
-      {:ok, charge} -> assert charge.id == first.id
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_get_w_key" do
+      {:ok,[first | _]} = Stripe.Charges.list Stripe.config_or_env_key, 1
+      case Stripe.Charges.get(first.id, Stripe.config_or_env_key) do
+        {:ok, charge} -> assert charge.id == first.id
+        {:error, err} -> flunk err
+      end
     end
   end
 
   test "Capture works", %{params: params} do
-    params = Keyword.put_new params, :capture, false
-    {:ok, charge} = Stripe.Charges.create(1000,params)
-    case Stripe.Charges.capture(charge.id) do
-      {:ok, captured} -> assert captured.id == charge.id
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_capture" do
+      params = Keyword.put_new params, :capture, false
+      {:ok, charge} = Stripe.Charges.create(1000,params)
+      case Stripe.Charges.capture(charge.id) do
+        {:ok, captured} -> assert captured.id == charge.id
+        {:error, err} -> flunk err
+      end
     end
   end
 
   test "Capture w/key works", %{params: params} do
-    params = Keyword.put_new params, :capture, false
-    {:ok, charge} = Stripe.Charges.create(1000,params, Stripe.config_or_env_key)
-    case Stripe.Charges.capture(charge.id, Stripe.config_or_env_key) do
-      {:ok, captured} -> assert captured.id == charge.id
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_capture_w_key" do
+      params = Keyword.put_new params, :capture, false
+      {:ok, charge} = Stripe.Charges.create(1000,params, Stripe.config_or_env_key)
+      case Stripe.Charges.capture(charge.id, Stripe.config_or_env_key) do
+        {:ok, captured} -> assert captured.id == charge.id
+        {:error, err} -> flunk err
+      end
     end
-end
+  end
+
   test "Change(Update) works", %{params: params} do
-    {:ok, charge} = Stripe.Charges.create(1000,params)
-    params = [description: "Changed charge"]
-    case Stripe.Charges.change(charge.id, params) do
-      {:ok, changed} -> assert changed.description == "Changed charge"
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_update" do
+      {:ok, charge} = Stripe.Charges.create(1000,params)
+      params = [description: "Changed charge"]
+      case Stripe.Charges.change(charge.id, params) do
+        {:ok, changed} -> assert changed.description == "Changed charge"
+        {:error, err} -> flunk err
+      end
     end
-end
+  end
 
   test "Change(Update) w/key works", %{params: params} do
-    {:ok, charge} = Stripe.Charges.create(1000,params, Stripe.config_or_env_key)
-    params = [description: "Changed charge"]
-    case Stripe.Charges.change(charge.id, params, Stripe.config_or_env_key) do
-      {:ok, changed} -> assert changed.description == "Changed charge"
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_update_w_key" do
+      {:ok, charge} = Stripe.Charges.create(2000,params, Stripe.config_or_env_key)
+      params = [description: "Changed charge"]
+      case Stripe.Charges.change(charge.id, params, Stripe.config_or_env_key) do
+        {:ok, changed} -> assert changed.description == "Changed charge"
+        {:error, err} -> flunk err
+      end
     end
   end
 
   test "Refund works", %{params: params} do
-    {:ok, charge} = Stripe.Charges.create(1000,params)
-    case Stripe.Charges.refund_partial(charge.id,500) do
-      {:ok, refunded} -> assert refunded.amount == 500
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_refund" do
+      {:ok, charge} = Stripe.Charges.create(3000,params)
+      case Stripe.Charges.refund_partial(charge.id,500) do
+        {:ok, refunded} -> assert refunded.amount == 500
+        {:error, err} -> flunk err
+      end
     end
   end
 
   test "Refund w/key works", %{params: params} do
-    {:ok, charge} = Stripe.Charges.create(1000,params, Stripe.config_or_env_key)
-    case Stripe.Charges.refund_partial(charge.id,500, Stripe.config_or_env_key) do
-      {:ok, refunded} -> assert refunded.amount == 500
-      {:error, err} -> flunk err
+    use_cassette "stripe_charge_refund_w_key" do
+      {:ok, charge} = Stripe.Charges.create(5000,params, Stripe.config_or_env_key)
+      case Stripe.Charges.refund_partial(charge.id,500, Stripe.config_or_env_key) do
+        {:ok, refunded} -> assert refunded.amount == 500
+        {:error, err} -> flunk err
+      end
     end
   end
 end

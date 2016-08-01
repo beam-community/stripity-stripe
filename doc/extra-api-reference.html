@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>API Reference – stripity_stripe v0.3.0</title>
+    <title>API Reference – stripity_stripe v1.3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -28,7 +28,7 @@
         stripity_stripe
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.3.0
+        v1.3.0
       </h2>
     </div>
     
@@ -80,16 +80,69 @@
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="Stripe.Accounts.html">Stripe.Accounts</a></div>
+  
+    <div class="summary-synopsis"><p>Main API for working with Customers at Stripe. Through this API you can:
+-create accounts
+-get single account
+-delete single account
+-delete all account
+-count account</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Stripe.Cards.html">Stripe.Cards</a></div>
+  
+    <div class="summary-synopsis"><p>Main API for working with Cards at Stripe. Through this API you can:
+-create cards for a customer
+-delete cards for a customer
+-delete all cards for a customer
+-list cards for a customer
+-count cards for a customer</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Stripe.Charges.html">Stripe.Charges</a></div>
   
-    <div class="summary-synopsis"><p>Handles charges to the Stripe API</p>
+    <div class="summary-synopsis"><p>Handles charges to the Stripe API.
+(API ref: <a href="https://stripe.com/docs/api#charges">https://stripe.com/docs/api#charges</a>)</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Stripe.Connect.html">Stripe.Connect</a></div>
+  
+    <div class="summary-synopsis"><p>Helper module for Connect related features at Stripe.
+Through this API you can:</p>
+<ul>
+<li>retrieve the oauth access token or the full response, using the code received from the oauth flow return
+</li>
+</ul>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature"><a href="Stripe.Customers.html">Stripe.Customers</a></div>
   
-    <div class="summary-synopsis"><p>Main API for working with Customers at Stripe. Through this API you can alter subscriptions, create invoices, create and delete customers, etc</p>
+    <div class="summary-synopsis"><p>Main API for working with Customers at Stripe. Through this API you can:
+-change subscriptions
+-create invoices
+-create customers
+-delete single customer
+-delete all customer
+-count customers</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Stripe.Events.html">Stripe.Events</a></div>
+  
+    <div class="summary-synopsis"><p>Main API for working with Events at Stripe. Through this API you can:
+-list/search events (last 30 days guaranteed to be available)
+-retrieve event from id
+-count number of events stored  currently on stripe</p>
 </div>
   
 </div>
@@ -101,6 +154,17 @@
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="Stripe.Invoices.html">Stripe.Invoices</a></div>
+  
+    <div class="summary-synopsis"><p>Main API for working with Invoices at Stripe. Through this API you can:
+-create
+-retrieve single
+-list (paged, 100 max/page)
+-count</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Stripe.Plans.html">Stripe.Plans</a></div>
   
     <div class="summary-synopsis"><p>Basic List, Create, Delete API for Plans</p>
@@ -108,7 +172,40 @@
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="Stripe.Subscriptions.html">Stripe.Subscriptions</a></div>
+  
+    <div class="summary-synopsis"><p>Main API for working with Subscriptions at Stripe. Through this API you can:</p>
+<ul>
+<li>create
+</li>
+<li>change
+</li>
+<li>retrieve
+</li>
+<li>cancel
+</li>
+<li>cancel_all
+</li>
+<li>list all
+</li>
+<li>count all
+</li>
+</ul>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Stripe.Supervisor.html">Stripe.Supervisor</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Stripe.Tokens.html">Stripe.Tokens</a></div>
+  
+    <div class="summary-synopsis"><p>API for working with Tokens at Stripe. Through this API you can:
+-create
+-retrieve
+tokens for both credit card and bank account allowing you to use them instead of a credit card number in various operations</p>
+</div>
   
 </div>
 <div class="summary-row">

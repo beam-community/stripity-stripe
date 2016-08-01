@@ -1,5 +1,6 @@
 defmodule Stripe.CustomerTest do
   use ExUnit.Case
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
 
   setup_all do
     Stripe.Customers.delete_all

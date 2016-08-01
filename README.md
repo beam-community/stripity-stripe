@@ -1,6 +1,6 @@
-# Stripe for Elixir
+# Stripe for Elixir [![Build Status](https://travis-ci.org/robconery/stripity-stripe.svg?branch=master)](https://travis-ci.org/robconery/stripity-stripe) [![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Inline docs](http://inch-ci.org/github/robconery/stripity-stripe.svg)](http://inch-ci.org/github/robconery/stripity-stripe) [![Coverage Status](https://coveralls.io/repos/github/robconery/stripity-stripe/badge.svg?branch=master)](https://coveralls.io/github/robconery/stripity-stripe?branch=master)
 
-An Elixir library for working [Stripe](https://stripe.com/).
+An Elixir library for working with [Stripe](https://stripe.com/).
 
  - Manage accounts (your own, standalone/managed via connect) [Stripe.Accounts](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/accounts.ex)
  - Manage customers [Stripe.Customers](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/customers.ex)
@@ -36,7 +36,7 @@ Works with API version 2015-10-16
 Install the dependency:
 
 ```ex
-{:stripity_stripe, "~> 1.0.0"}
+{:stripity_stripe, "~> 1.4.0"}
 ```
 
 Next, add to your applications:
@@ -56,15 +56,9 @@ config :stripity_stripe, secret_key: "YOUR SECRET KEY"
 config :stripity_stripe, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
 ```
 
-Then add Stripe to your supervisor tree or, to play around, make sure you start it up:
-
-```ex
-Stripe.start
-```
-HTTPoison is started automatically in [Stripe.ex](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe.ex)
-
 ## Testing
 If you start contributing and you want to run mix test, first you need to export STRIPE_SECRET_KEY environment variable in the same shell as the one you will be running mix test in. All tests have the @tag disabled: false and the test runner is configured to ignore disabled: true. This helps to turn tests on/off when working in them. Most of the tests depends on the order of execution (test random seed = 0) to minimize runtime. I've tried having each tests isolated but this made it take ~10 times longer.
+
 ```
 export STRIPE_SECRET_KEY="yourkey"
 mix test
@@ -166,3 +160,11 @@ https://dashboard.stripe.com/account/applications/settings
 
 Create a connect standalone account. Grab your development client_id. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to Stripe.Connect.oauth_token_callback or Stripe.Connect.get_token.
 
+
+## Contributing
+
+Feedback, feature requests, and fixes are welcomed and encouraged.  Please make appropriate use of [Issues](https://github.com/robconery/stripity-stripe/issues) and [Pull Requests](https://github.com/robconery/stripity-stripe/pulls).  All code should have accompanying tests.
+
+## License
+
+Please see [LICENSE](LICENSE) for licensing details.
