@@ -1,49 +1,26 @@
 defmodule Stripe.AccountTest do
   use ExUnit.Case
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup_all do
-    Stripe.Accounts.delete_all
+    use_cassette "account_test/setup", match_requests_on: [:query, :request_body] do
+      Stripe.Accounts.delete_all
 
-    new_account = [
-      email: "test@example.com",
-      managed: true,
-      tos_acceptance: [
-        date: :os.system_time(:seconds),
-        ip: "127.0.0.1"
-      ],
-      legal_entity: [
-        type: "individual",
-        address: [
-          city: "Los Angeles",
-          country: "US",
-          line1: "1st Ave",
-          postal_code: "910000",
-          state: "CA"
-        ],
-        dob: [
-          day: 1,
-          month: 1,
-          year: 1991
-        ],
-        first_name: "John",
-        last_name: "Doe"
-      ],
-      external_account: [
-        object: "bank_account",
-        country: "US",
-        currency: "usd",
-        routing_number: "110000000",
-        account_number: "000123456789"
+      new_account = [
+        email: "test@example.com",
+        managed: true
       ]
-    ]
-    case Stripe.Accounts.create new_account do
-      {:ok, account} ->
+      case Stripe.Accounts.create new_account do
+        {:ok, account} ->
         on_exit fn ->
-          Stripe.Accounts.delete account.id
+          use_cassette "account_test/teardown", match_requests_on: [:query, :request_body] do
+            Stripe.Accounts.delete account.id
+          end
         end
         {:ok, [account: account]}
 
-      {:error, err} -> flunk err
+        {:error, err} -> flunk err
+      end
     end
   end
 
@@ -54,33 +31,41 @@ defmodule Stripe.AccountTest do
 
   @tag disabled: false
   test "Retrieve list works" do
-    {:ok, accounts} = Stripe.Accounts.list
-    assert length(accounts) > 0
+    use_cassette "account_test/list", match_requests_on: [:query, :request_body] do
+      {:ok, accounts} = Stripe.Accounts.list
+      assert length(accounts) > 0
+    end
   end
 
   @tag disabled: false
   test "Retrieve single works", %{account: account} do
-    case Stripe.Accounts.get account.id do
-      {:ok, found} -> assert found.id == account.id
-      {:error, err} -> flunk err
+    use_cassette "account_test/get", match_requests_on: [:query, :request_body] do
+      case Stripe.Accounts.get account.id do
+        {:ok, found} -> assert found.id == account.id
+        {:error, err} -> flunk err
+      end
     end
   end
 
   test "Delete single works", %{account: account} do
-    case Stripe.Accounts.delete account.id do
-      {:ok, res} -> assert res.deleted
-      {:error, err} -> flunk err
+    use_cassette "account_test/delete", match_requests_on: [:query, :request_body] do
+      case Stripe.Accounts.delete account.id do
+        {:ok, res} -> assert res.deleted
+        {:error, err} -> flunk err
+      end
     end
   end
 
   test "Delete all works", %{account: _} do
-   Helper.create_test_account "test1@example.com"
-   Helper.create_test_account "test2@example.com"
-   Stripe.Accounts.delete_all
+    use_cassette "account_test/delete_all", match_requests_on: [:query, :request_body] do
+      Helper.create_test_account "test1@example.com"
+      Helper.create_test_account "test2@example.com"
+      Stripe.Accounts.delete_all
 
-    case Stripe.Accounts.count do
-      {:ok, cnt} -> assert cnt == 0
-      {:error, err} -> flunk err
+      case Stripe.Accounts.count do
+        {:ok, cnt} -> assert cnt == 0
+        {:error, err} -> flunk err
+      end
     end
   end
 end

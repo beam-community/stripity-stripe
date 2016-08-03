@@ -1,0 +1,374 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers/cus_8r2iLZ3me9G4hU/subscriptions/sub_8r2ikymYYXhIlq"
+    },
+    "response": {
+      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"Customer cus_8r2iLZ3me9G4hU does not have a subscription with ID sub_8r2ikymYYXhIlq\",\n    \"param\": \"subscription\"\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:11 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "188",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2iXQ7SnKG7I5",
+        "Stripe-Version": "2016-07-06"
+      },
+      "status_code": 404,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers/cus_8r2iLZ3me9G4hU/subscriptions/sub_8r2iF6CbPVjGK2"
+    },
+    "response": {
+      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"Customer cus_8r2iLZ3me9G4hU does not have a subscription with ID sub_8r2iF6CbPVjGK2\",\n    \"param\": \"subscription\"\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:11 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "188",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2iP5JZ49YKFb",
+        "Stripe-Version": "2016-07-06"
+      },
+      "status_code": 404,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/customers/cus_8r2iLZ3me9G4hU"
+    },
+    "response": {
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"cus_8r2iLZ3me9G4hU\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:11 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "52",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2iyFXCC1e7Vi",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans?limit=100"
+    },
+    "response": {
+      "body": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"id\": \"test-create-b\",\n      \"object\": \"plan\",\n      \"amount\": 100,\n      \"created\": 1469020862,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"interval_count\": 1,\n      \"livemode\": false,\n      \"metadata\": {},\n      \"name\": \"Test Plan test-create-b\",\n      \"statement_descriptor\": null,\n      \"trial_period_days\": null\n    },\n    {\n      \"id\": \"test-create-a\",\n      \"object\": \"plan\",\n      \"amount\": 100,\n      \"created\": 1469020859,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"interval_count\": 1,\n      \"livemode\": false,\n      \"metadata\": {},\n      \"name\": \"Test Plan test-create-a\",\n      \"statement_descriptor\": null,\n      \"trial_period_days\": null\n    },\n    {\n      \"id\": \"test-dla\",\n      \"object\": \"plan\",\n      \"amount\": 100,\n      \"created\": 1469020853,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"interval_count\": 1,\n      \"livemode\": false,\n      \"metadata\": {},\n      \"name\": \"Test Plan test-dla\",\n      \"statement_descriptor\": null,\n      \"trial_period_days\": null\n    },\n    {\n      \"id\": \"test-dlz\",\n      \"object\": \"plan\",\n      \"amount\": 100,\n      \"created\": 1469020853,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"interval_count\": 1,\n      \"livemode\": false,\n      \"metadata\": {},\n      \"name\": \"Test Plan test-dlz\",\n      \"statement_descriptor\": null,\n      \"trial_period_days\": null\n    },\n    {\n      \"id\": \"test-cancel-all\",\n      \"object\": \"plan\",\n      \"amount\": 100,\n      \"created\": 1469020852,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"interval_count\": 1,\n      \"livemode\": false,\n      \"metadata\": {},\n      \"name\": \"Test Plan test-cancel-all\",\n      \"statement_descriptor\": null,\n      \"trial_period_days\": null\n    },\n    {\n      \"id\": \"test-dlx\",\n      \"object\": \"plan\",\n      \"amount\": 1000,\n      \"created\": 1469020851,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"interval_count\": 1,\n      \"livemode\": false,\n      \"metadata\": {},\n      \"name\": \"Test Plan Deluxe\",\n      \"statement_descriptor\": null,\n      \"trial_period_days\": null\n    },\n    {\n      \"id\": \"test-std\",\n      \"object\": \"plan\",\n      \"amount\": 100,\n      \"created\": 1469020850,\n      \"currency\": \"usd\",\n      \"interval\": \"month\",\n      \"interval_count\": 1,\n      \"livemode\": false,\n      \"metadata\": {},\n      \"name\": \"Test Plan Standard\",\n      \"statement_descriptor\": null,\n      \"trial_period_days\": null\n    }\n  ],\n  \"has_more\": false,\n  \"url\": \"/v1/plans\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:12 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "2502",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2i1OanqjdGNK",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans/test-create-b"
+    },
+    "response": {
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"test-create-b\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:12 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "47",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2iTIBwpYehCX",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans/test-create-a"
+    },
+    "response": {
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"test-create-a\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:12 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "47",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2iVsRSxr7e7j",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans/test-dla"
+    },
+    "response": {
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"test-dla\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:12 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "42",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2iyCEVdd9Ry7",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans/test-dlz"
+    },
+    "response": {
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"test-dlz\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:13 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "42",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2iROz1FP0Agv",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans/test-cancel-all"
+    },
+    "response": {
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"test-cancel-all\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:13 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2i4ZLQs3VzRf",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans/test-dlx"
+    },
+    "response": {
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"test-dlx\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:13 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "42",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2iWiVogLPVYb",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  },
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "delete",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/plans/test-std"
+    },
+    "response": {
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"test-std\"\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Wed, 20 Jul 2016 13:21:14 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "42",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_8r2ico3aLbgLDa",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

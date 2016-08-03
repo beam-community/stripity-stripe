@@ -3,8 +3,6 @@ defmodule Stripe.ChargeTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
 
   setup do
-    HTTPoison.start
-    
     params = [
       source: [
         object: "card",
@@ -21,7 +19,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Create with card works", %{params: params} do
-    use_cassette "stripe_charge_create" do
+    use_cassette "charge_test/create", match_requests_on: [:query, :request_body] do
       case Stripe.Charges.create(1000,params) do
         {:ok, res} -> assert res.id
         {:error, err} -> flunk err
@@ -30,7 +28,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Create with card, w/key works", %{params: params} do
-    use_cassette "stripe_charge_create_w_key" do
+    use_cassette "charge_test/create_with_key", match_requests_on: [:query, :request_body] do
       case Stripe.Charges.create(1000,params, Stripe.config_or_env_key) do
         {:ok, res} -> assert res.id
         {:error, err} -> flunk err
@@ -38,7 +36,7 @@ defmodule Stripe.ChargeTest do
     end
   end
   test "List works" do
-    use_cassette "stripe_charge_list" do
+    use_cassette "charge_test/list", match_requests_on: [:query, :request_body] do
       case Stripe.Charges.list() do
         {:ok, charges} -> assert length(charges) > 0
         {:error, err} -> flunk err
@@ -47,7 +45,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "List w/key works" do
-    use_cassette "stripe_charge_list_w_keys" do
+    use_cassette "charge_test/list_with_key", match_requests_on: [:query, :request_body] do
       case Stripe.Charges.list Stripe.config_or_env_key, 1 do
         {:ok, charges} -> assert length(charges) > 0
         {:error, err} -> flunk err
@@ -56,7 +54,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Get works" do
-    use_cassette "stripe_charge_get" do
+    use_cassette "charge_test/get", match_requests_on: [:query, :request_body] do
       {:ok,[first | _]} = Stripe.Charges.list()
       case Stripe.Charges.get(first.id) do
         {:ok, charge} -> assert charge.id == first.id
@@ -66,7 +64,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Get w/key works" do
-    use_cassette "stripe_charge_get_w_key" do
+    use_cassette "charge_test/get_with_key", match_requests_on: [:query, :request_body] do
       {:ok,[first | _]} = Stripe.Charges.list Stripe.config_or_env_key, 1
       case Stripe.Charges.get(first.id, Stripe.config_or_env_key) do
         {:ok, charge} -> assert charge.id == first.id
@@ -76,7 +74,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Capture works", %{params: params} do
-    use_cassette "stripe_charge_capture" do
+    use_cassette "charge_test/capture", match_requests_on: [:query, :request_body] do
       params = Keyword.put_new params, :capture, false
       {:ok, charge} = Stripe.Charges.create(1000,params)
       case Stripe.Charges.capture(charge.id) do
@@ -87,7 +85,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Capture w/key works", %{params: params} do
-    use_cassette "stripe_charge_capture_w_key" do
+    use_cassette "charge_test/capture_with_key", match_requests_on: [:query, :request_body] do
       params = Keyword.put_new params, :capture, false
       {:ok, charge} = Stripe.Charges.create(1000,params, Stripe.config_or_env_key)
       case Stripe.Charges.capture(charge.id, Stripe.config_or_env_key) do
@@ -98,7 +96,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Change(Update) works", %{params: params} do
-    use_cassette "stripe_charge_update" do
+    use_cassette "charge_test/change", match_requests_on: [:query, :request_body] do
       {:ok, charge} = Stripe.Charges.create(1000,params)
       params = [description: "Changed charge"]
       case Stripe.Charges.change(charge.id, params) do
@@ -109,7 +107,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Change(Update) w/key works", %{params: params} do
-    use_cassette "stripe_charge_update_w_key" do
+    use_cassette "charge_test/change_with_key", match_requests_on: [:query, :request_body] do
       {:ok, charge} = Stripe.Charges.create(2000,params, Stripe.config_or_env_key)
       params = [description: "Changed charge"]
       case Stripe.Charges.change(charge.id, params, Stripe.config_or_env_key) do
@@ -120,7 +118,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Refund works", %{params: params} do
-    use_cassette "stripe_charge_refund" do
+    use_cassette "charge_test/partial_refund", match_requests_on: [:query, :request_body] do
       {:ok, charge} = Stripe.Charges.create(3000,params)
       case Stripe.Charges.refund_partial(charge.id,500) do
         {:ok, refunded} -> assert refunded.amount == 500
@@ -130,7 +128,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "Refund w/key works", %{params: params} do
-    use_cassette "stripe_charge_refund_w_key" do
+    use_cassette "charge_test/partial_refund_with_key", match_requests_on: [:query, :request_body] do
       {:ok, charge} = Stripe.Charges.create(5000,params, Stripe.config_or_env_key)
       case Stripe.Charges.refund_partial(charge.id,500, Stripe.config_or_env_key) do
         {:ok, refunded} -> assert refunded.amount == 500
