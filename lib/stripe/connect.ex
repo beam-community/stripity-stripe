@@ -1,5 +1,5 @@
 defmodule Stripe.Connect do
-  require HashDict
+  require Map
 
   @moduledoc """
   Helper module for Connect related features at Stripe.

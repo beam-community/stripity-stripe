@@ -14,15 +14,15 @@ defmodule Stripe.URI do
   end
 
   @doc """
-  Takes a flat or nested HashDict and turns it into proper query values.
+  Takes a map and turns it into proper query values.
 
   ## Example
-  card = HashDict.new([
-    card: HashDict.new([
+  card_data = %{
+    card: %{
       number: 424242424242,
       exp_year: 2014
-    ])
-  ])
+    }
+  }
 
   Stripe.URI.encode_query(card) # card[number]=424242424242&card[exp_year]=2014
   """
