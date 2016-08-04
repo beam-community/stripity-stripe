@@ -79,7 +79,7 @@ defmodule Stripe.Cards do
 
 
   def update(owner_type, owner_id, id, params, key) do
-    Stripe.make_request_with_key(:put, "#{endpoint_for_entity(owner_type, owner_id)}/#{id}", key, params)
+    Stripe.make_request_with_key(:post, "#{endpoint_for_entity(owner_type, owner_id)}/#{id}", key, params)
     |> Stripe.Util.handle_stripe_response
   end
 
