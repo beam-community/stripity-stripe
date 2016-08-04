@@ -1,7 +1,7 @@
 [
   {
     "request": {
-      "body": "email=events_test1%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe Test User",
+      "body": "email=events_test1%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe+Test+User",
       "headers": {
         "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -35,7 +35,7 @@
   },
   {
     "request": {
-      "body": "email=events_test2%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe Test User",
+      "body": "email=events_test2%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe+Test+User",
       "headers": {
         "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -69,7 +69,7 @@
   },
   {
     "request": {
-      "body": "email=events_test3%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe Test User",
+      "body": "email=events_test3%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe+Test+User",
       "headers": {
         "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -103,7 +103,7 @@
   },
   {
     "request": {
-      "body": "email=events_test4%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe Test User",
+      "body": "email=events_test4%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe+Test+User",
       "headers": {
         "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -137,7 +137,7 @@
   },
   {
     "request": {
-      "body": "email=events_test5%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe Test User",
+      "body": "email=events_test5%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe+Test+User",
       "headers": {
         "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -171,7 +171,7 @@
   },
   {
     "request": {
-      "body": "email=events_test6%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe Test User",
+      "body": "email=events_test6%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe+Test+User",
       "headers": {
         "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",

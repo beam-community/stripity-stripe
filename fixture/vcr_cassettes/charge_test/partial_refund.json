@@ -1,7 +1,7 @@
 [
   {
     "request": {
-      "body": "amount=3000&currency=USD&source[object]=card&source[number]=4111111111111111&source[exp_month]=10&source[exp_year]=2020&source[country]=US&source[name]=Ducky Test&source[cvc]=123&description=1000+Widgets",
+      "body": "amount=3000&currency=USD&source[object]=card&source[number]=4111111111111111&source[exp_month]=10&source[exp_year]=2020&source[country]=US&source[name]=Ducky+Test&source[cvc]=123&description=1000+Widgets",
       "headers": {
         "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
