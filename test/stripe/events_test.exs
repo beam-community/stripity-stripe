@@ -49,7 +49,7 @@ defmodule Stripe.EventsTest do
     use_cassette "events_test/list", match_requests_on: [:query, :request_body] do
       case Stripe.Events.list "",5 do
         {:ok, events} ->
-          assert Dict.size(events[:data]) > 0
+          assert length(events[:data]) > 0
           {:error, err} -> flunk err
       end
     end
@@ -59,7 +59,7 @@ defmodule Stripe.EventsTest do
   test "List w/key works" do
     use_cassette "events_test/list_with_key", match_requests_on: [:query, :request_body] do
       case Stripe.Events.list Stripe.config_or_env_key,"", 5 do
-        {:ok, events} -> assert Dict.size(events[:data]) > 0
+        {:ok, events} -> assert length(events[:data]) > 0
         {:error, err} -> flunk err
       end
     end
@@ -74,7 +74,7 @@ defmodule Stripe.EventsTest do
         true ->
           last = List.last( events[:data] )
           case Stripe.Events.list Stripe.config_or_env_key,last["id"], 1 do
-            {:ok, events} -> assert Dict.size(events[:data]) > 0
+            {:ok, events} -> assert length(events[:data]) > 0
             {:error,err} -> flunk err
           end
           false -> flunk "should have had more than 1 page. Check setup to make sure theres enough events for the test to run properly (5+)"

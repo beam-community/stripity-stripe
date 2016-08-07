@@ -89,7 +89,7 @@ defmodule Stripe.CustomerTest do
     use_cassette "customer_test/list", match_requests_on: [:query, :request_body] do
       case Stripe.Customers.list "", 1 do
         {:ok, res} ->
-          assert Dict.size(res[:data]) == 1
+          assert length(res[:data]) == 1
           {:error, err} -> flunk err
       end
     end
@@ -100,7 +100,7 @@ defmodule Stripe.CustomerTest do
     use_cassette "customer_test/list_with_key", match_requests_on: [:query, :request_body] do
       case Stripe.Customers.list Stripe.config_or_env_key,"", 1 do
         {:ok, res} ->
-          assert Dict.size(res[:data]) == 1
+          assert length(res[:data]) == 1
           {:error, err} -> flunk err
       end
     end
@@ -111,7 +111,7 @@ defmodule Stripe.CustomerTest do
     use_cassette "customer_test/all", match_requests_on: [:query, :request_body] do
       case Stripe.Customers.all [],"" do
         {:ok, custs} ->
-          assert Dict.size(custs) > 0
+          assert length(custs) > 0
           {:error, err} -> flunk err
       end
     end
@@ -122,7 +122,7 @@ defmodule Stripe.CustomerTest do
     use_cassette "customer_test/all_with_key", match_requests_on: [:query, :request_body] do
       case Stripe.Customers.all Stripe.config_or_env_key, [], "" do
         {:ok, custs} ->
-          assert Dict.size(custs) > 0
+          assert length(custs) > 0
           {:error, err} -> flunk err
       end
     end
