@@ -69,7 +69,7 @@
   },
   {
     "request": {
-      "body": "email=invoices_test1%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe Test User",
+      "body": "email=invoices_test1%40localhost&description=Test+Account&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2018&card[cvc]=123&card[name]=Joe+Test+User",
       "headers": {
         "Authorization": "Bearer non_empty_secret_key_string",
         "Content-Type": "application/x-www-form-urlencoded",
