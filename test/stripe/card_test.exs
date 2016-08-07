@@ -214,4 +214,48 @@ defmodule Stripe.CardTest do
       end
     end
   end
+
+  @tag disabled: false
+  test "Update with key works", %{customer: customer} do
+    use_cassette "card_test/update", match_requests_on: [:query, :request_body] do
+      new_card = [
+        source: [
+          object: "card",
+          number: "4111111111111111",
+          cvc: 123,
+          exp_month: 12,
+          exp_year: 2020
+        ]
+      ]
+
+      { :ok, card } = Stripe.Cards.create :customer, customer.id, new_card
+
+      case Stripe.Cards.update(:customer, customer.id, card.id, [exp_month: 11], Stripe.config_or_env_key) do
+        {:ok, res} -> assert res.exp_month == 11
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
+  @tag disabled: false
+  test "Update works", %{customer: customer} do
+    use_cassette "card_test/update", match_requests_on: [:query, :request_body] do
+      new_card = [
+        source: [
+          object: "card",
+          number: "4111111111111111",
+          cvc: 123,
+          exp_month: 12,
+          exp_year: 2020
+        ]
+      ]
+
+      { :ok, card } = Stripe.Cards.create :customer, customer.id, new_card
+
+      case Stripe.Cards.update(:customer, customer.id, card.id, [exp_month: 11], Stripe.config_or_env_key) do
+        {:ok, res} -> assert res.exp_month == 11
+        {:error, err} -> flunk err
+      end
+    end
+  end
 end
