@@ -131,6 +131,16 @@ defmodule Stripe.SubscriptionTest do
   end
 
   @tag disabled: false
+  test "General change works", %{ customer: customer, sub1: sub1 } do
+    use_cassette "subscription_test/general_change", match_requests_on: [:query, :request_body] do
+      case Stripe.Subscriptions.change customer.id, sub1.id, [quantity: 3] do
+        {:ok, changed} -> assert changed[:quantity] == 3
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
+  @tag disabled: false
   test "Change w/key works", %{customer: customer, sub1: _, sub2: sub2} do
     use_cassette "subscription_test/change_with_key", match_requests_on: [:query, :request_body] do
       case Stripe.Subscriptions.change customer.id, sub2.id, "test-dlz", Stripe.config_or_env_key do
