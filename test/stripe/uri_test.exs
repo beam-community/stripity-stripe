@@ -18,7 +18,7 @@ defmodule Stripe.UriTest do
     assert Stripe.URI.encode_query([a: [a: 1]]) == "a[a]=1"
     assert Stripe.URI.encode_query([a: [b: 1]]) == "a[b]=1"
     assert Stripe.URI.encode_query([a: [b: [c: 1]]]) == "a[b][c]=1"
-    #assert Stripe.URI.encode_query([a: [b: ["test &": "test &"]]]) == "a[b][test+%26]=test+%26"
+    assert Stripe.URI.encode_query([a: [b: ["test &": "test &"]]]) == "a[b][test+%26]=test+%26"
     assert Stripe.URI.encode_query([a: [a: "/\n+/ゆ"]]) == "a[a]=%2F%0A%2B%2F%E3%82%86"
     assert Stripe.URI.encode_query(%{a: [a: "test &"]}) == "a[a]=test+%26"
   end
