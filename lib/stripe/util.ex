@@ -48,9 +48,12 @@ defmodule Stripe.Util do
   def list_raw( endpoint, key, limit, starting_after)  do
     q = "#{endpoint}?limit=#{limit}"
 
-    if  String.length(starting_after) > 0 do
-        q = q <> "&starting_after=#{starting_after}"
-    end
+    q =
+      if String.length(starting_after) > 0 do
+        q <> "&starting_after=#{starting_after}"
+      else
+        q
+      end
 
     Stripe.make_request_with_key(:get, q, key )
     |> Stripe.Util.handle_stripe_full_response

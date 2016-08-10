@@ -25,9 +25,10 @@ defmodule Stripe.Connect do
     url = url <> "&client_id=#{Stripe.config_or_env_platform_client_id}"
 
     if String.length(csrf_token) > 0 do
-      url = url <> "&state=#{csrf_token}"
+      url <> "&state=#{csrf_token}"
+    else
+      url
     end
-    url
   end
 
   @doc """
