@@ -4,8 +4,8 @@ defmodule Stripe.Mixfile do
   def project do
     [ app: :stripity_stripe,
       version: "1.4.0",
-      description: description,
-      package: package,
+      description: description(),
+      package: package(),
       elixir: "~> 1.1",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [

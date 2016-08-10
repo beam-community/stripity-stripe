@@ -193,7 +193,7 @@ defmodule Stripe.Accounts do
   ```
   """
   def delete_all key do
-    case all  do
+    case all() do
       {:ok, accounts} ->
         Enum.each accounts, fn c -> delete(c["id"], key) end
       {:error, err} -> raise err
