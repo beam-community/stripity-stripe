@@ -2,26 +2,26 @@
 
 An Elixir library for working with [Stripe](https://stripe.com/).
 
- - Manage accounts (your own, standalone/managed via connect) [Stripe.Accounts](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/accounts.ex)
- - Manage customers [Stripe.Customers](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/customers.ex)
- - Manage Subscriptions [Stripe.Subscriptions](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/subscriptions.ex)
- - Manage plans [Stripe.Plans](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/plans.ex)
- - Manage Invoices [Stripe.Invoices](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoices.ex)
- - Manage Invoice Items [Stripe.InvoiceItems](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoice_items.ex)
- - Manage tokens for credit card and bank account [Stripe.Tokens](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/tokens.ex)
- - List and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve) [Stripe.Events](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/events.ex)
- - Manage/capture charges with or without an existing Customer [Stripe.Charges](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/charges.ex)
+Features:
 
-- Facilitate using the Connect API (for standalone/managed accounts) [Stripe Connect](https://stripe.com/docs/connect) by allowing you to supply your own key. The oauth callback processor (not endpoint) is supplied by this library as well as a connect button url generator. See below for [Instructions](#connect). [Stripe Connect API reference](https://stripe.com/docs/connect/reference)
-
-- All functions are available with a parameter that allow a stripe api key to be passed in and be used for the underlying request. This api key would be the one obtained by the oauth connect authorize workflow.
+* manage accounts (your own, standalone/managed via connect) [Stripe.Accounts](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/accounts.ex)
+* manage customers [Stripe.Customers](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/customers.ex)
+* manage Subscriptions [Stripe.Subscriptions](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/subscriptions.ex)
+* manage plans [Stripe.Plans](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/plans.ex)
+* manage Invoices [Stripe.Invoices](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoices.ex)
+* manage Invoice Items [Stripe.InvoiceItems](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoice_items.ex)
+* manage tokens for credit card and bank account [Stripe.Tokens](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/tokens.ex)
+* list and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve) [Stripe.Events](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/events.ex)
+* manage/capture charges with or without an existing Customer [Stripe.Charges](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/charges.ex)
+* facilitate using the Connect API (for standalone/managed accounts) [Stripe Connect](https://stripe.com/docs/connect) by allowing you to supply your own key. The oauth callback processor (not endpoint) is supplied by this library as well as a connect button url generator. See below for [Instructions](#connect). [Stripe Connect API reference](https://stripe.com/docs/connect/reference)
+* all functions are available with a parameter that allow a stripe api key to be passed in and be used for the underlying request. This api key would be the one obtained by the oauth connect authorize workflow.
 
 Why another Stripe Library? Currently there are a number of them in the Elixir world that are, well just not "done" yet. I started to fork/help but soon it became clear to me that what I wanted was:
 
- - An existing/better test story
- - An API that didn't just mimic a REST interaction
- - A library that was up to date with Elixir > 1.0 and would, you know, actually *compile*.
- - Function calls that returned a standard `{:ok, result}` or `{:error, message}` response
+* an existing/better test story
+* an API that didn't just mimic a REST interaction
+* a library that was up to date with Elixir > 1.0 and would, you know, actually *compile*.
+* function calls that returned a standard `{:ok, result}` or `{:error, message}` response
 
 As I began digging things up with these other libraries it became rather apparent that I was not only tweaking the API, but also ripping out a lot of the existing code... and that usually means I should probably do my own thing. So I did.
 
@@ -93,82 +93,87 @@ Metadata (metadata:) key is supported on most object type and allow the storage 
 
 That's the rule of thumb with this library. If there are any errors with your call, they will bubble up to you in the `{:error, message}` match.
 
-```
+```ex
 # Example of paging through events
-{:ok,events} = Stripe.Events.list key, "", 100   #2nd arg is a marker for paging
+{:ok, events} = Stripe.Events.list(key, "", 100) # second arg is a marker for paging
 
 case events[:has_more] do
-    true ->
-        # retrieve marker
-        last = List.last( events[:data] )
-        case Stripe.Events.list key, last["id"], 100 do
-            {:ok, events} -> events[:data]
-            ...
-    false -> events[:data]
+  true ->
+    # retrieve marker
+    last = List.last( events[:data] )
+    case Stripe.Events.list key, last["id"], 100 do
+      {:ok, events} -> events[:data]
+      # ...
+    end
+  false -> events[:data]
 end
 ```
 
-<a name="connect"></a>
 # Connect
 
-Stripe Connect allows you to provide your customers with an easy onboarding to
-their own Stripe account. This is useful when you run an ecommerce as a service platform. Each merchant can transact using their own account using your platform. Then your platform uses stripity API with their own API key obtained by the onboarding process.
+Stripe Connect allows you to provide your customers with an easy onboarding to their own Stripe account. This is useful when you run an ecommerce as a service platform. Each merchant can transact using their own account using your platform. Then your platform uses stripity API with their own API key obtained by the onboarding process.
 
-First, you need to register your platform on stripe connect to obtain a client_id.
-In your account settings, there's a "Connect" tab, select it. Then fill the information to activate your connect platform settings. The select he client_id (notice there's one for dev and one for prod), stash this client_id in the config file under
+First, you need to register your platform on stripe connect to obtain a `client_id`. In your account settings, there's a "Connect" tab, select it. Then fill the information to activate your connect platform settings. The select he `client_id` (notice there's one for dev and one for prod), stash this `client_id` in the config file under
+
+```ex
 config :stripity_stripe, platform_client_id: "ac_???"
-or
-in an env var named STRIPE_PLATFORM_CLIENT_ID
-
+```
+or in an env var named `STRIPE_PLATFORM_CLIENT_ID`.
 
 Then you send your users to sign up for the stripe account using a link.
 
 Here's an example of a button to start the workflow:
 <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_32D88BD1qLklliziD7gYQvctJIhWBSQ7&scope=read_write">Connect with Stripe</a>
 
-You can generate this url using
-```
+You can generate this URL using:
+
+```ex
 url = Stripe.Connect.generate_button_url csrf_token
 ```
 
-When the user gets back to your platform, the following url(redirect_uri form item on your "Connect" settings) will be used:
+When the user gets back to your platform, the following url (`redirect_uri` form item on your "Connect" settings) will be used:
 
+```
 //yoursvr/your_endpoint?scope=read_write&code=AUTHORIZATION_CODE
+```
 
 or
 
+```
 //yoursvr/your_endpoint?error=access_denied&error_description=The%20user%20denied%20your%20request
+```
 
 Using the code request parameter, you make the following call:
-```
+
+```ex
 {:ok, resp} -> Stripe.Connect.oauth_token_callback code
 resp[:access_token]
 ```
-resp will look like this
-```
+
+`resp` will look like this:
+```ex
 %{
-    token_type: "bearer",
-    stripe_publishable_key: PUBLISHABLE_KEY,
-    scope: "read_write",
-    livemode: false,
-    stripe_user_id: USER_ID,
-    refresh_token: REFRESH_TOKEN,
-    access_token: ACCESS_TOKEN
+  token_type: "bearer",
+  stripe_publishable_key: PUBLISHABLE_KEY,
+  scope: "read_write",
+  livemode: false,
+  stripe_user_id: USER_ID,
+  refresh_token: REFRESH_TOKEN,
+  access_token: ACCESS_TOKEN
 }
 ```
 
-You can then pass the "access_token" to the other API modules to act on their behalf.
+You can then pass the `access_token` to the other API modules to act on their behalf.
 
-See a demo using the phoenix framework with the bare minimum to get this working.[Demo](https://github.com/nicrioux/stripity-connect-phoenix)
+See a [demo](https://github.com/nicrioux/stripity-connect-phoenix) using the Phoenix framework with the bare minimum to get this working.
 
-# Testing Connect
+## Testing Connect
+
 The tests are currently manual as they require a unique oauth authorization code per test. You need to obtain this code maunally using the stripe connect workflow (that your user would go through using the above url).
 
-First, log in your account. Then go to url
-https://dashboard.stripe.com/account/applications/settings
+First, log in your account. Then go to the following url: https://dashboard.stripe.com/account/applications/settings
 
-Create a connect standalone account. Grab your development client_id. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to Stripe.Connect.oauth_token_callback or Stripe.Connect.get_token.
-
+Create a connect standalone account. Grab your development `client_id`. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to `Stripe.Connect.oauth_token_callback` or `Stripe.Connect.get_token`.
 
 ## Contributing
 
