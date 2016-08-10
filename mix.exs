@@ -38,14 +38,14 @@ defmodule Stripe.Mixfile do
 
   defp deps(:prod) do
     [
-      {:httpoison, "~> 0.8.2" },
-      {:poison, "~> 1.5 or ~> 2.1.0", optional: true},
-      {:ex_doc, "~> 0.7", only: :dev},
+      {:httpoison, ">= 0.0.0" },
+      {:poison, ">= 0.0.0", optional: true},
+      {:ex_doc, ">= 0.0.0", only: :dev},
       {:earmark, ">= 0.0.0", only: :dev},
-      {:excoveralls, "~> 0.5.4", only: :test},
-      {:exvcr, "~> 0.7", only: :test},
-      {:mock, "~> 0.1.1", only: :test},
-      {:inch_ex, "~> 0.5.1", only: [:dev, :test]}
+      {:excoveralls, ">= 0.0.0", only: :test},
+      {:exvcr, ">= 0.0.0", only: :test},
+      {:mock, ">= 0.0.0", only: :test},
+      {:inch_ex, ">= 0.0.0", only: [:dev, :test]}
     ]
   end
 
