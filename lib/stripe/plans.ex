@@ -160,7 +160,7 @@ end
     ```
     """
     def delete_all key do
-      case all  do
+      case all() do
         {:ok, plans} ->
           Enum.each plans, fn p -> delete(p["id"], key) end
         {:error, err} -> raise err

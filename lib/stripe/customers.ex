@@ -187,7 +187,7 @@ defmodule Stripe.Customers do
   ```
   """
   def delete_all do
-    case all  do
+    case all() do
       {:ok, customers} ->
         Enum.each customers, fn c -> delete(c["id"]) end
       {:error, err} -> raise err
@@ -205,7 +205,7 @@ defmodule Stripe.Customers do
   ```
   """
   def delete_all key do
-    case all  do
+    case all() do
       {:ok, customers} ->
         Enum.each customers, fn c -> delete(c["id"], key) end
       {:error, err} -> raise err

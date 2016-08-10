@@ -33,7 +33,7 @@ defmodule Stripe do
   Returns binary
   """
   def config_or_env_key do
-    require_stripe_key
+    require_stripe_key()
   end
 
   @doc """
@@ -108,7 +108,7 @@ defmodule Stripe do
   Returns tuple
   """
   def make_request(method, endpoint, body \\ [], headers \\ [], options \\ []) do
-    make_request_with_key( method, endpoint, config_or_env_key, body, headers, options )
+    make_request_with_key( method, endpoint, config_or_env_key(), body, headers, options )
   end
 
   @doc """

@@ -20,14 +20,15 @@ defmodule Stripe.Connect do
   """
   def generate_button_url( csrf_token ) do
     client_id = Stripe.config_or_env_platform_client_id
-    url = base_url <> "oauth/authorize?response_type=code"
+    url = base_url() <> "oauth/authorize?response_type=code"
     url = url <> "&scope=read_write"
     url = url <> "&client_id=#{Stripe.config_or_env_platform_client_id}"
 
     if String.length(csrf_token) > 0 do
-      url = url <> "&state=#{csrf_token}"
+      url <> "&state=#{csrf_token}"
+    else
+      url
     end
-    url
   end
 
   @doc """
