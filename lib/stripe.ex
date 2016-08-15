@@ -107,7 +107,7 @@ defmodule Stripe do
   * options - request options
   Returns tuple
   """
-  def make_request(method, endpoint, body \\ [], headers \\ [], options \\ []) do
+  def make_request(method, endpoint, body \\ %{}, headers \\ %{}, options \\ []) do
     make_request_with_key( method, endpoint, config_or_env_key(), body, headers, options )
   end
 

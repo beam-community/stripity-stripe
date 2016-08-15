@@ -1,0 +1,36 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/coupons/free-1-month"
+    },
+    "response": {
+      "body": "{\n  \"id\": \"free-1-month\",\n  \"object\": \"coupon\",\n  \"amount_off\": null,\n  \"created\": 1452612120,\n  \"currency\": null,\n  \"duration\": \"repeating\",\n  \"duration_in_months\": 1,\n  \"livemode\": false,\n  \"max_redemptions\": null,\n  \"metadata\": {},\n  \"percent_off\": 100,\n  \"redeem_by\": null,\n  \"times_redeemed\": 0,\n  \"valid\": true\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Mon, 15 Aug 2016 01:59:24 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "319",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_90bbU6ZDHzfxBg",
+        "Stripe-Version": "2016-03-07",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
