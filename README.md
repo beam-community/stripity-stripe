@@ -13,6 +13,7 @@ Features:
 * manage tokens for credit card and bank account [Stripe.Tokens](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/tokens.ex)
 * list and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve) [Stripe.Events](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/events.ex)
 * manage/capture charges with or without an existing Customer [Stripe.Charges](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/charges.ex)
+* manage and validate coupons [Stripe.Coupons](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/coupons.ex)
 * facilitate using the Connect API (for standalone/managed accounts) [Stripe Connect](https://stripe.com/docs/connect) by allowing you to supply your own key. The oauth callback processor (not endpoint) is supplied by this library as well as a connect button url generator. See below for [Instructions](#connect). [Stripe Connect API reference](https://stripe.com/docs/connect/reference)
 * all functions are available with a parameter that allow a stripe api key to be passed in and be used for the underlying request. This api key would be the one obtained by the oauth connect authorize workflow.
 
