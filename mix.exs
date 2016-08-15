@@ -18,7 +18,7 @@ defmodule Stripe.Mixfile do
         "vcr.check": :test,
         "vcr.show": :test
       ],
-      deps: deps(Mix.env) ]
+      deps: deps]
   end
 
   # Configuration for the OTP application
@@ -28,15 +28,7 @@ defmodule Stripe.Mixfile do
     ]
   end
 
-  defp deps(:dev) do
-    deps(:prod)
-  end
-
-  defp deps(:test) do
-    deps(:dev)
-  end
-
-  defp deps(:prod) do
+  defp deps do
     [
       {:httpoison, ">= 0.0.0" },
       {:poison, ">= 0.0.0", optional: true},
