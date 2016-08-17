@@ -1,19 +1,23 @@
 defmodule Stripe.Accounts do
   @moduledoc """
-  Main API for working with Customers at Stripe. Through this API you can:
-  -create accounts
-  -get single account
-  -delete single account
-  -delete all account
-  -count account
+  Functions for working with customers at Stripe. Through this API you can:
 
-  https://stripe.com/docs/api/curl#account_object
+    * create account,
+    * get account,
+    * get all accounts,
+    * delete account,
+    * delete all accounts,
+    * count accounts.
+
+  Stripe API reference: https://stripe.com/docs/api/curl#account_object
   """
 
   @endpoint "accounts"
 
   @doc """
-  Creates an Account with the given parameters
+  Creates an account given the account params.
+
+  Returns created account.
 
   At the bare minimum, to create and connect to a managed account, simply set
   managed to true in the creation request, and provide a country. The country,
@@ -21,36 +25,34 @@ defmodule Stripe.Accounts do
 
   https://stripe.com/docs/connect/managed-accounts
 
-  ## Example
+  ## Examples
 
-  ```
-    new_account = [
-      email: "test@example.com",
-      managed: true,
-      tos_acceptance: [
-        date: :os.system_time(:seconds),
-        ip: "127.0.0.1"
-      ],
-      legal_entity: [
-        type: "individual",
-        dob: [
-          day: 1,
-          month: 1,
-          year: 1991
+      params = [
+        email: "test@example.com",
+        managed: true,
+        tos_acceptance: [
+          date: :os.system_time(:seconds),
+          ip: "127.0.0.1"
         ],
-        first_name: "John",
-        last_name: "Doe"
-      ],
-      external_account: [
-        object: "bank_account",
-        country: "US",
-        currency: "usd",
-        routing_number: "110000000",
-        account_number: "000123456789"
+        legal_entity: [
+          type: "individual",
+          dob: [
+            day: 1,
+            month: 1,
+            year: 1991
+          ],
+          first_name: "John",
+          last_name: "Doe"
+        ],
+        external_account: [
+          object: "bank_account",
+          country: "US",
+          currency: "usd",
+          routing_number: "110000000",
+          account_number: "000123456789"
+        ]
       ]
-    ]
-    {:ok, res} = Stripe.Accounts.create new_account
-  ```
+      {:ok, account} = Stripe.Accounts.create(params)
 
   """
   def create(params) do
@@ -58,12 +60,14 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Save as create(params).
-  Accepts a stripe api key (for connect workflow)
+  Creates an account given the account params. Accepts Stripe API key.
+
+  Returns created account.
+
   # Example
-```
-{:ok, resp} = Stripe.Account.create(params,key)
-```
+
+      {:ok, account} = Stripe.Account.create(params, "my_key")
+
   """
   def create(params, key) do
     Stripe.make_request_with_key(:post, @endpoint, key, params)
@@ -71,12 +75,11 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Retrieves a given Account with the specified ID. Returns 404 if not found.
-  ## Example
+  Returns an account given the account ID.
 
-  ```
-    {:ok, account} = Stripe.Accounts.get "account_id" 
-  ```
+  ## Examples
+
+      {:ok, account} = Stripe.Accounts.get("account_id")
 
   """
   def get(id) do
@@ -84,28 +87,25 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Retrieves a given Account with the specified ID. Returns 404 if not found.
-  Accepts a stripe api key (for connect workflow)
-  ## Example
+  Returns an account given the account ID. Accepts Stripe API key.
 
-  ```
-  {:ok, account} = Stripe.Accounts.get "account_id", key
-  ```
-"""
-   def get(id, key) do
+  ## Examples
+
+      {:ok, account} = Stripe.Accounts.get("account_id", "my_key")
+
+  """
+  def get(id, key) do
     Stripe.make_request_with_key(:get, "#{@endpoint}/#{id}", key)
     |> Stripe.Util.handle_stripe_response
-   end
+  end
 
   @max_fetch_size 100
   @doc """
-  List all accounts.
+  Returns a list with all accounts.
 
-  ##Example
+  ## Examples
 
-  ```
-  {:ok, accounts} = Stripe.Accounts.all
-  ```
+      {:ok, accounts} = Stripe.Accounts.all()
 
   """
   def all( accum \\ [], starting_after \\ "") do
@@ -113,16 +113,11 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  List all accounts.
-  Accepts a stripe api key (for connect workflow)
+  Returns a list with all accounts. Accepts Stripe API key.
 
-  ##Example
+  ## Examples
 
-  ```
-  {:ok, accounts} = Stripe.Accounts.all key, accum, starting_after
-  ```
-  where accum is []
-  starting_after is the paging marker
+      {:ok, accounts} = Stripe.Accounts.all("my_key", [], 3)
 
   """
   def all( key, accum, starting_after) do
@@ -142,27 +137,28 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Deletes a Account with the specified ID
+  Deletes an account given the account ID.
 
-  ## Example
+  Returns a deleted account.
 
-  ```
-    Stripe.Accounts.delete "account_id"
-  ```
+  ## Examples
+
+      {:ok, deleted_account} = Stripe.Accounts.delete("account_id")
+
   """
   def delete(id) do
     delete id, Stripe.config_or_env_key
   end
 
   @doc """
-  Deletes a Account with the specified ID
-  Accepts a stripe api key (for connect workflow)
+  Deletes an account given the account ID. Accepts Stripe API key.
 
-  ## Example
+  Returns a deleted account.
 
-  ```
-  Stripe.Accounts.delete "account_id", key
-  ```
+  ## Examples
+
+      {:ok, deleted_account} = Stripe.Accounts.delete("account_id", "my_key")
+
   """
   def delete(id, key) do
     Stripe.make_request_with_key(:delete, "#{@endpoint}/#{id}", key)
@@ -170,27 +166,24 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Deletes all Accounts
+  Deletes all accounts.
 
-  ## Example
+  ## Examples
 
-  ```
-  Stripe.Accounts.delete_all
-  ```
+      Stripe.Accounts.delete_all()
+
   """
   def delete_all do
     delete_all Stripe.config_or_env_key
   end
 
   @doc """
-  Deletes all Accounts
-  Accepts a stripe api key (for connect workflow)
+  Deletes all accounts. Accepts Stripe API key.
 
-  ## Example
+  ## Examples
 
-  ```
-  Stripe.Accounts.delete_all key
-  ```
+      Stripe.Accounts.delete_all("my_key")
+
   """
   def delete_all key do
     case all() do
@@ -201,52 +194,54 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Count total number of accounts.
+  Returns total number of accounts.
 
-  ## Example
-  ```
-  {:ok, count} = Stripe.Accounts.count
-  ```
+  ## Examples
+
+      {:ok, count} = Stripe.Accounts.count()
+
   """
   def count do
     Stripe.Util.count "#{@endpoint}"
   end
 
   @doc """
-  Count total number of accounts.
-  Accepts a stripe api key (for connect workflow)
+  Returns total number of accounts. Accepts Stripe API key.
 
-  ## Example
-  ```
-  {:ok, count} = Stripe.Accounts.count key
-  ```
+  ## Examples
+
+      {:ok, count} = Stripe.Accounts.count("my_key")
+
   """
   def count key do
     Stripe.Util.count "#{@endpoint}", key
   end
 
   @doc """
-  Returns a list of Accounts with a default limit of 10 which you can override with `list/1`
+  Returns a list of accounts.
 
-  ## Example
+  Default limit of items returned is 10.
 
-  ```
-    {:ok, accounts} = Stripe.Accounts.list(20)
-  ```
+  ## Examples
+
+      {:ok, accounts} = Stripe.Accounts.list() # Get a list of 10 accounts
+      {:ok, accounts} = Stripe.Accounts.list(20) # Get a list of 20 accounts
+
   """
   def list(limit \\ 10) do
     list limit, Stripe.config_or_env_key
   end
 
   @doc """
-  Returns a list of Accounts with a default limit of 10 which you can override with `list/1`
-  Accepts a stripe api key (for connect workflow)
-  
-  ## Example
+  Returns a list of accounts. Accepts Stripe API key.
 
-  ```
-  {:ok, accounts} = Stripe.Accounts.list(20, key)
-  ```
+  Default limit of items returned is 10.
+
+  ## Examples
+
+      {:ok, accounts} = Stripe.Accounts.list("my_key") # Get a list of 10 accounts
+      {:ok, accounts} = Stripe.Accounts.list(20, "my_key") # Get a list of 20 accounts
+
   """
   def list(limit, key) do
     Stripe.make_request_with_key(:get, "#{@endpoint}?limit=#{limit}", key)
