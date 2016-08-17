@@ -1,15 +1,27 @@
 defmodule Stripe.Cards do
   @moduledoc """
-  Main API for working with Cards at Stripe. Through this API you can:
-  -create cards for a customer
-  -delete cards for a customer
-  -delete all cards for a customer
-  -list cards for a customer
-  -count cards for a customer
+  Functions for working with cards at Stripe. Through this API you can:
 
-  Supports Connect workflow by allowing to pass in any API key explicitely (vs using the one from env/config).
+    * create a card,
+    * update a card,
+    * get a card,
+    * delete a card,
+    * delete all cards,
+    * list cards,
+    * list all cards,
+    * count cards.
 
-  (API ref: https://stripe.com/docs/api/curl#card_object
+  All requests require `owner_type` and `owner_id` parameters to be specified.
+
+  `owner_type` must be one of the following:
+
+    * `customer`,
+    * `account`,
+    * `recipient`.
+
+  `owner_id` must be the ID of the owning object.
+
+  Stripe API reference: https://stripe.com/docs/api/curl#card_object
   """
 
   def endpoint_for_entity(entity_type, entity_id) do
@@ -20,34 +32,37 @@ defmodule Stripe.Cards do
     end
   end
 
-
   @doc """
-  Creates a Card with the given parameters.
+  Create a card.
   
-  * owner_type must be either :customer, :account or :recipient
-  * owner_id must be the ID of the owning object
-  * params, must contain a "source" object, and inside it, the following parameters are required: 
-  object, number, cvc, exp_month, exp-year
+  Creates a card for given owner type, owner ID using params.
 
-  ## Example
+  `params` must contain a "source" object. Inside the "source" object, the following parameters are required:
 
-  ```
+    * object,
+    * number,
+    * cvs,
+    * exp_month,
+    * exp_year.
 
-    new_card = [
-      source: [
-        object: "card",
-        number: "4111111111111111",
-        cvc: 123, 
-        exp_month: 12,
-        exp_year: 2020,
-        metadata: [
-          test_field: "test val"
+  Returns a `{:ok, card}` tuple.
+
+  ## Examples
+
+      params = [
+        source: [
+          object: "card",
+          number: "4111111111111111",
+          cvc: 123,
+          exp_month: 12,
+          exp_year: 2020,
+          metadata: [
+            test_field: "test val"
+          ]
         ]
       ]
-    ]
 
-    {:ok, res} = Stripe.Cards.create :customer, customer_id, new_card
-  ```
+      {:ok, card} = Stripe.Cards.create(:customer, customer_id, params)
 
   """
   def create(owner_type, owner_id, params) do
@@ -55,50 +70,81 @@ defmodule Stripe.Cards do
   end
 
   @doc """
-  Creates a Card with the given parameters.
-  Using a given stripe key to apply against the account associated.
+  Create a card. Accepts Stripe API key.
 
-  
-  * owner_type must be either :customer, :account or :recipient
-  * owner_id must be the ID of the owning object
-  * params, must contain a "source" object, and inside it, the following parameters are required:   object, number, cvc, exp_month, exp-year
-  * key, the stripe key to use
+  Creates a card for given owner using params.
 
-  ## Example
+  `params` must contain a "source" object. Inside the "source" object, the following parameters are required:
 
-  ```
-    {:ok, res} = Stripe.Cards.create :customer, customer_id, new_card, key
-  ```
+    * object,
+    * number,
+    * cvs,
+    * exp_month,
+    * exp_year.
+
+  Returns a `{:ok, card}` tuple.
+
+  ## Examples
+
+      {:ok, card} = Stripe.Cards.create(:customer, customer_id, params, key)
 
   """
-
   def create(owner_type, owner_id, params, key) do
     Stripe.make_request_with_key(:post, endpoint_for_entity(owner_type, owner_id), key, params)
     |> Stripe.Util.handle_stripe_response
   end
 
+  @doc """
+  Update a card.
+
+  Updates a card for given owner using card ID and params.
+
+    * `owner_type` must be one of the following:
+
+      * `customer`,
+      * `account`,
+      * `recipient`.
+
+    * `owner_id` must be the ID of the owning object.
+
+  Returns a `{:ok, card}` tuple.
+
+  ## Examples
+
+      {:ok, card} = Stripe.Cards.update(:customer, customer_id, card_id, params)
+
+  """
   def update(owner_type, owner_id, id, params) do
     update(owner_type, owner_id, id, params, Stripe.config_or_env_key)
   end
 
+  @doc """
+  Update a card. Accepts Stripe API key.
+
+  Updates a card for given owner using card ID and params.
+
+  Returns a `{:ok, card}` tuple.
+
+  ## Examples
+
+      {:ok, card} = Stripe.Cards.update(:customer, customer_id, card_id, params, key)
+
+  """
   def update(owner_type, owner_id, id, params, key) do
     Stripe.make_request_with_key(:post, "#{endpoint_for_entity(owner_type, owner_id)}/#{id}", key, params)
     |> Stripe.Util.handle_stripe_response
   end
 
-
   @doc """
-  Get a Card with the given id.
-  
-  * owner_type must be either :customer, :account or :recipient
-  * owner_id must be the ID of the owning object
-  * id,id of the card
+  Get a card.
 
-  ## Example
+  Gets a card for given owner using card ID.
 
-  ```
-    {:ok, res} = Stripe.Cards.get :customer, customer_id, id
-  ```
+  Returns a `{:ok, card}` tuple.
+
+  ## Examples
+
+      {:ok, card} = Stripe.Cards.get(:customer, customer_id, card_id)
 
   """
   def get(owner_type, owner_id, id) do
@@ -106,20 +152,15 @@ defmodule Stripe.Cards do
   end
 
   @doc """
-  Get a Card with the given id.
-  Using a given stripe key to apply against the account associated.
+  Get a card. Accepts Stripe API key.
 
-  
-  * owner_type must be either :customer, :account or :recipient
-  * owner_id must be the ID of the owning object
-  * id,id of the card
-  * key, the stripe key to use
+  Gets a card for given owner using card ID.
 
-  ## Example
+  Returns a `{:ok, card}` tuple.
 
-  ```
-    {:ok, res} = Stripe.Cards.get :customer, customer_id, id, key
-  ```
+  ## Examples
+
+      {:ok, card} = Stripe.Cards.get(:customer, customer_id, card_id, key)
 
   """
   def get(owner_type, owner_id, id, key) do
@@ -128,54 +169,76 @@ defmodule Stripe.Cards do
   end
 
   @doc """
-  Returns a list of Cards with a default limit of 10 which you can override with `list/3`
+  Get a list of cards.
 
-  ## Example
+  Gets a list of cards for given owner.
 
-  ```
-    {:ok, cards} = Stripe.Cards.list(:customer, customer_id, starting_after, 20)
-  ```
+  Accepts the following parameters:
+
+    * `starting_after` - an offset (optional),
+    * `limit` - a limit of items returned (optional; defaults to 10).
+
+  Returns a `{:ok, cards}` tuple, where `cards` is a list of cards.
+
+  ## Examples
+
+      {:ok, cards} = Stripe.Cards.list(:customer, customer_id, 5) # Get a list of up to 10 cards, skipping first 5 cards
+      {:ok, cards} = Stripe.Cards.list(:customer, customer_id, 5, 20) # Get a list of up to 20 cards, skipping first 5 cards
+
   """
   def list(owner_type, owner_id, starting_after, limit \\ 10) do
     list owner_type, owner_id, Stripe.config_or_env_key, "", limit
   end
 
   @doc """
-  Returns a list of Cards with a default limit of 10 which you can override with `list/3`
-  Using a given stripe key to apply against the account associated.
+  Get a list of cards. Accepts Stripe API key.
 
-  ## Example
+  Gets a list of cards for a given owner.
 
-  ```
-  {:ok, cards} = Stripe.Cards.list(:customer, customer_id, key, starting_after,20)
-  ```
+  Accepts the following parameters:
+
+    * `starting_after` - an offset (optional),
+    * `limit` - a limit of items returned (optional; defaults to 10).
+
+  Returns a `{:ok, cards}` tuple, where `cards` is a list of cards.
+
+  ## Examples
+
+      {:ok, cards} = Stripe.Cards.list(:customer, customer_id, key, 5) # Get a list of up to 10 cards, skipping first 5 cards
+      {:ok, cards} = Stripe.Cards.list(:customer, customer_id, key, 5, 20) # Get a list of up to 20 cards, skipping first 5 cards
+
   """
   def list(owner_type, owner_id, key, starting_after, limit) do
     Stripe.Util.list endpoint_for_entity(owner_type, owner_id), key, starting_after, limit
   end
 
   @doc """
-  Deletes a Card with the specified ID
+  Delete a card.
 
-  ## Example
+  Deletes a card for given owner using card ID.
 
-  ```
-  {:ok, resp} =  Stripe.Cards.delete :customer, customer_id, "card_id"
-  ```
+  Returns a `{:ok, card}` tuple.
+
+  ## Examples
+
+      {:ok, deleted_card} = Stripe.Cards.delete("card_id")
+
   """
   def delete(owner_type, owner_id, id) do
     delete owner_type, owner_id, id, Stripe.config_or_env_key
   end
 
   @doc """
-  Deletes a Card with the specified ID
-  Using a given stripe key to apply against the account associated.
+  Delete a card. Accepts Stripe API key.
 
-  ## Example
+  Deletes a card for given owner using card ID.
 
-  ```
-  {:ok, resp} = Stripe.Cards.delete :customer, customer_id, "card_id", key
-  ```
+  Returns a `{:ok, card}` tuple.
+
+  ## Examples
+
+      {:ok, deleted_card} = Stripe.Cards.delete("card_id", key)
+
   """
   def delete(owner_type, owner_id, id,key) do
     Stripe.make_request_with_key(:delete, "#{endpoint_for_entity(owner_type, owner_id)}/#{id}", key)
@@ -183,13 +246,16 @@ defmodule Stripe.Cards do
   end
   
   @doc """
-  Deletes all Cards owned by a particular entity
+  Delete all cards.
 
-  ## Example
+  Deletes all cards from given owner.
 
-  ```
-  Stripe.Cards.delete_all :customer, customer_id
-  ```
+  Returns `:ok` atom.
+
+  ## Examples
+
+      :ok = Stripe.Cards.delete_all(:customer, customer_id)
+
   """
   def delete_all(owner_type, owner_id) do
     case all(owner_type, owner_id) do
@@ -200,14 +266,16 @@ defmodule Stripe.Cards do
   end
 
   @doc """
-  Deletes all Cards owned by a particular entity
-  Using a given stripe key to apply against the account associated.
+  Delete all cards. Accepts Stripe API key.
 
-  ## Example
+  Deletes all cards from given owner.
 
-  ```
-  Stripe.Cards.delete_all :customer, customer_id, key
-  ```
+  Returns `:ok` atom.
+
+  ## Examples
+
+      :ok = Stripe.Cards.delete_all(:customer, customer_id, key)
+
   """
   def delete_all(owner_type, owner_id, key) do
     case all(owner_type, owner_id) do
@@ -220,13 +288,20 @@ defmodule Stripe.Cards do
   @max_fetch_size 100
 
   @doc """
-  List all Cards owned by a particular entity.
+  List all cards.
 
-  ##Example
+  Lists all cards for a given owner.
 
-  ```
-  {:ok, cards} = Stripe.Cards.all :customer, customer_id
-  ```
+  Accepts the following parameters:
+
+    * `accum` - a list to start accumulating cards to (optional; defaults to `[]`).,
+    * `starting_after` - an offset (optional; defaults to `""`).
+
+  Returns `{:ok, cards}` tuple.
+
+  ## Examples
+
+      {:ok, cards} = Stripe.Cards.all(:customer, customer_id, accum, starting_after)
 
   """  
   def all(owner_type, owner_id, accum \\ [], starting_after \\ "") do
@@ -234,14 +309,21 @@ defmodule Stripe.Cards do
   end
 
   @doc """
-  List all Cards owned by a particular entity.
-  Using a given stripe key to apply against the account associated.
+  List all cards. Accepts Stripe API key.
 
-  ##Example
+  Lists all cards for a given owner.
 
-  ```
-  {:ok, cards} = Stripe.Cards.all :customer, customer_id, key, accum, starting_after
-  ```
+  Accepts the following parameters:
+
+    * `accum` - a list to start accumulating cards to (optional; defaults to `[]`).,
+    * `starting_after` - an offset (optional; defaults to `""`).
+
+  Returns `{:ok, cards}` tuple.
+
+  ## Examples
+
+      {:ok, cards} = Stripe.Cards.all(:customer, customer_id, accum, starting_after, key)
+
   """  
   def all(owner_type, owner_id, key, accum, starting_after) do
     case Stripe.Util.list_raw("#{endpoint_for_entity(owner_type, owner_id)}",key, @max_fetch_size, starting_after) do
@@ -259,25 +341,32 @@ defmodule Stripe.Cards do
   end
 
   @doc """
-  Count total number of cards owned by a particular entity.
+  Get total number of cards.
 
-  ## Example
-  ```
-  {:ok, count} = Stripe.Cards.count :customer, customer_id
-  ```
+  Gets total number of cards for a given owner.
+
+  Returns `{:ok, count}` tuple.
+
+  ## Examples
+
+      {:ok, count} = Stripe.Cards.count(:customer, customer_id)
+
   """
   def count(owner_type, owner_id) do
     count owner_type, owner_id, Stripe.config_or_env_key
   end
 
   @doc """
-  Count total number of cards owned by a particular entity.
-  Using a given stripe key to apply against the account associated.
+  Get total number of cards. Accepts Stripe API key.
 
-  ## Example
-  ```
-  {:ok, count} = Stripe.Cards.count :customer, customer_id, key
-  ```
+  Gets total number of cards for a given owner.
+
+  Returns `{:ok, count}` tuple.
+
+  ## Examples
+
+      {:ok, count} = Stripe.Cards.count(:customer, customer_id, key)
+
   """
   def count(owner_type, owner_id, key)do
     Stripe.Util.count "#{endpoint_for_entity(owner_type, owner_id)}", key
