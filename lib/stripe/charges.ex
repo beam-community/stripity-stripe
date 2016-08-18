@@ -199,7 +199,7 @@ defmodule Stripe.Charges do
         description: "Changed charge"
       ]
 
-      {:ok, charge} = Stripe.Charges.change("charge_id", params)
+      {:ok, charge} = Stripe.Charges.change("charge_id", params, "my_key")
 
   """
   def change(id, params, key) do
@@ -208,57 +208,69 @@ defmodule Stripe.Charges do
   end
 
   @doc """
-  Captures a charge that is currently pending. Note: you can default a charge to be automatically captured by setting  `capture: true` in the charge create params.
+  Capture a charge.
+
+  Captures a charge that is currently pending.
+
+  Note: you can default a charge to be automatically captured by setting `capture: true` in the charge create params.
+
+  Returns a `{:ok, charge}` tuple.
 
   ## Examples
 
-  ```
-  {:ok, charge} = Stripe.Charges.capture("charge_id")
-  ```
+      {:ok, charge} = Stripe.Charges.capture("charge_id")
+
   """
   def capture(id) do
     capture id, Stripe.config_or_env_key
   end
 
   @doc """
-  Captures a charge that is currently pending. Note: you can default a charge to be automatically captured by setting  `capture: true` in the charge create params.
+  Capture a charge. Accepts Stripe API key.
 
-  Using a given stripe key to apply against the account associated.
+  Captures a charge that is currently pending.
+
+  Note: you can default a charge to be automatically captured by setting `capture: true` in the charge create params.
+
+  Returns a `{:ok, charge}` tuple.
 
   ## Examples
 
-  ```
-  {:ok, charge} = Stripe.Charges.capture("charge_id", key)
-  ```
+      {:ok, charge} = Stripe.Charges.capture("charge_id", "my_key")
+
   """
   def capture(id,key) do
     Stripe.make_request_with_key(:post, "#{@endpoint}/#{id}/capture", key)
     |> Stripe.Util.handle_stripe_response
   end
 
-
   @doc """
-  Retrieves a given charge.
+  Get a charge.
+
+  Gets a charge.
+
+  Returns a `{:ok, charge}` tuple.
 
   ## Examples
 
-  ```
-  {:ok, charge} = Stripe.Charges.get("charge_id")
-  ```
+      {:ok, charge} = Stripe.Charges.get("charge_id")
+
   """
   def get(id) do
     get id, Stripe.config_or_env_key
   end
 
   @doc """
-  Retrieves a given charge.
-  Using a given stripe key to apply against the account associated.
+  Get a charge. Accepts Stripe API key.
+
+  Gets a charge.
+
+  Returns a `{:ok, charge}` tuple.
 
   ## Examples
 
-  ```
-  {:ok, charge} = Stripe.Charges.get("charge_id", key)
-  ```
+      {:ok, charge} = Stripe.Charges.get("charge_id", "my_key")
+
   """
   def get(id, key) do
     Stripe.make_request_with_key(:get, "#{@endpoint}/#{id}", key)
@@ -266,26 +278,36 @@ defmodule Stripe.Charges do
   end
 
   @doc """
-  Refunds a charge completely. Use `refund_partial` if you just want to... you know... partially refund
+  Refund a charge.
+
+  Refunds a charge completely.
+
+  Note: use `refund_partial` if you just want to perform a partial refund.
+
+  Returns a `{:ok, charge}` tuple.
 
   ## Examples
 
-  ```
-  {:ok, charge} = Stripe.Charges.refund("charge_id")
-  ```
+      {:ok, charge} = Stripe.Charges.refund("charge_id")
+
   """
   def refund(id) do
     refund id, Stripe.config_or_env_key
   end
 
   @doc """
-  Refunds a charge completely. Use `refund_partial` if you just want to... you know... partially refund
-  Using a given stripe key to apply against the account associated.
+  Refund a charge. Accepts Stripe API key.
+
+  Refunds a charge completely.
   
+  Note: use `refund_partial` if you just want to perform a partial refund.
+
+  Returns a `{:ok, charge}` tuple.
+
   ## Examples
 
-  ```
-  {:ok, charge} = Stripe.Charges.refund("charge_id", key)
+      {:ok, charge} = Stripe.Charges.refund("charge_id", "my_key")
+
   """
   def refund(id, key) do
     Stripe.make_request_with_key(:post, "#{@endpoint}/#{id}/refunds", key)
@@ -293,27 +315,40 @@ defmodule Stripe.Charges do
   end
 
   @doc """
-  Refunds a charge partially; the amount is required.
+  Partially refund a charge.
+
+  Refunds a charge partially.
+
+  Accepts the following parameters:
+
+    * `amount` - amount to be refunded (required).
+
+  Returns a `{:ok, charge}` tuple.
 
   ## Examples
 
-  ```
-  {:ok, charge} = Stripe.Charges.refund_partial("charge_id", 500)
-  ```
+      {:ok, charge} = Stripe.Charges.refund_partial("charge_id", 500)
+
   """
   def refund_partial(id, amount) do
     refund_partial id, amount, Stripe.config_or_env_key
   end
 
   @doc """
-  Refunds a charge partially; the amount is required.
-  Using a given stripe key to apply against the account associated.
+  Partially refund a charge. Accepts Stripe API key.
+
+  Refunds a charge partially.
+
+  Accepts the following parameters:
+
+    * `amount` - amount to be refunded (required).
+
+  Returns a `{:ok, charge}` tuple.
 
   ## Examples
 
-  ```
-  {:ok, charge} = Stripe.Charges.refund_partial("charge_id", 500, key)
-  ```
+      {:ok, charge} = Stripe.Charges.refund_partial("charge_id", 500, "my_key")
+
   """
   def refund_partial(id, amount, key) do
     params = [amount: amount]
@@ -322,28 +357,34 @@ defmodule Stripe.Charges do
   end
 
   @doc """
-  Count number of charges.
+  Get total number of charges.
+
+  Gets total number of charges.
+
+  Returns `{:ok, count}` tuple.
 
   ## Examples
 
-  ```
-  {:ok, count} = Stripe.Charges.count
-  ```
+      {:ok, count} = Stripe.Charges.count()
+
   """
   def count do
     count Stripe.config_or_env_key
   end
 
   @doc """
-  Count number of charges.
-  Using a given stripe key to apply against the account associated.
+  Get total number of charges. Accepts Stripe API key.
+
+  Gets total number of charges.
+
+  Returns `{:ok, count}` tuple.
+
   ## Examples
 
-  ```
-  {:ok, count} = Stripe.Charges.count key
-  ```
+      {:ok, count} = Stripe.Charges.count("key")
+
   """
   def count(key) do
-    Stripe.Util.count  "#{@endpoint}", key
+    Stripe.Util.count "#{@endpoint}", key
   end
 end
