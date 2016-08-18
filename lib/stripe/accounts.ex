@@ -266,9 +266,9 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Get a list of accounts. Accepts Stripe API key.
+  Get a list of accounts.
 
-  Gets a list of accounts for a given owner.
+  Gets a list of accounts.
 
   Accepts the following parameters:
 
@@ -278,8 +278,8 @@ defmodule Stripe.Accounts do
 
   ## Examples
 
-      {:ok, accounts} = Stripe.Accounts.list("my_key") # Get a list of 10 accounts
-      {:ok, accounts} = Stripe.Accounts.list(20, "my_key") # Get a list of 20 accounts
+      {:ok, accounts} = Stripe.Accounts.list() # Get a list of 10 accounts
+      {:ok, accounts} = Stripe.Accounts.list(20) # Get a list of 20 accounts
 
   """
   def list(limit \\ 10) do
@@ -289,7 +289,7 @@ defmodule Stripe.Accounts do
   @doc """
   Get a list of accounts. Accepts Stripe API key.
 
-  Gets a list of accounts for a given owner.
+  Gets a list of accounts.
 
   Accepts the following parameters:
 
