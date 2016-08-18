@@ -1,56 +1,63 @@
 defmodule Stripe.Charges do
   @moduledoc """
-  Handles charges to the Stripe API.
-  (API ref: https://stripe.com/docs/api#charges)
+  Functions for working with charges at Stripe. Through this API you can:
 
-  Operations:
-  - create
-  - update
-  - get one 
-  - list 
-  - count
-  - refund 
-  - refund partial 
+    * create a charge,
+    * update a charge,
+    * get a charge,
+    * list charges,
+    * count charges,
+    * refund a charge,
+    * partially refund a charge.
+
+  Stripe API reference: https://stripe.com/docs/api#charges
   """
 
   @endpoint "charges"
 
-
   @doc """
-  Creates a charge for a customer or card. You must pass in the amount, and also a source for the charge
-  that can be a token or customer. See the Stripe docs for proper source specs.
+  Create a charge.
+
+  Creates a charge for a customer or card using amount and params. `params`
+  must include a source.
+
+  Returns `{:ok, charge}` tuple.
 
   ## Examples
-  ```
-    params = [
-      source: [
-        object: "card",
-        number: "4111111111111111",
-        exp_month: 10,
-        exp_year: 2020,
-        country: "US",
-        name: "Ducky Test",
-        cvc: 123
-      ],
-      description: "1000 Widgets"
-    ]
 
-    {:ok, result} = Stripe.Charges.create 1000,params
-  ```
+      params = [
+        source: [
+          object: "card",
+          number: "4111111111111111",
+          exp_month: 10,
+          exp_year: 2020,
+          country: "US",
+          name: "Ducky Test",
+          cvc: 123
+        ],
+        description: "1000 Widgets"
+      ]
+
+      {:ok, charge} = Stripe.Charges.create(1000, params)
+
   """
   def create(amount, params) do
     create amount, params, Stripe.config_or_env_key
   end
 
   @doc """
-  Creates a charge for a customer or card. You must pass in the amount, and also a source for the charge
-  that can be a token or customer. See the Stripe docs for proper source specs.
-  Using a given stripe key to apply against the account associated.
+  Create a charge. Accepts Stripe API key.
+
+  Creates a charge for a customer or card using amount and params. `params`
+  must include a source.
+
+  Returns `{:ok, charge}` tuple.
 
   ## Examples
 
-  {:ok, result} = Stripe.Charges.create 1000,params, key
-"""
+      {:ok, charge} = Stripe.Charges.create(1000, params, key)
+
+  """
   def create(amount, params, key) do
     #default currency
     params = Keyword.put_new params, :currency, "USD"
@@ -61,82 +68,139 @@ defmodule Stripe.Charges do
     |> Stripe.Util.handle_stripe_response
   end
 
-
   @doc """
-  Lists out charges from your account with a default limit of 10. You can override this by passing in a limit.
+  Get a list of charges.
+
+  Gets a list of charges.
+
+  Accepts the following parameters:
+
+    * `limit` - a limit of items to be returned (optional; defaults to 10).
+
+  Returns a `{:ok, charges}` tuple, where `charges` is a list of charges.
 
   ## Examples
-  ```
-    {:ok, charges} = Stripe.Charges.list(100)
-  ```
+
+      {:ok, charges} = Stripe.charges.list() # Get a list of 10 charges
+      {:ok, charges} = Stripe.charges.list(20) # Get a list of 20 charges
+
   """
   def list(params \\ [])
   def list(limit) when is_integer(limit) do
     list Stripe.config_or_env_key, limit
   end
   @doc """
-  Lists charges from your account. Optionally pass parameters that are accepted through the Stripe
-  API.
+  Get a list of charges.
+
+  Gets a list of charges.
+
+  Accepts the following parameters:
+
+    * `params` - a list of params supported by Stripe (optional; defaults to []). Available parameters are:
+      `customer`, `ending_before`, `limit` and `source`.
+
+  Returns a `{:ok, charges}` tuple, where `charges` is a list of charges.
 
   ## Examples
-  ```
-    {:ok, charges} = Stripe.Charges.list(limit: 100)
-  ```
+
+      {:ok, charges} = Stripe.Charges.list(source: "card") # Get a list of charges for cards
+
   """
   def list(params) do
     list(Stripe.config_or_env_key, params)
   end
 
   @doc """
-  Lists out charges from your account with a default limit of 10. You can override this by passing in a limit.
-  Using a given stripe key to apply against the account associated.
+  Get a list of charges. Accepts Stripe API key.
+
+  Gets a list of charges.
+
+  Accepts the following parameters:
+
+    * `limit` - a limit of items to be returned (optional; defaults to 10).
+
+  Returns a `{:ok, charges}` tuple, where `charges` is a list of charges.
 
   ## Examples
-  ```
-  {:ok, charges} = Stripe.Charges.list(key, 100)
-  ```
+
+      {:ok, charges} = Stripe.charges.list() # Get a list of 10 charges
+      {:ok, charges} = Stripe.charges.list(20) # Get a list of 20 charges
+
   """
   def list(key, limit) when is_integer(limit) do
     Stripe.make_request_with_key(:get, "#{@endpoint}?limit=#{limit}", key)
     |> Stripe.Util.handle_stripe_response
   end
   @doc """
-  Lists charges from your account. Optionally pass parameters that are accepted through the Stripe
-  API. Using a given stripe key to apply against the account associated.
+  Get a list of charges. Accepts Stripe API key.
+
+  Gets a list of charges.
+
+  Accepts the following parameters:
+
+    * `params` - a list of params supported by Stripe (optional; defaults to
+      `[]`). Available parameters are: `customer`, `ending_before`, `limit` and
+      `source`.
+
+  Returns a `{:ok, charges}` tuple, where `charges` is a list of charges.
 
   ## Examples
-  ```
-    {:ok, charges} = Stripe.Charges.list(limit: 100)
-  ```
+
+      {:ok, charges} = Stripe.Charges.list(source: "card") # Get a list of charges for cards
+
   """
   def list(key, params) do
     Stripe.make_request_with_key(:get, "#{@endpoint}", key, %{}, %{}, [params: params])
     |> Stripe.Util.handle_stripe_response
   end
 
-
   @doc """
-  Updates a charge with changeable information (see the Stripe docs on what you can change)
+  Update a charge.
+
+  Updates a charge with changeable information.
+
+  Accepts the following parameters:
+
+    * `params` - a list of params to be updated (optional; defaults to `[]`).
+      Available parameters are: `description`, `metadata`, `receipt_email`,
+      `fraud_details` and `shipping`.
+
+  Returns a `{:ok, charge}` tuple.
+
   ## Examples
 
-  ```
-    params = [description: "Changed charge"]
-    {:ok, charge} = Stripe.Charges.change("charge_id", params)
-  ```
+      params = [
+        description: "Changed charge"
+      ]
+
+      {:ok, charge} = Stripe.Charges.change("charge_id", params)
+
   """
   def change(id, params) do
     change id, params, Stripe.config_or_env_key
   end
 
   @doc """
-  Updates a charge with changeable information (see the Stripe docs on what you can change)
-  Using a given stripe key to apply against the account associated.
+  Update a charge. Accepts Stripe API key.
+
+  Updates a charge with changeable information.
+
+  Accepts the following parameters:
+
+    * `params` - a list of params to be updated (optional; defaults to `[]`).
+      Available parameters are: `description`, `metadata`, `receipt_email`,
+      `fraud_details` and `shipping`.
+
+  Returns a `{:ok, charge}` tuple.
+
   ## Examples
 
-  ```
-  params = [description: "Changed charge"]
-  {:ok, charge} = Stripe.Charges.change("charge_id", params, key)
-  ```
+      params = [
+        description: "Changed charge"
+      ]
+
+      {:ok, charge} = Stripe.Charges.change("charge_id", params)
+
   """
   def change(id, params, key) do
     Stripe.make_request_with_key(:post, "#{@endpoint}/#{id}", key, params)
@@ -146,10 +210,10 @@ defmodule Stripe.Charges do
   @doc """
   Captures a charge that is currently pending. Note: you can default a charge to be automatically captured by setting  `capture: true` in the charge create params.
 
-  ## Example
+  ## Examples
 
   ```
-      {:ok, charge} = Stripe.Charges.capture("charge_id")
+  {:ok, charge} = Stripe.Charges.capture("charge_id")
   ```
   """
   def capture(id) do
@@ -160,7 +224,8 @@ defmodule Stripe.Charges do
   Captures a charge that is currently pending. Note: you can default a charge to be automatically captured by setting  `capture: true` in the charge create params.
 
   Using a given stripe key to apply against the account associated.
-  ## Example
+
+  ## Examples
 
   ```
   {:ok, charge} = Stripe.Charges.capture("charge_id", key)
@@ -175,10 +240,10 @@ defmodule Stripe.Charges do
   @doc """
   Retrieves a given charge.
 
-  ## Example
+  ## Examples
 
   ```
-      {:ok, charge} = Stripe.Charges.get("charge_id")
+  {:ok, charge} = Stripe.Charges.get("charge_id")
   ```
   """
   def get(id) do
@@ -189,7 +254,7 @@ defmodule Stripe.Charges do
   Retrieves a given charge.
   Using a given stripe key to apply against the account associated.
 
-  ## Example
+  ## Examples
 
   ```
   {:ok, charge} = Stripe.Charges.get("charge_id", key)
@@ -203,10 +268,10 @@ defmodule Stripe.Charges do
   @doc """
   Refunds a charge completely. Use `refund_partial` if you just want to... you know... partially refund
 
-  ## Example
+  ## Examples
 
   ```
-    {:ok, charge} = Stripe.Charges.refund("charge_id")
+  {:ok, charge} = Stripe.Charges.refund("charge_id")
   ```
   """
   def refund(id) do
@@ -217,7 +282,7 @@ defmodule Stripe.Charges do
   Refunds a charge completely. Use `refund_partial` if you just want to... you know... partially refund
   Using a given stripe key to apply against the account associated.
   
-  ## Example
+  ## Examples
 
   ```
   {:ok, charge} = Stripe.Charges.refund("charge_id", key)
@@ -230,10 +295,10 @@ defmodule Stripe.Charges do
   @doc """
   Refunds a charge partially; the amount is required.
 
-  ## Example
+  ## Examples
 
   ```
-    {:ok, charge} = Stripe.Charges.refund_partial("charge_id",500)
+  {:ok, charge} = Stripe.Charges.refund_partial("charge_id", 500)
   ```
   """
   def refund_partial(id, amount) do
@@ -243,10 +308,11 @@ defmodule Stripe.Charges do
   @doc """
   Refunds a charge partially; the amount is required.
   Using a given stripe key to apply against the account associated.
-  ## Example
+
+  ## Examples
 
   ```
-  {:ok, charge} = Stripe.Charges.refund_partial("charge_id",500, key)
+  {:ok, charge} = Stripe.Charges.refund_partial("charge_id", 500, key)
   ```
   """
   def refund_partial(id, amount, key) do
@@ -257,10 +323,11 @@ defmodule Stripe.Charges do
 
   @doc """
   Count number of charges.
-  ## Example
+
+  ## Examples
 
   ```
-  {:ok, cnt} = Stripe.Charges.count 
+  {:ok, count} = Stripe.Charges.count
   ```
   """
   def count do
@@ -270,10 +337,10 @@ defmodule Stripe.Charges do
   @doc """
   Count number of charges.
   Using a given stripe key to apply against the account associated.
-  ## Example
+  ## Examples
 
   ```
-  {:ok, cnt} = Stripe.Charges.count key 
+  {:ok, count} = Stripe.Charges.count key
   ```
   """
   def count(key) do
