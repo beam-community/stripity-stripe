@@ -1,12 +1,13 @@
 defmodule Stripe.Accounts do
   @moduledoc """
-  Functions for working with customers at Stripe. Through this API you can:
+  Functions for working with accounts at Stripe. Through this API you can:
 
-    * create account,
-    * get account,
-    * get all accounts,
-    * delete account,
+    * create an account,
+    * get an account,
+    * delete an account,
     * delete all accounts,
+    * list accounts,
+    * list all accounts,
     * count accounts.
 
   Stripe API reference: https://stripe.com/docs/api/curl#account_object
@@ -15,7 +16,9 @@ defmodule Stripe.Accounts do
   @endpoint "accounts"
 
   @doc """
-  Creates an account given the account params.
+  Create an account.
+
+  Creates an account using params.
 
   Returns created account.
 
@@ -52,6 +55,7 @@ defmodule Stripe.Accounts do
           account_number: "000123456789"
         ]
       ]
+
       {:ok, account} = Stripe.Accounts.create(params)
 
   """
@@ -60,7 +64,9 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Creates an account given the account params. Accepts Stripe API key.
+  Create an account. Accepts Stripe API key.
+
+  Creates an account given the account params.
 
   Returns created account.
 
@@ -75,7 +81,9 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Returns an account given the account ID.
+  Get an account.
+
+  Gets an account using account ID.
 
   ## Examples
 
@@ -87,7 +95,9 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Returns an account given the account ID. Accepts Stripe API key.
+  Get an account. Accepts Stripe API key.
+
+  Gets an account using account ID.
 
   ## Examples
 
@@ -101,11 +111,20 @@ defmodule Stripe.Accounts do
 
   @max_fetch_size 100
   @doc """
-  Returns a list with all accounts.
+  List all accounts.
+
+  Lists all accounts.
+
+  Accepts the following parameters:
+
+    * `accum` - a list to start accumulating accounts to (optional; defaults to `[]`).,
+    * `starting_after` - an offset (optional; defaults to `""`).
+
+  Returns `{:ok, accounts}` tuple.
 
   ## Examples
 
-      {:ok, accounts} = Stripe.Accounts.all()
+      {:ok, accounts} = Stripe.Accounts.all([], 5)
 
   """
   def all( accum \\ [], starting_after \\ "") do
@@ -113,11 +132,20 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Returns a list with all accounts. Accepts Stripe API key.
+  List all accounts. Accepts Stripe API key.
+
+  Lists all accounts.
+
+  Accepts the following parameters:
+
+    * `accum` - a list to start accumulating accounts to (optional; defaults to `[]`).,
+    * `starting_after` - an offset (optional; defaults to `""`).
+
+  Returns `{:ok, accounts}` tuple.
 
   ## Examples
 
-      {:ok, accounts} = Stripe.Accounts.all("my_key", [], 3)
+      {:ok, accounts} = Stripe.Accounts.all("my_key", [], 5)
 
   """
   def all( key, accum, starting_after) do
@@ -137,9 +165,11 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
+  Delete an account.
+
   Deletes an account given the account ID.
 
-  Returns a deleted account.
+  Returns a `{:ok, account}` tuple.
 
   ## Examples
 
@@ -151,9 +181,11 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Deletes an account given the account ID. Accepts Stripe API key.
+  Delete an account. Accepts Stripe API key.
 
-  Returns a deleted account.
+  Deletes an account given the account ID.
+
+  Returns a `{:ok, account}` tuple.
 
   ## Examples
 
@@ -166,7 +198,11 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
+  Delete all accounts.
+
   Deletes all accounts.
+
+  Returns `:ok` atom.
 
   ## Examples
 
@@ -178,7 +214,11 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Deletes all accounts. Accepts Stripe API key.
+  Delete all accounts. Accepts Stripe API key.
+
+  Deletes all accounts.
+
+  Returns `:ok` atom.
 
   ## Examples
 
@@ -194,7 +234,11 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Returns total number of accounts.
+  Get total number of accounts.
+
+  Gets total number of accounts.
+
+  Returns `{:ok, count}` tuple.
 
   ## Examples
 
@@ -206,7 +250,11 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Returns total number of accounts. Accepts Stripe API key.
+  Get total number of accounts. Accepts Stripe API key.
+
+  Gets total number of accounts.
+
+  Returns `{:ok, count}` tuple.
 
   ## Examples
 
@@ -218,14 +266,20 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Returns a list of accounts.
+  Get a list of accounts. Accepts Stripe API key.
 
-  Default limit of items returned is 10.
+  Gets a list of accounts for a given owner.
+
+  Accepts the following parameters:
+
+    * `limit` - a limit of items to be returned (optional; defaults to 10).
+
+  Returns a `{:ok, accounts}` tuple, where `accounts` is a list of accounts.
 
   ## Examples
 
-      {:ok, accounts} = Stripe.Accounts.list() # Get a list of 10 accounts
-      {:ok, accounts} = Stripe.Accounts.list(20) # Get a list of 20 accounts
+      {:ok, accounts} = Stripe.Accounts.list("my_key") # Get a list of 10 accounts
+      {:ok, accounts} = Stripe.Accounts.list(20, "my_key") # Get a list of 20 accounts
 
   """
   def list(limit \\ 10) do
@@ -233,9 +287,15 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
-  Returns a list of accounts. Accepts Stripe API key.
+  Get a list of accounts. Accepts Stripe API key.
 
-  Default limit of items returned is 10.
+  Gets a list of accounts for a given owner.
+
+  Accepts the following parameters:
+
+    * `limit` - a limit of items to be returned (optional; defaults to 10).
+
+  Returns a `{:ok, accounts}` tuple, where `accounts` is a list of accounts.
 
   ## Examples
 

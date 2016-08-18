@@ -176,7 +176,7 @@ defmodule Stripe.Cards do
   Accepts the following parameters:
 
     * `starting_after` - an offset (optional),
-    * `limit` - a limit of items returned (optional; defaults to 10).
+    * `limit` - a limit of items to be returned (optional; defaults to 10).
 
   Returns a `{:ok, cards}` tuple, where `cards` is a list of cards.
 
@@ -198,7 +198,7 @@ defmodule Stripe.Cards do
   Accepts the following parameters:
 
     * `starting_after` - an offset (optional),
-    * `limit` - a limit of items returned (optional; defaults to 10).
+    * `limit` - a limit of items to be returned (optional; defaults to 10).
 
   Returns a `{:ok, cards}` tuple, where `cards` is a list of cards.
 
