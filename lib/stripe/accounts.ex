@@ -6,6 +6,7 @@ defmodule Stripe.Accounts do
     * get an account,
     * delete an account,
     * delete all accounts,
+    * list accounts,
     * list all accounts,
     * count accounts.
 
