@@ -123,8 +123,8 @@ defmodule Stripe.Charges do
 
   ## Examples
 
-      {:ok, charges} = Stripe.charges.list() # Get a list of 10 charges
-      {:ok, charges} = Stripe.charges.list(20) # Get a list of 20 charges
+      {:ok, charges} = Stripe.charges.list("my_key") # Get a list of up to 10 charges
+      {:ok, charges} = Stripe.charges.list("my_key", 20) # Get a list of up to 20 charges
 
   """
   def list(key, limit) when is_integer(limit) do
@@ -146,7 +146,7 @@ defmodule Stripe.Charges do
 
   ## Examples
 
-      {:ok, charges} = Stripe.Charges.list(source: "card") # Get a list of charges for cards
+      {:ok, charges} = Stripe.Charges.list("my_key", source: "card") # Get a list of charges for cards
 
   """
   def list(key, params) do
