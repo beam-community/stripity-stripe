@@ -1,6 +1,6 @@
 defmodule Stripe.Accounts do
   @moduledoc """
-  Functions for working with customers at Stripe. Through this API you can:
+  Functions for working with accounts at Stripe. Through this API you can:
 
     * create an account,
     * get an account,
