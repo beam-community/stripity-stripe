@@ -146,4 +146,27 @@ defmodule Stripe.InvoicesTest do
       assert upcoming_invoice[:customer] == customer1.id
     end
   end
+
+  @tag disabled: false
+  test "Pay an invoice", %{customer1: customer1, sub1: sub1} do
+    use_cassette "invoices_test/pay", match_requests_on: [:query, :request_body] do
+      params = [
+        customer: customer1.id,
+        amount: 10,
+        currency: "usd",
+        subscription: sub1.id
+      ]
+      {:ok, _} = Stripe.InvoiceItems.create params
+
+      {:ok, invoice} = Stripe.Invoices.create(customer1.id, [subscription: sub1.id])
+        |> Tuple.to_list
+        |> Enum.at(1)
+        |> Map.fetch!(:id)
+        |> Stripe.Invoices.pay
+
+        assert invoice.attempted == true
+        assert invoice.closed == true
+        assert invoice.object == "invoice"
+    end
+  end
 end

@@ -184,4 +184,27 @@
     Stripe.make_request_with_key(:get, "#{@endpoint}/upcoming", key, params)
     |> Stripe.Util.handle_stripe_response
   end
+
+  @doc """
+  Stripe automatically creates and then attempts to pay invoices for customers on subscriptions.
+  However, if you’d like to attempt to collect payment on an invoice out of the normal retry schedule or for some other reason, you can do so.
+
+  ## Example
+  {:ok, invoice} = Stripe.Invoices.pay "invoice_id"
+  """
+  def pay(invoice_id) do
+    pay invoice_id, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Stripe automatically creates and then attempts to pay invoices for customers on subscriptions.
+  However, if you’d like to attempt to collect payment on an invoice out of the normal retry schedule or for some other reason, you can do so.
+
+  ## Example
+  {:ok, invoice} = Stripe.Invoices.pay "invoice_id", key
+  """
+  def pay(invoice_id, key) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{invoice_id}/pay", key)
+    |> Stripe.Util.handle_stripe_response
+  end
 end
