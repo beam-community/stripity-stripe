@@ -305,7 +305,7 @@ defmodule Stripe.Charges do
       {:ok, charge} = Stripe.Charges.refund_with_reversal("charge_id")
   """
   def refund_with_reversal(id) do
-    refund id, Stripe.config_or_env_key, %{reverse_transfer: true}
+    refund id, Stripe.config_or_env_key, %{reverse_transfer: true, refund_application_fee: true}
   end
 
 
