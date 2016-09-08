@@ -1,0 +1,35 @@
+[
+  {
+    "request": {
+      "body": "id=DISCOUNT20",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/coupons"
+    },
+    "response": {
+      "body": "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\": \"Missing required param: duration.\",\n    \"param\": \"duration\"\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Thu, 08 Sep 2016 16:23:37 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "134",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_99oxrxXauEEDvo",
+        "Stripe-Version": "2016-07-06"
+      },
+      "status_code": 400,
+      "type": "ok"
+    }
+  }
+]
