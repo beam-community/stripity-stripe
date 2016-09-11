@@ -35,9 +35,19 @@ defmodule Stripe.ChargeTest do
       end
     end
   end
+
   test "List works" do
     use_cassette "charge_test/list", match_requests_on: [:query, :request_body] do
       case Stripe.Charges.list() do
+        {:ok, charges} -> assert length(charges) > 0
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
+  test "List with customer works" do
+    use_cassette "charge_test/list_with_customer", match_requests_on: [:query, :request_body] do
+      case Stripe.Charges.list(customer: "test") do
         {:ok, charges} -> assert length(charges) > 0
         {:error, err} -> flunk err
       end
