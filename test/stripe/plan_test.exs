@@ -81,6 +81,24 @@ defmodule Stripe.PlanTest do
     end
   end
 
+  test "Retrieve plan" do
+    use_cassette "plan_test/retrieve", match_requests_on: [:query, :request_body] do
+      case Stripe.Plans.retrieve("specific-test-plan") do
+        {:ok, plan} -> assert plan.id == "specific-test-plan"
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
+  test "Retrieve plan w/ key" do
+    use_cassette "plan_test/retrieve_with_key", match_requests_on: [:query, :request_body] do
+      case Stripe.Plans.retrieve("specific-test-plan1", Stripe.config_or_env_key) do
+        {:ok, plan} -> assert plan.id == "specific-test-plan1"
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
   test "Plan deletion" do
     use_cassette "plan_test/delete", match_requests_on: [:query, :request_body] do
       case Stripe.Plans.delete "test-plan" do
