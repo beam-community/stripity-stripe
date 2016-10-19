@@ -26,6 +26,14 @@ Why another Stripe Library? Currently there are a number of them in the Elixir w
 
 As I began digging things up with these other libraries it became rather apparent that I was not only tweaking the API, but also ripping out a lot of the existing code... and that usually means I should probably do my own thing. So I did.
 
+### Update:
+
+As of October 18th, Rob has graciously handed over the reins to the teams at [Code Corps](https://www.codecorps.org/) and [Strumber](https://strumber.com/). Over the next several weeks, we will be working to produce and release a 2.0 version of Stripity Stripe which fully addresses the concerns Rob mentioned above and updates the high level api to work with all of the Stripe API Endpoints.
+
+**If you are starting a new implementation, particularly one using Stripe Connect, we recommend relying on [the low level API defined here](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe.ex#L88).**
+
+Stay tuned...
+
 ## Stripe API
 
 I've tested this library against Stripe API v1 and above. [The docs are up at Hex](http://hexdocs.pm/stripity_stripe/)
