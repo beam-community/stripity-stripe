@@ -1,19 +1,19 @@
-# Stripe for Elixir [![Build Status](https://travis-ci.org/robconery/stripity-stripe.svg?branch=master)](https://travis-ci.org/robconery/stripity-stripe) [![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Inline docs](http://inch-ci.org/github/robconery/stripity-stripe.svg)](http://inch-ci.org/github/robconery/stripity-stripe) [![Coverage Status](https://coveralls.io/repos/github/robconery/stripity-stripe/badge.svg?branch=master)](https://coveralls.io/github/robconery/stripity-stripe?branch=master)
+# Stripe for Elixir [![Build Status](https://travis-ci.org/code-corps/stripity-stripe.svg?branch=master)](https://travis-ci.org/code-corps/stripity-stripe) [![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)] [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Inline docs](http://inch-ci.org/github/code-corps/stripity-stripe.svg)](http://inch-ci.org/github/code-corps/stripity-stripe) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity-stripe/badge.svg?branch=master)](https://coveralls.io/github/code-corps/stripity-stripe?branch=master)
 
 An Elixir library for working with [Stripe](https://stripe.com/).
 
 Features:
 
-* manage accounts (your own, standalone/managed via connect) [Stripe.Accounts](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/accounts.ex)
-* manage customers [Stripe.Customers](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/customers.ex)
-* manage Subscriptions [Stripe.Subscriptions](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/subscriptions.ex)
-* manage plans [Stripe.Plans](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/plans.ex)
-* manage Invoices [Stripe.Invoices](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoices.ex)
-* manage Invoice Items [Stripe.InvoiceItems](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/invoice_items.ex)
-* manage tokens for credit card and bank account [Stripe.Tokens](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/tokens.ex)
-* list and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve) [Stripe.Events](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/events.ex)
-* manage/capture charges with or without an existing Customer [Stripe.Charges](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/charges.ex)
-* manage and validate coupons [Stripe.Coupons](https://github.com/robconery/stripity-stripe/blob/master/lib/stripe/coupons.ex)
+* manage accounts (your own, standalone/managed via connect) [Stripe.Accounts](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/accounts.ex)
+* manage customers [Stripe.Customers](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/customers.ex)
+* manage Subscriptions [Stripe.Subscriptions](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/subscriptions.ex)
+* manage plans [Stripe.Plans](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/plans.ex)
+* manage Invoices [Stripe.Invoices](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/invoices.ex)
+* manage Invoice Items [Stripe.InvoiceItems](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/invoice_items.ex)
+* manage tokens for credit card and bank account [Stripe.Tokens](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/tokens.ex)
+* list and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve) [Stripe.Events](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/events.ex)
+* manage/capture charges with or without an existing Customer [Stripe.Charges](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/charges.ex)
+* manage and validate coupons [Stripe.Coupons](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/coupons.ex)
 * facilitate using the Connect API (for standalone/managed accounts) [Stripe Connect](https://stripe.com/docs/connect) by allowing you to supply your own key. The oauth callback processor (not endpoint) is supplied by this library as well as a connect button url generator. See below for [Instructions](#connect). [Stripe Connect API reference](https://stripe.com/docs/connect/reference)
 * all functions are available with a parameter that allow a stripe api key to be passed in and be used for the underlying request. This api key would be the one obtained by the oauth connect authorize workflow.
 
@@ -90,7 +90,7 @@ For optional arguments, you can send in a Keyword list that will get translated 
 {:ok, result} = Stripe.Customers.change_subscription "customer_id", "sub_id", [plan: "premium"]
 ```
 
-Metadata (metadata:) key is supported on most object type and allow the storage of extra information on the stripe platform. See [test](https://github.com/robconery/stripity-stripe/blob/master/test/stripe/customer_test.exs) for an example.
+Metadata (metadata:) key is supported on most object type and allow the storage of extra information on the stripe platform. See [test](https://github.com/code-corps/stripity-stripe/blob/master/test/stripe/customer_test.exs) for an example.
 
 That's the rule of thumb with this library. If there are any errors with your call, they will bubble up to you in the `{:error, message}` match.
 
@@ -112,9 +112,9 @@ end
 
 # Connect
 
-Stripe Connect allows you to provide your customers with an easy onboarding to their own Stripe account. This is useful when you run an ecommerce as a service platform. Each merchant can transact using their own account using your platform. Then your platform uses stripity API with their own API key obtained by the onboarding process.
+Stripe Connect allows you to provide your customers with an easy onboarding to their own Stripe account. This is useful when you run an e-commerce as a service platform. Each merchant can transact using their own account using your platform. Then your platform uses Stripe's API with their own API key obtained in the onboarding process.
 
-First, you need to register your platform on stripe connect to obtain a `client_id`. In your account settings, there's a "Connect" tab, select it. Then fill the information to activate your connect platform settings. The select he `client_id` (notice there's one for dev and one for prod), stash this `client_id` in the config file under
+First, you need to register your platform on Stripe Connect to obtain a `client_id`. In your account settings, there's a "Connect" tab, select it. Then fill the information to activate your connect platform settings. The select he `client_id` (notice there's one for dev and one for prod), stash this `client_id` in the config file under
 
 ```ex
 config :stripity_stripe, platform_client_id: "ac_???"
@@ -170,7 +170,7 @@ See a [demo](https://github.com/nicrioux/stripity-connect-phoenix) using the Pho
 
 ## Testing Connect
 
-The tests are currently manual as they require a unique oauth authorization code per test. You need to obtain this code maunally using the stripe connect workflow (that your user would go through using the above url).
+The tests are currently manual as they require a unique OAuth authorization code per test. You need to obtain this code manually using the stripe connect workflow (that your user would go through using the above url).
 
 First, log in your account. Then go to the following url: https://dashboard.stripe.com/account/applications/settings
 
@@ -178,7 +178,7 @@ Create a connect standalone account. Grab your development `client_id`. Put it i
 
 ## Contributing
 
-Feedback, feature requests, and fixes are welcomed and encouraged.  Please make appropriate use of [Issues](https://github.com/robconery/stripity-stripe/issues) and [Pull Requests](https://github.com/robconery/stripity-stripe/pulls).  All code should have accompanying tests.
+Feedback, feature requests, and fixes are welcomed and encouraged.  Please make appropriate use of [Issues](https://github.com/code-corps/stripity-stripe/issues) and [Pull Requests](https://github.com/code-corps/stripity-stripe/pulls).  All code should have accompanying tests.
 
 ## License
 

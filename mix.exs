@@ -53,7 +53,7 @@ defmodule Stripe.Mixfile do
       maintainers: ["Rob Conery","Nic Rioux"],
       licenses: ["New BSD"],
       links: %{
-        "GitHub" => "https://github.com/robconery/stripity-stripe",
+        "GitHub" => "https://github.com/code-corps/stripity-stripe",
         "Docs" => "https://hexdocs.pm/stripity_stripe"
       }
     ]
