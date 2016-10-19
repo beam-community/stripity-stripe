@@ -18,7 +18,7 @@ defmodule Stripe.Connect do
   Generate the URL to start a stripe workflow. You can pass in a
   crsf token to be sent to stripe, which they send you back at the end of the workflow to further secure the interaction. Make sure you verify this token yourself on reception of the workflow callback.
   """
-  def generate_button_url( csrf_token ) do
+  def generate_button_url(csrf_token) do
     client_id = Stripe.config_or_env_platform_client_id
     url = base_url() <> "oauth/authorize?response_type=code"
     url = url <> "&scope=read_write"
@@ -91,14 +91,13 @@ IO.inspect resp
  end
   ```
   """
-  def oauth_deauthorize( stripe_user_id ) do
+  def oauth_deauthorize(stripe_user_id) do
     {:ok, resp} = Stripe.make_oauth_deauthorize_request stripe_user_id
-    body = Stripe.Util.string_map_to_atoms Poison.decode!( resp.body )
+    body = Stripe.Util.string_map_to_atoms Poison.decode!(resp.body)
 
     case body[:stripe_user_id] == stripe_user_id do
         true -> {:ok, true}
-        false -> {:error, body[:error_description]}  
+        false -> {:error, body[:error_description]}
     end
   end
 end
-

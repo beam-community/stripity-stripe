@@ -3,7 +3,7 @@ defmodule Stripe.Mixfile do
 
   def project do
     [ app: :stripity_stripe,
-      version: "1.4.0",
+      version: "2.0.0",
       description: description(),
       package: package(),
       elixir: "~> 1.1",
@@ -12,11 +12,7 @@ defmodule Stripe.Mixfile do
         "coveralls": :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
-        "coveralls.html": :test,
-        vcr: :test,
-        "vcr.delete": :test,
-        "vcr.check": :test,
-        "vcr.show": :test
+        "coveralls.html": :test
       ],
       deps: deps]
   end
@@ -35,7 +31,6 @@ defmodule Stripe.Mixfile do
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:earmark, ">= 0.0.0", only: :dev},
       {:excoveralls, ">= 0.0.0", only: :test},
-      {:exvcr, ">= 0.0.0", only: :test},
       {:mock, ">= 0.0.0", only: :test},
       {:inch_ex, ">= 0.0.0", only: [:dev, :test]}
     ]
@@ -50,7 +45,7 @@ defmodule Stripe.Mixfile do
   defp package do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
-      maintainers: ["Rob Conery","Nic Rioux"],
+      maintainers: ["Dan Matthews", "Josh Smith"],
       licenses: ["New BSD"],
       links: %{
         "GitHub" => "https://github.com/code-corps/stripity-stripe",
