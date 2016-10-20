@@ -108,7 +108,7 @@ defmodule Stripe do
   Returns tuple
   """
   def make_request(method, endpoint, body \\ %{}, headers \\ %{}, options \\ []) do
-    make_request_with_key( method, endpoint, config_or_env_key(), body, headers, options )
+    make_request_with_key(method, endpoint, config_or_env_key(), body, headers, options)
   end
 
   @doc """
@@ -128,7 +128,7 @@ defmodule Stripe do
     rb = Stripe.URI.encode_query([
       stripe_user_id: stripe_user_id,
       client_id: Stripe.config_or_env_platform_client_id])
-    rh = req_headers( Stripe.config_or_env_key)
+    rh = req_headers(Stripe.config_or_env_key)
       |> Map.to_list
 
     options = httpoison_request_options()
