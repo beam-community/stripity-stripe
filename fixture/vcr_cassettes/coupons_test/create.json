@@ -1,0 +1,36 @@
+[
+  {
+    "request": {
+      "body": "duration=forever&id=DISCOUNT20&percent_off=25",
+      "headers": {
+        "Authorization": "Bearer non_empty_secret_key_string",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/coupons"
+    },
+    "response": {
+      "body": "{\n  \"id\": \"DISCOUNT20\",\n  \"object\": \"coupon\",\n  \"amount_off\": null,\n  \"created\": 1473351510,\n  \"currency\": null,\n  \"duration\": \"forever\",\n  \"duration_in_months\": null,\n  \"livemode\": false,\n  \"max_redemptions\": null,\n  \"metadata\": {},\n  \"percent_off\": 25,\n  \"redeem_by\": null,\n  \"times_redeemed\": 0,\n  \"valid\": true\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Thu, 08 Sep 2016 16:18:30 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "317",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_99osjMAkI67Vjy",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
