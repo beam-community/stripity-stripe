@@ -22,6 +22,7 @@ defmodule Stripe.Mixfile do
   # Configuration for the OTP application
   def application do
     [
+      mod: {Stripe, []},
       env: env(),
       applications: apps(Mix.env)
     ]

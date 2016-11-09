@@ -117,28 +117,47 @@ defmodule Stripe do
   @typep http_success :: {:ok, integer, [{String.t, String.t}], String.t}
   @typep http_failure :: {:error, term}
 
+  use Application
+
   @pool_name __MODULE__
   @api_version "2016-07-06"
 
   @doc """
-  Starts necessary components for the HTTP client to function
+  Callback for the application
+
+  Starts the HTTP connection pool (if it's being used) when
+  the VM loads the application pool.
+
+  Note that we are taking advantage of the BEAM application
+  standard in order to start the pool when the application is
+  started. While we do start a supervisor, the supervisor is only
+  to comply with the expectations of the BEAM application standard.
+  It is not given any children to supervise.
   """
-  @spec start() :: :ok
-  def start() do
+  @spec start(Application.start_type, any) :: :ok
+  def start(_start_type, _args) do
+    import Supervisor.Spec, warn: false
+    
     if use_pool?() do
       pool_options = get_pool_options()
       :ok = :hackney_pool.start_pool(@pool_name, pool_options)
     end
-
-    :ok
+    
+    opts = [strategy: :one_for_one, name: Stripe.Supervisor]
+    Supervisor.start_link([], opts)
   end
 
   @doc """
-  Cleans up the HTTP client's components (typically unnecessary to call)
+  Callback for the application
+
+  Shuts down the HTTP connection pool (if it's being used) when
+  the VM instructs the application to shut down.
   """
   @spec stop() :: :ok
   def stop() do
     :ok = :hackney_pool.stop_pool(@pool_name)
+
+    :ok
   end
 
   @spec get_pool_options() :: Keyword.t
