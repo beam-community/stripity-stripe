@@ -52,8 +52,8 @@ defmodule Stripe.Mixfile do
       {:ex_doc, "~> 0.14", only: :dev},
       {:excoveralls, "~> 0.5", only: :test},
       {:hackney, "~> 1.6"},
-      {:inch_ex, "~> 0.5", only: [:dev, :test]}
-      {:poison, "~> 2.0"},
+      {:inch_ex, "~> 0.5", only: [:dev, :test]},
+      {:poison, "~> 2.0"}
     ]
   end
 
