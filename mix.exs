@@ -2,7 +2,8 @@ defmodule Stripe.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :stripity_stripe,
+    [
+      app: :stripity_stripe,
       version: "2.0.0",
       description: description(),
       package: package(),
@@ -14,7 +15,8 @@ defmodule Stripe.Mixfile do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
-      deps: deps]
+      deps: deps
+    ]
   end
 
   # Configuration for the OTP application
@@ -46,13 +48,13 @@ defmodule Stripe.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.6"},
-      {:poison, "~> 2.0"},
       {:bypass, "~> 0.5", only: :test},
-      {:ex_doc, "~> 0.14", only: :dev},
       {:earmark, "~> 1.0", only: :dev},
+      {:ex_doc, "~> 0.14", only: :dev},
       {:excoveralls, "~> 0.5", only: :test},
+      {:hackney, "~> 1.6"},
       {:inch_ex, "~> 0.5", only: [:dev, :test]}
+      {:poison, "~> 2.0"},
     ]
   end
 
@@ -72,5 +74,4 @@ defmodule Stripe.Mixfile do
       }
     ]
   end
-
 end
