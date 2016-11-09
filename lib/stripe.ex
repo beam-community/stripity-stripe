@@ -113,7 +113,7 @@ defmodule Stripe do
   alias __MODULE__.{MissingAPIKeyError, HTTPError, APIRateLimitingError, APIError}
 
   @type method :: :get | :post | :put | :delete | :patch
-  @type headers :: %{required(String.t) => String.t}
+  @type headers :: %{String.t => String.t}
   @typep http_success :: {:ok, integer, [{String.t, String.t}], String.t}
   @typep http_failure :: {:error, term}
 
@@ -137,12 +137,12 @@ defmodule Stripe do
   @spec start(Application.start_type, any) :: :ok
   def start(_start_type, _args) do
     import Supervisor.Spec, warn: false
-    
+
     if use_pool?() do
       pool_options = get_pool_options()
       :ok = :hackney_pool.start_pool(@pool_name, pool_options)
     end
-    
+
     opts = [strategy: :one_for_one, name: Stripe.Supervisor]
     Supervisor.start_link([], opts)
   end
