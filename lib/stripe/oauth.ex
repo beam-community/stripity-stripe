@@ -1,7 +1,7 @@
 defmodule Stripe.OAuth do
   @doc """
   """
-  @spec make_oauth_deauthorize_request(map) :: {:ok, map} | {:error, Exception.t}
+  @spec make_oauth_token_callback_request(map) :: {:ok, map} | {:error, Exception.t}
   def make_oauth_token_callback_request(body) do
     endpoint = "oauth/token"
 
