@@ -118,6 +118,7 @@ defmodule Stripe do
   @typep http_failure :: {:error, term}
 
   @pool_name __MODULE__
+  @api_version "2016-07-06"
 
   @doc """
   Starts necessary components for the HTTP client to function
@@ -166,7 +167,6 @@ defmodule Stripe do
   @spec add_default_headers(headers) :: headers
   defp add_default_headers(existing_headers) do
     api_key = get_api_key()
-    version_num = Application.spec(:stripity_stripe, :vsn)
 
     Map.merge(existing_headers, %{
       "Accept" => "application/json; charset=utf8",
@@ -174,7 +174,7 @@ defmodule Stripe do
       "Authorization" => "Bearer #{api_key}",
       "Content-Type" => "applicaton/x-www-form-urlencoded",
       "Connection" => "keep-alive",
-      "User-Agent" => "Stripe/v1 stripity-stripe/#{version_num}"
+      "User-Agent" => "Stripe/v1 stripity-stripe/#{@api_version}"
     })
   end
 

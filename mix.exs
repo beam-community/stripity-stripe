@@ -30,7 +30,6 @@ defmodule Stripe.Mixfile do
   defp env() do
     [
       stripity_stripe: [
-        api_version: "2016-07-06",
         api_base_url: "https://api.stripe.com/v1/",
         use_connection_pool: true,
         pool_options: [
