@@ -79,5 +79,5 @@ defmodule Stripe.Util do
         {:ok, res[:total_count]}
       {:error, err} -> raise err
     end
-end
+  end
 end

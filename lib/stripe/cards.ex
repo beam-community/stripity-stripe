@@ -34,7 +34,7 @@ defmodule Stripe.Cards do
 
   @doc """
   Create a card.
-  
+
   Creates a card for given owner type, owner ID using params.
 
   `params` must contain a "source" object. Inside the "source" object, the following parameters are required:
@@ -186,8 +186,8 @@ defmodule Stripe.Cards do
       {:ok, cards} = Stripe.Cards.list(:customer, customer_id, 5, 20) # Get a list of up to 20 cards, skipping first 5 cards
 
   """
-  def list(owner_type, owner_id, starting_after, limit \\ 10) do
-    list owner_type, owner_id, Stripe.config_or_env_key, "", limit
+  def list(owner_type, owner_id, starting_after \\ "", limit \\ 10) do
+    list owner_type, owner_id, Stripe.config_or_env_key, starting_after, limit
   end
 
   @doc """
@@ -244,7 +244,7 @@ defmodule Stripe.Cards do
     Stripe.make_request_with_key(:delete, "#{endpoint_for_entity(owner_type, owner_id)}/#{id}", key)
     |> Stripe.Util.handle_stripe_response
   end
-  
+
   @doc """
   Delete all cards.
 
@@ -303,7 +303,7 @@ defmodule Stripe.Cards do
 
       {:ok, cards} = Stripe.Cards.all(:customer, customer_id, accum, starting_after)
 
-  """  
+  """
   def all(owner_type, owner_id, accum \\ [], starting_after \\ "") do
     all owner_type, owner_id, Stripe.config_or_env_key, accum, starting_after
   end
@@ -324,7 +324,7 @@ defmodule Stripe.Cards do
 
       {:ok, cards} = Stripe.Cards.all(:customer, customer_id, accum, starting_after, key)
 
-  """  
+  """
   def all(owner_type, owner_id, key, accum, starting_after) do
     case Stripe.Util.list_raw("#{endpoint_for_entity(owner_type, owner_id)}",key, @max_fetch_size, starting_after) do
       {:ok, resp}  ->
