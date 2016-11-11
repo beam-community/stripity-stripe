@@ -12,8 +12,6 @@ defmodule Stripe.Account do
   Stripe API reference: https://stripe.com/docs/api#account
   """
 
-  alias Stripe.Util
-
   @type t :: %__MODULE__{}
 
   defstruct [
@@ -36,17 +34,18 @@ defmodule Stripe.Account do
   @doc """
   Retrieve your own account with options.
   """
-  @spec retrieve(Keyword.t) :: {:ok, t} | {:error, Exception.t}
-  def retrieve(opts), do: do_retrieve(@singular_endpoint, opts)
+  @spec retrieve(list) :: {:ok, t} | {:error, Exception.t}
+  def retrieve(opts) when is_list(opts), do: do_retrieve(@singular_endpoint, opts)
 
   @doc """
   Retrieve an account with a specified `id`.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Exception.t}
+  @spec retrieve(binary, list) :: {:ok, t} | {:error, Exception.t}
   def retrieve(id, opts \\ []), do: do_retrieve(@plural_endpoint <> "/" <> id, opts)
 
-  @spec do_retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Exception.t}
-  defp do_retrieve(endpoint, opts) do
+  @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Exception.t}
+  defp do_retrieve(endpoint, opts \\ []) do
+    IO.inspect opts
     case Stripe.request(:get, endpoint, %{}, %{}, opts) do
       {:ok, result} -> {:ok, to_struct(result)}
       {:error, error} -> {:error, error}

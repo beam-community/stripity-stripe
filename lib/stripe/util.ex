@@ -1,14 +1,22 @@
 defmodule Stripe.Util do
 
+  def drop_nil_keys(map) do
+    Enum.reject(map, fn
+      {_, nil} -> true
+      _ -> false
+    end)
+    |> Enum.into(%{})
+  end
+
   @spec get_date(map, atom | String.t) :: DateTime.t | nil
   def get_date(m, k) do
     case Map.get(m, k) do
       nil -> nil
-      ts -> DateTime.from_unix!(ts)
+      ts -> datetime_from_timestamp(ts)
     end
   end
 
-  def datetime_from_timestamp(ts) when is_binary ts do
+  defp datetime_from_timestamp(ts) when is_binary ts do
     ts = case Integer.parse ts do
       :error -> 0
       {i, _r} -> i
@@ -16,13 +24,46 @@ defmodule Stripe.Util do
     datetime_from_timestamp ts
   end
 
-  def datetime_from_timestamp(ts) when is_number ts do
-    {{year, month, day}, {hour, minutes, seconds}} = :calendar.gregorian_seconds_to_datetime ts
-    {{year + 1970, month, day}, {hour, minutes, seconds}}
+  defp datetime_from_timestamp(ts) when is_number ts do
+    DateTime.from_unix!(ts)
   end
 
-  def datetime_from_timestamp(nil) do
-    datetime_from_timestamp 0
+  @doc """
+  Performs a root-level conversion of map keys from strings to atoms.
+
+  This function performs the transformation safely using `String.to_existing_atom/1`, but this has a possibility to raise if
+  there is not a corresponding atom.
+
+  It is recommended that you pre-filter maps for known values before
+  calling this function.
+
+  ## Examples
+  
+  iex> map = %{
+  ...>   "a"=> %{
+  ...>     "b" => %{
+  ...>       "c" => 1
+  ...>     }
+  ...>   }
+  ...> }
+  iex> Stripe.Util.map_keys_to_atoms(map)
+  %{
+    a: %{
+      "b" => %{
+        "c" => 1
+      }
+    }
+  }
+  """
+  def map_keys_to_atoms(m) do
+    Enum.map(m, fn
+      {k, v} when is_binary(k)  ->
+        a = String.to_existing_atom(k)
+        {a, v}
+      entry ->
+        entry
+    end)
+    |> Enum.into(%{})
   end
 
   def string_map_to_atoms([string_key_map]) do
