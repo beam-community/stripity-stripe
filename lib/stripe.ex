@@ -191,7 +191,7 @@ defmodule Stripe do
       "Accept" => "application/json; charset=utf8",
       "Accept-Encoding" => "gzip",
       "Authorization" => "Bearer #{api_key}",
-      "Content-Type" => "applicaton/x-www-form-urlencoded",
+      "Content-Type" => "application/x-www-form-urlencoded",
       "Connection" => "keep-alive",
       "User-Agent" => "Stripe/v1 stripity-stripe/#{@api_version}"
     })
