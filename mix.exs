@@ -4,47 +4,44 @@ defmodule Stripe.Mixfile do
   def project do
     [
       app: :stripity_stripe,
-      version: "2.0.0",
+      deps: deps,
       description: description(),
-      package: package(),
       elixir: "~> 1.1",
-      test_coverage: [tool: ExCoveralls],
+      package: package(),
       preferred_cli_env: [
         "coveralls": :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
-      deps: deps
+      test_coverage: [tool: ExCoveralls],
+      version: "2.0.0"
     ]
   end
 
   # Configuration for the OTP application
   def application do
     [
-      mod: {Stripe, []},
+      applications: apps(Mix.env),
       env: env(),
-      applications: apps(Mix.env)
+      mod: {Stripe, []}
     ]
   end
 
   defp env() do
     [
-      stripity_stripe: [
-        api_base_url: "https://api.stripe.com/v1/",
-        use_connection_pool: true,
-        pool_options: [
-          timeout: 5_000,
-          max_connections: 10
-        ]
-      ]
+      api_base_url: "https://api.stripe.com/v1/",
+      pool_options: [
+        timeout: 5_000,
+        max_connections: 10
+      ],
+      use_connection_pool: true
     ]
   end
 
   defp apps(:test), do: [:bypass | apps()]
   defp apps(_), do: apps()
-
-  defp apps(), do: [:hackney, :poison, :logger]
+  defp apps(), do: [:hackney, :logger, :poison]
 
   defp deps do
     [
@@ -60,18 +57,18 @@ defmodule Stripe.Mixfile do
 
   defp description do
     """
-    A Stripe Library for Elixir.
+    A Stripe client for Elixir.
     """
   end
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README*", "LICENSE*"],
-      maintainers: ["Dan Matthews", "Josh Smith"],
+      files: ["lib", "LICENSE*", "mix.exs", "README*"],
       licenses: ["New BSD"],
       links: %{
         "GitHub" => "https://github.com/code-corps/stripity-stripe"
-      }
+      },
+      maintainers: ["Dan Matthews", "Josh Smith"]
     ]
   end
 end

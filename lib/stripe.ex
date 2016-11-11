@@ -5,7 +5,7 @@ defmodule Stripe do
   ## Configuration
 
   ### API Key
-  
+
   You need to set your API key in your application configuration. Typically
   this is done in `config/config.exs` or a similar file. For example:
 
@@ -18,7 +18,7 @@ defmodule Stripe do
       config :stripity_stripe, api_key: System.get_env("STRIPE_API_KEY")
 
   ### HTTP Connection Pool
-  
+
   Stripity Stripe is set up to use an HTTP connection pool by default. This
   means that it will reuse already opened HTTP connections in order to
   minimize the overhead of establishing connections. Two configuration
@@ -203,15 +203,15 @@ defmodule Stripe do
     Map.put(existing_headers, "Stripe-Account", account_id)
   end
 
-  @spec add_default_options(Keyword.t) :: Keyword.t
+  @spec add_default_options(list) :: list
   defp add_default_options(opts) do
-    Keyword.merge(opts, [with_body: opts])
+    [ :with_body | opts ]
   end
 
-  @spec add_pool_option(Keyword.t) :: Keyword.t
+  @spec add_pool_option(list) :: list
   defp add_pool_option(opts) do
     if use_pool?() do
-      Keyword.put(opts, :pool, @pool_name)
+      [ {:pool, @pool_name} | opts ]
     else
       opts
     end
@@ -229,11 +229,12 @@ defmodule Stripe do
       request(:get, "/customers", %{}, %{}, connect_account: "acc_134151")
 
   """
-  @spec request(method, String.t, map, headers, Keyword.t) :: {:ok, map} | {:error, Exception.t}
+  @spec request(method, String.t, map, headers, list) :: {:ok, map} | {:error, Exception.t}
   def request(method, endpoint, body, headers, opts) do
-    {connect_account_id, opts} = Keyword.pop(opts, :connection_account)
+    {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
 
-    req_url = get_base_url() <> endpoint
+    base_url = get_base_url()
+    req_url = base_url <> endpoint
     req_body = Stripe.URI.encode_query(body)
     req_headers =
       headers

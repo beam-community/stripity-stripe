@@ -19,7 +19,6 @@ defmodule Stripe.Connect do
   crsf token to be sent to stripe, which they send you back at the end of the workflow to further secure the interaction. Make sure you verify this token yourself on reception of the workflow callback.
   """
   def generate_button_url(csrf_token) do
-    client_id = Stripe.config_or_env_platform_client_id
     url = base_url() <> "oauth/authorize?response_type=code"
     url = url <> "&scope=read_write"
     url = url <> "&client_id=#{Stripe.config_or_env_platform_client_id}"
