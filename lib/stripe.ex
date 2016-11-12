@@ -79,7 +79,7 @@ defmodule Stripe do
     }
 
     @spec exception({integer, map}) :: t
-    def exception({status_code, %{"type" => type, "message" => message} = body}) do
+    def exception({status_code, %{"type" => type, "message" => message} = body}, _) do
       # code is not a guaranteed key
       code = Map.get(body, "code")
 
@@ -88,6 +88,14 @@ defmodule Stripe do
         type: type,
         status_code: status_code,
         code: code
+      }
+    end
+
+    def exception({status_code, code, message}) do
+      %__MODULE__{
+        code: code,
+        message: message,
+        status_code: status_code
       }
     end
 
@@ -251,6 +259,28 @@ defmodule Stripe do
     |> handle_response()
   end
 
+  @doc """
+  A low level utility function to make an OAuth request to the Stripe API
+  """
+  @spec oauth_request(method, String.t, map) :: {:ok, map} | {:error, Exception.t}
+  def oauth_request(method, endpoint, body) do
+    base_url = "https://connect.stripe.com/oauth/"
+    req_url = base_url <> endpoint
+    req_body = Stripe.URI.encode_query(body)
+    req_headers =
+      %{}
+      |> add_default_headers()
+      |> Map.to_list()
+
+    req_opts =
+      []
+      |> add_default_options()
+      |> add_pool_option()
+
+    :hackney.request(method, req_url, req_headers, req_body, req_opts)
+    |> handle_response()
+  end
+
   @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, Exception.t}
   defp handle_response({:ok, status, _headers, body}) when status in 200..299 do
     decoded_body = Poison.decode!(body)
@@ -273,8 +303,8 @@ defmodule Stripe do
   end
 
   defp handle_response({:ok, status, _headers, body}) when status in 400..599 do
-    %{"error" => api_error} = Poison.decode!(body)
-    error = APIError.exception({status, api_error})
+    %{"error" => api_error, "error_description" => description} = Poison.decode!(body)
+    error = APIError.exception({status, api_error, description})
 
     {:error, error}
   end
