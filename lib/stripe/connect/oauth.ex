@@ -1,10 +1,14 @@
 defmodule Stripe.Connect.OAuth do
   @moduledoc """
-  Helper module for Connect related features at Stripe.
-  Through this API you can:
-  - retrieve the oauth access token or the full response, using the code received from the oauth flow return
+  Work with Stripe Connect.
 
-  (reference https://stripe.com/docs/connect/standalone-accounts)
+  You can:
+
+  - generate the URL for starting the OAuth workflow
+  - authorize a new connected account with a token
+  - deauthorize an existing connected account
+
+  Stripe API reference: https://stripe.com/docs/connect/reference
   """
 
   alias Stripe.Util
@@ -39,19 +43,20 @@ defmodule Stripe.Connect.OAuth do
   end
 
   @doc """
-  Execute the oauth callback to Stripe using the code supplied in the request parameter of the oauth redirect at the end of the onboarding workflow.
-# Example
+  Execute the OAuth callback to Stripe using the code supplied in the request parameter of the oauth redirect at the end of the onboarding workflow.
+
+## Example
 ```
 {:ok, resp} = Stripe.Connect.token code
 IO.inspect resp
 %Stripe.Connect.OAuth.TokenResponse{
-    token_type: "bearer",
-    stripe_publishable_key: "PUBLISHABLE_KEY",
-    scope: "read_write",
-    livemode: false,
-    stripe_user_id: "USER_ID",
-    refresh_token: "REFRESH_TOKEN",
-    access_token: "ACCESS_TOKEN"
+  access_token: "ACCESS_TOKEN",
+  livemode: false,
+  refresh_token: "REFRESH_TOKEN",
+  scope: "read_write",
+  stripe_publishable_key: "PUBLISHABLE_KEY",
+  stripe_user_id: "USER_ID",
+  token_type: "bearer"
 }
 
 ```
@@ -74,13 +79,13 @@ IO.inspect resp
   end
 
   @doc """
-  De-authorize an account with your connect entity. A kind of oauth reset which invalidates all tokens and requires the customer to re-establish the link using the onboarding workflow.
-  # Example
+  De-authorizes the connected account.
+
+  Requires the customer to re-establish the link using the onboarding workflow.
+
+  ## Example
   ```
-  case Stripe.Connect.oauth_deauthorize stripe_user_id do
-   {:ok, success} -> assert success == true
-   {:error, msg} -> flunk msg
- end
+  Stripe.Connect.deauthorize(stripe_user_id)
   ```
   """
   @spec deauthorize(String.t) :: {:ok, map} | {:error, Exception.t}
