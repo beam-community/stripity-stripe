@@ -1,14 +1,14 @@
 defmodule Stripe.Request do
   alias Stripe.Util
 
-  @type stripe_response :: {:ok, t} | {:error, Exception.t}
+  @type stripe_response :: {:ok, struct} | {:error, Exception.t}
   @type stripe_delete_response :: :ok | {:error, Exception.t}
 
   @spec create(String.t, struct, map, struct, Keyword.t) :: stripe_response
   def create(endpoint, struct, valid_keys, return_struct, opts) do
     body =
       struct
-      |> Map.take(@valid_create_keys)
+      |> Map.take(valid_keys)
       |> Util.drop_nil_keys()
 
     case Stripe.request(:post, endpoint, body, %{}, opts) do
@@ -30,7 +30,7 @@ defmodule Stripe.Request do
     body =
       changes
       |> Util.map_keys_to_atoms()
-      |> Map.take(keys)
+      |> Map.take(valid_keys)
       |> Util.drop_nil_keys()
 
     case Stripe.request(:post, endpoint, body, %{}, opts) do
