@@ -1,5 +1,21 @@
 defmodule Stripe.Util do
 
+  @type stripe_response :: %{String.t => any}
+
+  @spec stripe_response_to_struct(struct, stripe_response) :: struct
+  def stripe_response_to_struct(struct, stripe_response) do
+    keys = case struct do
+      %{__struct__: _t} -> struct |> Map.from_struct |> Map.keys
+      _ -> raise "First argument to 'stripe_response_to_struct' must be a struct."
+    end
+
+    Enum.reduce keys, struct, fn (atom, acc) ->
+      str = to_string(atom)
+      value = Map.get(stripe_response, str)
+      Map.put(acc, atom, value)
+    end
+  end
+   
   def drop_nil_keys(map) do
     Enum.reject(map, fn
       {_, nil} -> true
