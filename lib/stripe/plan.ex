@@ -15,6 +15,8 @@ defmodule Stripe.Plan do
   alias Stripe.Util
 
   @type t :: %__MODULE__{}
+  @type stripe_response :: {:ok, t} | {:error, Exception.t}
+  @type stripe_delete_response :: :ok | {:error, Exception.t}
 
   defstruct [
     :id, :amount, :created, :currency, :interval, :interval_count,
@@ -35,17 +37,17 @@ defmodule Stripe.Plan do
   @doc """
   Create a plan.
   """
-  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Exception.t}
+  @spec create(t, Keyword.t) :: stripe_response
   def create(plan, opts \\ []) do
     endpoint = @plural_endpoint
 
     plan =
-      Map.from_struct(plan)
+      plan
       |> Map.take(@valid_create_keys)
       |> Util.drop_nil_keys()
 
     case Stripe.request(:post, endpoint, plan, %{}, opts) do
-      {:ok, result} -> {:ok, to_struct(result)}
+      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%__MODULE__{}, result)}
       {:error, error} -> {:error, error}
     end
   end
@@ -53,11 +55,11 @@ defmodule Stripe.Plan do
   @doc """
   Retrieve a plan.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Exception.t}
+  @spec retrieve(binary, Keyword.t) :: stripe_response
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     case Stripe.request(:get, endpoint, %{}, %{}, opts) do
-      {:ok, result} -> {:ok, to_struct(result)}
+      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%__MODULE__{}, result)}
       {:error, error} -> {:error, error}
     end
   end
@@ -67,7 +69,7 @@ defmodule Stripe.Plan do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(t, map, list) :: {:ok, t} | {:error, Exception.t}
+  @spec update(t, map, list) :: stripe_response
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
 
@@ -78,7 +80,7 @@ defmodule Stripe.Plan do
       |> Util.drop_nil_keys()
 
     case Stripe.request(:post, endpoint, plan, %{}, opts) do
-      {:ok, result} -> {:ok, to_struct(result)}
+      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%__MODULE__{}, result)}
       {:error, error} -> {:error, error}
     end
   end
@@ -86,7 +88,7 @@ defmodule Stripe.Plan do
   @doc """
   Delete a plan.
   """
-  @spec delete(binary, list) :: :ok | {:error, Exception.t}
+  @spec delete(binary, list) :: stripe_delete_response
   def delete(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
 

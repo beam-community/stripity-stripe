@@ -1,6 +1,8 @@
 defmodule Stripe.Connect do
   require Map
 
+  alias Stripe.Util
+
   @moduledoc """
   Helper module for Connect related features at Stripe.
   Through this API you can:
@@ -49,20 +51,11 @@ IO.inspect resp
 ```
 
   """
+  @spec oauth_token_callback(String.t) :: {:ok, map} | {:error, Exception.t}
   def oauth_token_callback(code) do
-    req = [
-      client_secret: Stripe.config_or_env_key,
-      code: code,
-      grant_type: "authorization_code"
-    ]
-
-     case Stripe.make_oauth_token_callback_request req do
-       {:ok, resp} ->
-         case resp.status_code do
-           200 ->
-             {:ok, Stripe.Util.string_map_to_atoms Poison.decode!(resp.body)}
-           _ -> {:error, Stripe.Util.string_map_to_atoms Poison.decode!(resp.body)}
-         end
+     case Stripe.OAuth.token_callback_request(code) do
+       {:ok, result} -> {:ok, Util.string_map_to_atoms Poison.decode!(result.body)}
+       {:error, error} -> {:error, error}
      end
   end
 
@@ -91,12 +84,12 @@ IO.inspect resp
   ```
   """
   def oauth_deauthorize(stripe_user_id) do
-    {:ok, resp} = Stripe.make_oauth_deauthorize_request stripe_user_id
-    body = Stripe.Util.string_map_to_atoms Poison.decode!(resp.body)
+    {:ok, resp} = Stripe.OAuth.deauthorize_request(stripe_user_id)
+    body = Util.string_map_to_atoms(Poison.decode!(resp.body))
 
     case body[:stripe_user_id] == stripe_user_id do
-        true -> {:ok, true}
-        false -> {:error, body[:error_description]}
+      true -> {:ok, true}
+      false -> {:error, body[:error_description]}
     end
   end
 end
