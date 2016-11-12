@@ -40,16 +40,7 @@ defmodule Stripe.Customer do
   @spec create(t, Keyword.t) :: {:ok, t} | {:error, Exception.t}
   def create(customer, opts \\ []) do
     endpoint = @plural_endpoint
-
-    customer =
-      Map.from_struct(customer)
-      |> Map.take(@valid_create_keys)
-      |> Util.drop_nil_keys()
-
-    case Stripe.request(:post, endpoint, customer, %{}, opts) do
-      {:ok, result} -> {:ok, to_struct(result)}
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.create(endpoint, customer, @valid_create_keys, %__MODULE__{}, opts)
   end
 
   @doc """
@@ -58,10 +49,7 @@ defmodule Stripe.Customer do
   @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Exception.t}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    case Stripe.request(:get, endpoint, %{}, %{}, opts) do
-      {:ok, result} -> {:ok, to_struct(result)}
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.retrieve(endpoint, %__MODULE__{}, opts)
   end
 
   @doc """
@@ -72,17 +60,7 @@ defmodule Stripe.Customer do
   @spec update(t, map, list) :: {:ok, t} | {:error, Exception.t}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-
-    customer =
-      changes
-      |> Util.map_keys_to_atoms()
-      |> Map.take(@valid_update_keys)
-      |> Util.drop_nil_keys()
-
-    case Stripe.request(:post, endpoint, customer, %{}, opts) do
-      {:ok, result} -> {:ok, to_struct(result)}
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.update(endpoint, changes, @valid_update_keys, %__MODULE__{}, opts)
   end
 
   @doc """
@@ -91,30 +69,6 @@ defmodule Stripe.Customer do
   @spec delete(binary, list) :: :ok | {:error, Exception.t}
   def delete(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-
-    case Stripe.request(:delete, endpoint, %{}, %{}, opts) do
-      {:ok, _} -> :ok
-      {:error, error} -> {:error, error}
-    end
-  end
-
-  defp to_struct(response) do
-    %__MODULE__{
-      id: Map.get(response, "id"),
-      account_balance: Map.get(response, "account_balance"),
-      business_vat_id: Map.get(response, "business_vat_id"),
-      created: Util.get_date(response, "created"),
-      currency: Map.get(response, "currency"),
-      default_source: Map.get(response, "default_source"),
-      delinquent: Map.get(response, "delinquent"),
-      description: Map.get(response, "description"),
-      discount: Map.get(response, "discount"),
-      email: Map.get(response, "email"),
-      livemode: Map.get(response, "livemode"),
-      metadata: Map.get(response, "metadata"),
-      shipping: Map.get(response, "shipping"),
-      sources: Map.get(response, "sources"),
-      subscriptions: Map.get(response, "subscriptions")
-    }
+    Stripe.Request.delete(endpoint, opts)
   end
 end

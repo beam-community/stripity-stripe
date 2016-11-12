@@ -45,33 +45,6 @@ defmodule Stripe.Account do
 
   @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Exception.t}
   defp do_retrieve(endpoint, opts \\ []) do
-    IO.inspect opts
-    case Stripe.request(:get, endpoint, %{}, %{}, opts) do
-      {:ok, result} -> {:ok, to_struct(result)}
-      {:error, error} -> {:error, error}
-    end
-  end
-
-  defp to_struct(response) do
-    %__MODULE__{
-      id: Map.get(response, "id"),
-      business_name: Map.get(response, "business_name"),
-      business_primary_color: Map.get(response, "business_primary_color"),
-      business_url: Map.get(response, "business_url"),
-      charges_enabled: Map.get(response, "charges_enabled"),
-      country: Map.get(response, "country"),
-      default_currency: Map.get(response, "default_currency"),
-      details_submitted: Map.get(response, "details_submitted"),
-      display_name: Map.get(response, "display_name"),
-      email: Map.get(response, "email"),
-      managed: Map.get(response, "managed"),
-      metadata: Map.get(response, "metadata"),
-      statement_descriptor: Map.get(response, "statement_descriptor"),
-      support_email: Map.get(response, "support_email"),
-      support_phone: Map.get(response, "support_phone"),
-      support_url: Map.get(response, "support_url"),
-      timezone: Map.get(response, "timezone"),
-      transfers_enabled: Map.get(response, "transfers_enabled")
-    }
+    Stripe.Request.retrieve(endpoint, %__MODULE__{}, opts)
   end
 end

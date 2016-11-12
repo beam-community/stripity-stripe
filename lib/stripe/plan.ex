@@ -40,16 +40,7 @@ defmodule Stripe.Plan do
   @spec create(t, Keyword.t) :: stripe_response
   def create(plan, opts \\ []) do
     endpoint = @plural_endpoint
-
-    plan =
-      plan
-      |> Map.take(@valid_create_keys)
-      |> Util.drop_nil_keys()
-
-    case Stripe.request(:post, endpoint, plan, %{}, opts) do
-      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%__MODULE__{}, result)}
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.create(endpoint, plan, @valid_create_keys, %__MODULE__{}, opts)
   end
 
   @doc """
@@ -58,10 +49,7 @@ defmodule Stripe.Plan do
   @spec retrieve(binary, Keyword.t) :: stripe_response
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    case Stripe.request(:get, endpoint, %{}, %{}, opts) do
-      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%__MODULE__{}, result)}
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.retrieve(endpoint, %__MODULE__{}, opts)
   end
 
   @doc """
@@ -72,17 +60,7 @@ defmodule Stripe.Plan do
   @spec update(t, map, list) :: stripe_response
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-
-    plan =
-      changes
-      |> Util.map_keys_to_atoms()
-      |> Map.take(@valid_update_keys)
-      |> Util.drop_nil_keys()
-
-    case Stripe.request(:post, endpoint, plan, %{}, opts) do
-      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%__MODULE__{}, result)}
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.update(endpoint, changes, @valid_update_keys, %__MODULE__{}, opts)
   end
 
   @doc """
@@ -91,10 +69,6 @@ defmodule Stripe.Plan do
   @spec delete(binary, list) :: stripe_delete_response
   def delete(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-
-    case Stripe.request(:delete, endpoint, %{}, %{}, opts) do
-      {:ok, _} -> :ok
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.delete(endpoint, opts)
   end
 end

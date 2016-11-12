@@ -91,11 +91,7 @@ defmodule Stripe.Card do
   @spec retrieve(source, String.t, String.t, Keyword.t) :: {:ok, t} | {:error, Exception.t}
   def retrieve(owner_type, owner_id, card_id, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-
-    case Stripe.request(:get, endpoint, %{}, %{}, opts) do
-      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%__MODULE__{}, result)}
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.retrieve(endpoint, %__MODULE__{}, opts)
   end
 
   @doc """
@@ -106,17 +102,7 @@ defmodule Stripe.Card do
   @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {:error, Exception.t}
   def update(owner_type, owner_id, card_id, changes, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-
-    card =
-      changes
-      |> Util.map_keys_to_atoms()
-      |> Map.take(@valid_update_keys)
-      |> Util.drop_nil_keys()
-
-    case Stripe.request(:post, endpoint, card, %{}, opts) do
-      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%__MODULE__{}, result)}
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.update(endpoint, changes, @valid_update_keys, %__MODULE__{}, opts)
   end
 
   @doc """
@@ -125,10 +111,6 @@ defmodule Stripe.Card do
   @spec delete(source, String.t, String.t, Keyword.t) :: :ok | {:error, Exception.t}
   def delete(owner_type, owner_id, card_id, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-
-    case Stripe.request(:delete, endpoint, %{}, %{}, opts) do
-      {:ok, _} -> :ok
-      {:error, error} -> {:error, error}
-    end
+    Stripe.Request.delete(endpoint, opts)
   end
 end
