@@ -39,8 +39,7 @@ defmodule Stripe.Customer do
   """
   @spec create(t, Keyword.t) :: {:ok, t} | {:error, Exception.t}
   def create(customer, opts \\ []) do
-    endpoint = @plural_endpoint
-    Stripe.Request.create(endpoint, customer, @valid_create_keys, %__MODULE__{}, opts)
+    Stripe.Request.create(@plural_endpoint, customer, @valid_create_keys, %__MODULE__{}, opts)
   end
 
   @doc """
