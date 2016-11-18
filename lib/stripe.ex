@@ -91,6 +91,19 @@ defmodule Stripe do
       }
     end
 
+    @spec exception({integer, map}) :: t
+    def exception({status_code, %{"type" => type, "message" => message} = body}) do
+      # code is not a guaranteed key
+      code = Map.get(body, "code")
+
+      %__MODULE__{
+        message: message,
+        type: type,
+        status_code: status_code,
+        code: code
+      }
+    end
+
     def exception({status_code, code, message}) do
       %__MODULE__{
         code: code,
@@ -286,6 +299,13 @@ defmodule Stripe do
     decoded_body = Poison.decode!(body)
 
     {:ok, decoded_body}
+  end
+
+  defp handle_response({:ok, 400, _headers, body}) do
+    %{"error" => api_error} = Poison.decode!(body)
+    error = APIError.exception({400, api_error})
+
+    {:error, error}
   end
 
   defp handle_response({:ok, 401, _headers, body}) do
