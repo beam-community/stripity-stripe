@@ -9,6 +9,8 @@ defmodule Stripe.Account do
 
   This module does not yet support managed accounts.
 
+  Does not yet render lists or take options.
+
   Stripe API reference: https://stripe.com/docs/api#account
   """
 
@@ -22,8 +24,35 @@ defmodule Stripe.Account do
     :transfers_enabled
   ]
 
+  @response_mapping %{
+    id: :string,
+    business_name: :string,
+    business_primary_color: :string,
+    business_url: :string,
+    charges_enabled: :boolean,
+    country: :string,
+    default_currency: :string,
+    details_submitted: :boolean,
+    display_name: :string,
+    email: :string,
+    managed: :boolean,
+    metadata: :metadata,
+    statement_descriptor: :string,
+    support_email: :string,
+    support_phone: :string,
+    support_url: :string,
+    timezone: :string,
+    transfers_enabled: :boolean
+  }
+
   @singular_endpoint "account"
   @plural_endpoint "accounts"
+
+  @doc """
+  Returns the Stripe response mapping of keys to types.
+  """
+  @spec response_mapping :: Keyword.t
+  def response_mapping, do: @response_mapping
 
   @doc """
   Retrieve your own account without options.
@@ -45,6 +74,6 @@ defmodule Stripe.Account do
 
   @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Exception.t}
   defp do_retrieve(endpoint, opts \\ []) do
-    Stripe.Request.retrieve(endpoint, %__MODULE__{}, opts)
+    Stripe.Request.retrieve(endpoint, __MODULE__, opts)
   end
 end

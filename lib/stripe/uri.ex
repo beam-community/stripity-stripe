@@ -1,7 +1,5 @@
 defmodule Stripe.URI do
-  @moduledoc """
-  Stripe URI helpers to encode nested dictionaries as query_params.
-  """
+  @moduledoc false
 
   defmacro __using__(_) do
     quote do

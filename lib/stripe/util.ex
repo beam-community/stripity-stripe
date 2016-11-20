@@ -1,21 +1,35 @@
 defmodule Stripe.Util do
+  @moduledoc false
 
-  @type stripe_response :: %{String.t => any}
+  alias Stripe.Convert
 
-  @spec stripe_response_to_struct(struct, stripe_response) :: struct
-  def stripe_response_to_struct(struct, stripe_response) do
-    keys = case struct do
-      %{__struct__: _t} -> struct |> Map.from_struct |> Map.keys
-      _ -> raise "First argument to 'stripe_response_to_struct' must be a struct."
+  @doc """
+  Takes the module (e.g. `Stripe.Card`) and the response from Stripe and
+  returns a struct (e.g. `%Stripe.Card{}`) containing the Stripe response.
+  """
+  @spec stripe_map_to_struct(module, %{String.t => any}) :: struct
+  def stripe_map_to_struct(module, stripe_response) do
+    response_mapping = module.response_mapping()
+    map = Enum.reduce response_mapping, %{}, fn ({key, format}, acc) ->
+      value = key |> to_string() |> convert_value(format, stripe_response)
+      Map.put(acc, key, value)
     end
-
-    Enum.reduce keys, struct, fn (atom, acc) ->
-      str = to_string(atom)
-      value = Map.get(stripe_response, str)
-      Map.put(acc, atom, value)
-    end
+    struct = struct(module, map)
   end
-   
+
+  defp convert_value(key, format, map) when is_map(format) do
+    stripe_map_to_struct(format.module, map)
+  end
+  defp convert_value(key, :metadata, map) do
+    map
+    |> Map.get(key)
+  end
+  defp convert_value(key, format, map) do
+    map
+    |> Map.get(key)
+    |> Convert.with_format(format)
+  end
+
   def drop_nil_keys(map) do
     Enum.reject(map, fn
       {_, nil} -> true
@@ -54,7 +68,7 @@ defmodule Stripe.Util do
   calling this function.
 
   ## Examples
-  
+
   iex> map = %{
   ...>   "a"=> %{
   ...>     "b" => %{
