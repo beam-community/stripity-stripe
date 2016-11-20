@@ -9,21 +9,42 @@ defmodule Stripe.Subscription do
   - Update a subscription
   - Delete a subscription
 
+  Does not yet render lists or take options.
+
   Stripe API reference: https://stripe.com/docs/api#subscription
   """
 
   alias Stripe.Util
 
   @type t :: %__MODULE__{}
-  @type stripe_response :: {:ok, t} | {:error, Exception.t}
-  @type stripe_delete_response :: :ok | {:error, Exception.t}
 
   defstruct [
     :id, :application_fee_percent, :cancel_at_period_end, :canceled_at,
     :created, :current_period_end, :current_period_start, :customer,
-    :discount, :ended_at, :livemode, :metadata, :plan, :quantity, :source,
+    :ended_at, :livemode, :metadata, :plan, :quantity, :source,
     :start, :status, :tax_percent, :trial_end, :trial_start
   ]
+
+  @response_mapping %{
+    id: :string,
+    application_fee_percent: :float,
+    cancel_at_period_end: :boolean,
+    canceled_at: :datetime,
+    created: :datetime,
+    current_period_end: :datetime,
+    current_period_start: :datetime,
+    customer: :string,
+    ended_at: :datetime,
+    livemode: :boolean,
+    metadata: :metadata,
+    plan: %{module: Stripe.Plan},
+    quantity: :integer,
+    start: :datetime,
+    status: :string,
+    tax_percent: :float,
+    trial_end: :datetime,
+    trial_start: :datetime
+  }
 
   @plural_endpoint "subscriptions"
 
@@ -38,20 +59,26 @@ defmodule Stripe.Subscription do
   ]
 
   @doc """
+  Returns the Stripe response mapping of keys to types.
+  """
+  @spec response_mapping :: Keyword.t
+  def response_mapping, do: @response_mapping
+
+  @doc """
   Create a subscription.
   """
-  @spec create(t, Keyword.t) :: stripe_response
+  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Exception.t}
   def create(subscription, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, subscription, @valid_create_keys, %__MODULE__{}, opts)
+    Stripe.Request.create(@plural_endpoint, subscription, @valid_create_keys, __MODULE__, opts)
   end
 
   @doc """
   Retrieve a subscription.
   """
-  @spec retrieve(binary, Keyword.t) :: stripe_response
+  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Exception.t}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve(endpoint, %__MODULE__{}, opts)
+    Stripe.Request.retrieve(endpoint, __MODULE__, opts)
   end
 
   @doc """
@@ -59,16 +86,16 @@ defmodule Stripe.Subscription do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(t, map, list) :: stripe_response
+  @spec update(t, map, list) :: {:ok, t} | {:error, Exception.t}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @valid_update_keys, %__MODULE__{}, opts)
+    Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
   end
 
   @doc """
   Delete a subscription.
   """
-  @spec delete(binary, list) :: stripe_delete_response
+  @spec delete(binary, list) :: :ok | {:error, Exception.t}
   def delete(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.delete(endpoint, opts)

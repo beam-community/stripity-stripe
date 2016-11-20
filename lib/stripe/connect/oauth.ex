@@ -45,22 +45,20 @@ defmodule Stripe.Connect.OAuth do
   @doc """
   Execute the OAuth callback to Stripe using the code supplied in the request parameter of the oauth redirect at the end of the onboarding workflow.
 
-## Example
-```
-{:ok, resp} = Stripe.Connect.token code
-IO.inspect resp
-%Stripe.Connect.OAuth.TokenResponse{
-  access_token: "ACCESS_TOKEN",
-  livemode: false,
-  refresh_token: "REFRESH_TOKEN",
-  scope: "read_write",
-  stripe_publishable_key: "PUBLISHABLE_KEY",
-  stripe_user_id: "USER_ID",
-  token_type: "bearer"
-}
-
-```
-
+  ## Example
+  ```
+  iex(1)> {:ok, resp} = Stripe.Connect.OAuth.token(code)
+  ...(1)> IO.inspect resp
+  %Stripe.Connect.OAuth.TokenResponse{
+      access_token: "ACCESS_TOKEN",
+      livemode: false,
+      refresh_token: "REFRESH_TOKEN",
+      scope: "read_write",
+      stripe_publishable_key: "PUBLISHABLE_KEY",
+      stripe_user_id: "USER_ID",
+      token_type: "bearer"
+  }
+  ```
   """
   @spec token(String.t) :: {:ok, map} | {:error, Exception.t}
   def token(code) do
@@ -73,7 +71,7 @@ IO.inspect resp
     }
 
     case Stripe.oauth_request(:post, endpoint, body) do
-       {:ok, result} -> {:ok, Util.stripe_response_to_struct(%TokenResponse{}, result)}
+       {:ok, result} -> {:ok, Util.stripe_map_to_struct(%TokenResponse{}, result)}
        {:error, error} -> {:error, error}
      end
   end
@@ -85,7 +83,7 @@ IO.inspect resp
 
   ## Example
   ```
-  Stripe.Connect.deauthorize(stripe_user_id)
+  iex(1)> {:ok, result} = Stripe.Connect.OAuth.deauthorize(stripe_user_id)
   ```
   """
   @spec deauthorize(String.t) :: {:ok, map} | {:error, Exception.t}
@@ -97,7 +95,7 @@ IO.inspect resp
     }
 
     case Stripe.oauth_request(:post, endpoint, body) do
-      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%DeauthorizeResponse{}, result)}
+      {:ok, result} -> {:ok, Util.stripe_map_to_struct(%DeauthorizeResponse{}, result)}
       {:error, error} -> {:error, error}
     end
   end
@@ -105,6 +103,11 @@ IO.inspect resp
   @doc """
   Generate the URL to start a Stripe workflow. You can pass in a
   CSRF token to be sent to Stripe, which they send you back at the end of the workflow to further secure the interaction. Make sure you verify this token yourself upon receipt of the callback.
+
+  ## Example
+  ```
+  iex(1)> {:ok, result} = Stripe.Connect.OAuth.authorize_url(csrf_token)
+  ```
   """
   @spec authorize_url(String.t) :: {:ok, map} | {:error, Exception.t}
   def authorize_url(csrf_token) do

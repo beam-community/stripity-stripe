@@ -19,6 +19,8 @@ defmodule Stripe.Card do
 
   This module does not yet support managed accounts.
 
+  Does not yet render lists or take options.
+
   Recipients may be deprecated for your version of the API. They have
   been replaced by managed accounts (see
   https://stripe.com/docs/connect/managed-accounts), which you should use
@@ -41,10 +43,42 @@ defmodule Stripe.Card do
     :tokenization_method
   ]
 
+  @response_mapping %{
+    id: :string,
+    address_city: :string,
+    address_country: :string,
+    address_line1: :string,
+    address_line1_check: :string,
+    address_line2: :string,
+    address_state: :string,
+    address_zip: :string,
+    address_zip_check: :string,
+    brand: :string,
+    country: :string,
+    customer: :string,
+    cvc_check: :string,
+    dynamic_last4: :string,
+    exp_month: :integer,
+    exp_year: :integer,
+    fingerprint: :string,
+    funding: :string,
+    last4: :string,
+    metadata: :metadata,
+    name: :string,
+    recipient: :string,
+    tokenization_method: :string
+  }
+
   @valid_update_keys [
     :address_city, :address_country, :address_line1, :address_line2,
     :address_state, :address_zip, :exp_month, :exp_year, :metadata, :name
   ]
+
+  @doc """
+  Returns the Stripe response mapping of keys to types.
+  """
+  @spec response_mapping :: Keyword.t
+  def response_mapping, do: @response_mapping
 
   defp endpoint_for_owner(owner_type, owner_id) do
     case owner_type do
@@ -72,7 +106,7 @@ defmodule Stripe.Card do
       |> Util.map_keys_to_atoms()
 
     case Stripe.request(:post, endpoint, body, %{}, opts) do
-      {:ok, result} -> {:ok, Util.stripe_response_to_struct(%__MODULE__{}, result)}
+      {:ok, result} -> {:ok, Util.stripe_map_to_struct(%__MODULE__{}, result)}
       {:error, error} -> {:error, error}
     end
   end
@@ -91,7 +125,7 @@ defmodule Stripe.Card do
   @spec retrieve(source, String.t, String.t, Keyword.t) :: {:ok, t} | {:error, Exception.t}
   def retrieve(owner_type, owner_id, card_id, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.retrieve(endpoint, %__MODULE__{}, opts)
+    Stripe.Request.retrieve(endpoint, __MODULE__, opts)
   end
 
   @doc """
@@ -102,7 +136,7 @@ defmodule Stripe.Card do
   @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {:error, Exception.t}
   def update(owner_type, owner_id, card_id, changes, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.update(endpoint, changes, @valid_update_keys, %__MODULE__{}, opts)
+    Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
   end
 
   @doc """

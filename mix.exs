@@ -6,7 +6,7 @@ defmodule Stripe.Mixfile do
       app: :stripity_stripe,
       deps: deps,
       description: description(),
-      elixir: "~> 1.1",
+      elixir: "~> 1.3",
       package: package(),
       preferred_cli_env: [
         "coveralls": :test,
@@ -15,7 +15,7 @@ defmodule Stripe.Mixfile do
         "coveralls.html": :test
       ],
       test_coverage: [tool: ExCoveralls],
-      version: "2.0.0-alpha.1"
+      version: "2.0.0-alpha.2"
     ]
   end
 
