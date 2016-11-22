@@ -57,22 +57,22 @@ defmodule Stripe.Account do
   @doc """
   Retrieve your own account without options.
   """
-  @spec retrieve :: {:ok, t} | {:error, Exception.t}
+  @spec retrieve :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve, do: retrieve([])
 
   @doc """
   Retrieve your own account with options.
   """
-  @spec retrieve(list) :: {:ok, t} | {:error, Exception.t}
+  @spec retrieve(list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(opts) when is_list(opts), do: do_retrieve(@singular_endpoint, opts)
 
   @doc """
   Retrieve an account with a specified `id`.
   """
-  @spec retrieve(binary, list) :: {:ok, t} | {:error, Exception.t}
+  @spec retrieve(binary, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []), do: do_retrieve(@plural_endpoint <> "/" <> id, opts)
 
-  @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Exception.t}
+  @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   defp do_retrieve(endpoint, opts \\ []) do
     Stripe.Request.retrieve(endpoint, __MODULE__, opts)
   end

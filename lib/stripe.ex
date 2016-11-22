@@ -48,38 +48,71 @@ defmodule Stripe do
 
   defmodule MissingAPIKeyError do
     defexception message: """
-    The secret_key setting is required so that we can report the
+    The api_key setting is required so that we can report the
     correct environment instance to Stripe. Please configure
     secret_key in your config.exs and environment specific config files
     to have accurate reporting of errors.
+
     config :stripity_stripe, api_key: YOUR_SECRET_KEY
     """
   end
 
-  defmodule APIAuthenticationError do
-    defexception message: """
+  defmodule AuthenticationErrorResponse do
+    defstruct message: """
     Stripe could not authenticate the request with the provided API key
     """
   end
 
-  defmodule APIRateLimitingError do
-    defexception message: """
+  defmodule APIRateLimitingResponse do
+    defstruct message: """
     Stripe is currently limiting the rate at which it accepts your HTTP requests
     """
   end
 
-  defmodule APIError do
-    defexception [:message, :type, :status_code, :code]
+  defmodule APIErrorResponse do
+    @moduledoc """
+    Represents an error response from the API
 
+    See the type documentation for more about how this struct can be
+    used.
+
+    The full details of error responses can be found in the
+    [Stripe API documentation](https://stripe.com/docs/api#errors).
+    """
+    defstruct [:message, :type, :status_code, :code]
+
+    @typedoc """
+    The `code`, `status_code`, and `type` fields can all be used for control flow.
+    The `message` field should only be used for understanding what went wrong, and
+    you should not expose it to the end-user unless you are sure it does not contain
+    sensitive information based on the `type` field.
+
+    ### code
+
+    A short, parsable code provided when there there was a card error in order to
+    describe the error furhter.
+
+    ### message
+
+    A human readable message describing the error, if one was provided.
+
+    ### status_code
+
+    The HTTP status code that was returned with the error.
+
+    ### type
+
+    Stripe's error type
+    """
     @type t :: %__MODULE__{
+      code: String.t | nil,
       message: String.t | nil,
-      type: String.t | nil,
       status_code: pos_integer | nil,
-      code: String.t | nil
+      type: String.t | nil
     }
 
-    @spec exception({integer, map}) :: t
-    def exception({status_code, %{"type" => type, "message" => message} = body}, _) do
+    @spec new({integer, map}) :: t
+    def new({status_code, %{"type" => type, "message" => message} = body}) do
       # code is not a guaranteed key
       code = Map.get(body, "code")
 
@@ -91,20 +124,7 @@ defmodule Stripe do
       }
     end
 
-    @spec exception({integer, map}) :: t
-    def exception({status_code, %{"type" => type, "message" => message} = body}) do
-      # code is not a guaranteed key
-      code = Map.get(body, "code")
-
-      %__MODULE__{
-        message: message,
-        type: type,
-        status_code: status_code,
-        code: code
-      }
-    end
-
-    def exception({status_code, _}) do
+    def new({status_code, _}) do
       msg = """
       The Stripe HTTP client received an error response with status code #{status_code}
       """
@@ -116,27 +136,36 @@ defmodule Stripe do
     end
   end
 
-  defmodule HTTPError do
-    defexception message: """
+  defmodule HTTPClientFailed do
+    defstruct [:reason, message: """
     The Stripe HTTP client encountered an error while communicating with the
     Stripe service.
-    """
-  end
+    """]
 
-  defmodule OAuthAPIError do
-    defexception [:message, :error, :state, :status_code]
-
-    def exception(opts) do
+    def new(opts) do
       struct(__MODULE__, opts)
     end
   end
 
-  alias __MODULE__.{MissingAPIKeyError, HTTPError, APIRateLimitingError, APIError}
+  defmodule OAuthAPIErrorResponse do
+    defstruct [:message, :error, :state, :status_code]
+
+    def new(opts) do
+      struct(__MODULE__, opts)
+    end
+  end
 
   @type method :: :get | :post | :put | :delete | :patch
   @type headers :: %{String.t => String.t}
   @typep http_success :: {:ok, integer, [{String.t, String.t}], String.t}
   @typep http_failure :: {:error, term}
+
+  @type api_error_struct ::
+    %APIErrorResponse{}            |
+    %APIRateLimitingResponse{}     |
+    %AuthenticationErrorResponse{} |
+    %HTTPClientFailed{}            |
+    %OAuthAPIErrorResponse{}       
 
   use Application
 
@@ -250,7 +279,7 @@ defmodule Stripe do
       request(:get, "/customers", %{}, %{}, connect_account: "acc_134151")
 
   """
-  @spec request(method, String.t, map, headers, list) :: {:ok, map} | {:error, Exception.t}
+  @spec request(method, String.t, map, headers, list) :: {:ok, map} | {:error, api_error_struct}
   def request(method, endpoint, body, headers, opts) do
     {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
 
@@ -275,7 +304,7 @@ defmodule Stripe do
   @doc """
   A low level utility function to make an OAuth request to the Stripe API
   """
-  @spec oauth_request(method, String.t, map) :: {:ok, map} | {:error, Exception.t}
+  @spec oauth_request(method, String.t, map) :: {:ok, map} | {:error, struct}
   def oauth_request(method, endpoint, body) do
     base_url = "https://connect.stripe.com/oauth/"
     req_url = base_url <> endpoint
@@ -294,30 +323,21 @@ defmodule Stripe do
     |> handle_response()
   end
 
-  @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, Exception.t}
+  @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, struct}
   defp handle_response({:ok, status, _headers, body}) when status in 200..299 do
     decoded_body = Poison.decode!(body)
 
     {:ok, decoded_body}
   end
 
-  defp handle_response({:ok, 400, _headers, body}) do
-    %{"error" => api_error} = Poison.decode!(body)
-    error = APIError.exception({400, api_error})
+  defp handle_response({:ok, 401, _headers, _body}) do
+    error = %AuthenticationErrorResponse{}
 
     {:error, error}
   end
 
-  defp handle_response({:ok, 401, _headers, body}) do
-    %{"error" => api_error} = Poison.decode!(body)
-    error = APIAuthenticationError.exception({401, api_error})
-
-    {:error, error}
-  end
-
-  defp handle_response({:ok, 429, _headers, body}) do
-    %{"error" => api_error} = Poison.decode!(body)
-    error = APIRateLimitingError.exception({429, api_error})
+  defp handle_response({:ok, 429, _headers, _body}) do
+    error = %APIRateLimitingResponse{}
 
     {:error, error}
   end
@@ -329,16 +349,16 @@ defmodule Stripe do
           message = Map.get(api_error, "error_description")
           error = Map.get(api_error, "error")
           state = Map.get(api_error, "state")
-          OAuthAPIError.exception([message: message, error: error, state: state, status_code: status])
+          OAuthAPIErrorResponse.new([message: message, error: error, state: state, status_code: status])
         %{"error" => api_error} ->
-          APIError.exception({status, api_error})
+          APIErrorResponse.new({status, api_error})
       end
 
     {:error, error}
   end
 
-  defp handle_response({:error, _reason}) do
-    error = HTTPError.exception(nil)
+  defp handle_response({:error, reason}) do
+    error = HTTPClientFailed.new(reason: reason)
     {:error, error}
   end
 end
