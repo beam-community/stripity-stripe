@@ -104,14 +104,6 @@ defmodule Stripe do
       }
     end
 
-    def exception({status_code, code, message}) do
-      %__MODULE__{
-        code: code,
-        message: message,
-        status_code: status_code
-      }
-    end
-
     def exception({status_code, _}) do
       msg = """
       The Stripe HTTP client received an error response with status code #{status_code}
@@ -129,6 +121,14 @@ defmodule Stripe do
     The Stripe HTTP client encountered an error while communicating with the
     Stripe service.
     """
+  end
+
+  defmodule OAuthAPIError do
+    defexception [:message, :error, :state, :status_code]
+
+    def exception(opts) do
+      struct(opts)
+    end
   end
 
   alias __MODULE__.{MissingAPIKeyError, HTTPError, APIRateLimitingError, APIError}
@@ -323,8 +323,16 @@ defmodule Stripe do
   end
 
   defp handle_response({:ok, status, _headers, body}) when status in 400..599 do
-    %{"error" => api_error, "error_description" => description} = Poison.decode!(body)
-    error = APIError.exception({status, api_error, description})
+    error =
+      case Poison.decode!(body) do
+        %{"error_description" => _} = api_error ->
+          message = Map.get(api_error, "error_description")
+          error = Map.get(api_error, "error")
+          state = Map.get(api_error, "state")
+          OAuthAPIError.exception([message: message, error: error, state: state, status_code: status])
+        %{"error" => api_error} ->
+          APIError.exception({status, api_error})
+      end
 
     {:error, error}
   end
