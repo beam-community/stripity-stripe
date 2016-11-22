@@ -127,7 +127,7 @@ defmodule Stripe do
     defexception [:message, :error, :state, :status_code]
 
     def exception(opts) do
-      struct(opts)
+      struct(__MODULE__, opts)
     end
   end
 
