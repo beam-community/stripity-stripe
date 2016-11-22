@@ -67,7 +67,7 @@ defmodule Stripe.Subscription do
   @doc """
   Create a subscription.
   """
-  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Exception.t}
+  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(subscription, opts \\ []) do
     Stripe.Request.create(@plural_endpoint, subscription, @valid_create_keys, __MODULE__, opts)
   end
@@ -75,7 +75,7 @@ defmodule Stripe.Subscription do
   @doc """
   Retrieve a subscription.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Exception.t}
+  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.retrieve(endpoint, __MODULE__, opts)
@@ -86,7 +86,7 @@ defmodule Stripe.Subscription do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(t, map, list) :: {:ok, t} | {:error, Exception.t}
+  @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
@@ -95,7 +95,7 @@ defmodule Stripe.Subscription do
   @doc """
   Delete a subscription.
   """
-  @spec delete(binary, list) :: :ok | {:error, Exception.t}
+  @spec delete(binary, list) :: :ok | {:error, Stripe.api_error_struct}
   def delete(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.delete(endpoint, opts)

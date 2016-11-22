@@ -1,7 +1,7 @@
 defmodule Stripe.Request do
   alias Stripe.Util
 
-  @spec create(String.t, struct, map, module, Keyword.t) :: {:ok, struct} | {:error, Exception.t}
+  @spec create(String.t, struct, map, module, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
   def create(endpoint, struct, valid_keys, module, opts) do
     body =
       struct
@@ -14,7 +14,7 @@ defmodule Stripe.Request do
     end
   end
 
-  @spec retrieve(String.t, module, Keyword.t) :: {:ok, struct} | {:error, Exception.t}
+  @spec retrieve(String.t, module, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
   def retrieve(endpoint, module, opts) do
     case Stripe.request(:get, endpoint, %{}, %{}, opts) do
       {:ok, result} -> {:ok, Util.stripe_map_to_struct(module, result)}
@@ -22,7 +22,7 @@ defmodule Stripe.Request do
     end
   end
 
-  @spec update(String.t, map, map, struct, Keyword.t) :: {:ok, struct} | {:error, Exception.t}
+  @spec update(String.t, map, map, struct, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
   def update(endpoint, changes, valid_keys, module, opts) do
     body =
       changes
@@ -36,7 +36,7 @@ defmodule Stripe.Request do
     end
   end
 
-  @spec delete(String.t, Keyword.t) :: :ok | {:error, Exception.t}
+  @spec delete(String.t, Keyword.t) :: :ok | {:error, Stripe.api_error_struct}
   def delete(endpoint, opts) do
     case Stripe.request(:delete, endpoint, %{}, %{}, opts) do
       {:ok, _} -> :ok

@@ -60,7 +60,7 @@ defmodule Stripe.Connect.OAuth do
   }
   ```
   """
-  @spec token(String.t) :: {:ok, map} | {:error, Exception.t}
+  @spec token(String.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
   def token(code) do
     endpoint = "token"
 
@@ -86,7 +86,7 @@ defmodule Stripe.Connect.OAuth do
   iex(1)> {:ok, result} = Stripe.Connect.OAuth.deauthorize(stripe_user_id)
   ```
   """
-  @spec deauthorize(String.t) :: {:ok, map} | {:error, Exception.t}
+  @spec deauthorize(String.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
   def deauthorize(stripe_user_id) do
     endpoint = "deauthorize"
     body = %{
@@ -109,17 +109,17 @@ defmodule Stripe.Connect.OAuth do
   iex(1)> {:ok, result} = Stripe.Connect.OAuth.authorize_url(csrf_token)
   ```
   """
-  @spec authorize_url(String.t) :: {:ok, map} | {:error, Exception.t}
+  @spec authorize_url(String.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
   def authorize_url(csrf_token) do
     @authorize_url_base_body
     |> Map.put(:state, csrf_token)
     |> do_authorize_url()
   end
 
-  @spec authorize_url :: {:ok, map} | {:error, Exception.t}
+  @spec authorize_url :: {:ok, map} | {:error, Stripe.api_error_struct}
   def authorize_url, do: do_authorize_url(@authorize_url_base_body)
 
-  @spec do_authorize_url(map) :: {:ok, map} | {:error, Exception.t}
+  @spec do_authorize_url(map) :: {:ok, map} | {:error, Stripe.api_error_struct}
   defp do_authorize_url(body) do
     base_url = "https://connect.stripe.com/oauth/authorize?"
     body = Stripe.URI.encode_query(body)
