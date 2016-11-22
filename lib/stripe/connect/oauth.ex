@@ -34,6 +34,22 @@ defmodule Stripe.Connect.OAuth do
       :access_token, :livemode, :refresh_token, :scope, :stripe_user_id,
       :stripe_publishable_key, :token_type
     ]
+
+    @response_mapping %{
+      access_token: :string,
+      livemode: :boolean,
+      refresh_token: :string,
+      scope: :string,
+      stripe_publishable_key: :string,
+      stripe_user_id: :string,
+      token_type: :string
+    }
+
+    @doc """
+    Returns the Stripe response mapping of keys to types.
+    """
+    @spec response_mapping :: Keyword.t
+    def response_mapping, do: @response_mapping
   end
 
   defmodule DeauthorizeResponse do
