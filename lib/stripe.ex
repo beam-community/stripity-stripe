@@ -188,26 +188,13 @@ defmodule Stripe do
   def start(_start_type, _args) do
     import Supervisor.Spec, warn: false
 
-    if use_pool?() do
-      pool_options = get_pool_options()
-      :ok = :hackney_pool.start_pool(@pool_name, pool_options)
+    children = case use_pool? do
+      true -> [:hackney_pool.child_spec(@pool_name, get_pool_options())]
+      _ -> []
     end
 
     opts = [strategy: :one_for_one, name: Stripe.Supervisor]
-    Supervisor.start_link([], opts)
-  end
-
-  @doc """
-  Callback for the application
-
-  Shuts down the HTTP connection pool (if it's being used) when
-  the VM instructs the application to shut down.
-  """
-  @spec stop() :: :ok
-  def stop() do
-    :ok = :hackney_pool.stop_pool(@pool_name)
-
-    :ok
+    Supervisor.start_link(children, opts)
   end
 
   @spec get_pool_options() :: Keyword.t
