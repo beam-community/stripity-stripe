@@ -16,11 +16,22 @@ defmodule Stripe.Connect.OAuth do
   @client_id Application.get_env(:stripity_stripe, :connect_client_id)
   @client_secret Application.get_env(:stripity_stripe, :api_key)
 
-  @authorize_url_base_body %{
+  @authorize_url_base_params %{
     client_id: @client_id,
     response_type: "code",
     scope: "read_write"
   }
+
+  @authorize_url_valid_keys [
+   :always_prompt,
+   :client_id,
+   :redirect_uri,
+   :response_type,
+   :scope,
+   :state,
+   :stripe_landing,
+   :stripe_user,
+  ]
 
   defmodule AuthorizeResponse do
     defstruct [
@@ -116,29 +127,71 @@ defmodule Stripe.Connect.OAuth do
     end
   end
 
-  @doc """
-  Generate the URL to start a Stripe workflow. You can pass in a
-  CSRF token to be sent to Stripe, which they send you back at the end of the workflow to further secure the interaction. Make sure you verify this token yourself upon receipt of the callback.
+  @doc ~S"""
+  Generate the URL to start a Stripe workflow.
+
+  ## Paremeter Map Keys
+  
+  The parameter map keys are derived from the [valid request parameter](https://stripe.com/docs/connect/reference)
+  for the Stripe Connect authorize endpoint. A parameter only needs to be provided if
+  you wish to override the default.
+  
+  - `:always_prompt`
+  - `:client_id`
+  - `:redirect_uri`
+  - `:response_type`
+  - `:scope`
+  - `:state`
+  - `:stripe_landing`
+  - `:stripe_user`
+
+  For ease of use, any parameters you provide will be merged into
+  the following default map with sensible defaults. This also allows
+  you to call the function with no parameters and it will fall
+  back to this map:
+
+  ```
+  %{
+    client_id: @client_id, # :connect_client_id from configuration
+    response_type: "code",
+    scope: "read_write"
+  }
+  ```
 
   ## Example
+
   ```
-  iex(1)> {:ok, result} = Stripe.Connect.OAuth.authorize_url(csrf_token)
+  connect_opts = %{
+    state: "2686e7a93156ff5af76a83262ac653",
+    stripe_user: %{
+      "email" => "local@business.example.net",
+      "url" => "http://local.example.net",
+      "country" => "US",
+      "phone_number" => "5555555678",
+      "business_name" => "Jeanine & Jerome's Jellies",
+      "businessy_type" => "llc",
+      "first_name" => "Jeanine",
+      "last_name" => "Smith",
+      "dob_day" => 29,
+      "dob_month" => 1,
+      "dob_year" => 1983,
+      "street_address" => "123 Main St.",
+      "product_category" => "food_and_restuarants"
+    }
+  }
+  url = Stripe.Connect.OAuth.authorize_url(connect_opts)
   ```
   """
-  @spec authorize_url(String.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
-  def authorize_url(csrf_token) do
-    @authorize_url_base_body
-    |> Map.put(:state, csrf_token)
-    |> do_authorize_url()
-  end
-
-  @spec authorize_url :: {:ok, map} | {:error, Stripe.api_error_struct}
-  def authorize_url, do: do_authorize_url(@authorize_url_base_body)
-
-  @spec do_authorize_url(map) :: {:ok, map} | {:error, Stripe.api_error_struct}
-  defp do_authorize_url(body) do
+  @spec authorize_url(map) :: String.t
+  def authorize_url(options \\ %{}) do
     base_url = "https://connect.stripe.com/oauth/authorize?"
-    body = Stripe.URI.encode_query(body)
-    base_url <> body
+
+    param_string =
+      @authorize_url_base_params
+      |> Map.merge(options)
+      |> Map.take(@authorize_url_valid_keys)
+      |> Stripe.URI.encode_query()
+
+    base_url <> param_string
   end
 end
