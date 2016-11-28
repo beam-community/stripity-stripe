@@ -304,7 +304,7 @@ defmodule Stripe do
   @doc """
   A low level utility function to make an OAuth request to the Stripe API
   """
-  @spec oauth_request(method, String.t, map) :: {:ok, map} | {:error, struct}
+  @spec oauth_request(method, String.t, map) :: {:ok, map} | {:error, api_error_struct}
   def oauth_request(method, endpoint, body) do
     base_url = "https://connect.stripe.com/oauth/"
     req_url = base_url <> endpoint
@@ -323,7 +323,7 @@ defmodule Stripe do
     |> handle_response()
   end
 
-  @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, struct}
+  @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, api_error_struct}
   defp handle_response({:ok, status, _headers, body}) when status in 200..299 do
     decoded_body = Poison.decode!(body)
 
