@@ -220,8 +220,8 @@ defmodule Stripe do
     Application.get_env(:stripity_stripe, :api_base_url)
   end
 
-  @spec get_api_key() :: String.t
-  defp get_api_key() do
+  @spec get_default_api_key() :: String.t
+  defp get_default_api_key() do
     case Application.get_env(:stripity_stripe, :api_key) do
       nil -> raise MissingAPIKeyError
       key -> key
@@ -235,16 +235,22 @@ defmodule Stripe do
 
   @spec add_default_headers(headers) :: headers
   defp add_default_headers(existing_headers) do
-    api_key = get_api_key()
-
     Map.merge(existing_headers, %{
       "Accept" => "application/json; charset=utf8",
       "Accept-Encoding" => "gzip",
-      "Authorization" => "Bearer #{api_key}",
       "Content-Type" => "application/x-www-form-urlencoded",
       "Connection" => "keep-alive",
       "User-Agent" => "Stripe/v1 stripity-stripe/#{@api_version}"
     })
+  end
+
+  @spec add_auth_header(headers, String.t | nil) :: headers
+  defp add_auth_header(existing_headers, api_key) do
+    api_key = case api_key do
+      key when is_binary(key) -> key
+      _ -> get_default_api_key()
+    end
+    Map.put(existing_headers, "Authorization", "Bearer #{api_key}")
   end
 
   @spec add_connect_header(headers, String.t | nil) :: headers
@@ -282,6 +288,7 @@ defmodule Stripe do
   @spec request(method, String.t, map, headers, list) :: {:ok, map} | {:error, api_error_struct}
   def request(method, endpoint, body, headers, opts) do
     {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
+    {api_key, opts} = Keyword.pop(opts, :api_key)
 
     base_url = get_base_url()
     req_url = base_url <> endpoint
@@ -289,6 +296,7 @@ defmodule Stripe do
     req_headers =
       headers
       |> add_default_headers()
+      |> add_auth_header(api_key)
       |> add_connect_header(connect_account_id)
       |> Map.to_list()
 
