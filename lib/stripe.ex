@@ -332,8 +332,11 @@ defmodule Stripe do
   end
 
   @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, api_error_struct}
-  defp handle_response({:ok, status, _headers, body}) when status in 200..299 do
-    decoded_body = Poison.decode!(body)
+  defp handle_response({:ok, status, headers, body}) when status in 200..299 do
+    decoded_body = 
+      body
+      |> Poison.decode!
+      |> decompress_body(headers)
 
     {:ok, decoded_body}
   end
@@ -369,4 +372,14 @@ defmodule Stripe do
     error = HTTPClientFailed.new(reason: reason)
     {:error, error}
   end
+
+  defp decompress_body(body, headers) do
+    headers_dict = :hackney_headers.new(headers)
+    case :hackney_headers.get_value("Content-Encoding", headers_dict) do
+      "gzip" -> :zlib.gunzip(body)
+      "deflate" -> :zlib.unzip(body)
+      _ -> body
+    end
+  end
+
 end
