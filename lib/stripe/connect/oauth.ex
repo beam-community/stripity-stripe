@@ -13,14 +13,6 @@ defmodule Stripe.Connect.OAuth do
 
   alias Stripe.Util
 
-  @client_id Application.get_env(:stripity_stripe, :connect_client_id)
-  @client_secret Application.get_env(:stripity_stripe, :api_key)
-
-  @authorize_url_base_params %{
-    client_id: @client_id,
-    response_type: "code",
-    scope: "read_write"
-  }
 
   @authorize_url_valid_keys [
    :always_prompt,
@@ -92,7 +84,7 @@ defmodule Stripe.Connect.OAuth do
     endpoint = "token"
 
     body = %{
-      client_secret: @client_secret,
+      client_secret: get_client_secret(),
       code: code,
       grant_type: "authorization_code"
     }
@@ -112,12 +104,13 @@ defmodule Stripe.Connect.OAuth do
   ```
   iex(1)> {:ok, result} = Stripe.Connect.OAuth.deauthorize(stripe_user_id)
   ```
+  
   """
   @spec deauthorize(String.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
   def deauthorize(stripe_user_id) do
     endpoint = "deauthorize"
     body = %{
-      client_id: @client_id,
+      client_id: get_client_id(),
       stripe_user_id: stripe_user_id
     }
 
@@ -152,7 +145,7 @@ defmodule Stripe.Connect.OAuth do
 
   ```
   %{
-    client_id: @client_id, # :connect_client_id from configuration
+    client_id: client_id, # :connect_client_id from configuration
     response_type: "code",
     scope: "read_write"
   }
@@ -187,11 +180,30 @@ defmodule Stripe.Connect.OAuth do
     base_url = "https://connect.stripe.com/oauth/authorize?"
 
     param_string =
-      @authorize_url_base_params
+      get_default_authorize_map()
       |> Map.merge(options)
       |> Map.take(@authorize_url_valid_keys)
       |> Stripe.URI.encode_query()
 
     base_url <> param_string
+  end
+
+  @spec get_client_id() :: String.t
+  defp get_client_id() do
+    Application.get_env(:stripity_stripe, :connect_client_id)
+  end
+
+  @spec get_client_secret() :: String.t
+  defp get_client_secret() do
+    Application.get_env(:stripity_stripe, :api_key)
+  end
+
+  @spec get_default_authorize_map() :: map
+  defp get_default_authorize_map() do
+    %{
+      client_id: get_client_id(),
+      response_type: "code",
+      scope: "read_write"
+    }
   end
 end
