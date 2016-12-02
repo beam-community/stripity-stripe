@@ -175,7 +175,8 @@ defmodule Stripe do
   @doc """
   Callback for the application
 
-  Start the supervision tree including the supervised HTTP connection pool (if it's being used) when
+  Start the supervision tree including the supervised
+  HTTP connection pool (if it's being used) when
   the VM loads the application pool.
 
   Note that we are taking advantage of the BEAM application
