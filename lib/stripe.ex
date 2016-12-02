@@ -335,9 +335,9 @@ defmodule Stripe do
   defp handle_response({:ok, status, headers, body}) when status in 200..299 do
     decoded_body = 
       body
-      |> Poison.decode!
       |> decompress_body(headers)
-
+      |> Poison.decode!
+  
     {:ok, decoded_body}
   end
 
