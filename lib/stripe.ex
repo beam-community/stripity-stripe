@@ -21,10 +21,10 @@ defmodule Stripe do
 
   Stripity Stripe is set up to use an HTTP connection pool by default. This
   means that it will reuse already opened HTTP connections in order to
-  minimize the overhead of establishing connections. Two configuration
-  options are available to tune how this pool works: `:timeout` and
-  `:max_connections`.
-
+  minimize the overhead of establishing connections. The pool is directly
+  supervised by Stripity Stripe. Two configuration options are
+  available to tune how this pool works: `:timeout` and `:max_connections`.
+  
   `:timeout` is the amount of time that a connection will be allowed
   to remain open but idle (no data passing over it) before it is closed
   and cleaned up. This defaults to 5 seconds.
@@ -175,7 +175,8 @@ defmodule Stripe do
   @doc """
   Callback for the application
 
-  Starts the HTTP connection pool (if it's being used) when
+  Start the supervision tree including the supervised
+  HTTP connection pool (if it's being used) when
   the VM loads the application pool.
 
   Note that we are taking advantage of the BEAM application
@@ -188,26 +189,13 @@ defmodule Stripe do
   def start(_start_type, _args) do
     import Supervisor.Spec, warn: false
 
-    if use_pool?() do
-      pool_options = get_pool_options()
-      :ok = :hackney_pool.start_pool(@pool_name, pool_options)
+    children = case use_pool? do
+      true -> [:hackney_pool.child_spec(@pool_name, get_pool_options())]
+      _ -> []
     end
 
     opts = [strategy: :one_for_one, name: Stripe.Supervisor]
-    Supervisor.start_link([], opts)
-  end
-
-  @doc """
-  Callback for the application
-
-  Shuts down the HTTP connection pool (if it's being used) when
-  the VM instructs the application to shut down.
-  """
-  @spec stop() :: :ok
-  def stop() do
-    :ok = :hackney_pool.stop_pool(@pool_name)
-
-    :ok
+    Supervisor.start_link(children, opts)
   end
 
   @spec get_pool_options() :: Keyword.t
