@@ -42,12 +42,12 @@ defmodule Stripe.Customer do
 
   @valid_create_keys [
     :account_balance, :business_vat_id, :coupon, :description, :email,
-    :metadata, :plan, :quantity, :tax_percent, :trial_end
+    :metadata, :plan, :quantity, :tax_percent, :trial_end, :source
   ]
 
   @valid_update_keys [
     :account_balance, :business_vat_id, :coupon, :default_source, :description,
-    :email, :metadata
+    :email, :metadata, :source
   ]
 
   @doc """
