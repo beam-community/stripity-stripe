@@ -9,7 +9,9 @@ defmodule Stripe.Request do
       |> Util.drop_nil_keys()
 
     case Stripe.request(:post, endpoint, body, %{}, opts) do
-      {:ok, result} -> {:ok, Util.stripe_map_to_struct(module, result)}
+      {:ok, result} ->
+        IO.inspect(result, pretty: true)
+        {:ok, Util.stripe_map_to_struct(module, result)}
       {:error, error} -> {:error, error}
     end
   end
