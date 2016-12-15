@@ -208,6 +208,11 @@ defmodule Stripe do
     Application.get_env(:stripity_stripe, :api_base_url)
   end
 
+  @spec get_upload_url() :: String.t
+  defp get_upload_url() do
+    Application.get_env(:stripity_stripe, :api_upload_url)
+  end
+
   @spec get_default_api_key() :: String.t
   defp get_default_api_key() do
     case Application.get_env(:stripity_stripe, :api_key) do
@@ -227,6 +232,17 @@ defmodule Stripe do
       "Accept" => "application/json; charset=utf8",
       "Accept-Encoding" => "gzip",
       "Content-Type" => "application/x-www-form-urlencoded",
+      "Connection" => "keep-alive",
+      "User-Agent" => "Stripe/v1 stripity-stripe/#{@api_version}"
+    })
+  end
+
+  @spec add_multipart_form_headers(headers) :: headers
+  defp add_multipart_form_headers(existing_headers) do
+    Map.merge(existing_headers, %{
+      "Accept" => "application/json; charset=utf8",
+      "Accept-Encoding" => "gzip",
+      "Content-Type" => "multipart/form-data",
       "Connection" => "keep-alive",
       "User-Agent" => "Stripe/v1 stripity-stripe/#{@api_version}"
     })
@@ -284,6 +300,32 @@ defmodule Stripe do
     req_headers =
       headers
       |> add_default_headers()
+      |> add_auth_header(api_key)
+      |> add_connect_header(connect_account_id)
+      |> Map.to_list()
+
+    req_opts =
+      opts
+      |> add_default_options()
+      |> add_pool_option()
+
+    :hackney.request(method, req_url, req_headers, req_body, req_opts)
+    |> handle_response()
+  end
+
+  @doc """
+  """
+  @spec request_file_upload(method, String.t, map, headers, list) :: {:ok, map} | {:error, api_error_struct}
+  def request_file_upload(method, endpoint, body, headers, opts) do
+    {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
+    {api_key, opts} = Keyword.pop(opts, :api_key)
+
+    base_url = get_upload_url()
+    req_url = base_url <> endpoint
+    req_body = Stripe.URI.encode_query(body)
+    req_headers =
+      headers
+      |> add_multipart_form_headers()
       |> add_auth_header(api_key)
       |> add_connect_header(connect_account_id)
       |> Map.to_list()
