@@ -14,8 +14,8 @@ defmodule Stripe.Event do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :object, :api_version, :created, :livemode,
-    :pending_webhooks, :request, :type
+    :id, :object, :api_version, :created, :livemode, :pending_webhooks,
+    :request, :type, :user_id
   ]
 
   @response_mapping %{
@@ -26,7 +26,8 @@ defmodule Stripe.Event do
     livemode: :boolean,
     pending_webhooks: :integer,
     request: :string,
-    type: :string
+    type: :string,
+    user_id: :string
   }
 
   @plural_endpoint "events"
