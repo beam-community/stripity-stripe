@@ -30,16 +30,20 @@ defmodule Stripe.FileUpload do
 
   @plural_endpoint "files"
 
-  @valid_create_keys [
-    :purpose, :file
-  ]
+  @doc """
+  Returns the Stripe response mapping of keys to types.
+  """
+  @spec response_mapping :: Keyword.t
+  def response_mapping, do: @response_mapping
 
   @doc """
   Create a file according to Stripe's file_upload rules.
+
+  Takes the filepath and the purpose.
   """
-  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(file, opts \\ []) do
-    Stripe.Request.create_file_upload(@plural_endpoint, file, @valid_create_keys, __MODULE__, opts)
+  @spec create(Path.t, String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(filepath, purpose, opts \\ []) do
+    Stripe.Request.create_file_upload(@plural_endpoint, filepath, purpose, __MODULE__, opts)
   end
 
   @doc """

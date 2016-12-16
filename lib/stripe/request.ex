@@ -14,13 +14,9 @@ defmodule Stripe.Request do
     end
   end
 
-  @spec create_file_upload(String.t, struct, map, module, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
-  def create_file_upload(endpoint, struct, valid_keys, module, opts) do
-    body =
-      struct
-      |> Map.take(valid_keys)
-      |> Util.drop_nil_keys()
-
+  @spec create_file_upload(String.t, Path.t, String.t, module, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
+  def create_file_upload(endpoint, filepath, purpose, module, opts) do
+    body = {:multipart, [{"purpose", purpose}, {:file, filepath}]}
     case Stripe.request_file_upload(:post, endpoint, body, %{}, opts) do
       {:ok, result} -> {:ok, Util.stripe_map_to_struct(module, result)}
       {:error, error} -> {:error, error}

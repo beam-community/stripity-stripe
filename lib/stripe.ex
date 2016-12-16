@@ -24,7 +24,7 @@ defmodule Stripe do
   minimize the overhead of establishing connections. The pool is directly
   supervised by Stripity Stripe. Two configuration options are
   available to tune how this pool works: `:timeout` and `:max_connections`.
-  
+
   `:timeout` is the amount of time that a connection will be allowed
   to remain open but idle (no data passing over it) before it is closed
   and cleaned up. This defaults to 5 seconds.
@@ -165,7 +165,7 @@ defmodule Stripe do
     %APIRateLimitingResponse{}     |
     %AuthenticationErrorResponse{} |
     %HTTPClientFailed{}            |
-    %OAuthAPIErrorResponse{}       
+    %OAuthAPIErrorResponse{}
 
   use Application
 
@@ -250,11 +250,25 @@ defmodule Stripe do
 
   @spec add_auth_header(headers, String.t | nil) :: headers
   defp add_auth_header(existing_headers, api_key) do
-    api_key = case api_key do
+    api_key = fetch_api_key(api_key)
+    Map.put(existing_headers, "Authorization", "Bearer #{api_key}")
+  end
+
+  @spec add_basic_auth_header(headers, String.t | nil) :: headers
+  defp add_basic_auth_header(existing_headers, api_key) do
+    api_key = fetch_api_key(api_key)
+    auth_string =
+      api_key <> ":"
+      |> :base64.encode_to_string()
+    Map.put(existing_headers, "Authorization", "Basic #{auth_string}")
+  end
+
+  @spec fetch_api_key(String.t | nil) :: String.t
+  defp fetch_api_key(api_key) do
+    case api_key do
       key when is_binary(key) -> key
       _ -> get_default_api_key()
     end
-    Map.put(existing_headers, "Authorization", "Bearer #{api_key}")
   end
 
   @spec add_connect_header(headers, String.t | nil) :: headers
@@ -322,11 +336,10 @@ defmodule Stripe do
 
     base_url = get_upload_url()
     req_url = base_url <> endpoint
-    req_body = Stripe.URI.encode_query(body)
     req_headers =
       headers
       |> add_multipart_form_headers()
-      |> add_auth_header(api_key)
+      |> add_basic_auth_header(api_key)
       |> add_connect_header(connect_account_id)
       |> Map.to_list()
 
@@ -335,7 +348,7 @@ defmodule Stripe do
       |> add_default_options()
       |> add_pool_option()
 
-    :hackney.request(method, req_url, req_headers, req_body, req_opts)
+    :hackney.request(method, req_url, req_headers, body, req_opts)
     |> handle_response()
   end
 
@@ -363,11 +376,11 @@ defmodule Stripe do
 
   @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, api_error_struct}
   defp handle_response({:ok, status, headers, body}) when status in 200..299 do
-    decoded_body = 
+    decoded_body =
       body
       |> decompress_body(headers)
       |> Poison.decode!
-  
+
     {:ok, decoded_body}
   end
 
