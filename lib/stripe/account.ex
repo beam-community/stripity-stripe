@@ -19,7 +19,7 @@ defmodule Stripe.Account do
   defstruct [
     :id, :business_name, :business_primary_color, :business_url,
     :charges_enabled, :country, :default_currency, :details_submitted,
-    :display_name, :email, :managed, :metadata, :statement_descriptor,
+    :display_name, :email, :legal_entity, :managed, :metadata, :statement_descriptor,
     :support_email, :support_phone, :support_url, :timezone,
     :transfers_enabled
   ]
@@ -42,17 +42,28 @@ defmodule Stripe.Account do
     support_phone: :string,
     support_url: :string,
     timezone: :string,
-    transfers_enabled: :boolean
+    transfers_enabled: :boolean,
+    legal_entity: %{module: Stripe.Account.LegalEntity}
   }
 
   @singular_endpoint "account"
   @plural_endpoint "accounts"
+
+  @valid_create_keys [:country, :email, :managed, :legal_entity]
 
   @doc """
   Returns the Stripe response mapping of keys to types.
   """
   @spec response_mapping :: Keyword.t
   def response_mapping, do: @response_mapping
+
+  @doc """
+  Create an account.
+  """
+  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(account, opts \\ []) do
+    Stripe.Request.create(@plural_endpoint, account, @valid_create_keys, __MODULE__, opts)
+  end
 
   @doc """
   Retrieve your own account without options.
