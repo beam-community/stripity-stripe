@@ -24,35 +24,18 @@ defmodule Stripe.Account do
     :transfers_enabled
   ]
 
-  @response_mapping %{
-    id: :string,
-    business_name: :string,
-    business_primary_color: :string,
-    business_url: :string,
-    charges_enabled: :boolean,
-    country: :string,
-    default_currency: :string,
-    details_submitted: :boolean,
-    display_name: :string,
-    email: :string,
-    managed: :boolean,
-    metadata: :metadata,
-    statement_descriptor: :string,
-    support_email: :string,
-    support_phone: :string,
-    support_url: :string,
-    timezone: :string,
-    transfers_enabled: :boolean
-  }
+  @relationships %{}
 
   @singular_endpoint "account"
   @plural_endpoint "accounts"
 
   @doc """
-  Returns the Stripe response mapping of keys to types.
+  Returns a map of relationship keys and their Struct name.
+  Relationships must be specified for the relationship to
+  be returned as a struct.
   """
-  @spec response_mapping :: Keyword.t
-  def response_mapping, do: @response_mapping
+  @spec relationships :: Keyword.t
+  def relationships, do: @relationships
 
   @doc """
   Retrieve your own account without options.

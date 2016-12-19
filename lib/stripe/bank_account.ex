@@ -22,22 +22,7 @@ defmodule Stripe.BankAccount do
     :last4, :metadata, :routing_number, :status
   ]
 
-  @response_mapping %{
-    id: :string,
-    object: :string,
-    account: :string,
-    account_holder_name: :string,
-    account_holder_type: :string,
-    bank_name: :string,
-    country: :string,
-    currency: :string,
-    default_for_currency: :string,
-    fingerprint: :string,
-    last4: :string,
-    metadata: :metadata,
-    routing_number: :string,
-    status: :string
-  }
+  @relationships %{}
 
   @plural_endpoint "bank_accounts"
 
@@ -54,10 +39,12 @@ defmodule Stripe.BankAccount do
   ]
 
   @doc """
-  Returns the Stripe response mapping of keys to types.
+  Returns a map of relationship keys and their Struct name.
+  Relationships must be specified for the relationship to
+  be returned as a struct.
   """
-  @spec response_mapping :: Keyword.t
-  def response_mapping, do: @response_mapping
+  @spec relationships :: Keyword.t
+  def relationships, do: @relationships
 
   @doc """
   Create a bank account.

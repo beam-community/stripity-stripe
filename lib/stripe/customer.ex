@@ -22,18 +22,8 @@ defmodule Stripe.Customer do
     :metadata
   ]
 
-  @response_mapping %{
-    id: :string,
-    account_balance: :string,
-    business_vat_id: :string,
-    created: :datetime,
-    currency: :string,
-    default_source: :string,
-    delinquent: :boolean,
-    description: :string,
-    email: :string,
-    livemode: :boolean,
-    metadata: :metadata
+  @relationships %{
+    created: DateTime
   }
 
   @plural_endpoint "customers"
@@ -49,10 +39,12 @@ defmodule Stripe.Customer do
   ]
 
   @doc """
-  Returns the Stripe response mapping of keys to types.
+  Returns a map of relationship keys and their Struct name.
+  Relationships must be specified for the relationship to
+  be returned as a struct.
   """
-  @spec response_mapping :: Keyword.t
-  def response_mapping, do: @response_mapping
+  @spec relationships :: Keyword.t
+  def relationships, do: @relationships
 
   @doc """
   Create a customer.

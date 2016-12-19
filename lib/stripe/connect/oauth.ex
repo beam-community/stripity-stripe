@@ -37,21 +37,15 @@ defmodule Stripe.Connect.OAuth do
       :stripe_publishable_key, :token_type
     ]
 
-    @response_mapping %{
-      access_token: :string,
-      livemode: :boolean,
-      refresh_token: :string,
-      scope: :string,
-      stripe_publishable_key: :string,
-      stripe_user_id: :string,
-      token_type: :string
-    }
+    @relationships %{}
 
     @doc """
-    Returns the Stripe response mapping of keys to types.
+    Returns a map of relationship keys and their Struct name.
+    Relationships must be specified for the relationship to
+    be returned as a struct.
     """
-    @spec response_mapping :: Keyword.t
-    def response_mapping, do: @response_mapping
+    @spec relationships :: Keyword.t
+    def relationships, do: @relationships
   end
 
   defmodule DeauthorizeResponse do

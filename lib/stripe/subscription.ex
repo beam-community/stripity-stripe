@@ -23,25 +23,11 @@ defmodule Stripe.Subscription do
     :start, :status, :tax_percent, :trial_end, :trial_start
   ]
 
-  @response_mapping %{
-    id: :string,
-    application_fee_percent: :float,
-    cancel_at_period_end: :boolean,
-    canceled_at: :datetime,
-    created: :datetime,
-    current_period_end: :datetime,
-    current_period_start: :datetime,
-    customer: :string,
-    ended_at: :datetime,
-    livemode: :boolean,
-    metadata: :metadata,
-    plan: %{module: Stripe.Plan},
-    quantity: :integer,
-    start: :datetime,
-    status: :string,
-    tax_percent: :float,
-    trial_end: :datetime,
-    trial_start: :datetime
+  @relationships %{
+    plan: Stripe.Plan,
+    start: DateTime,
+    trial_end: DateTime,
+    trial_start: DateTime
   }
 
   @plural_endpoint "subscriptions"
@@ -57,10 +43,12 @@ defmodule Stripe.Subscription do
   ]
 
   @doc """
-  Returns the Stripe response mapping of keys to types.
+  Returns a map of relationship keys and their Struct name.
+  Relationships must be specified for the relationship to
+  be returned as a struct.
   """
-  @spec response_mapping :: Keyword.t
-  def response_mapping, do: @response_mapping
+  @spec relationships :: Keyword.t
+  def relationships, do: @relationships
 
   @doc """
   Create a subscription.

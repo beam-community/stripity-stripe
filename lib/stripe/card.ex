@@ -44,31 +44,7 @@ defmodule Stripe.Card do
     :tokenization_method
   ]
 
-  @response_mapping %{
-    id: :string,
-    address_city: :string,
-    address_country: :string,
-    address_line1: :string,
-    address_line1_check: :string,
-    address_line2: :string,
-    address_state: :string,
-    address_zip: :string,
-    address_zip_check: :string,
-    brand: :string,
-    country: :string,
-    customer: :string,
-    cvc_check: :string,
-    dynamic_last4: :string,
-    exp_month: :integer,
-    exp_year: :integer,
-    fingerprint: :string,
-    funding: :string,
-    last4: :string,
-    metadata: :metadata,
-    name: :string,
-    recipient: :string,
-    tokenization_method: :string
-  }
+  @relationships %{}
 
   @valid_update_keys [
     :address_city, :address_country, :address_line1, :address_line2,
@@ -76,10 +52,12 @@ defmodule Stripe.Card do
   ]
 
   @doc """
-  Returns the Stripe response mapping of keys to types.
+  Returns a map of relationship keys and their Struct name.
+  Relationships must be specified for the relationship to
+  be returned as a struct.
   """
-  @spec response_mapping :: Keyword.t
-  def response_mapping, do: @response_mapping
+  @spec relationships :: Keyword.t
+  def relationships, do: @relationships
 
   defp endpoint_for_owner(owner_type, owner_id) do
     case owner_type do

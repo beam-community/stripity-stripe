@@ -21,18 +21,8 @@ defmodule Stripe.Plan do
     :livemode, :metadata, :name, :statement_descriptor, :trial_period_days
   ]
 
-  @response_mapping %{
-    id: :string,
-    amount: :integer,
-    created: :datetime,
-    currency: :string,
-    interval: :string,
-    interval_count: :integer,
-    livemode: :boolean,
-    metadata: :metadata,
-    name: :string,
-    statement_descriptor: :string,
-    trial_period_days: :integer
+  @relationships %{
+    created: DateTime
   }
 
   @plural_endpoint "plans"
@@ -47,10 +37,12 @@ defmodule Stripe.Plan do
   ]
 
   @doc """
-  Returns the Stripe response mapping of keys to types.
+  Returns a map of relationship keys and their Struct name.
+  Relationships must be specified for the relationship to
+  be returned as a struct.
   """
-  @spec response_mapping :: Keyword.t
-  def response_mapping, do: @response_mapping
+  @spec relationships :: Keyword.t
+  def relationships, do: @relationships
 
   @doc """
   Create a plan.

@@ -18,25 +18,19 @@ defmodule Stripe.Event do
     :request, :type, :user_id
   ]
 
-  @response_mapping %{
-    id: :string,
-    object: :string,
-    api_version: :string,
-    created: :datetime,
-    livemode: :boolean,
-    pending_webhooks: :integer,
-    request: :string,
-    type: :string,
-    user_id: :string
+  @relationships %{
+    created: DateTime
   }
 
   @plural_endpoint "events"
 
   @doc """
-  Returns the Stripe response mapping of keys to types.
+  Returns a map of relationship keys and their Struct name.
+  Relationships must be specified for the relationship to
+  be returned as a struct.
   """
-  @spec response_mapping :: Keyword.t
-  def response_mapping, do: @response_mapping
+  @spec relationships :: Keyword.t
+  def relationships, do: @relationships
 
   @doc """
   Retrieve an event.

@@ -16,23 +16,19 @@ defmodule Stripe.FileUpload do
     :id, :object, :created, :purpose, :size, :type, :metadata
   ]
 
-  @response_mapping %{
-    id: :string,
-    object: :string,
-    created: :datetime,
-    purpose: :string,
-    size: :integer,
-    type: :string,
-    metadata: :metadata
+  @relationships %{
+    created: DateTime
   }
 
   @plural_endpoint "files"
 
   @doc """
-  Returns the Stripe response mapping of keys to types.
+  Returns a map of relationship keys and their Struct name.
+  Relationships must be specified for the relationship to
+  be returned as a struct.
   """
-  @spec response_mapping :: Keyword.t
-  def response_mapping, do: @response_mapping
+  @spec relationships :: Keyword.t
+  def relationships, do: @relationships
 
   @doc """
   Create a file according to Stripe's file_upload rules.
