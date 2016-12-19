@@ -24,7 +24,7 @@ defmodule Stripe.Converter do
     struct(module, processed_map)
   end
 
-  defp build_struct(module, nil), do: nil
+  defp build_struct(_module, nil), do: nil
   defp build_struct(DateTime, value) do
     {:ok, value} = DateTime.from_unix(value)
     value

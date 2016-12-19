@@ -14,8 +14,6 @@ defmodule Stripe.Subscription do
   Stripe API reference: https://stripe.com/docs/api#subscription
   """
 
-  alias Stripe.Util
-
   @type t :: %__MODULE__{}
 
   defstruct [

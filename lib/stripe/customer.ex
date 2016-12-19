@@ -14,8 +14,6 @@ defmodule Stripe.Customer do
   Stripe API reference: https://stripe.com/docs/api#customer
   """
 
-  alias Stripe.Util
-
   @type t :: %__MODULE__{}
 
   defstruct [

@@ -12,8 +12,6 @@ defmodule Stripe.Token do
   Stripe API reference: https://stripe.com/docs/api#token
   """
 
-  alias Stripe.Util
-
   @type t :: %__MODULE__{}
 
   defstruct [

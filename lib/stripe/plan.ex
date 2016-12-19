@@ -14,8 +14,6 @@ defmodule Stripe.Plan do
   Stripe API reference: https://stripe.com/docs/api#plan
   """
 
-  alias Stripe.Util
-
   @type t :: %__MODULE__{}
 
   defstruct [

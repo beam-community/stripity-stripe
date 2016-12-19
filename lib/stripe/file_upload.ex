@@ -10,8 +10,6 @@ defmodule Stripe.FileUpload do
   Stripe API reference: https://stripe.com/docs/api#file_uploads
   """
 
-  alias Stripe.Util
-
   @type t :: %__MODULE__{}
 
   defstruct [

@@ -14,8 +14,6 @@ defmodule Stripe.BankAccount do
   Stripe API reference: https://stripe.com/docs/api#bank_account
   """
 
-  alias Stripe.Util
-
   @type t :: %__MODULE__{}
 
   defstruct [
