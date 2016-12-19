@@ -11,8 +11,7 @@ defmodule Stripe.Connect.OAuth do
   Stripe API reference: https://stripe.com/docs/connect/reference
   """
 
-  alias Stripe.Util
-
+  alias Stripe.Converter
 
   @authorize_url_valid_keys [
    :always_prompt,
@@ -90,7 +89,7 @@ defmodule Stripe.Connect.OAuth do
     }
 
     case Stripe.oauth_request(:post, endpoint, body) do
-       {:ok, result} -> {:ok, Util.stripe_map_to_struct(TokenResponse, result)}
+       {:ok, result} -> {:ok, Converter.stripe_map_to_struct(TokenResponse, result)}
        {:error, error} -> {:error, error}
      end
   end
@@ -104,7 +103,7 @@ defmodule Stripe.Connect.OAuth do
   ```
   iex(1)> {:ok, result} = Stripe.Connect.OAuth.deauthorize(stripe_user_id)
   ```
-  
+
   """
   @spec deauthorize(String.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
   def deauthorize(stripe_user_id) do
@@ -115,7 +114,7 @@ defmodule Stripe.Connect.OAuth do
     }
 
     case Stripe.oauth_request(:post, endpoint, body) do
-      {:ok, result} -> {:ok, Util.stripe_map_to_struct(DeauthorizeResponse, result)}
+      {:ok, result} -> {:ok, Converter.stripe_map_to_struct(DeauthorizeResponse, result)}
       {:error, error} -> {:error, error}
     end
   end
@@ -124,11 +123,11 @@ defmodule Stripe.Connect.OAuth do
   Generate the URL to start a Stripe workflow.
 
   ## Paremeter Map Keys
-  
+
   The parameter map keys are derived from the [valid request parameter](https://stripe.com/docs/connect/reference)
   for the Stripe Connect authorize endpoint. A parameter only needs to be provided if
   you wish to override the default.
-  
+
   - `:always_prompt`
   - `:client_id`
   - `:redirect_uri`

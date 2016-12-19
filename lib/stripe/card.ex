@@ -30,6 +30,7 @@ defmodule Stripe.Card do
   """
 
   alias Stripe.Util
+  alias Stripe.Converter
 
   @type t :: %__MODULE__{}
   @type source :: :customer | :recipient
@@ -106,7 +107,7 @@ defmodule Stripe.Card do
       |> Util.map_keys_to_atoms()
 
     case Stripe.request(:post, endpoint, body, %{}, opts) do
-      {:ok, result} -> {:ok, Util.stripe_map_to_struct(__MODULE__, result)}
+      {:ok, result} -> {:ok, Converter.stripe_map_to_struct(__MODULE__, result)}
       {:error, error} -> {:error, error}
     end
   end
