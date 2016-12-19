@@ -18,7 +18,7 @@ defmodule Stripe.Util do
   end
 
   defp convert_value(key, format, map) when is_map(format) do
-    stripe_map_to_struct(format.module, map[key)
+    stripe_map_to_struct(format.module, map[key])
   end
   defp convert_value(key, :metadata, map) do
     map
