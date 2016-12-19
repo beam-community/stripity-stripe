@@ -14,9 +14,8 @@ defmodule Stripe.Converter do
           fetch_value(response, key)
           |> convert_value()
 
-        if struct_name = Map.get(module.relationships, key) do
-          value = build_struct(struct_name, value)
-        end
+        value = Map.get(module.relationships, key)
+        |> build_struct(value)
 
         Map.put(acc, key, value)
       end)
@@ -24,6 +23,7 @@ defmodule Stripe.Converter do
     struct(module, processed_map)
   end
 
+  defp build_struct(nil, value), do: value
   defp build_struct(_module, nil), do: nil
   defp build_struct(DateTime, value) do
     {:ok, value} = DateTime.from_unix(value)
