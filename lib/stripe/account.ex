@@ -31,6 +31,14 @@ defmodule Stripe.Account do
 
   @valid_create_keys [:country, :email, :managed]
 
+  @valid_update_keys [
+    :business_logo, :business_name, :business_primary_color, :business_url,
+    :debit_negative_balances, :decline_charge_on, :default_currency, :email,
+    :external_account, :legal_entity, :metadata, :product_description,
+    :statement_descriptor, :support_email, :support_phone, :support_url,
+    :tos_acceptance, :transfer_schedule, :transfer_statement_descriptor
+  ]
+
   @doc """
   Returns a map of relationship keys and their Struct name.
   Relationships must be specified for the relationship to
