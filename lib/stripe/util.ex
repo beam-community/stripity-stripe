@@ -3,33 +3,6 @@ defmodule Stripe.Util do
 
   alias Stripe.Convert
 
-  @doc """
-  Takes the module (e.g. `Stripe.Card`) and the response from Stripe and
-  returns a struct (e.g. `%Stripe.Card{}`) containing the Stripe response.
-  """
-  @spec stripe_map_to_struct(module, %{String.t => any}) :: struct
-  def stripe_map_to_struct(module, stripe_response) do
-    response_mapping = module.response_mapping()
-    map = Enum.reduce response_mapping, %{}, fn ({key, format}, acc) ->
-      value = key |> to_string() |> convert_value(format, stripe_response)
-      Map.put(acc, key, value)
-    end
-    struct = struct(module, map)
-  end
-
-  defp convert_value(key, format, map) when is_map(format) do
-    stripe_map_to_struct(format.module, map)
-  end
-  defp convert_value(key, :metadata, map) do
-    map
-    |> Map.get(key)
-  end
-  defp convert_value(key, format, map) do
-    map
-    |> Map.get(key)
-    |> Convert.with_format(format)
-  end
-
   def drop_nil_keys(map) do
     Enum.reject(map, fn
       {_, nil} -> true

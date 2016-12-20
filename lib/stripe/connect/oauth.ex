@@ -11,8 +11,7 @@ defmodule Stripe.Connect.OAuth do
   Stripe API reference: https://stripe.com/docs/connect/reference
   """
 
-  alias Stripe.Util
-
+  alias Stripe.Converter
 
   @authorize_url_valid_keys [
    :always_prompt,
@@ -38,21 +37,15 @@ defmodule Stripe.Connect.OAuth do
       :stripe_publishable_key, :token_type
     ]
 
-    @response_mapping %{
-      access_token: :string,
-      livemode: :boolean,
-      refresh_token: :string,
-      scope: :string,
-      stripe_publishable_key: :string,
-      stripe_user_id: :string,
-      token_type: :string
-    }
+    @relationships %{}
 
     @doc """
-    Returns the Stripe response mapping of keys to types.
+    Returns a map of relationship keys and their Struct name.
+    Relationships must be specified for the relationship to
+    be returned as a struct.
     """
-    @spec response_mapping :: Keyword.t
-    def response_mapping, do: @response_mapping
+    @spec relationships :: Keyword.t
+    def relationships, do: @relationships
   end
 
   defmodule DeauthorizeResponse do
@@ -90,7 +83,7 @@ defmodule Stripe.Connect.OAuth do
     }
 
     case Stripe.oauth_request(:post, endpoint, body) do
-       {:ok, result} -> {:ok, Util.stripe_map_to_struct(TokenResponse, result)}
+       {:ok, result} -> {:ok, Converter.stripe_map_to_struct(TokenResponse, result)}
        {:error, error} -> {:error, error}
      end
   end
@@ -104,7 +97,7 @@ defmodule Stripe.Connect.OAuth do
   ```
   iex(1)> {:ok, result} = Stripe.Connect.OAuth.deauthorize(stripe_user_id)
   ```
-  
+
   """
   @spec deauthorize(String.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
   def deauthorize(stripe_user_id) do
@@ -115,7 +108,7 @@ defmodule Stripe.Connect.OAuth do
     }
 
     case Stripe.oauth_request(:post, endpoint, body) do
-      {:ok, result} -> {:ok, Util.stripe_map_to_struct(DeauthorizeResponse, result)}
+      {:ok, result} -> {:ok, Converter.stripe_map_to_struct(DeauthorizeResponse, result)}
       {:error, error} -> {:error, error}
     end
   end
@@ -124,11 +117,11 @@ defmodule Stripe.Connect.OAuth do
   Generate the URL to start a Stripe workflow.
 
   ## Paremeter Map Keys
-  
+
   The parameter map keys are derived from the [valid request parameter](https://stripe.com/docs/connect/reference)
   for the Stripe Connect authorize endpoint. A parameter only needs to be provided if
   you wish to override the default.
-  
+
   - `:always_prompt`
   - `:client_id`
   - `:redirect_uri`

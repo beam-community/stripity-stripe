@@ -12,21 +12,15 @@ defmodule Stripe.Token do
   Stripe API reference: https://stripe.com/docs/api#token
   """
 
-  alias Stripe.Util
-
   @type t :: %__MODULE__{}
 
   defstruct [
     :id, :card, :client_ip, :created, :livemode, :type, :used
   ]
 
-  @response_mapping %{
-    id: :string,
-    card: %{module: Stripe.Card},
-    client_ip: :string,
-    created: :datetime,
-    livemode: :boolean,
-    used: :boolean
+  @relationships %{
+    card: Stripe.Card,
+    created: DateTime
   }
 
   @plural_endpoint "tokens"
@@ -36,10 +30,12 @@ defmodule Stripe.Token do
   ]
 
   @doc """
-  Returns the Stripe response mapping of keys to types.
+  Returns a map of relationship keys and their Struct name.
+  Relationships must be specified for the relationship to
+  be returned as a struct.
   """
-  @spec response_mapping :: Keyword.t
-  def response_mapping, do: @response_mapping
+  @spec relationships :: Keyword.t
+  def relationships, do: @relationships
 
   @doc """
   Create a token for a Connect customer with a card belonging to that customer.
