@@ -19,9 +19,9 @@ defmodule Stripe.Account do
   defstruct [
     :id, :business_name, :business_primary_color, :business_url,
     :charges_enabled, :country, :default_currency, :details_submitted,
-    :display_name, :email, :managed, :metadata, :statement_descriptor,
-    :support_email, :support_phone, :support_url, :timezone,
-    :transfers_enabled
+    :display_name, :email, :external_accounts, :managed, :metadata,
+    :statement_descriptor, :support_email, :support_phone, :support_url,
+    :timezone, :transfers_enabled
   ]
 
   @relationships %{}
@@ -58,5 +58,16 @@ defmodule Stripe.Account do
   @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   defp do_retrieve(endpoint, opts \\ []) do
     Stripe.Request.retrieve(endpoint, __MODULE__, opts)
+  end
+
+  @doc """
+  Update an account.
+
+  Takes the `id` and a map of changes.
+  """
+  @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def update(id, changes, opts \\ []) do
+    endpoint = @plural_endpoint <> "/" <> id
+    Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
   end
 end
