@@ -2,6 +2,7 @@ defmodule Stripe.ConverterTest do
   use ExUnit.Case
 
   alias Stripe.Converter
+  alias Stripe.ConverterTest
 
   defmodule Person do
     defstruct [:email, :first_name, :last_name, :legal_entity, :metadata]
@@ -10,13 +11,13 @@ defmodule Stripe.ConverterTest do
 
   defmodule PersonWithMissingRelationship do
     defstruct [:card]
-    def relationships, do: %{card: Stripe.ConverterTest.CreditCard}
+    def relationships, do: %{card: ConverterTest.CreditCard}
   end
 
   defmodule AuthToken do
     defstruct [:id, :card, :client_ip, :created, :livemode, :type, :used]
     def relationships, do: %{
-      card: Stripe.ConverterTest.CreditCard,
+      card: ConverterTest.CreditCard,
       created: DateTime
     }
   end
@@ -47,7 +48,7 @@ defmodule Stripe.ConverterTest do
       }
     }
 
-    result = Converter.stripe_map_to_struct(Stripe.ConverterTest.Person, json_response)
+    result = Converter.stripe_map_to_struct(ConverterTest.Person, json_response)
     assert result == expected_result
   end
 
@@ -99,7 +100,7 @@ defmodule Stripe.ConverterTest do
     }
 
     result = Converter.stripe_map_to_struct(
-      Stripe.ConverterTest.AuthToken, json_response_with_relationship
+      ConverterTest.AuthToken, json_response_with_relationship
     )
     assert result == expected_result
   end
@@ -122,7 +123,7 @@ defmodule Stripe.ConverterTest do
       card: nil
     }
 
-    result = Converter.stripe_map_to_struct(Stripe.ConverterTest.PersonWithMissingRelationship, json_response)
+    result = Converter.stripe_map_to_struct(ConverterTest.PersonWithMissingRelationship, json_response)
     assert result == expected_result
   end
 end

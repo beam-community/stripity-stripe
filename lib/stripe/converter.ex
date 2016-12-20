@@ -14,8 +14,10 @@ defmodule Stripe.Converter do
           fetch_value(response, key)
           |> convert_value()
 
-        value = Map.get(module.relationships, key)
-        |> build_struct(value)
+        value =
+          module.relationships
+          |> Map.get(key)
+          |> maybe_build_struct(value)
 
         Map.put(acc, key, value)
       end)
@@ -23,13 +25,13 @@ defmodule Stripe.Converter do
     struct(module, processed_map)
   end
 
-  defp build_struct(nil, value), do: value
-  defp build_struct(_module, nil), do: nil
-  defp build_struct(DateTime, value) do
+  defp maybe_build_struct(nil, value), do: value
+  defp maybe_build_struct(_module, nil), do: nil
+  defp maybe_build_struct(DateTime, value) do
     {:ok, value} = DateTime.from_unix(value)
     value
   end
-  defp build_struct(module, value) when is_map(value) do
+  defp maybe_build_struct(module, value) when is_map(value) do
     stripe_map_to_struct(module, value)
   end
 
