@@ -29,6 +29,8 @@ defmodule Stripe.Account do
   @singular_endpoint "account"
   @plural_endpoint "accounts"
 
+  @valid_create_keys [:country, :email, :managed]
+
   @doc """
   Returns a map of relationship keys and their Struct name.
   Relationships must be specified for the relationship to
@@ -36,6 +38,14 @@ defmodule Stripe.Account do
   """
   @spec relationships :: Keyword.t
   def relationships, do: @relationships
+
+  @doc """
+  Create an account.
+  """
+  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(account, opts \\ []) do
+    Stripe.Request.create(@plural_endpoint, account, @valid_create_keys, __MODULE__, opts)
+  end
 
   @doc """
   Retrieve your own account without options.
