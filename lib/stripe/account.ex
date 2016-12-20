@@ -59,4 +59,15 @@ defmodule Stripe.Account do
   defp do_retrieve(endpoint, opts \\ []) do
     Stripe.Request.retrieve(endpoint, __MODULE__, opts)
   end
+
+  @doc """
+  Update an account.
+
+  Takes the `id` and a map of changes.
+  """
+  @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def update(id, changes, opts \\ []) do
+    endpoint = @plural_endpoint <> "/" <> id
+    Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
+  end
 end
