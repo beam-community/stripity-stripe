@@ -1,16 +1,6 @@
 defmodule Stripe.Util do
   @moduledoc false
 
-  alias Stripe.Convert
-
-  def drop_nil_keys(map) do
-    Enum.reject(map, fn
-      {_, nil} -> true
-      _ -> false
-    end)
-    |> Enum.into(%{})
-  end
-
   @spec get_date(map, atom | String.t) :: DateTime.t | nil
   def get_date(m, k) do
     case Map.get(m, k) do
@@ -76,4 +66,16 @@ defmodule Stripe.Util do
   def string_map_to_atoms(string_key_map) do
     for {key, val} <- string_key_map, into: %{}, do: {String.to_atom(key), val}
   end
+
+  def atomize_keys(map = %{}) do
+    map
+    |> Enum.map(fn {k, v} -> {atomize_key(k), atomize_keys(v)} end)
+    |> Enum.into(%{})
+  end
+  def atomize_keys([head | rest]), do: [atomize_keys(head) | atomize_keys(rest)]
+  # Default
+  def atomize_keys(not_a_map), do: not_a_map
+
+  def atomize_key(k) when is_binary(k), do: String.to_atom(k)
+  def atomize_key(k), do: k
 end

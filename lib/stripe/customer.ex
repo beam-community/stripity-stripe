@@ -28,14 +28,42 @@ defmodule Stripe.Customer do
 
   @plural_endpoint "customers"
 
-  @valid_create_keys [
-    :account_balance, :business_vat_id, :coupon, :description, :email,
-    :metadata, :plan, :quantity, :tax_percent, :trial_end, :source
-  ]
+  @address_map %{
+    city: [:create, :retrieve, :update], #required
+    country: [:create, :retrieve, :update],
+    line1: [:create, :retrieve, :update],
+    line2: [:create, :retrieve, :update],
+    postal_code: [:create, :retrieve, :update],
+    state: [:create, :retrieve, :update]
+  }
 
-  @valid_update_keys [
-    :account_balance, :business_vat_id, :coupon, :default_source, :description,
-    :email, :metadata, :source
+  @schema %{
+    account_balance: [:retrieve, :update],
+    business_vat_id: [:create, :retrieve, :update],
+    created: [:retrieve],
+    coupon: [:create, :retrieve, :update],
+    currency: [:retrieve],
+    default_source: [:retrieve, :update],
+    delinquent: [:retrieve],
+    description: [:create, :retrieve, :update],
+    discount: [:retrieve],
+    email: [:create, :retrieve, :update],
+    livemode: [:retrieve],
+    metadata: [:create, :retrieve, :update],
+    plan: [:create, :update],
+    quantity: [:create, :update],
+    shipping: %{
+      address: @address_map
+    },
+    source: [:create, :retrieve, :update],
+    sources: [:retrieve],
+    subscriptiones: [:retrieve],
+    tax_percent: [:create],
+    trial_end: [:create]
+  }
+
+  @nullable_keys [
+    :business_vat_id, :description, :email, :metadata
   ]
 
   @doc """
@@ -49,9 +77,9 @@ defmodule Stripe.Customer do
   @doc """
   Create a customer.
   """
-  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(customer, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, customer, @valid_create_keys, __MODULE__, opts)
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(changes, opts \\ []) do
+    Stripe.Request.create(@plural_endpoint, changes, @schema, __MODULE__, opts)
   end
 
   @doc """
@@ -71,7 +99,7 @@ defmodule Stripe.Customer do
   @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
+    Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
   end
 
   @doc """

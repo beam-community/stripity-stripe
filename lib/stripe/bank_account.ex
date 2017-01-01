@@ -26,17 +26,27 @@ defmodule Stripe.BankAccount do
 
   @plural_endpoint "bank_accounts"
 
-  @valid_create_keys [
-    :source, :object, :account_number, :country, :currency,
-    :account_holder_name, :account_holder_type, :routing_number,
-    :default_for_currency, :metadata
-  ]
+  @schema %{
+    account: [:retrieve],
+    account_number: :string,
+    account_holder_name: [:retrieve, :update],
+    account_holder_type: [:retrieve, :update],
+    bank_name: [:retrieve],
+    country: [:retrieve],
+    currency: [:retrieve],
+    default_for_currency: [:create, :retrieve],
+    external_account: [:create],
+    fingerprint: [:retrieve],
+    id: [:retrieve],
+    last4: [:retrieve],
+    metadata: [:create, :retrieve, :update],
+    object: [:retrieve],
+    routing_number: [:retrieve],
+    source: [:create],
+    status: [:retrieve]
+  }
 
-  @valid_update_keys [
-    :source, :object, :account_number, :country, :currency,
-    :account_holder_name, :account_holder_type, :routing_number,
-    :default_for_currency, :metadata
-  ]
+  @nullable_keys []
 
   @doc """
   Returns a map of relationship keys and their Struct name.
@@ -49,9 +59,9 @@ defmodule Stripe.BankAccount do
   @doc """
   Create a bank account.
   """
-  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(bank_account, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, bank_account, @valid_create_keys, __MODULE__, opts)
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(changes, opts \\ []) do
+    Stripe.Request.create(@plural_endpoint, changes, @schema, __MODULE__, opts)
   end
 
   @doc """
@@ -71,7 +81,7 @@ defmodule Stripe.BankAccount do
   @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
+    Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
   end
 
   @doc """
