@@ -18,9 +18,7 @@ defmodule Stripe.Event do
     :request, :type, :user_id
   ]
 
-  @relationships %{
-    created: DateTime
-  }
+  @relationships %{}
 
   @plural_endpoint "events"
 

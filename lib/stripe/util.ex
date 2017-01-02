@@ -1,26 +1,6 @@
 defmodule Stripe.Util do
   @moduledoc false
 
-  @spec get_date(map, atom | String.t) :: DateTime.t | nil
-  def get_date(m, k) do
-    case Map.get(m, k) do
-      nil -> nil
-      ts -> datetime_from_timestamp(ts)
-    end
-  end
-
-  defp datetime_from_timestamp(ts) when is_binary ts do
-    ts = case Integer.parse ts do
-      :error -> 0
-      {i, _r} -> i
-    end
-    datetime_from_timestamp ts
-  end
-
-  defp datetime_from_timestamp(ts) when is_number ts do
-    DateTime.from_unix!(ts)
-  end
-
   @doc """
   Performs a root-level conversion of map keys from strings to atoms.
 

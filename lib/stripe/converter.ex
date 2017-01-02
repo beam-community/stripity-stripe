@@ -27,10 +27,6 @@ defmodule Stripe.Converter do
 
   defp maybe_build_struct(nil, value), do: value
   defp maybe_build_struct(_module, nil), do: nil
-  defp maybe_build_struct(DateTime, value) do
-    {:ok, value} = DateTime.from_unix(value)
-    value
-  end
   defp maybe_build_struct(module, value) when is_map(value) do
     stripe_map_to_struct(module, value)
   end

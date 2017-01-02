@@ -21,9 +21,7 @@ defmodule Stripe.Plan do
     :livemode, :metadata, :name, :statement_descriptor, :trial_period_days
   ]
 
-  @relationships %{
-    created: DateTime
-  }
+  @relationships %{}
 
   @plural_endpoint "plans"
 

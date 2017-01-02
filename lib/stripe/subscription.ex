@@ -24,14 +24,7 @@ defmodule Stripe.Subscription do
   ]
 
   @relationships %{
-    created: DateTime,
-    current_period_end: DateTime,
-    current_period_start: DateTime,
-    ended_at: DateTime,
-    plan: Stripe.Plan,
-    start: DateTime,
-    trial_end: DateTime,
-    trial_start: DateTime
+    plan: Stripe.Plan
   }
 
   @plural_endpoint "subscriptions"
@@ -66,14 +59,6 @@ defmodule Stripe.Subscription do
   @nullable_keys [
     :metadata
   ]
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: Keyword.t
-  def relationships, do: @relationships
 
   @doc """
   Create a subscription.

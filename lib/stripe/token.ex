@@ -19,8 +19,7 @@ defmodule Stripe.Token do
   ]
 
   @relationships %{
-    card: Stripe.Card,
-    created: DateTime
+    card: Stripe.Card
   }
 
   @plural_endpoint "tokens"

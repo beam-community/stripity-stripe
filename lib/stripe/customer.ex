@@ -22,9 +22,7 @@ defmodule Stripe.Customer do
     :metadata
   ]
 
-  @relationships %{
-    created: DateTime
-  }
+  @relationships %{}
 
   @plural_endpoint "customers"
 

@@ -16,9 +16,7 @@ defmodule Stripe.FileUpload do
     :id, :object, :created, :purpose, :size, :type, :metadata
   ]
 
-  @relationships %{
-    created: DateTime
-  }
+  @relationships %{}
 
   @plural_endpoint "files"
 
