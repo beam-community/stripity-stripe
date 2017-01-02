@@ -17,8 +17,7 @@ defmodule Stripe.ConverterTest do
   defmodule AuthToken do
     defstruct [:id, :card, :client_ip, :created, :livemode, :type, :used]
     def relationships, do: %{
-      card: ConverterTest.CreditCard,
-      created: DateTime
+      card: ConverterTest.CreditCard
     }
   end
 
@@ -83,20 +82,7 @@ defmodule Stripe.ConverterTest do
         country: "US",
         exp_month: 8
       },
-      created: %DateTime{
-        calendar: Calendar.ISO,
-        day: 10,
-        hour: 18,
-        microsecond: {0, 0},
-        minute: 37,
-        month: 5,
-        second: 25,
-        std_offset: 0,
-        time_zone: "Etc/UTC",
-        utc_offset: 0,
-        year: 2016,
-        zone_abbr: "UTC"
-      }
+      created: 1462905445
     }
 
     result = Converter.stripe_map_to_struct(

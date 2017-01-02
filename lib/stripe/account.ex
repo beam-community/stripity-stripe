@@ -21,7 +21,8 @@ defmodule Stripe.Account do
     :charges_enabled, :country, :default_currency, :details_submitted,
     :display_name, :email, :legal_entity, :external_accounts, :managed,
     :metadata, :statement_descriptor, :support_email, :support_phone,
-    :support_url, :timezone, :transfers_enabled, :verification
+    :support_url, :timezone, :tos_acceptance, :transfers_enabled,
+    :verification
   ]
 
   @relationships %{}
