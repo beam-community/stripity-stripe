@@ -24,6 +24,10 @@ defmodule Stripe.Subscription do
   ]
 
   @relationships %{
+    created: DateTime,
+    current_period_end: DateTime,
+    current_period_start: DateTime,
+    ended_at: DateTime,
     plan: Stripe.Plan,
     start: DateTime,
     trial_end: DateTime,
@@ -32,14 +36,35 @@ defmodule Stripe.Subscription do
 
   @plural_endpoint "subscriptions"
 
-  @valid_create_keys [
-    :application_fee_percent, :coupon, :customer, :metadata, :plan, :quantity,
-    :source, :tax_percent, :trial_end
-  ]
+  @schema %{
+    application_fee_percent: [:create, :retrieve, :update],
+    cancel_at_period_end: [:retrieve],
+    canceled_at: [:retrieve],
+    coupon: [:create, :update],
+    created: [:retrieve],
+    current_period_end: [:retrieve],
+    current_period_start: [:retrieve],
+    customer: [:create, :retrieve],
+    discount: [:retrieve],
+    ended_at: [:retrieve],
+    id: [:retrieve],
+    livemode: [:retrieve],
+    metadata: [:create, :retrieve, :update],
+    object: [:retrieve],
+    plan: [:create, :retrieve, :update],
+    prorate: [:create],
+    quantity: [:create, :retrieve, :update],
+    source: [:create, :update],
+    start: [:retrieve],
+    status: [:retrieve],
+    tax_percent: [:create, :retrieve, :update],
+    trial_end: [:create, :retrieve, :update],
+    trial_period_days: [:create],
+    trial_start: [:create, :retrieve]
+  }
 
-  @valid_update_keys [
-    :application_fee_percent, :coupon, :metadata, :plan, :prorate,
-    :proration_date, :quantity, :source, :tax_percent, :trial_end
+  @nullable_keys [
+    :metadata
   ]
 
   @doc """
@@ -53,9 +78,9 @@ defmodule Stripe.Subscription do
   @doc """
   Create a subscription.
   """
-  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(subscription, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, subscription, @valid_create_keys, __MODULE__, opts)
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(changes, opts \\ []) do
+    Stripe.Request.create(@plural_endpoint, changes, @schema, __MODULE__, opts)
   end
 
   @doc """
@@ -75,7 +100,7 @@ defmodule Stripe.Subscription do
   @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
+    Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
   end
 
   @doc """

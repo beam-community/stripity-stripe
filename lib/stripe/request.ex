@@ -1,13 +1,12 @@
 defmodule Stripe.Request do
-  alias Stripe.Util
+  alias Stripe.Changeset
   alias Stripe.Converter
 
-  @spec create(String.t, struct, map, module, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
-  def create(endpoint, struct, valid_keys, module, opts) do
+  @spec create(String.t, map, map, module, Keyword.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
+  def create(endpoint, changes, schema, module, opts) do
     body =
-      struct
-      |> Map.take(valid_keys)
-      |> Util.drop_nil_keys()
+      changes
+      |> Changeset.cast(schema, :create)
 
     case Stripe.request(:post, endpoint, body, %{}, opts) do
       {:ok, result} -> {:ok, Converter.stripe_map_to_struct(module, result)}
@@ -40,13 +39,11 @@ defmodule Stripe.Request do
     end
   end
 
-  @spec update(String.t, map, map, struct, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
-  def update(endpoint, changes, valid_keys, module, opts) do
+  @spec update(String.t, map, map, struct, list, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
+  def update(endpoint, changes, schema, nullable_keys, module, opts) do
     body =
       changes
-      |> Util.map_keys_to_atoms()
-      |> Map.take(valid_keys)
-      |> Util.drop_nil_keys()
+      |> Changeset.cast(schema, :update, nullable_keys)
 
     case Stripe.request(:post, endpoint, body, %{}, opts) do
       {:ok, result} -> {:ok, Converter.stripe_map_to_struct(module, result)}

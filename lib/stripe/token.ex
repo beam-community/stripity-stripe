@@ -25,9 +25,21 @@ defmodule Stripe.Token do
 
   @plural_endpoint "tokens"
 
-  @valid_create_connect_keys [
-    :card, :customer
-  ]
+  @schema %{
+    bank_account: [:create, :retrieve],
+    card: [:create, :retrieve],
+    client_ip: [:retrieve],
+    created: [:retrieve],
+    customer: [:create],
+    id: [:retrieve],
+    livemode: [:retrieve],
+    object: [:retrieve],
+    pii: %{
+      personal_id_number: [:create]
+    },
+    type: [:retrieve],
+    used: [:retrieve]
+  }
 
   @doc """
   Returns a map of relationship keys and their Struct name.
@@ -38,7 +50,8 @@ defmodule Stripe.Token do
   def relationships, do: @relationships
 
   @doc """
-  Create a token for a Connect customer with a card belonging to that customer.
+  Create a token for a Connect customer with a card belonging to the
+  platform customer.
 
   You must pass in the account number for the Stripe Connect account
   in `opts`.
@@ -49,7 +62,21 @@ defmodule Stripe.Token do
       card: customer_card_id,
       customer: customer_id
     }
-    Stripe.Request.create(@plural_endpoint, body, @valid_create_connect_keys, __MODULE__, opts)
+    Stripe.Request.create(@plural_endpoint, body, @schema, __MODULE__, opts)
+  end
+
+  @doc """
+  Create a token for a Connect customer using the default card.
+
+  You must pass in the account number for the Stripe Connect account
+  in `opts`.
+  """
+  @spec create_with_default_card(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create_with_default_card(customer_id, opts \\ []) do
+    body = %{
+      customer: customer_id
+    }
+    Stripe.Request.create(@plural_endpoint, body, @schema, __MODULE__, opts)
   end
 
   @doc """

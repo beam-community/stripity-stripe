@@ -46,10 +46,40 @@ defmodule Stripe.Card do
 
   @relationships %{}
 
-  @valid_update_keys [
-    :address_city, :address_country, :address_line1, :address_line2,
-    :address_state, :address_zip, :exp_month, :exp_year, :metadata, :name
-  ]
+  @schema %{
+    account: [:retrieve],
+    address_city: [:retrieve, :update],
+    address_country: [:retrieve, :update],
+    address_line1: [:retrieve, :update],
+    address_line1_check: [:retrieve],
+    address_line2: [:retrieve, :update],
+    address_state: [:retrieve, :update],
+    address_zip: [:retrieve, :update],
+    address_zip_check: [:retrieve],
+    brand: [:retrieve, :update],
+    country: [:retrieve, :update],
+    currency: [:retrieve, :update],
+    customer: [:retrieve, :update],
+    cvc_check: [:retrieve, :update],
+    default_for_currency: [:create, :retrieve, :update],
+    dynamic_last4: [:retrieve],
+    exp_month: [:retrieve, :update],
+    exp_year: [:retrieve, :update],
+    external_account: [:create],
+    fingerprint: [:retrieve],
+    funding: [:retrieve],
+    id: [:retrieve],
+    last4: [:retrieve],
+    metadata: [:create, :retrieve, :update],
+    name: [:retrieve, :update],
+    object: [:retrieve],
+    recipient: [:retrieve],
+    source: [:create],
+    three_d_secure: [:retrieve],
+    tokenization_method: [:retrieve]
+  }
+
+  @nullable_keys []
 
   @doc """
   Returns a map of relationship keys and their Struct name.
@@ -115,7 +145,7 @@ defmodule Stripe.Card do
   @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(owner_type, owner_id, card_id, changes, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
+    Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
   end
 
   @doc """

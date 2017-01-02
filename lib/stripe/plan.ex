@@ -27,13 +27,23 @@ defmodule Stripe.Plan do
 
   @plural_endpoint "plans"
 
-  @valid_create_keys [
-    :id, :amount, :currency, :interval, :interval_count, :metadata, :name,
-    :statement_descriptor, :trial_period_days
-  ]
+  @schema %{
+    amount: [:create, :retrieve],
+    created: [:retrieve],
+    currency: [:create, :retrieve],
+    id: [:create, :retrieve],
+    interval: [:create, :retrieve],
+    interval_count: [:create, :retrieve],
+    livemode: [:retrieve],
+    metadata: [:create, :retrieve, :update],
+    name: [:create, :retrieve, :update],
+    object: [:retrieve],
+    statement_descriptor: [:create, :retrieve, :update],
+    trial_period_days: [:create, :retrieve, :update]
+  }
 
-  @valid_update_keys [
-    :metadata, :name, :statement_descriptor, :trial_period_days
+  @nullable_keys [
+    :metadata, :statement_descriptor
   ]
 
   @doc """
@@ -47,9 +57,9 @@ defmodule Stripe.Plan do
   @doc """
   Create a plan.
   """
-  @spec create(t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(plan, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, plan, @valid_create_keys, __MODULE__, opts)
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(changes, opts \\ []) do
+    Stripe.Request.create(@plural_endpoint, changes, @schema, __MODULE__, opts)
   end
 
   @doc """
@@ -69,7 +79,7 @@ defmodule Stripe.Plan do
   @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @valid_update_keys, __MODULE__, opts)
+    Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
   end
 
   @doc """
