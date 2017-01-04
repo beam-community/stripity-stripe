@@ -141,7 +141,7 @@ defmodule Stripe.Account do
   Schema map indicating when a particular argument can be created on, retrieved
   from, or updated on the Stripe API.
   """
-  @spec schema :: Keyword.t
+  @spec schema :: map
   def schema, do: @schema
 
   @nullable_keys [
@@ -153,7 +153,7 @@ defmodule Stripe.Account do
   Relationships must be specified for the relationship to
   be returned as a struct.
   """
-  @spec relationships :: Keyword.t
+  @spec relationships :: map
   def relationships, do: @relationships
 
   @doc """
@@ -192,7 +192,7 @@ defmodule Stripe.Account do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, __MODULE__, opts)

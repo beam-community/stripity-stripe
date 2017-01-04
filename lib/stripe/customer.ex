@@ -69,7 +69,7 @@ defmodule Stripe.Customer do
   Relationships must be specified for the relationship to
   be returned as a struct.
   """
-  @spec relationships :: Keyword.t
+  @spec relationships :: map
   def relationships, do: @relationships
 
   @doc """
@@ -94,7 +94,7 @@ defmodule Stripe.Customer do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, __MODULE__, opts)

@@ -156,7 +156,8 @@ defmodule Stripe do
   end
 
   @type method :: :get | :post | :put | :delete | :patch
-  @type headers :: %{String.t => String.t}
+  @type headers :: %{String.t => String.t} | %{}
+  @type body :: {:multipart, list} | map
   @typep http_success :: {:ok, integer, [{String.t, String.t}], String.t}
   @typep http_failure :: {:error, term}
 
@@ -185,7 +186,7 @@ defmodule Stripe do
   to comply with the expectations of the BEAM application standard.
   It is not given any children to supervise.
   """
-  @spec start(Application.start_type, any) :: :ok
+  @spec start(Application.start_type, any) :: {:error, any} | {:ok, pid} | {:ok, pid, any}
   def start(_start_type, _args) do
     import Supervisor.Spec, warn: false
 
@@ -329,7 +330,7 @@ defmodule Stripe do
 
   @doc """
   """
-  @spec request_file_upload(method, String.t, map, headers, list) :: {:ok, map} | {:error, api_error_struct}
+  @spec request_file_upload(method, String.t, body, headers, list) :: {:ok, map} | {:error, api_error_struct}
   def request_file_upload(method, endpoint, body, headers, opts) do
     {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
     {api_key, opts} = Keyword.pop(opts, :api_key)

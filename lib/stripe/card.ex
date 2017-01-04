@@ -86,7 +86,7 @@ defmodule Stripe.Card do
   Relationships must be specified for the relationship to
   be returned as a struct.
   """
-  @spec relationships :: Keyword.t
+  @spec relationships :: map
   def relationships, do: @relationships
 
   defp endpoint_for_owner(owner_type, owner_id) do
@@ -145,7 +145,7 @@ defmodule Stripe.Card do
   @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(owner_type, owner_id, card_id, changes, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, __MODULE__, opts)
   end
 
   @doc """

@@ -53,7 +53,7 @@ defmodule Stripe.ExternalAccount do
   Relationships must be specified for the relationship to
   be returned as a struct.
   """
-  @spec relationships :: Keyword.t
+  @spec relationships :: map
   def relationships, do: @relationships
 
   defp endpoint(managed_account_id) do
@@ -83,10 +83,10 @@ defmodule Stripe.ExternalAccount do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts = [connect_account: managed_account_id]) do
     endpoint = endpoint(managed_account_id) <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, __MODULE__, opts)
   end
 
   @doc """
