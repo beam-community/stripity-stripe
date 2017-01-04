@@ -1,5 +1,6 @@
 defmodule Stripe.UriTest do
   use ExUnit.Case
+  doctest Stripe.URI
 
   test "keyword list encoding" do
     assert Stripe.URI.encode_query([a: 1]) == "a=1"
@@ -34,5 +35,9 @@ defmodule Stripe.UriTest do
     assert Stripe.URI.encode_query(%{a: "poll:146%"}) == "a=poll%3A146%25"
     assert Stripe.URI.encode_query(%{a: "/\n+/ゆ"}) == "a=%2F%0A%2B%2F%E3%82%86"
     assert Stripe.URI.encode_query(%{a: "/\n+/ゆ"}) == "a=%2F%0A%2B%2F%E3%82%86"
+  end
+
+  test "nested map encoding" do
+    assert Stripe.URI.encode_query(%{a: %{b: 1}}) == "a[b]=1"
   end
 end

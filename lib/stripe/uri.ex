@@ -1,64 +1,57 @@
 defmodule Stripe.URI do
   @moduledoc false
+  @http_param_sep "&"
 
   defmacro __using__(_) do
     quote do
-      defp build_url(ext \\ "") do
-        if ext != "", do: ext = "/" <> ext
-
-        @base <> ext
-      end
+      defp build_url(""), do: @base
+      defp build_url(ext), do: @base <> "/" <> ext
     end
   end
 
   @doc """
   Takes a map and turns it into proper query values.
 
-  ## Example
-  card_data = %{
-    card: %{
-      number: 424242424242,
-      exp_year: 2014
-    }
-  }
+  ## Parameters
+    - list: a map of query parameters and values, which may themselves be maps
 
-  Stripe.URI.encode_query(card) # card[number]=424242424242&card[exp_year]=2014
+  ## Examples
+  iex> Stripe.URI.encode_query(%{"card": %{"number": 1234, "exp_year": 2014}})
+  "card[exp_year]=2014&card[number]=1234"
   """
+  @spec encode_query(Enum.t) :: String.t
   def encode_query(list) do
-    Enum.map_join list, "&", fn x ->
-      pair(x)
-    end
+    Enum.map_join list, @http_param_sep, &(pair(&1))
+  end
+
+  defp pair({key, values})
+  when is_list(values) or is_map(values) do
+    pair(to_string(key), [], values)
   end
 
   defp pair({key, value}) do
-    cond do
-      Enumerable.impl_for(value) ->
-        pair(to_string(key), [], value)
-      true ->
-        param_name = key |> to_string |> URI.encode_www_form
-        param_value = value |> to_string |> URI.encode_www_form
-
-        "#{param_name}=#{param_value}"
-    end
+    "#{encoded_string(key)}=#{encoded_string(value)}"
   end
 
   defp pair(root, parents, values) do
-    Enum.map_join values, "&", fn {key, value} ->
-      cond do
-        Enumerable.impl_for(value) ->
-          pair(root, parents ++ [key], value)
+    Enum.map_join values, @http_param_sep, fn {key, value} ->
+      new_parents = [key | parents]
+      case is_list(value) || is_map(value) do
         true ->
-          build_key(root, parents ++ [key]) <> URI.encode_www_form(to_string(value))
+          pair(root, new_parents, value)
+        _ ->
+          build_key(root, Enum.reverse(new_parents)) <> encoded_string(value)
       end
     end
   end
 
   defp build_key(root, parents) do
     path = Enum.map_join parents, "", fn x ->
-      param = x |> to_string |> URI.encode_www_form
-      "[#{param}]"
+      "[#{encoded_string(x)}]"
     end
 
     "#{root}#{path}="
   end
+
+  defp encoded_string(value), do: value |> to_string |> URI.encode_www_form
 end
