@@ -1,17 +1,19 @@
-defmodule Stripe.BankAccount do
+defmodule Stripe.ExternalAccount do
   @moduledoc """
-  Work with Stripe bank_account objects.
+  Work with Stripe external account objects.
 
   You can:
 
-  - Create a bank account
-  - Retrieve a bank account
-  - Update a bank account
-  - Delete a bank account
+  - Create an external account
+  - Retrieve an external account
+  - Update an external account
+  - Delete an external account
 
   Does not yet render lists or take options.
 
-  Stripe API reference: https://stripe.com/docs/api#bank_account
+  Probably does not yet work for credit cards.
+
+  Stripe API reference: https://stripe.com/docs/api#external_accounts
   """
 
   @type t :: %__MODULE__{}
@@ -23,8 +25,6 @@ defmodule Stripe.BankAccount do
   ]
 
   @relationships %{}
-
-  @plural_endpoint "bank_accounts"
 
   @schema %{
     account: [:retrieve],
@@ -56,40 +56,45 @@ defmodule Stripe.BankAccount do
   @spec relationships :: Keyword.t
   def relationships, do: @relationships
 
-  @doc """
-  Create a bank account.
-  """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, __MODULE__, opts)
+  defp endpoint(managed_account_id) do
+    "accounts/#{managed_account_id}/external_accounts"
   end
 
   @doc """
-  Retrieve a bank account.
+  Create an external account.
+  """
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(changes, opts = [connect_account: managed_account_id]) do
+    endpoint = endpoint(managed_account_id)
+    Stripe.Request.create(endpoint, changes, @schema, __MODULE__, opts)
+  end
+
+  @doc """
+  Retrieve an external account.
   """
   @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def retrieve(id, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
+  def retrieve(id, opts = [connect_account: managed_account_id]) do
+    endpoint = endpoint(managed_account_id) <> "/" <> id
     Stripe.Request.retrieve(endpoint, __MODULE__, opts)
   end
 
   @doc """
-  Update a bank account.
+  Update an external account.
 
   Takes the `id` and a map of changes.
   """
   @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def update(id, changes, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
+  def update(id, changes, opts = [connect_account: managed_account_id]) do
+    endpoint = endpoint(managed_account_id) <> "/" <> id
     Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
   end
 
   @doc """
-  Delete a bank account.
+  Delete an external account.
   """
   @spec delete(binary, list) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(id, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
+  def delete(id, opts = [connect_account: managed_account_id]) do
+    endpoint = endpoint(managed_account_id) <> "/" <> id
     Stripe.Request.delete(endpoint, opts)
   end
 end
