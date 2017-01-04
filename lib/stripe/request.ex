@@ -39,7 +39,7 @@ defmodule Stripe.Request do
     end
   end
 
-  @spec update(String.t, map, map, struct, list, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
+  @spec update(String.t, map, map, list, module, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
   def update(endpoint, changes, schema, nullable_keys, module, opts) do
     body =
       changes

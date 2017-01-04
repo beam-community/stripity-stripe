@@ -25,7 +25,7 @@ defmodule Stripe.FileUpload do
   Relationships must be specified for the relationship to
   be returned as a struct.
   """
-  @spec relationships :: Keyword.t
+  @spec relationships :: map
   def relationships, do: @relationships
 
   @doc """
