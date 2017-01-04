@@ -97,7 +97,7 @@ defmodule Stripe.Customer do
   @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, __MODULE__, opts)
   end
 
   @doc """
