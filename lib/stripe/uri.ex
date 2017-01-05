@@ -10,13 +10,13 @@ defmodule Stripe.URI do
   end
 
   @doc """
-  Takes a map and turns it into proper query values.
+  Takes a keyword/map and turns it into proper query values.
 
   ## Parameters
-    - list: a map of query parameters and values, which may themselves be maps
+    - list: a keyword/map of query parameters and values, which may also be enum
 
   ## Examples
-  iex> Stripe.URI.encode_query(%{"card": %{"number": 1234, "exp_year": 2014}})
+  iex> Stripe.URI.encode_query(%{card: %{number: 1234, exp_year: 2014}})
   "card[exp_year]=2014&card[number]=1234"
   """
   @spec encode_query(Enum.t) :: String.t
@@ -26,7 +26,7 @@ defmodule Stripe.URI do
 
   defp pair({key, values})
   when is_list(values) or is_map(values) do
-    pair(to_string(key), [], values)
+    pair(key, [], values)
   end
 
   defp pair({key, value}) do
