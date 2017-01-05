@@ -131,8 +131,8 @@ defmodule Stripe.Customers do
     {:ok, customers} = Stripe.Customers.list(starting_after, 20)
   ```
   """
-  def list(starting_after,limit \\ 10) do
-    list Stripe.config_or_env_key, "", limit
+  def list(starting_after \\ "", limit \\ 10) do
+    list Stripe.config_or_env_key, starting_after, limit
   end
 
   @doc """

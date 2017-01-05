@@ -19,7 +19,6 @@ defmodule Stripe.Connect do
   crsf token to be sent to stripe, which they send you back at the end of the workflow to further secure the interaction. Make sure you verify this token yourself on reception of the workflow callback.
   """
   def generate_button_url( csrf_token ) do
-    client_id = Stripe.config_or_env_platform_client_id
     url = base_url() <> "oauth/authorize?response_type=code"
     url = url <> "&scope=read_write"
     url = url <> "&client_id=#{Stripe.config_or_env_platform_client_id}"
@@ -33,21 +32,21 @@ defmodule Stripe.Connect do
 
   @doc """
   Execute the oauth callback to Stripe using the code supplied in the request parameter of the oauth redirect at the end of the onboarding workflow.
-# Example
-```
-{:ok, resp} = Stripe.Connect.oauth_token_callback code
-IO.inspect resp
-%{
-    token_type: "bearer",
-    stripe_publishable_key: "PUBLISHABLE_KEY",
-    scope: "read_write",
-    livemode: false,
-    stripe_user_id: "USER_ID",
-    refresh_token: "REFRESH_TOKEN",
-    access_token: "ACCESS_TOKEN"
-}
+  # Example
+  ```
+  {:ok, resp} = Stripe.Connect.oauth_token_callback code
+  IO.inspect resp
+  %{
+      token_type: "bearer",
+      stripe_publishable_key: "PUBLISHABLE_KEY",
+      scope: "read_write",
+      livemode: false,
+      stripe_user_id: "USER_ID",
+      refresh_token: "REFRESH_TOKEN",
+      access_token: "ACCESS_TOKEN"
+  }
 
-```
+  ```
 
   """
   def oauth_token_callback(code) do
@@ -97,7 +96,7 @@ IO.inspect resp
 
     case body[:stripe_user_id] == stripe_user_id do
         true -> {:ok, true}
-        false -> {:error, body[:error_description]}  
+        false -> {:error, body[:error_description]}
     end
   end
 end

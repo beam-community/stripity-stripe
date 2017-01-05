@@ -8,7 +8,7 @@
 
   All calls have a version with accept a key parameter for leveraging Connect.
 
-  (API ref:https://stripe.com/docs/api#invoices) 
+  (API ref:https://stripe.com/docs/api#invoices)
   """
 
   @endpoint "invoices"
@@ -31,42 +31,42 @@
     |> Stripe.Util.handle_stripe_response
   end
 
-  @doc """
-  Returns a list of invoices for a given customer
+  # @doc """
+  # Returns a list of invoices for a given customer
 
-  ## Example
+  # ## Example
 
-  ```
-  {:ok, invoices} = Stripe.Customers.get_invoices "customer_id"
-  ```
+  # ```
+  # {:ok, invoices} = Stripe.Customers.get_invoices "customer_id"
+  # ```
 
-  """
- # def get_invoices(id, params \\ []) do
- #   get_invoices id, params, Stripe.config_or_env_key
- # end
+  # """
+  # def get_invoices(id, params \\ []) do
+  #   get_invoices id, params, Stripe.config_or_env_key
+  # end
 
-  @doc """
-  Returns a list of invoices for a given customer
-  Using a given stripe key to apply against the account associated.
+  # @doc """
+  # Returns a list of invoices for a given customer
+  # Using a given stripe key to apply against the account associated.
 
-  ## Example
+  # ## Example
 
-  ```
-  {:ok, invoices} = Stripe.Customers.get_invoices "customer_id", key
-  ```
-  """
- # def get_invoices(id, params, key) do
- #   params = Keyword.put_new params, :limit, 10
- #   params = Keyword.put_new params, :customer, id
- #   Stripe.Util.list "invoices", key, starting_after, limit
- # end
+  # ```
+  # {:ok, invoices} = Stripe.Customers.get_invoices "customer_id", key
+  # ```
+  # """
+  # def get_invoices(id, params, key) do
+  #   params = Keyword.put_new params, :limit, 10
+  #   params = Keyword.put_new params, :customer, id
+  #   Stripe.Util.list "invoices", key, starting_after, limit
+  # end
 
   @doc """
   Count number of invoices.
   ## Example
 
   ```
-  {:ok, cnt} = Stripe.Invoices.count 
+  {:ok, cnt} = Stripe.Invoices.count
   ```
   """
   def count do
@@ -79,7 +79,7 @@
   ## Example
 
   ```
-  {:ok, cnt} = Stripe.Invoices.count key 
+  {:ok, cnt} = Stripe.Invoices.count key
   ```
   """
   def count(key) do
