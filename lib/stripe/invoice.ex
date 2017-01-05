@@ -18,7 +18,7 @@ defmodule Stripe.Invoice do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :amount, :amount_due, :application_fee, :attempt_count, :attempted,
+    :id, :amount_due, :application_fee, :attempt_count, :attempted,
     :charge, :closed, :currency, :customer, :date, :description, :discount,
     :ending_balance, :forgiven, :livemode, :metadata,
     :next_payment_attempt, :paid, :period_end, :period_start, :receipt_number,
@@ -32,7 +32,6 @@ defmodule Stripe.Invoice do
   @plural_endpoint "invoices"
 
   @schema %{
-    amount: [:receive],
     amount_due: [:receive],
     application_fee: [:create, :receive, :update],
     attempt_count: [:receive],
