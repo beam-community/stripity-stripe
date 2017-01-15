@@ -30,20 +30,33 @@ defmodule Stripe.Converter do
   defp convert_key(key) when is_atom(key), do: to_string(key)
   defp convert_key(key) when is_binary(key), do: String.to_atom(key)
 
+  @supported_objects ~w(account bank_account card customer event external_account file_upload invoice plan subscription token)
+
+  defp convert_value(%{"object" => "list"} = value), do: convert_map(value)
+
   # converts maps that are actually Stripe objects
   defp convert_value(%{"object" => object_name} = value) when is_binary(object_name) do
-    object_name
-    |> Stripe.Util.object_name_to_module
-    |> stripe_map_to_struct(value)
+    case Enum.member?(@supported_objects, object_name) do
+      true -> convert_stripe_object(value)
+      false -> convert_map(value)
+    end
   end
 
   # converts plain maps
-  defp convert_value(value) when is_map(value) do
+  defp convert_value(value) when is_map(value), do: convert_map(value)
+
+  # converts anything else
+  defp convert_value(value), do: value
+
+  defp convert_map(value) do
     Enum.reduce(value, %{}, fn({key, value}, acc) ->
       Map.put(acc, String.to_atom(key), convert_value(value))
     end)
   end
 
-  # converts anything else
-  defp convert_value(value), do: value
+  defp convert_stripe_object(%{"object" => object_name} = value) do
+    object_name
+    |> Stripe.Util.object_name_to_module
+    |> stripe_map_to_struct(value)
+  end
 end
