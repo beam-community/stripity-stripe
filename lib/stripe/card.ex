@@ -44,8 +44,6 @@ defmodule Stripe.Card do
     :tokenization_method
   ]
 
-  @relationships %{}
-
   @schema %{
     account: [:retrieve],
     address_city: [:retrieve, :update],
@@ -80,14 +78,6 @@ defmodule Stripe.Card do
   }
 
   @nullable_keys []
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: map
-  def relationships, do: @relationships
 
   defp endpoint_for_owner(owner_type, owner_id) do
     case owner_type do

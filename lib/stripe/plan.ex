@@ -21,8 +21,6 @@ defmodule Stripe.Plan do
     :livemode, :metadata, :name, :statement_descriptor, :trial_period_days
   ]
 
-  @relationships %{}
-
   @plural_endpoint "plans"
 
   @schema %{
@@ -43,14 +41,6 @@ defmodule Stripe.Plan do
   @nullable_keys [
     :metadata, :statement_descriptor
   ]
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: map
-  def relationships, do: @relationships
 
   @doc """
   Create a plan.

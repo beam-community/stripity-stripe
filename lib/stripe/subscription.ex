@@ -23,18 +23,6 @@ defmodule Stripe.Subscription do
     :start, :status, :tax_percent, :trial_end, :trial_start
   ]
 
-  @relationships %{
-    plan: Stripe.Plan
-  }
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: map
-  def relationships, do: @relationships
-
   @plural_endpoint "subscriptions"
 
   @schema %{

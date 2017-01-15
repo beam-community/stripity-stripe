@@ -58,4 +58,16 @@ defmodule Stripe.Util do
 
   def atomize_key(k) when is_binary(k), do: String.to_atom(k)
   def atomize_key(k), do: k
+
+  @spec object_name_to_module(String.t) :: module
+  def object_name_to_module("bank_account"), do: Stripe.ExternalAccount
+  def object_name_to_module(object_name) do
+    module_name =
+      object_name
+      |> String.split("_")
+      |> Enum.map(&String.capitalize/1)
+      |> Enum.join("")
+
+    Module.concat("Stripe", module_name)
+  end
 end
