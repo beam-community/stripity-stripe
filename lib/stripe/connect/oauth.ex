@@ -36,16 +36,6 @@ defmodule Stripe.Connect.OAuth do
       :access_token, :livemode, :refresh_token, :scope, :stripe_user_id,
       :stripe_publishable_key, :token_type
     ]
-
-    @relationships %{}
-
-    @doc """
-    Returns a map of relationship keys and their Struct name.
-    Relationships must be specified for the relationship to
-    be returned as a struct.
-    """
-    @spec relationships :: map
-    def relationships, do: @relationships
   end
 
   defmodule DeauthorizeResponse do

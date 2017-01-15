@@ -14,21 +14,11 @@ defmodule Stripe.Event do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :object, :api_version, :created, :livemode, :pending_webhooks,
+    :id, :object, :api_version, :created, :data, :livemode, :pending_webhooks,
     :request, :type, :user_id
   ]
 
-  @relationships %{}
-
   @plural_endpoint "events"
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: map
-  def relationships, do: @relationships
 
   @doc """
   Retrieve an event.

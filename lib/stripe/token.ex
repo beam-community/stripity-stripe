@@ -18,10 +18,6 @@ defmodule Stripe.Token do
     :id, :card, :client_ip, :created, :livemode, :type, :used
   ]
 
-  @relationships %{
-    card: Stripe.Card
-  }
-
   @plural_endpoint "tokens"
 
   @schema %{
@@ -39,14 +35,6 @@ defmodule Stripe.Token do
     type: [:retrieve],
     used: [:retrieve]
   }
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: map
-  def relationships, do: @relationships
 
   @doc """
   Create a token for a Connect customer with a card belonging to the

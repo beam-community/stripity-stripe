@@ -27,8 +27,6 @@ defmodule Stripe.Invoice do
     :webhooks_delivered_at
   ]
 
-  @relationships %{}
-
   @plural_endpoint "invoices"
 
   @schema %{
@@ -65,14 +63,6 @@ defmodule Stripe.Invoice do
   }
 
   @nullable_keys []
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: Keyword.t
-  def relationships, do: @relationships
 
   @doc """
   Create an invoice.

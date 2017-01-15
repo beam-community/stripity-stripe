@@ -22,8 +22,6 @@ defmodule Stripe.Customer do
     :metadata
   ]
 
-  @relationships %{}
-
   @plural_endpoint "customers"
 
   @address_map %{
@@ -63,14 +61,6 @@ defmodule Stripe.Customer do
   @nullable_keys [
     :business_vat_id, :description, :email, :metadata
   ]
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: map
-  def relationships, do: @relationships
 
   @doc """
   Create a customer.

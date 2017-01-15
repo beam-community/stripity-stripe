@@ -24,11 +24,9 @@ defmodule Stripe.ExternalAccount do
     :last4, :metadata, :routing_number, :status
   ]
 
-  @relationships %{}
-
   @schema %{
     account: [:retrieve],
-    account_number: :string,
+    account_number: [:retrieve],
     account_holder_name: [:retrieve, :update],
     account_holder_type: [:retrieve, :update],
     bank_name: [:retrieve],
@@ -47,14 +45,6 @@ defmodule Stripe.ExternalAccount do
   }
 
   @nullable_keys []
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: map
-  def relationships, do: @relationships
 
   defp endpoint(managed_account_id) do
     "accounts/#{managed_account_id}/external_accounts"

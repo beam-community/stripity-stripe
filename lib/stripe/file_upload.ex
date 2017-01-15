@@ -16,17 +16,7 @@ defmodule Stripe.FileUpload do
     :id, :object, :created, :purpose, :size, :type, :metadata
   ]
 
-  @relationships %{}
-
   @plural_endpoint "files"
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: map
-  def relationships, do: @relationships
 
   @doc """
   Create a file according to Stripe's file_upload rules.

@@ -25,8 +25,6 @@ defmodule Stripe.Account do
     :verification
   ]
 
-  @relationships %{}
-
   @singular_endpoint "account"
   @plural_endpoint "accounts"
 
@@ -147,14 +145,6 @@ defmodule Stripe.Account do
   @nullable_keys [
     :metadata, :transfer_statement_descriptor
   ]
-
-  @doc """
-  Returns a map of relationship keys and their Struct name.
-  Relationships must be specified for the relationship to
-  be returned as a struct.
-  """
-  @spec relationships :: map
-  def relationships, do: @relationships
 
   @doc """
   Create an account.
