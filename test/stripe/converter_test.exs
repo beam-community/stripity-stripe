@@ -91,56 +91,7 @@ defmodule Stripe.ConverterTest do
     }
   end
 
-  @event_response %{
-    "id" => "evt_19YEx1BKl1F6IRFfb1cFLHzZ",
-    "object" => "event",
-    "api_version" => "2016-07-06",
-    "created" => 1483537031,
-    "data" => %{
-      "object" => %{
-        "id" => "cus_9ryX7lUQ4Dcpf7",
-        "object" => "customer",
-        "account_balance" => 0,
-        "created" => 1483535628,
-        "currency" => nil,
-        "default_source" => nil,
-        "delinquent" => false,
-        "description" => nil,
-        "discount" => nil,
-        "email" => "test2@mail.com",
-        "livemode" => false,
-        "metadata" => %{},
-        "shipping" => nil,
-        "sources" => %{
-          "object" => "list",
-          "data" => [],
-          "has_more" => false,
-          "total_count" => 0,
-          "url" => "/v1/customers/cus_9ryX7lUQ4Dcpf7/sources"
-        },
-        "subscriptions" => %{
-          "object" => "list",
-          "data" => [],
-          "has_more" => false,
-          "total_count" => 0,
-          "url" => "/v1/customers/cus_9ryX7lUQ4Dcpf7/subscriptions"
-        }
-      },
-      "previous_attributes" => %{
-        "description" => "testcustomer",
-        "email" => "test@mail.com",
-        "metadata" => %{
-          "test" => "key"
-        }
-      }
-    },
-    "livemode" => false,
-    "pending_webhooks" => 0,
-    "request" => "req_9ryusbEBenV0BX",
-    "type" => "customer.updated"
-  }
-
-  test "converts an event response properly" do
+  test "converts an object containing another object properly" do
     expected_result = %Stripe.Event{
       api_version: "2016-07-06",
       created: 1483537031,
@@ -156,7 +107,19 @@ defmodule Stripe.ConverterTest do
           email: "test2@mail.com",
           id: "cus_9ryX7lUQ4Dcpf7",
           livemode: false,
-          metadata: %{}
+          metadata: %{},
+          sources: %Stripe.List{
+            data: [],
+            has_more: false,
+            total_count: 0,
+            url: "/v1/customers/cus_9ryX7lUQ4Dcpf7/sources"
+          },
+          subscriptions: %Stripe.List{
+            data: [],
+            has_more: false,
+            total_count: 0,
+            url: "/v1/customers/cus_9ryX7lUQ4Dcpf7/subscriptions"
+          }
         },
         previous_attributes: %{
           description: "testcustomer",
@@ -173,7 +136,103 @@ defmodule Stripe.ConverterTest do
       user_id: nil
     }
 
-    result = Converter.stripe_map_to_struct(Stripe.Event, @event_response)
+    fixture = Helper.load_fixture("event_with_customer.json")
+    result = Converter.stripe_map_to_struct(Stripe.Event, fixture)
+
+    assert result == expected_result
+  end
+
+  test "converts a list response properly" do
+    expected_result = %Stripe.List{
+      data: [
+        %Stripe.Card{
+          id: "card_19YDiuBKl1F6IRFflldIp6Dc",
+          address_city: nil,
+          address_country: nil,
+          address_line1: nil,
+          address_line1_check: nil,
+          address_line2: nil,
+          address_state: nil,
+          address_zip: nil,
+          address_zip_check: nil,
+          brand: "Visa",
+          country: "US",
+          customer: "cus_9ryX7lUQ4Dcpf7",
+          cvc_check: nil,
+          dynamic_last4: nil,
+          exp_month: 8,
+          exp_year: 2018,
+          funding: "credit",
+          last4: "4242",
+          metadata: %{},
+          name: nil,
+          tokenization_method: nil
+        },
+        %Stripe.Card{
+          id: "card_abcdiuBKl1F6IRFflldIp6Dc",
+          address_city: nil,
+          address_country: nil,
+          address_line1: nil,
+          address_line1_check: nil,
+          address_line2: nil,
+          address_state: nil,
+          address_zip: nil,
+          address_zip_check: nil,
+          brand: "Visa",
+          country: "US",
+          customer: "cus_9ryX7lUQ4Dcpf7",
+          cvc_check: nil,
+          dynamic_last4: nil,
+          exp_month: 12,
+          exp_year: 2020,
+          funding: "credit",
+          last4: "4242",
+          metadata: %{},
+          name: nil,
+          tokenization_method: nil
+        }
+      ],
+      has_more: false,
+      total_count: 2,
+      url: "/v1/customers/cus_9ryX7lUQ4Dcpf7/sources"
+    }
+
+    fixture = Helper.load_fixture("card_list.json")
+    result = Converter.stripe_map_to_struct(Stripe.List, fixture)
+
+    assert result == expected_result
+  end
+
+  test "converts an object containing a list properly" do
+    expected_result = %Stripe.Customer{
+      id: "cus_9ryX7lUQ4Dcpf7",
+      account_balance: 0,
+      created: 1483535628,
+      currency: "usd",
+      default_source: nil,
+      delinquent: false,
+      description: nil,
+      discount: nil,
+      email: "test2@mail.com",
+      livemode: false,
+      metadata: %{},
+      shipping: nil,
+      sources: %Stripe.List{
+        data: [],
+        has_more: false,
+        total_count: 0,
+        url: "/v1/customers/cus_9ryX7lUQ4Dcpf7/sources"
+      },
+      subscriptions: %Stripe.List{
+        data: [],
+        has_more: false,
+        total_count: 0,
+        url: "/v1/customers/cus_9ryX7lUQ4Dcpf7/subscriptions"
+      }
+    }
+
+    fixture = Helper.load_fixture("customer.json")
+    result = Converter.stripe_map_to_struct(Stripe.Customer, fixture)
 
     assert result == expected_result
   end

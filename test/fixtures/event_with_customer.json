@@ -1,0 +1,52 @@
+{
+  "id": "evt_19YEx1BKl1F6IRFfb1cFLHzZ",
+  "object": "event",
+  "api_version": "2016-07-06",
+  "created": 1483537031,
+  "data": {
+    "object": {
+      "id": "cus_9ryX7lUQ4Dcpf7",
+      "object": "customer",
+      "account_balance": 0,
+      "created": 1483535628,
+      "currency": null,
+      "default_source": null,
+      "delinquent": false,
+      "description": null,
+      "discount": null,
+      "email": "test2@mail.com",
+      "livemode": false,
+      "metadata": {
+      },
+      "shipping": null,
+      "sources": {
+        "object": "list",
+        "data": [
+        ],
+        "has_more": false,
+        "total_count": 0,
+        "url": "/v1/customers/cus_9ryX7lUQ4Dcpf7/sources"
+      },
+      "subscriptions": {
+        "object": "list",
+        "data": [
+
+        ],
+        "has_more": false,
+        "total_count": 0,
+        "url": "/v1/customers/cus_9ryX7lUQ4Dcpf7/subscriptions"
+      }
+    },
+    "previous_attributes": {
+      "description": "testcustomer",
+      "email": "test@mail.com",
+      "metadata": {
+        "test": "key"
+      }
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 0,
+  "request": "req_9ryusbEBenV0BX",
+  "type": "customer.updated"
+}
