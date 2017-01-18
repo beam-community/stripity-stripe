@@ -15,7 +15,8 @@ defmodule Stripe.Token do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :card, :client_ip, :created, :livemode, :type, :used
+    :id, :object,
+    :card, :client_ip, :created, :livemode, :type, :used
   ]
 
   @plural_endpoint "tokens"

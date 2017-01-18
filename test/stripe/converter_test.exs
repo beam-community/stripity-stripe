@@ -64,6 +64,7 @@ defmodule Stripe.ConverterTest do
       id: "token_id",
       used: false,
       card: %Stripe.Card{
+        object: "card",
         brand: "Visa",
         country: "US",
         exp_month: 8
@@ -97,6 +98,8 @@ defmodule Stripe.ConverterTest do
       created: 1483537031,
       data: %{
         object: %Stripe.Customer{
+          id: "cus_9ryX7lUQ4Dcpf7",
+          object: "customer",
           account_balance: 0,
           business_vat_id: nil,
           created: 1483535628,
@@ -105,16 +108,17 @@ defmodule Stripe.ConverterTest do
           delinquent: false,
           description: nil,
           email: "test2@mail.com",
-          id: "cus_9ryX7lUQ4Dcpf7",
           livemode: false,
           metadata: %{},
           sources: %Stripe.List{
+            object: "list",
             data: [],
             has_more: false,
             total_count: 0,
             url: "/v1/customers/cus_9ryX7lUQ4Dcpf7/sources"
           },
           subscriptions: %Stripe.List{
+            object: "list",
             data: [],
             has_more: false,
             total_count: 0,
@@ -144,9 +148,11 @@ defmodule Stripe.ConverterTest do
 
   test "converts a list response properly" do
     expected_result = %Stripe.List{
+      object: "list",
       data: [
         %Stripe.Card{
           id: "card_19YDiuBKl1F6IRFflldIp6Dc",
+          object: "card",
           address_city: nil,
           address_country: nil,
           address_line1: nil,
@@ -170,6 +176,7 @@ defmodule Stripe.ConverterTest do
         },
         %Stripe.Card{
           id: "card_abcdiuBKl1F6IRFflldIp6Dc",
+          object: "card",
           address_city: nil,
           address_country: nil,
           address_line1: nil,
@@ -206,6 +213,7 @@ defmodule Stripe.ConverterTest do
   test "converts an object containing a list properly" do
     expected_result = %Stripe.Customer{
       id: "cus_9ryX7lUQ4Dcpf7",
+      object: "customer",
       account_balance: 0,
       created: 1483535628,
       currency: "usd",
@@ -218,12 +226,14 @@ defmodule Stripe.ConverterTest do
       metadata: %{},
       shipping: nil,
       sources: %Stripe.List{
+        object: "list",
         data: [],
         has_more: false,
         total_count: 0,
         url: "/v1/customers/cus_9ryX7lUQ4Dcpf7/sources"
       },
       subscriptions: %Stripe.List{
+        object: "list",
         data: [],
         has_more: false,
         total_count: 0,

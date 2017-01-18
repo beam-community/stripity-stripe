@@ -19,7 +19,8 @@ defmodule Stripe.ExternalAccount do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :object, :account, :account_holder_name, :account_holder_type,
+    :id, :object,
+    :account, :account_holder_name, :account_holder_type,
     :bank_name, :country, :currency, :default_for_currency, :fingerprint,
     :last4, :metadata, :routing_number, :status
   ]

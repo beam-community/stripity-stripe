@@ -17,7 +17,8 @@ defmodule Stripe.Customer do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :account_balance, :business_vat_id, :created, :currency,
+    :id, :object,
+    :account_balance, :business_vat_id, :created, :currency,
     :default_source, :delinquent, :description, :discount, :email,
     :livemode, :metadata, :shipping, :sources, :subscriptions
   ]

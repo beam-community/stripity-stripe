@@ -18,13 +18,14 @@ defmodule Stripe.Invoice do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :amount_due, :application_fee, :attempt_count, :attempted,
+    :id, :object,
+    :amount_due, :application_fee, :attempt_count, :attempted,
     :charge, :closed, :currency, :customer, :date, :description, :discount,
     :ending_balance, :forgiven, :livemode, :metadata,
-    :next_payment_attempt, :paid, :period_end, :period_start, :receipt_number,
-    :starting_balance, :statement_descriptor, :subscription,
-    :subscription_proration_date, :subtotal, :tax, :tax_percent, :total,
-    :webhooks_delivered_at
+    :next_payment_attempt, :paid, :period_end, :period_start,
+    :receipt_number, :starting_balance, :statement_descriptor,
+    :subscription, :subscription_proration_date, :subtotal, :tax,
+    :tax_percent, :total, :webhooks_delivered_at
   ]
 
   @plural_endpoint "invoices"

@@ -14,7 +14,8 @@ defmodule Stripe.Event do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :object, :api_version, :created, :data, :livemode, :pending_webhooks,
+    :id, :object,
+    :api_version, :created, :data, :livemode, :pending_webhooks,
     :request, :type, :user_id
   ]
 
