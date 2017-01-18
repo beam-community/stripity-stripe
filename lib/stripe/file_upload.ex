@@ -13,7 +13,8 @@ defmodule Stripe.FileUpload do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :object, :created, :purpose, :size, :type, :metadata
+    :id, :object,
+    :created, :purpose, :size, :type, :metadata
   ]
 
   @plural_endpoint "files"

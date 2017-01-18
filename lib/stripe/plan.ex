@@ -17,7 +17,8 @@ defmodule Stripe.Plan do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :amount, :created, :currency, :interval, :interval_count,
+    :id, :object,
+    :amount, :created, :currency, :interval, :interval_count,
     :livemode, :metadata, :name, :statement_descriptor, :trial_period_days
   ]
 
