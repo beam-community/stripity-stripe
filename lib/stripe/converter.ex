@@ -6,29 +6,17 @@ defmodule Stripe.Converter do
   """
   @spec stripe_map_to_struct(module, %{String.t => any}) :: struct
   def stripe_map_to_struct(module, response) do
-    [_|struct_keys] = Map.keys(module.__struct__)
+    struct_keys = Map.keys(module.__struct__) |> List.delete(:__struct__)
 
     processed_map =
       Enum.reduce(struct_keys, %{}, fn key, acc ->
-        value =
-          fetch_value(response, key)
-          |> convert_value()
-
-        Map.put(acc, key, value)
+        string_key = to_string(key)
+        converted_value = Map.get(response, string_key) |> convert_value()
+        Map.put(acc, key, converted_value)
       end)
 
     struct(module, processed_map)
   end
-
-  defp fetch_value(response, key) do
-    case Map.fetch(response, key) do
-      {:ok, value} -> value
-      :error -> Map.get(response, convert_key(key))
-    end
-  end
-
-  defp convert_key(key) when is_atom(key), do: to_string(key)
-  defp convert_key(key) when is_binary(key), do: String.to_atom(key)
 
   @supported_objects ~w(account bank_account card customer event external_account file_upload invoice list plan subscription token)
 
