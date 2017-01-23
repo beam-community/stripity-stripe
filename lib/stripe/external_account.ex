@@ -57,7 +57,7 @@ defmodule Stripe.ExternalAccount do
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts = [connect_account: managed_account_id]) do
     endpoint = endpoint(managed_account_id)
-    Stripe.Request.create(endpoint, changes, @schema, __MODULE__, opts)
+    Stripe.Request.create(endpoint, changes, @schema, opts)
   end
 
   @doc """
@@ -66,7 +66,7 @@ defmodule Stripe.ExternalAccount do
   @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts = [connect_account: managed_account_id]) do
     endpoint = endpoint(managed_account_id) <> "/" <> id
-    Stripe.Request.retrieve(endpoint, __MODULE__, opts)
+    Stripe.Request.retrieve(endpoint, opts)
   end
 
   @doc """
@@ -77,7 +77,7 @@ defmodule Stripe.ExternalAccount do
   @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts = [connect_account: managed_account_id]) do
     endpoint = endpoint(managed_account_id) <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, __MODULE__, opts)
+    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
   end
 
   @doc """
