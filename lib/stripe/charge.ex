@@ -42,7 +42,7 @@ defmodule Stripe.Charge do
     capture: [:create],
     captured: [:retrieve],
     created: [:retrieve],
-    currency: [:retrieve],
+    currency: [:create, :retrieve],
     customer: [:create, :retrieve],
     description: [:create, :retrieve, :update],
     destination: [:create, :retrieve],
@@ -78,6 +78,14 @@ defmodule Stripe.Charge do
   }
 
   @nullable_keys []
+
+  @doc """
+  Create a charge.
+  """
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(changes, opts \\ []) do
+    Stripe.Request.create(@plural_endpoint, changes, @schema, __MODULE__, opts)
+  end
 
   @doc """
   Retrieve a charge.
