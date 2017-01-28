@@ -4,7 +4,7 @@ defmodule Stripe.Mixfile do
   def project do
     [
       app: :stripity_stripe,
-      deps: deps,
+      deps: deps(),
       description: description(),
       elixir: "~> 1.3",
       package: package(),
