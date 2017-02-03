@@ -77,8 +77,6 @@ defmodule Stripe.Charge do
     transfer: [:retrieve]
   }
 
-  @nullable_keys []
-
   @doc """
   Create a charge.
   """
