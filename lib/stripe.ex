@@ -190,9 +190,10 @@ defmodule Stripe do
   def start(_start_type, _args) do
     import Supervisor.Spec, warn: false
 
-    children = case use_pool? do
-      true -> [:hackney_pool.child_spec(@pool_name, get_pool_options())]
-      _ -> []
+    children = if use_pool?() do
+      [:hackney_pool.child_spec(@pool_name, get_pool_options())]
+    else
+      []
     end
 
     opts = [strategy: :one_for_one, name: Stripe.Supervisor]
