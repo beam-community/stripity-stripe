@@ -62,8 +62,7 @@ defmodule Stripe.Util do
     module_name =
       object_name
       |> String.split("_")
-      |> Enum.map(&String.capitalize/1)
-      |> Enum.join("")
+      |> Enum.map_join("", &String.capitalize/1)
 
     Module.concat("Stripe", module_name)
   end
