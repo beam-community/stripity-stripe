@@ -29,14 +29,13 @@ defmodule Stripe.Util do
   }
   """
   def map_keys_to_atoms(m) do
-    Enum.map(m, fn
+    Enum.into(m, %{}, fn
       {k, v} when is_binary(k)  ->
         a = String.to_existing_atom(k)
         {a, v}
       entry ->
         entry
     end)
-    |> Enum.into(%{})
   end
 
   def string_map_to_atoms([string_key_map]) do
@@ -48,9 +47,7 @@ defmodule Stripe.Util do
   end
 
   def atomize_keys(map = %{}) do
-    map
-    |> Enum.map(fn {k, v} -> {atomize_key(k), atomize_keys(v)} end)
-    |> Enum.into(%{})
+    Enum.into(map, %{}, fn {k, v} -> {atomize_key(k), atomize_keys(v)} end)
   end
   def atomize_keys([head | rest]), do: [atomize_keys(head) | atomize_keys(rest)]
   # Default
@@ -65,8 +62,7 @@ defmodule Stripe.Util do
     module_name =
       object_name
       |> String.split("_")
-      |> Enum.map(&String.capitalize/1)
-      |> Enum.join("")
+      |> Enum.map_join("", &String.capitalize/1)
 
     Module.concat("Stripe", module_name)
   end
