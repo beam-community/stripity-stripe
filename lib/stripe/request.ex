@@ -57,7 +57,7 @@ defmodule Stripe.Request do
     |> handle_result
   end
 
-  @spec retrieve_all(function) :: {:ok, [t]} | {:error, Stripe.api_error_struct}
+  @spec retrieve_all(function) :: {:ok, [struct]} | {:error, Stripe.api_error_struct}
   def retrieve_all(retrieve_many, opts \\ []) do
     try do
       all =
