@@ -8,5 +8,12 @@ defmodule Stripe.RequestTest do
       result = Stripe.Request.retrieve_all(retrieve_many, opts)
       assert result == {:error, "error"}
     end
+
+    test "handles no more correctly" do
+      opts = []
+      retrieve_many = fn _ -> {:ok, false, [:a, :b, :c]} end
+      result = Stripe.Request.retrieve_all(retrieve_many, opts)
+      assert result == {:ok, [:a, :b, :c]}
+    end
   end
 end
