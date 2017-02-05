@@ -128,6 +128,28 @@ defmodule Stripe.Card do
     Stripe.Request.retrieve(endpoint, __MODULE__, opts)
   end
 
+  @spec retrieve_many(source, String.t, Keyword.t) :: {:ok, boolean, [t]} | {:error, Stripe.api_error_struct}
+  def retrieve_many(owner_type, owner_id, opts \\ []) do
+    query =
+      %{object: "card"}
+      |> Util.put_if_non_nil_opt(:starting_after, opts)
+      |> Util.put_if_non_nil_opt(:ending_before, opts)
+      |> Util.put_if_non_nil_opt(:limit, opts)
+      |> URI.encode_query
+    endpoint = endpoint_for_owner(owner_type, owner_id) <> "?" <> query
+
+    Stripe.Request.retrieve_many(endpoint, __MODULE__, opts)
+  end
+
+  @spec retrieve_all(source, String.t, Keyword.t) :: {:ok, [t]}
+  def retrieve_all(owner_type, owner_id, opts \\ []) do
+    all =
+      fn opts_list -> retrieve_many(owner_type, owner_id, opts_list) end
+      |> Stripe.Request.stream(opts)
+      |> Enum.to_list
+    {:ok, all}
+  end
+
   @doc """
   Update a card.
 
