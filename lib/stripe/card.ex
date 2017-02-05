@@ -141,13 +141,9 @@ defmodule Stripe.Card do
     Stripe.Request.retrieve_many(endpoint, __MODULE__, opts)
   end
 
-  @spec retrieve_all(source, String.t, Keyword.t) :: {:ok, [t]}
+  @spec retrieve_all(source, String.t, Keyword.t) :: {:ok, [t]} | {:error, Stripe.api_error_struct}
   def retrieve_all(owner_type, owner_id, opts \\ []) do
-    all =
-      fn opts_list -> retrieve_many(owner_type, owner_id, opts_list) end
-      |> Stripe.Request.stream(opts)
-      |> Enum.to_list
-    {:ok, all}
+    Stripe.Stquest.retrieve_all(fn opts_list -> retrieve_many(owner_type, owner_id, opts_list) end)
   end
 
   @doc """

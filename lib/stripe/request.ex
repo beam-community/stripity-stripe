@@ -57,7 +57,20 @@ defmodule Stripe.Request do
     |> handle_result
   end
 
-  @spec stream(function, Keyword.t) :: Enumerable.t
+  @spec retrieve_all(function) :: {:ok, [t]} | {:error, Stripe.api_error_struct}
+  def retrieve_all(retrieve_many, opts \\ []) do
+    try do
+      all =
+        retrieve_many
+        |> Stripe.Request.stream(opts)
+        |> Enum.to_list
+      {:ok, all}
+    rescue
+      error -> {:error, error}
+    end
+  end
+
+  @spec stream(function, Keyword.t) :: Enumerable.t | no_return
   def stream(retrieve_many, opts) do
     initial_opts = Keyword.take(opts, [:starting_after, :ending_before])
     ongoing_opts = Keyword.take(opts, [:ending_before])
@@ -75,14 +88,13 @@ defmodule Stripe.Request do
             end
 
           case retrieve_many.(opts_list) do
-            {:error, error} -> {:halt, error}
+            {:error, error} -> raise error
             {:ok, false, results} -> {results, false}
             {:ok, true, results} ->
               last_result_id =
                 results
                 |> List.last
                 |> Map.fetch!(:id)
-
               {results, last_result_id}
           end
       end,
