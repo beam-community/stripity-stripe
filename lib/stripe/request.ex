@@ -65,7 +65,7 @@ defmodule Stripe.Request do
         |> Stripe.Request.stream(opts)
         |> Enum.to_list
       {:ok, all}
-    rescue
+    catch
       error -> {:error, error}
     end
   end
@@ -88,9 +88,9 @@ defmodule Stripe.Request do
             end
 
           case retrieve_many.(opts_list) do
-            # Unfortunately we have to raise here to break out of Stream.
-            # But this can easily be rescued and error tuple-ized.
-            {:error, error} -> raise error
+            # Unfortunately we have to throw here to break out of Stream.
+            # But this can easily be caught and error tuple-ized.
+            {:error, error} -> throw error
             {:ok, false, results} -> {results, false}
             {:ok, true, results} ->
               last_result_id =
