@@ -58,7 +58,7 @@ defmodule Stripe.Request do
   end
 
   @doc """
-  Wraps call to `stream/` in try/catch and wraps results in result tuple.
+  Wraps call to `Stripe.Request.stream/2` in try/catch and wraps results in result tuple.
   """
   @spec retrieve_all(function, Keyword.t) :: {:ok, [struct]} | {:error, Stripe.api_error_struct}
   def retrieve_all(retrieve_many, opts) do
@@ -76,9 +76,12 @@ defmodule Stripe.Request do
   @doc """
   Retrieve all entities from the Stripe API.
 
-  How it works is that it effectively calls retrieve_many/3 and chains
-  successive calls together, collecting the results into an
-  Enumerable, overwriting the opts each time.
+  How it works is that it effectively calls retrieve_many from e.g.
+  `Stripe.Card` and chains successive calls together, collecting the
+  results, overwriting the opts each time using the Stripe pagination
+  mechanisms of taking the last id you've seen and retrieving all
+  results starting past that id, up to `limit`. See Stripe documentation
+  for details on parameter values.
 
   The argument `retrieve_many` should be a one argument function that
   takes in the new opts to pass to retrieve_many. If there is an
