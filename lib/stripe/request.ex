@@ -57,6 +57,9 @@ defmodule Stripe.Request do
     |> handle_result
   end
 
+  @doc """
+  Wraps call to `stream/` in try/catch and wraps results in result tuple.
+  """
   @spec retrieve_all(function, Keyword.t) :: {:ok, [struct]} | {:error, Stripe.api_error_struct}
   def retrieve_all(retrieve_many, opts) do
     try do
@@ -70,6 +73,25 @@ defmodule Stripe.Request do
     end
   end
 
+  @doc """
+  Retrieve all entities from the Stripe API.
+
+  How it works is that it effectively calls retrieve_many/3 and chains
+  successive calls together, collecting the results into an
+  Enumerable, overwriting the opts each time.
+
+  The argument `retrieve_many` should be a one argument function that
+  takes in the new opts to pass to retrieve_many. If there is an
+  error, the error is thrown since there is no good way otherwise to
+  signal an error within `Stream.resource`.
+
+  Example:
+  ```
+  retrieve_many = fn opts_list -> retrieve_many(owner_type, owner_id, opts_list) end, opts
+  opts = []
+  stream(retrieve_many, opts)
+  ````
+  """
   @spec stream(function, Keyword.t) :: Enumerable.t | no_return
   def stream(retrieve_many, opts) do
     initial_opts = Keyword.take(opts, [:starting_after, :ending_before])
