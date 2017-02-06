@@ -87,7 +87,7 @@ defmodule Stripe.Request do
 
   Example:
   ```
-  retrieve_many = fn opts_list -> retrieve_many(owner_type, owner_id, opts_list) end, opts
+  retrieve_many = fn opts_list -> retrieve_many(owner_type, owner_id, opts_list) end
   opts = []
   stream(retrieve_many, opts)
   ````
