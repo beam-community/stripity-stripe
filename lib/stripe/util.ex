@@ -66,4 +66,14 @@ defmodule Stripe.Util do
 
     Module.concat("Stripe", module_name)
   end
+
+  @spec put_if_non_nil_opt(map, atom, Keyword.t) :: map
+  def put_if_non_nil_opt(map, opt, opts) do
+    opt_value = Keyword.get(opts, opt)
+    if opt_value == nil do
+      map
+    else
+      Map.put(map, opt, opt_value)
+    end
+  end
 end
