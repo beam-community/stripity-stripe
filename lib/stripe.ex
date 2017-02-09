@@ -302,11 +302,11 @@ defmodule Stripe do
   utilizing the Connect program, you can pass the other Stripe account's
   ID to the request function as follows:
 
-      request(:get, "/customers", %{}, %{}, connect_account: "acc_134151")
+      request(%{}, :get, "/customers", %{}, connect_account: "acc_134151")
 
   """
-  @spec request(method, String.t, map, headers, list) :: {:ok, map} | {:error, api_error_struct}
-  def request(method, endpoint, body, headers, opts) do
+  @spec request(body, method, String.t, headers, list) :: {:ok, map} | {:error, api_error_struct}
+  def request(body, method, endpoint, headers, opts) do
     {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
     {api_key, opts} = Keyword.pop(opts, :api_key)
 
@@ -331,8 +331,8 @@ defmodule Stripe do
 
   @doc """
   """
-  @spec request_file_upload(method, String.t, body, headers, list) :: {:ok, map} | {:error, api_error_struct}
-  def request_file_upload(method, endpoint, body, headers, opts) do
+  @spec request_file_upload(body, method, String.t, headers, list) :: {:ok, map} | {:error, api_error_struct}
+  def request_file_upload(body, method, endpoint, headers, opts) do
     {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
     {api_key, opts} = Keyword.pop(opts, :api_key)
 
