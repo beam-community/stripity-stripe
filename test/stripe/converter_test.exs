@@ -33,7 +33,7 @@ defmodule Stripe.ConverterTest do
       }
     }
 
-    result = Converter.stripe_map_to_struct(ConverterTest.Person, json_response)
+    result = Converter.stripe_map_to_struct(ConverterTest.Person, json_response())
     assert result == expected_result
   end
 
@@ -73,7 +73,7 @@ defmodule Stripe.ConverterTest do
     }
 
     result = Converter.stripe_map_to_struct(
-      ConverterTest.AuthToken, json_response_with_card_subobject
+      ConverterTest.AuthToken, json_response_with_card_subobject()
     )
     assert result == expected_result
   end
