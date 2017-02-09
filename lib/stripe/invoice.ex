@@ -87,9 +87,9 @@ defmodule Stripe.Invoice do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(binary, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, __MODULE__, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, __MODULE__, opts)
   end
 end
