@@ -50,7 +50,7 @@ defmodule Stripe.Token do
       card: customer_card_id,
       customer: customer_id
     }
-    Stripe.Request.create(@plural_endpoint, body, @schema, __MODULE__, opts)
+    Stripe.Request.create(@plural_endpoint, body, @schema, opts)
   end
 
   @doc """
@@ -64,7 +64,7 @@ defmodule Stripe.Token do
     body = %{
       customer: customer_id
     }
-    Stripe.Request.create(@plural_endpoint, body, @schema, __MODULE__, opts)
+    Stripe.Request.create(@plural_endpoint, body, @schema, opts)
   end
 
   @doc """
@@ -73,6 +73,6 @@ defmodule Stripe.Token do
   @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve(endpoint, __MODULE__, opts)
+    Stripe.Request.retrieve(endpoint, opts)
   end
 end

@@ -152,7 +152,7 @@ defmodule Stripe.Account do
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, __MODULE__, opts)
+    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
   end
 
   @doc """
@@ -174,9 +174,7 @@ defmodule Stripe.Account do
   def retrieve(id, opts \\ []), do: do_retrieve(@plural_endpoint <> "/" <> id, opts)
 
   @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  defp do_retrieve(endpoint, opts) do
-    Stripe.Request.retrieve(endpoint, __MODULE__, opts)
-  end
+  defp do_retrieve(endpoint, opts), do: Stripe.Request.retrieve(endpoint, opts)
 
   @doc """
   Update an account.
@@ -186,6 +184,6 @@ defmodule Stripe.Account do
   @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, __MODULE__, opts)
+    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
   end
 end
