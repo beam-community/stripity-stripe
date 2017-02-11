@@ -5,6 +5,7 @@ defmodule Stripe.Token do
   You can:
 
   - Create a token for a Connect customer with a card
+  - Create a token with all options - Only for Unit Tests with Stripe
   - Retrieve a token
 
   Does not yet render lists or take options.
@@ -50,7 +51,7 @@ defmodule Stripe.Token do
       card: customer_card_id,
       customer: customer_id
     }
-    Stripe.Request.create(@plural_endpoint, body, @schema, __MODULE__, opts)
+    Stripe.Request.create(@plural_endpoint, body, @schema, opts)
   end
 
   @doc """
@@ -64,7 +65,20 @@ defmodule Stripe.Token do
     body = %{
       customer: customer_id
     }
-    Stripe.Request.create(@plural_endpoint, body, @schema, __MODULE__, opts)
+    Stripe.Request.create(@plural_endpoint, body, @schema, opts)
+  end
+
+  @doc """
+  Create a token.
+
+  WARNING : This function is mainly for testing purposes only, you should not use
+  it on a production server, unless you are able to transfer and store credit card
+  data on your server in a PCI compliance way.
+  Use the Stripe.js library on the client device instead.
+  """
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def create(changes, opts \\ []) do
+    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
   end
 
   @doc """
@@ -73,6 +87,6 @@ defmodule Stripe.Token do
   @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve(endpoint, __MODULE__, opts)
+    Stripe.Request.retrieve(endpoint, opts)
   end
 end

@@ -122,7 +122,7 @@ defmodule Stripe.Card do
   @spec retrieve(source, String.t, String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(owner_type, owner_id, card_id, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.retrieve(endpoint, __MODULE__, opts)
+    Stripe.Request.retrieve(endpoint, opts)
   end
 
   @doc """
@@ -133,7 +133,7 @@ defmodule Stripe.Card do
   @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(owner_type, owner_id, card_id, changes, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, __MODULE__, opts)
+    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
   end
 
   @doc """

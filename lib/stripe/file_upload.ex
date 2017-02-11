@@ -26,7 +26,7 @@ defmodule Stripe.FileUpload do
   """
   @spec create(Path.t, String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(filepath, purpose, opts \\ []) do
-    Stripe.Request.create_file_upload(@plural_endpoint, filepath, purpose, __MODULE__, opts)
+    Stripe.Request.create_file_upload(@plural_endpoint, filepath, purpose, opts)
   end
 
   @doc """
@@ -35,7 +35,7 @@ defmodule Stripe.FileUpload do
   @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve_file_upload(endpoint, __MODULE__, opts)
+    Stripe.Request.retrieve_file_upload(endpoint, opts)
   end
 
 end

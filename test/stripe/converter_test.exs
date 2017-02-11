@@ -2,97 +2,8 @@ defmodule Stripe.ConverterTest do
   use ExUnit.Case
 
   alias Stripe.Converter
-  alias Stripe.ConverterTest
 
-  defmodule Person do
-    defstruct [:email, :first_name, :last_name, :legal_entity, :metadata]
-  end
-
-  defmodule AuthToken do
-    defstruct [:id, :card, :client_ip, :created, :livemode, :type, :used]
-  end
-
-  test "converts a response into a struct" do
-    expected_result = %Stripe.ConverterTest.Person{
-      first_name: "Leslie",
-      last_name: "Knope",
-      email: "knope@stripe.com",
-      metadata: %{},
-      legal_entity: %{
-        address: %{
-          city: "Pawnee",
-          country: "US",
-          state: "IN"
-        },
-        business_name: "Parks and Rec",
-        dob: %{
-          day: 23,
-          month: 12,
-          year: 2016
-        }
-      }
-    }
-
-    result = Converter.stripe_map_to_struct(ConverterTest.Person, json_response)
-    assert result == expected_result
-  end
-
-  defp json_response do
-    %{
-      "first_name" => "Leslie",
-      "last_name" => "Knope",
-      "email" => "knope@stripe.com",
-      "metadata" => %{},
-      "legal_entity" => %{
-        "address" => %{
-          "city" => "Pawnee",
-          "country" => "US",
-          "state" => "IN"
-        },
-        "business_name" => "Parks and Rec",
-        "dob" => %{
-          "day" => 23,
-          "month" => 12,
-          "year" => 2016
-        }
-      }
-    }
-  end
-
-  test "converts a stripe card sub-object into a struct" do
-    expected_result = %Stripe.ConverterTest.AuthToken{
-      id: "token_id",
-      used: false,
-      card: %Stripe.Card{
-        object: "card",
-        brand: "Visa",
-        country: "US",
-        exp_month: 8
-      },
-      created: 1462905445
-    }
-
-    result = Converter.stripe_map_to_struct(
-      ConverterTest.AuthToken, json_response_with_card_subobject
-    )
-    assert result == expected_result
-  end
-
-  defp json_response_with_card_subobject do
-    %{
-      "id" => "token_id",
-      "used" => false,
-      "created" => 1462905445,
-      "card" => %{
-        "object" => "card",
-        "brand" => "Visa",
-        "country" => "US",
-        "exp_month" => 8,
-      }
-    }
-  end
-
-  test "converts an object containing another object properly" do
+  test "converts a 'customer.updated' event response properly" do
     expected_result = %Stripe.Event{
       api_version: "2016-07-06",
       created: 1483537031,
@@ -141,7 +52,7 @@ defmodule Stripe.ConverterTest do
     }
 
     fixture = Helper.load_fixture("event_with_customer.json")
-    result = Converter.stripe_map_to_struct(Stripe.Event, fixture)
+    result = Converter.stripe_map_to_struct(fixture)
 
     assert result == expected_result
   end
@@ -205,12 +116,12 @@ defmodule Stripe.ConverterTest do
     }
 
     fixture = Helper.load_fixture("card_list.json")
-    result = Converter.stripe_map_to_struct(Stripe.List, fixture)
+    result = Converter.stripe_map_to_struct(fixture)
 
     assert result == expected_result
   end
 
-  test "converts an object containing a list properly" do
+  test "converts a customer response with a list of sources properly" do
     expected_result = %Stripe.Customer{
       id: "cus_9ryX7lUQ4Dcpf7",
       object: "customer",
@@ -242,7 +153,7 @@ defmodule Stripe.ConverterTest do
     }
 
     fixture = Helper.load_fixture("customer.json")
-    result = Converter.stripe_map_to_struct(Stripe.Customer, fixture)
+    result = Converter.stripe_map_to_struct(fixture)
 
     assert result == expected_result
   end
