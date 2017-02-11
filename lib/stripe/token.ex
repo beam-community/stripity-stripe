@@ -78,7 +78,7 @@ defmodule Stripe.Token do
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, __MODULE__, opts)
+    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
   end
 
   @doc """
