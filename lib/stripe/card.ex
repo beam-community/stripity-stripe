@@ -101,14 +101,11 @@ defmodule Stripe.Card do
   @spec create(source, String.t, String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(owner_type, owner_id, token, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id)
-    body =
-      to_create_body(owner_type, token)
-      |> Util.map_keys_to_atoms()
 
-    case Stripe.request(:post, endpoint, body, %{}, opts) do
-      {:ok, result} -> {:ok, Converter.stripe_map_to_struct(result)}
-      {:error, error} -> {:error, error}
-    end
+    to_create_body(owner_type, token)
+    |> Util.map_keys_to_atoms()
+    |> Stripe.request(:post, endpoint, %{}, opts)
+    |> Stripe.Request.handle_result(__MODULE__)
   end
 
   @spec to_create_body(source, String.t) :: map
