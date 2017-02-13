@@ -11,6 +11,44 @@ defmodule Stripe.Token do
   Does not yet render lists or take options.
 
   Stripe API reference: https://stripe.com/docs/api#token
+
+  Example:
+
+  ```
+  {
+    "id": "tok_189fqt2eZvKYlo2CTGBeg6Uq",
+    "object": "token",
+    "card": {
+      "id": "card_189fqt2eZvKYlo2CQoh5XpA3",
+      "object": "card",
+      "address_city": null,
+      "address_country": null,
+      "address_line1": null,
+      "address_line1_check": null,
+      "address_line2": null,
+      "address_state": null,
+      "address_zip": null,
+      "address_zip_check": null,
+      "brand": "Visa",
+      "country": "US",
+      "cvc_check": null,
+      "dynamic_last4": null,
+      "exp_month": 8,
+      "exp_year": 2017,
+      "funding": "credit",
+      "last4": "4242",
+      "metadata": {
+      },
+      "name": null,
+      "tokenization_method": null
+    },
+    "client_ip": null,
+    "created": 1462905903,
+    "livemode": false,
+    "type": "card",
+    "used": false
+  }
+  ```
   """
 
   @type t :: %__MODULE__{}
@@ -21,22 +59,6 @@ defmodule Stripe.Token do
   ]
 
   @plural_endpoint "tokens"
-
-  @schema %{
-    bank_account: [:create, :retrieve],
-    card: [:create, :retrieve],
-    client_ip: [:retrieve],
-    created: [:retrieve],
-    customer: [:create],
-    id: [:retrieve],
-    livemode: [:retrieve],
-    object: [:retrieve],
-    pii: %{
-      personal_id_number: [:create]
-    },
-    type: [:retrieve],
-    used: [:retrieve]
-  }
 
   @doc """
   Create a token for a Connect customer with a card belonging to the
@@ -51,7 +73,7 @@ defmodule Stripe.Token do
       card: customer_card_id,
       customer: customer_id
     }
-    Stripe.Request.create(@plural_endpoint, body, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, body, opts)
   end
 
   @doc """
@@ -65,7 +87,7 @@ defmodule Stripe.Token do
     body = %{
       customer: customer_id
     }
-    Stripe.Request.create(@plural_endpoint, body, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, body, opts)
   end
 
   @doc """
@@ -78,7 +100,7 @@ defmodule Stripe.Token do
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """

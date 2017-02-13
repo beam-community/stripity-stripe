@@ -12,6 +12,69 @@ defmodule Stripe.Customer do
   Does not yet render lists or take options.
 
   Stripe API reference: https://stripe.com/docs/api#customer
+
+  Example:
+
+  ```
+  {
+    "id": "cus_A5IzRTlo2DcV1J",
+    "object": "customer",
+    "account_balance": 0,
+    "created": 1486610024,
+    "currency": "usd",
+    "default_source": "card_19l8NQ2eZvKYlo2CiYWILX4R",
+    "delinquent": false,
+    "description": "Sample user",
+    "discount": null,
+    "email": "jaylen@example.com",
+    "livemode": false,
+    "metadata": {
+    },
+    "shipping": null,
+    "sources": {
+      "object": "list",
+      "data": [
+        {
+          "id": "card_19l8NQ2eZvKYlo2CiYWILX4R",
+          "object": "card",
+          "address_city": null,
+          "address_country": null,
+          "address_line1": null,
+          "address_line1_check": null,
+          "address_line2": null,
+          "address_state": null,
+          "address_zip": null,
+          "address_zip_check": null,
+          "brand": "Visa",
+          "country": "US",
+          "customer": "cus_A5IzRTlo2DcV1J",
+          "cvc_check": "pass",
+          "dynamic_last4": null,
+          "exp_month": 2,
+          "exp_year": 2018,
+          "funding": "credit",
+          "last4": "1881",
+          "metadata": {
+          },
+          "name": null,
+          "tokenization_method": null
+        }
+      ],
+      "has_more": false,
+      "total_count": 1,
+      "url": "/v1/customers/cus_A5IzRTlo2DcV1J/sources"
+    },
+    "subscriptions": {
+      "object": "list",
+      "data": [
+
+      ],
+      "has_more": false,
+      "total_count": 0,
+      "url": "/v1/customers/cus_A5IzRTlo2DcV1J/subscriptions"
+    }
+  }
+  ```
   """
 
   @type t :: %__MODULE__{}
@@ -25,50 +88,12 @@ defmodule Stripe.Customer do
 
   @plural_endpoint "customers"
 
-  @address_map %{
-    city: [:create, :retrieve, :update], #required
-    country: [:create, :retrieve, :update],
-    line1: [:create, :retrieve, :update],
-    line2: [:create, :retrieve, :update],
-    postal_code: [:create, :retrieve, :update],
-    state: [:create, :retrieve, :update]
-  }
-
-  @schema %{
-    account_balance: [:retrieve, :update],
-    business_vat_id: [:create, :retrieve, :update],
-    created: [:retrieve],
-    coupon: [:create, :retrieve, :update],
-    currency: [:retrieve],
-    default_source: [:retrieve, :update],
-    delinquent: [:retrieve],
-    description: [:create, :retrieve, :update],
-    discount: [:retrieve],
-    email: [:create, :retrieve, :update],
-    livemode: [:retrieve],
-    metadata: [:create, :retrieve, :update],
-    plan: [:create, :update],
-    quantity: [:create, :update],
-    shipping: %{
-      address: @address_map
-    },
-    source: [:create, :retrieve, :update],
-    sources: [:retrieve],
-    subscriptions: [:retrieve],
-    tax_percent: [:create],
-    trial_end: [:create]
-  }
-
-  @nullable_keys [
-    :business_vat_id, :description, :email, :metadata
-  ]
-
   @doc """
   Create a customer.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """
@@ -88,7 +113,7 @@ defmodule Stripe.Customer do
   @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """

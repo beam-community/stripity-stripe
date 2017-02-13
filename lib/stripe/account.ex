@@ -12,6 +12,105 @@ defmodule Stripe.Account do
   Does not yet render lists or take options.
 
   Stripe API reference: https://stripe.com/docs/api#account
+
+  Example:
+
+  ```
+  {
+    "id": "acct_1032D82eZvKYlo2C",
+    "object": "account",
+    "business_logo": null,
+    "business_name": "Stripe.com",
+    "business_url": null,
+    "charges_enabled": false,
+    "country": "US",
+    "debit_negative_balances": true,
+    "decline_charge_on": {
+      "avs_failure": true,
+      "cvc_failure": false
+    },
+    "default_currency": "usd",
+    "details_submitted": false,
+    "display_name": "Stripe.com",
+    "email": "site@stripe.com",
+    "external_accounts": {
+      "object": "list",
+      "data": [
+
+      ],
+      "has_more": false,
+      "total_count": 0,
+      "url": "/v1/accounts/acct_1032D82eZvKYlo2C/external_accounts"
+    },
+    "legal_entity": {
+      "address": {
+        "city": null,
+        "country": "US",
+        "line1": null,
+        "line2": null,
+        "postal_code": null,
+        "state": null
+      },
+      "business_name": null,
+      "business_tax_id_provided": false,
+      "dob": {
+        "day": null,
+        "month": null,
+        "year": null
+      },
+      "first_name": null,
+      "last_name": null,
+      "personal_address": {
+        "city": null,
+        "country": "US",
+        "line1": null,
+        "line2": null,
+        "postal_code": null,
+        "state": null
+      },
+      "personal_id_number_provided": false,
+      "ssn_last_4_provided": false,
+      "type": null,
+      "verification": {
+        "details": null,
+        "details_code": "failed_other",
+        "document": null,
+        "status": "unverified"
+      }
+    },
+    "managed": true,
+    "metadata": {
+    },
+    "product_description": null,
+    "statement_descriptor": null,
+    "support_email": null,
+    "support_phone": null,
+    "timezone": "US/Pacific",
+    "tos_acceptance": {
+      "date": null,
+      "ip": null,
+      "user_agent": null
+    },
+    "transfer_schedule": {
+      "delay_days": 7,
+      "interval": "daily"
+    },
+    "transfer_statement_descriptor": null,
+    "transfers_enabled": false,
+    "verification": {
+      "disabled_reason": "fields_needed",
+      "due_by": null,
+      "fields_needed": [
+        "business_url",
+        "external_account",
+        "product_description",
+        "support_phone",
+        "tos_acceptance.date",
+        "tos_acceptance.ip"
+      ]
+    }
+  }
+  ```
   """
 
   @type t :: %__MODULE__{}
@@ -29,130 +128,12 @@ defmodule Stripe.Account do
   @singular_endpoint "account"
   @plural_endpoint "accounts"
 
-  @address_map %{
-    city: [:create, :retrieve, :update],
-    country: [:create, :retrieve, :update],
-    line1: [:create, :retrieve, :update],
-    line2: [:create, :retrieve, :update],
-    postal_code: [:create, :retrieve, :update],
-    state: [:create, :retrieve, :update]
-  }
-
-  @address_kana_kanji_map %{ # Japan only
-    city: [:create, :retrieve, :update],
-    country: [:create, :retrieve, :update],
-    line1: [:create, :retrieve, :update],
-    line2: [:create, :retrieve, :update],
-    postal_code: [:create, :retrieve, :update],
-    state: [:create, :retrieve, :update],
-    town: [:create, :retrieve, :update]
-  }
-
-  @dob_map %{
-    day: [:create, :retrieve, :update],
-    month: [:create, :retrieve, :update],
-    year: [:create, :retrieve, :update]
-  }
-
-  @schema %{
-    business_logo: [:create, :retrieve, :update],
-    business_name: [:create, :retrieve, :update],
-    business_primary_color: [:create, :retrieve, :update],
-    business_url: [:create, :retrieve, :update],
-    country: [:create, :retrieve],
-    debit_negative_balances: [:create, :retrieve, :update],
-    decline_charge_on: %{
-      avs_failure: [:create, :retrieve, :update],
-      cvc_failure: [:create, :retrieve, :update]
-    },
-    default_currency: [:create, :retrieve, :update],
-    email: [:create, :retrieve, :update],
-    # TODO: Add ability to have nested external_account object OR the
-    # token string – can accomplish with a tuple and matching on that.
-    external_account: [:create, :retrieve, :update],
-    external_accounts: [:retrieve],
-    id: [:retrieve],
-    legal_entity: %{
-      address: @address_map,
-      address_kana: @address_kana_kanji_map, # Japan only
-      address_kanji: @address_kana_kanji_map, # Japan only
-      business_name: [:create, :retrieve, :update],
-      business_name_kana: [:create, :retrieve, :update], # Japan only
-      business_name_kanji: [:create, :retrieve, :update], # Japan only
-      business_tax_id: [:create, :update],
-      business_tax_id_provided: [:retrieve],
-      business_vat_id: [:create, :update],
-      business_vat_id_provided: [:retrieve],
-      dob: @dob_map,
-      first_name: [:create, :retrieve, :update],
-      first_name_kana: [:create, :retrieve, :update], # Japan only
-      first_name_kanji: [:create, :retrieve, :update], # Japan only
-      gender: [:create, :retrieve, :update], # "male" or "female"
-      last_name: [:create, :retrieve, :update],
-      last_name_kana: [:create, :retrieve, :update], # Japan only
-      last_name_kanji: [:create, :retrieve, :update], # Japan only
-      maiden_name: [:create, :retrieve, :update],
-      personal_address: @address_map,
-      personal_address_kana: @address_kana_kanji_map, # Japan only
-      personal_address_kanji: @address_kana_kanji_map, # Japan only
-      personal_id_number: [:create, :update],
-      personal_id_number_provided: [:retrieve],
-      phone_number: [:create, :retrieve, :update],
-      ssn_last_4: [:create, :update], # US only
-      ssn_last_4_provided: [:retrieve],
-      type: [:create, :update, :retrieve], # "individual" or "company"
-      verification: %{
-        details: [:retrieve],
-        details_code: [:retrieve],
-        document: [:create, :retrieve, :update],
-        status: [:retrieve],
-      }
-    },
-    managed: [:create, :retrieve],
-    metadata: [:create, :retrieve, :update],
-    object: [:retrieve],
-    product_description: [:create, :retrieve, :update],
-    statement_descriptor: [:create, :retrieve, :update],
-    support_email: [:create, :retrieve, :update],
-    support_phone: [:create, :retrieve, :update],
-    support_url: [:create, :retrieve, :update],
-    timezone: [:retrieve],
-    tos_acceptance: %{
-      date: [:create, :retrieve, :update],
-      ip: [:create, :retrieve, :update],
-      user_agent: [:create, :retrieve, :update]
-    },
-    transfer_schedule: %{
-      delay_days: [:create, :retrieve, :update],
-      interval: [:create, :retrieve, :update],
-      monthly_anchor: [:create, :retrieve, :update],
-      weekly_anchor: [:create, :retrieve, :update]
-    },
-    transfer_statement_descriptor: [:create, :retrieve, :update],
-    verification: %{
-      disabled_reason: [:retrieve],
-      due_by: [:retrieve],
-      fields_needed: [:retrieve]
-    }
-  }
-
-  @doc """
-  Schema map indicating when a particular argument can be created on, retrieved
-  from, or updated on the Stripe API.
-  """
-  @spec schema :: map
-  def schema, do: @schema
-
-  @nullable_keys [
-    :metadata, :transfer_statement_descriptor
-  ]
-
   @doc """
   Create an account.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """
@@ -184,6 +165,6 @@ defmodule Stripe.Account do
   @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 end
