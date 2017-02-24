@@ -47,6 +47,28 @@ defmodule Stripe.AccountTest do
     end
   end
 
+  @tag disabled: false
+  test "Update w/key works", %{account: account} do
+    use_cassette "account_test/update_with_key", match_requests_on: [:query, :request_body] do
+      new_params = [email: "newemail@example.com"]
+      case Stripe.Accounts.update(account.id, new_params, Stripe.config_or_env_key) do
+        {:ok, res} -> assert res.email == "newemail@example.com"
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
+  @tag disabled: false
+  test "Update works", %{account: account} do
+    use_cassette "account_test/update", match_requests_on: [:query, :request_body] do
+      new_params = [email: "newemail@example.com"]
+      case Stripe.Accounts.update(account.id, new_params) do
+        {:ok, res} -> assert res.email == "newemail@example.com"
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
   test "Delete single works", %{account: account} do
     use_cassette "account_test/delete", match_requests_on: [:query, :request_body] do
       case Stripe.Accounts.delete account.id do
