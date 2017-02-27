@@ -12,14 +12,14 @@ defmodule Stripe.AccountTest do
       ]
       case Stripe.Accounts.create new_account do
         {:ok, account} ->
-        on_exit fn ->
-          use_cassette "account_test/teardown", match_requests_on: [:query, :request_body] do
-            Stripe.Accounts.delete account.id
+          on_exit fn ->
+            use_cassette "account_test/teardown", match_requests_on: [:query, :request_body] do
+              Stripe.Accounts.delete account.id
+            end
           end
-        end
-        {:ok, [account: account]}
+          {:ok, [account: account]}
 
-        {:error, err} -> flunk err
+        {:error, err} -> err |> IO.inspect |> flunk
       end
     end
   end

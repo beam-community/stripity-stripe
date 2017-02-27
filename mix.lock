@@ -12,7 +12,7 @@
   "jsex": {:hex, :jsex, "2.0.0"},
   "json": {:hex, :json, "0.3.2"},
   "jsx": {:hex, :jsx, "2.6.2", "213721e058da0587a4bce3cc8a00ff6684ced229c8f9223245c6ff2c88fbaa5a", [:mix, :rebar], []},
-  "meck": {:hex, :meck, "0.8.4", "59ca1cd971372aa223138efcf9b29475bde299e1953046a0c727184790ab1520", [:rebar, :make], []},
+  "meck": {:hex, :meck, "0.8.4", "59ca1cd971372aa223138efcf9b29475bde299e1953046a0c727184790ab1520", [:make, :rebar], []},
   "metrics": {:hex, :metrics, "1.0.1", "25f094dea2cda98213cecc3aeff09e940299d950904393b2a29d191c346a8486", [:rebar3], []},
   "mimerl": {:hex, :mimerl, "1.0.2", "993f9b0e084083405ed8252b99460c4f0563e41729ab42d9074fd5e52439be88", [:rebar3], []},
   "mock": {:hex, :mock, "0.1.3", "657937b03f88fce89b3f7d6becc9f1ec1ac19c71081aeb32117db9bc4d9b3980", [:mix], [{:meck, "~> 0.8.2", [hex: :meck, optional: false]}]},
