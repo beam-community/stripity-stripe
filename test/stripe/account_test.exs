@@ -12,14 +12,14 @@ defmodule Stripe.AccountTest do
       ]
       case Stripe.Accounts.create new_account do
         {:ok, account} ->
-        on_exit fn ->
-          use_cassette "account_test/teardown", match_requests_on: [:query, :request_body] do
-            Stripe.Accounts.delete account.id
+          on_exit fn ->
+            use_cassette "account_test/teardown", match_requests_on: [:query, :request_body] do
+              Stripe.Accounts.delete account.id
+            end
           end
-        end
-        {:ok, [account: account]}
+          {:ok, [account: account]}
 
-        {:error, err} -> flunk err
+        {:error, err} -> err |> IO.inspect |> flunk
       end
     end
   end
@@ -42,6 +42,28 @@ defmodule Stripe.AccountTest do
     use_cassette "account_test/get", match_requests_on: [:query, :request_body] do
       case Stripe.Accounts.get account.id do
         {:ok, found} -> assert found.id == account.id
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
+  @tag disabled: false
+  test "Update w/key works", %{account: account} do
+    use_cassette "account_test/update_with_key", match_requests_on: [:query, :request_body] do
+      new_params = [email: "newemail@example.com"]
+      case Stripe.Accounts.update(account.id, new_params, Stripe.config_or_env_key) do
+        {:ok, res} -> assert res.email == "newemail@example.com"
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
+  @tag disabled: false
+  test "Update works", %{account: account} do
+    use_cassette "account_test/update", match_requests_on: [:query, :request_body] do
+      new_params = [email: "newemail@example.com"]
+      case Stripe.Accounts.update(account.id, new_params) do
+        {:ok, res} -> assert res.email == "newemail@example.com"
         {:error, err} -> flunk err
       end
     end

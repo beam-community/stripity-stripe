@@ -109,6 +109,33 @@ defmodule Stripe.Accounts do
     |> Stripe.Util.handle_stripe_response
   end
 
+  @doc """
+  Updates an Account with the given parameters - all of which are optional.
+  ## Example
+  ```
+    new_fields = [
+      email: "new_email@test.com"
+    ]
+    {:ok, res} = Stripe.Accounts.update(account_id, new_fields)
+  ```
+  """
+  def update(account_id, params) do
+    update(account_id, params, Stripe.config_or_env_key)
+  end
+
+  @doc """
+  Updates an Account with the given parameters - all of which are optional.
+  Using a given stripe key to apply against the account associated.
+  ## Example
+  ```
+  {:ok, res} = Stripe.Accounts.update(account_id, new_fields, key)
+  ```
+  """
+  def update(account_id, params, key) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{account_id}", key, params)
+    |> Stripe.Util.handle_stripe_response
+  end
+
   @max_fetch_size 100
   @doc """
   List all accounts.
