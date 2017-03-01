@@ -1,0 +1,37 @@
+[
+  {
+    "request": {
+      "body": "email=newemail%40example.com",
+      "headers": {
+        "Authorization": "Bearer STRIPE_SECRET_KEY",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.stripe.com/v1/accounts/acct_19rq2PIWufwlreyr"
+    },
+    "response": {
+      "body": "{\n  \"id\": \"acct_19rq2PIWufwlreyr\",\n  \"object\": \"account\",\n  \"business_logo\": null,\n  \"business_name\": null,\n  \"business_url\": null,\n  \"charges_enabled\": true,\n  \"country\": \"US\",\n  \"debit_negative_balances\": false,\n  \"decline_charge_on\": {\n    \"avs_failure\": false,\n    \"cvc_failure\": false\n  },\n  \"default_currency\": \"usd\",\n  \"details_submitted\": false,\n  \"display_name\": null,\n  \"email\": \"newemail@example.com\",\n  \"external_accounts\": {\n    \"object\": \"list\",\n    \"data\": [],\n    \"has_more\": false,\n    \"total_count\": 0,\n    \"url\": \"/v1/accounts/acct_19rq2PIWufwlreyr/external_accounts\"\n  },\n  \"legal_entity\": {\n    \"address\": {\n      \"city\": null,\n      \"country\": \"US\",\n      \"line1\": null,\n      \"line2\": null,\n      \"postal_code\": null,\n      \"state\": null\n    },\n    \"business_name\": null,\n    \"business_tax_id_provided\": false,\n    \"dob\": {\n      \"day\": null,\n      \"month\": null,\n      \"year\": null\n    },\n    \"first_name\": null,\n    \"last_name\": null,\n    \"personal_address\": {\n      \"city\": null,\n      \"country\": \"US\",\n      \"line1\": null,\n      \"line2\": null,\n      \"postal_code\": null,\n      \"state\": null\n    },\n    \"personal_id_number_provided\": false,\n    \"ssn_last_4_provided\": false,\n    \"type\": null,\n    \"verification\": {\n      \"details\": null,\n      \"details_code\": null,\n      \"document\": null,\n      \"status\": \"unverified\"\n    }\n  },\n  \"managed\": true,\n  \"metadata\": {},\n  \"product_description\": null,\n  \"statement_descriptor\": null,\n  \"support_email\": null,\n  \"support_phone\": null,\n  \"timezone\": \"Etc/UTC\",\n  \"tos_acceptance\": {\n    \"date\": null,\n    \"ip\": null,\n    \"user_agent\": null\n  },\n  \"transfer_schedule\": {\n    \"delay_days\": 2,\n    \"interval\": \"daily\"\n  },\n  \"transfer_statement_descriptor\": null,\n  \"transfers_enabled\": false,\n  \"verification\": {\n    \"disabled_reason\": \"fields_needed\",\n    \"due_by\": null,\n    \"fields_needed\": [\n      \"external_account\",\n      \"legal_entity.dob.day\",\n      \"legal_entity.dob.month\",\n      \"legal_entity.dob.year\",\n      \"legal_entity.first_name\",\n      \"legal_entity.last_name\",\n      \"legal_entity.type\",\n      \"tos_acceptance.date\",\n      \"tos_acceptance.ip\"\n    ]\n  }\n}\n",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Mon, 27 Feb 2017 15:03:48 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "2142",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "300",
+        "Cache-Control": "no-cache, no-store",
+        "Request-Id": "req_ACEVmMZ1p6ZNCI",
+        "Stripe-Account": "acct_19rq2PIWufwlreyr",
+        "Stripe-Version": "2016-07-06",
+        "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

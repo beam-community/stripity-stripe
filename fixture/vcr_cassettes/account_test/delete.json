@@ -3,20 +3,20 @@
     "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer non_empty_secret_key_string",
+        "Authorization": "Bearer STRIPE_SECRET_KEY",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
       "method": "delete",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/accounts/acct_18ZKelAF5r091xjE"
+      "url": "https://api.stripe.com/v1/accounts/acct_19rq2PIWufwlreyr"
     },
     "response": {
-      "body": "{\n  \"deleted\": true,\n  \"id\": \"acct_18ZKelAF5r091xjE\"\n}\n",
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"acct_19rq2PIWufwlreyr\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 13:22:40 GMT",
+        "Date": "Mon, 27 Feb 2017 15:03:49 GMT",
         "Content-Type": "application/json",
         "Content-Length": "55",
         "Connection": "keep-alive",
@@ -25,8 +25,8 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8r2kR6JS7w8qyY",
-        "Stripe-Account": "acct_18ZKelAF5r091xjE",
+        "Request-Id": "req_ACEVsPqQWXPprQ",
+        "Stripe-Account": "acct_19rq2PIWufwlreyr",
         "Stripe-Version": "2016-07-06",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
