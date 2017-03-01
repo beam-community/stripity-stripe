@@ -6,6 +6,7 @@ defmodule Stripe.Mixfile do
       version: "1.4.0",
       description: description(),
       package: package(),
+      deps: deps(),
       elixir: "~> 1.1",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
@@ -17,8 +18,7 @@ defmodule Stripe.Mixfile do
         "vcr.delete": :test,
         "vcr.check": :test,
         "vcr.show": :test
-      ],
-      deps: deps]
+      ]]
   end
 
   # Configuration for the OTP application
