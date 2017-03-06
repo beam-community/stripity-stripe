@@ -7,6 +7,88 @@ defmodule Stripe.Charge do
   - Retrieve a charge
 
   Stripe API reference: https://stripe.com/docs/api#charge
+
+  Example:
+
+  ```
+  {
+    "id": "ch_19l8PP2eZvKYlo2CJo3S4Ka5",
+    "object": "charge",
+    "amount": 2000,
+    "amount_refunded": 0,
+    "application": null,
+    "application_fee": null,
+    "balance_transaction": "txn_19XQj42eZvKYlo2CQ5A803uM",
+    "captured": true,
+    "created": 1486610147,
+    "currency": "usd",
+    "customer": "cus_4YUnnAzzvuqjSD",
+    "description": null,
+    "destination": null,
+    "dispute": null,
+    "failure_code": null,
+    "failure_message": null,
+    "fraud_details": {
+    },
+    "invoice": "in_19l6C52eZvKYlo2CpZ9qGpDQ",
+    "livemode": false,
+    "metadata": {
+    },
+    "on_behalf_of": null,
+    "order": null,
+    "outcome": {
+      "network_status": "approved_by_network",
+      "reason": null,
+      "risk_level": "normal",
+      "seller_message": "Payment complete.",
+      "type": "authorized"
+    },
+    "paid": true,
+    "receipt_email": null,
+    "receipt_number": null,
+    "refunded": false,
+    "refunds": {
+      "object": "list",
+      "data": [
+
+      ],
+      "has_more": false,
+      "total_count": 0,
+      "url": "/v1/charges/ch_19l8PP2eZvKYlo2CJo3S4Ka5/refunds"
+    },
+    "review": null,
+    "shipping": null,
+    "source": {
+      "id": "card_14PNna2eZvKYlo2C13kTQzRo",
+      "object": "card",
+      "address_city": null,
+      "address_country": null,
+      "address_line1": null,
+      "address_line1_check": null,
+      "address_line2": null,
+      "address_state": null,
+      "address_zip": null,
+      "address_zip_check": null,
+      "brand": "Visa",
+      "country": "US",
+      "customer": "cus_4YUnnAzzvuqjSD",
+      "cvc_check": null,
+      "dynamic_last4": null,
+      "exp_month": 6,
+      "exp_year": 2019,
+      "funding": "credit",
+      "last4": "4242",
+      "metadata": {
+      },
+      "name": null,
+      "tokenization_method": null
+    },
+    "source_transfer": null,
+    "statement_descriptor": null,
+    "status": "succeeded",
+    "transfer_group": null
+  }
+  ```
   """
 
   @type t :: %__MODULE__{}
@@ -24,65 +106,12 @@ defmodule Stripe.Charge do
 
   @plural_endpoint "charges"
 
-  @address_map %{
-    city: [:create, :retrieve, :update],
-    country: [:create, :retrieve, :update],
-    line1: [:create, :retrieve, :update],
-    line2: [:create, :retrieve, :update],
-    postal_code: [:create, :retrieve, :update],
-    state: [:create, :retrieve, :update]
-  }
-
-  @schema %{
-    amount: [:create, :retrieve],
-    amount_refunded: [:retrieve],
-    application: [:retrieve],
-    application_fee: [:create, :retrieve],
-    balance_transaction: [:retrieve],
-    capture: [:create],
-    captured: [:retrieve],
-    created: [:retrieve],
-    currency: [:create, :retrieve],
-    customer: [:create, :retrieve],
-    description: [:create, :retrieve, :update],
-    destination: [:create, :retrieve],
-    dispute: [:retrieve],
-    failure_code: [:retrieve],
-    failure_message: [:retrieve],
-    fraud_details: [:retrieve, :update],
-    id: [:retrieve],
-    invoice: [:retrieve],
-    livemode: [:retrieve],
-    metadata: [:create, :retrieve, :update],
-    object: [:retrieve],
-    order: [:create, :retrieve],
-    outcome: [:create, :retrieve],
-    paid: [:create, :retrieve],
-    receipt_email: [:create, :retrieve, :update],
-    receipt_number: [:retrieve],
-    refunded: [:retrieve],
-    refunds: [:retrieve],
-    review: [:retrieve],
-    shipping: %{
-      address: @address_map,
-      carrier: [:create, :retrieve, :update],
-      name: [:create, :retrieve, :update],
-      phone: [:create, :retrieve, :update],
-      tracking_number: [:create, :retrieve, :update]
-    },
-    source: [:create, :retrieve],
-    source_transfer: [:retrieve],
-    statement_descriptor: [:create, :retrieve],
-    status: [:retrieve],
-    transfer: [:retrieve]
-  }
-
   @doc """
   Create a charge.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """

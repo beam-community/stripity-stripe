@@ -12,6 +12,26 @@ defmodule Stripe.Plan do
   Does not yet render lists or take options.
 
   Stripe API reference: https://stripe.com/docs/api#plan
+
+  Example:
+
+  ```
+  {
+    "id": "quartz-enterprise",
+    "object": "plan",
+    "amount": 5000,
+    "created": 1486598337,
+    "currency": "usd",
+    "interval": "month",
+    "interval_count": 1,
+    "livemode": false,
+    "metadata": {
+    },
+    "name": "Quartz enterprise",
+    "statement_descriptor": null,
+    "trial_period_days": null
+  }
+  ```
   """
 
   @type t :: %__MODULE__{}
@@ -24,31 +44,12 @@ defmodule Stripe.Plan do
 
   @plural_endpoint "plans"
 
-  @schema %{
-    amount: [:create, :retrieve],
-    created: [:retrieve],
-    currency: [:create, :retrieve],
-    id: [:create, :retrieve],
-    interval: [:create, :retrieve],
-    interval_count: [:create, :retrieve],
-    livemode: [:retrieve],
-    metadata: [:create, :retrieve, :update],
-    name: [:create, :retrieve, :update],
-    object: [:retrieve],
-    statement_descriptor: [:create, :retrieve, :update],
-    trial_period_days: [:create, :retrieve, :update]
-  }
-
-  @nullable_keys [
-    :metadata, :statement_descriptor
-  ]
-
   @doc """
   Create a plan.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """
@@ -68,7 +69,7 @@ defmodule Stripe.Plan do
   @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """
