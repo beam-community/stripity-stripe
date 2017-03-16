@@ -139,6 +139,6 @@ defmodule Stripe.Card do
   @spec delete(source, String.t, String.t, Keyword.t) :: :ok | {:error, Stripe.api_error_struct}
   def delete(owner_type, owner_id, card_id, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.delete(endpoint, opts)
+    Stripe.Request.delete(endpoint, %{}, opts)
   end
 end
