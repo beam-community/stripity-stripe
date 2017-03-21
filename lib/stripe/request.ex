@@ -38,7 +38,7 @@ defmodule Stripe.Request do
   https://stripe.com/docs/api#pagination
   """
   @spec retrieve_many(map, String.t, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
-  def retrieve_many(pagination_params, endpoint, opts \\ []) do
+  def retrieve_many(%{limit: _} = pagination_params, endpoint, opts \\ []) do
     Stripe.request(pagination_params, :get, endpoint, %{}, opts)
     |> handle_result_list(pagination_params, endpoint)
   end

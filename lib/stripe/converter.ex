@@ -7,7 +7,7 @@ defmodule Stripe.Converter do
   @spec stripe_map_to_struct(%{String.t => any}) :: struct
   def stripe_map_to_struct(response), do: convert_stripe_object(response)
 
-  @supported_objects ~w(account bank_account card customer event external_account file_upload invoice list plan subscription token)
+  @supported_objects ~w(account bank_account card country_spec customer event external_account file_upload invoice list plan subscription token)
 
   @spec convert_value(any) :: any
   defp convert_value(%{"object" => object_name} = value) when is_binary(object_name) do
