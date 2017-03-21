@@ -15,5 +15,5 @@ defmodule Stripe.List do
 
   @type t :: %__MODULE__{}
 
-  defstruct [:object, :data, :has_more, :total_count, :url]
+  defstruct [:object, :limit, :data, :has_more, :total_count, :url]
 end
