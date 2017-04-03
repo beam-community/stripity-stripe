@@ -48,6 +48,6 @@ defmodule Stripe.Request do
     |> handle_result
   end
 
-  defp handle_result({:ok, result = %{}}), do: {:ok, Converter.stripe_map_to_struct(result)}
+  defp handle_result({:ok, result = %{}}), do: {:ok, Converter.convert_result(result)}
   defp handle_result({:error, error}), do: {:error, error}
 end

@@ -73,7 +73,7 @@ defmodule Stripe.Connect.OAuth do
     }
 
     case Stripe.oauth_request(:post, endpoint, body) do
-       {:ok, result} -> {:ok, Converter.stripe_map_to_struct(result)}
+       {:ok, result} -> {:ok, Converter.convert_result(result)}
        {:error, error} -> {:error, error}
      end
   end
@@ -98,7 +98,7 @@ defmodule Stripe.Connect.OAuth do
     }
 
     case Stripe.oauth_request(:post, endpoint, body) do
-      {:ok, result} -> {:ok, Converter.stripe_map_to_struct(result)}
+      {:ok, result} -> {:ok, Converter.convert_result(result)}
       {:error, error} -> {:error, error}
     end
   end
