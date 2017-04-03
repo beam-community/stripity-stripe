@@ -1,13 +1,17 @@
 defmodule Stripe.Converter do
 
   @doc """
-  Takes the module (e.g. `Stripe.Card`) and the response from Stripe and
-  returns a struct (e.g. `%Stripe.Card{}`) containing the Stripe response.
-  """
-  @spec stripe_map_to_struct(%{String.t => any}) :: struct
-  def stripe_map_to_struct(response), do: convert_stripe_object(response)
+  Takes a result map or list of maps from a Stripe response and returns a
+  struct (e.g. `%Stripe.Card{}`) or list of structs.
 
-  @supported_objects ~w(account bank_account card customer event external_account file_upload invoice list plan subscription token)
+  If the result is not a supported Stripe object, it just returns a plain map
+  with atomized keys.
+  """
+  @spec convert_result(%{String.t => any}) :: struct
+  def convert_result(result), do: convert_value(result)
+
+  @supported_objects ~w(account bank_account card customer event external_account 
+    file_upload invoice list plan subscription token)
 
   @spec convert_value(any) :: any
   defp convert_value(%{"object" => object_name} = value) when is_binary(object_name) do

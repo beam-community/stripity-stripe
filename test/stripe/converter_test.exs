@@ -52,7 +52,7 @@ defmodule Stripe.ConverterTest do
     }
 
     fixture = Helper.load_fixture("event_with_customer.json")
-    result = Converter.stripe_map_to_struct(fixture)
+    result = Converter.convert_result(fixture)
 
     assert result == expected_result
   end
@@ -116,7 +116,7 @@ defmodule Stripe.ConverterTest do
     }
 
     fixture = Helper.load_fixture("card_list.json")
-    result = Converter.stripe_map_to_struct(fixture)
+    result = Converter.convert_result(fixture)
 
     assert result == expected_result
   end
@@ -153,7 +153,19 @@ defmodule Stripe.ConverterTest do
     }
 
     fixture = Helper.load_fixture("customer.json")
-    result = Converter.stripe_map_to_struct(fixture)
+    result = Converter.convert_result(fixture)
+
+    assert result == expected_result
+  end
+
+  test "converts a deleted response properly" do
+    expected_result = %{
+      deleted: true,
+      id: "card_1A49JREym4h6pgdFkbcuN03L"
+    }
+
+    fixture = Helper.load_fixture("card_deleted.json")
+    result = Converter.convert_result(fixture)
 
     assert result == expected_result
   end
