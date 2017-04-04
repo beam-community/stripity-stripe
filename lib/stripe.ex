@@ -45,13 +45,25 @@ defmodule Stripe do
   end
 
   @doc """
-  Creates the URL for our endpoint.
+  Creates the URL for our endpoint. You can also manually set API base url
+  for testing purpose by configuring the :stripity_stripe application
+  with `:api_base_url` key. By default `https://api.stripe.com/v1/`.
+  Here is an example:
+
+      iex> Application.put_env(:stripity_stripe, :api_base_url, "http://localhost:4004")
+      :ok
+
+      iex> Stripe.process_url("/plans")
+      "http://localhost:4004/plans"
+
   Args:
     * endpoint - part of the API we're hitting
+
   Returns string
   """
   def process_url(endpoint) do
-    "https://api.stripe.com/v1/" <> endpoint
+    api_base_url = Application.get_env(:stripity_stripe, :api_base_url, "https://api.stripe.com/v1/")
+    api_base_url <> endpoint
   end
 
   @doc """
