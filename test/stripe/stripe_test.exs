@@ -7,6 +7,14 @@ defmodule Stripe.StripeTest do
     assert Stripe.process_url("payment") == "https://api.stripe.com/v1/payment"
   end
 
+  test "process_url when base_url from config" do
+    :ok = Application.put_env(:stripity_stripe, :api_base_url, "http://localhost:4000/")
+
+    assert Stripe.process_url("plans") == "http://localhost:4000/plans"
+
+    :ok = Application.delete_env(:stripity_stripe, :api_base_url)
+  end
+
   # test "make_request_with_key fails when no key is supplied on environment config" do
   #   with_mock System, [get_env: fn(_opts) -> nil end] do
   #     assert_raise Stripe.MissingSecretKeyError, fn ->
