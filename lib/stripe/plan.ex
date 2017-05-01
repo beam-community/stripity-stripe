@@ -77,6 +77,6 @@ defmodule Stripe.Plan do
   @spec delete(binary, list) :: :ok | {:error, Stripe.api_error_struct}
   def delete(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.delete(endpoint, opts)
+    Stripe.Request.delete(endpoint, %{}, opts)
   end
 end

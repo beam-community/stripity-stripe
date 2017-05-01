@@ -86,6 +86,6 @@ defmodule Stripe.ExternalAccount do
   @spec delete(binary, list) :: :ok | {:error, Stripe.api_error_struct}
   def delete(id, opts = [connect_account: managed_account_id]) do
     endpoint = endpoint(managed_account_id) <> "/" <> id
-    Stripe.Request.delete(endpoint, opts)
+    Stripe.Request.delete(endpoint, %{}, opts)
   end
 end

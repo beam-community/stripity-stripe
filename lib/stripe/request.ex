@@ -41,9 +41,9 @@ defmodule Stripe.Request do
     |> handle_result
   end
 
-  @spec delete(String.t, Keyword.t) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(endpoint, opts) do
-    %{}
+  @spec delete(String.t, map, Keyword.t) :: :ok | {:error, Stripe.api_error_struct}
+  def delete(endpoint, params, opts) do
+    params
     |> Stripe.request(:delete, endpoint, %{}, opts)
     |> handle_result
   end

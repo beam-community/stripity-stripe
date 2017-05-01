@@ -87,10 +87,12 @@ defmodule Stripe.Subscription do
 
   @doc """
   Delete a subscription.
+
+  Takes the `id` and an optional map of `params`.
   """
-  @spec delete(binary, list) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(id, opts \\ []) do
+  @spec delete(binary, map, list) :: :ok | {:error, Stripe.api_error_struct}
+  def delete(id, params \\ %{}, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.delete(endpoint, opts)
+    Stripe.Request.delete(endpoint, params, opts)
   end
 end
