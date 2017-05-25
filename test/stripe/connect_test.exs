@@ -12,6 +12,15 @@ defmodule Stripe.ConnectTest do
     end
   end
 
+  test "Generate button url works redirect_uri" do
+    use_cassette "connect_test/generate_button_url", match_requests_on: [:query, :request_body] do
+      url = Stripe.Connect.generate_button_url "csrf_token", "http://somewhere.is/here"
+
+      assert String.ends_with? url, "&redirect_uri=http://somewhere.is/here"
+      assert String.starts_with? url, Stripe.Connect.base_url
+    end
+  end
+
   @tag disabled: true
   test "OAuth Callback works" do
     use_cassette "stripe_connect_oauth" do

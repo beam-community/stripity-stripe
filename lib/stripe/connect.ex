@@ -17,14 +17,22 @@ defmodule Stripe.Connect do
   @doc """
   Generate the URL to start a stripe workflow. You can pass in a
   crsf token to be sent to stripe, which they send you back at the end of the workflow to further secure the interaction. Make sure you verify this token yourself on reception of the workflow callback.
+
+  You can also pass redirect_uri as a second parameter if you have multiple possible redirect_uris
   """
-  def generate_button_url( csrf_token ) do
+  def generate_button_url( csrf_token , redirect_uri \\ "" ) do
     url = base_url() <> "oauth/authorize?response_type=code"
     url = url <> "&scope=read_write"
     url = url <> "&client_id=#{Stripe.config_or_env_platform_client_id}"
 
-    if String.length(csrf_token) > 0 do
+    url = if String.length(csrf_token) > 0 do
       url <> "&state=#{csrf_token}"
+    else
+      url
+    end
+
+    if String.length(redirect_uri) > 0 do
+      url <> "&redirect_uri=#{redirect_uri}"
     else
       url
     end
