@@ -50,7 +50,7 @@ defmodule Stripe do
     defexception message: """
     The api_key setting is required so that we can report the
     correct environment instance to Stripe. Please configure
-    secret_key in your config.exs and environment specific config files
+    api_key in your config.exs and environment specific config files
     to have accurate reporting of errors.
 
     config :stripity_stripe, api_key: YOUR_SECRET_KEY
