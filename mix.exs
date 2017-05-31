@@ -15,7 +15,7 @@ defmodule Stripe.Mixfile do
         "coveralls.html": :test
       ],
       test_coverage: [tool: ExCoveralls],
-      version: "2.0.0-alpha.7"
+      version: "2.0.0-alpha.8"
     ]
   end
 
@@ -71,7 +71,7 @@ defmodule Stripe.Mixfile do
       links: %{
         "GitHub" => "https://github.com/code-corps/stripity-stripe"
       },
-      maintainers: ["Dan Matthews", "Josh Smith"]
+      maintainers: ["Dan Matthews", "Josh Smith", "Nikola Begedin"]
     ]
   end
 end

@@ -29,9 +29,6 @@ defmodule Stripe.Card do
   Stripe API reference: https://stripe.com/docs/api#cards
   """
 
-  alias Stripe.Util
-  alias Stripe.Converter
-
   @type t :: %__MODULE__{}
   @type source :: :customer | :recipient
 
