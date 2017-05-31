@@ -20,8 +20,11 @@ defmodule Stripe.Request do
   end
 
   @spec retrieve(String.t, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
-  def retrieve(endpoint, opts) do
-    %{}
+  def retrieve(endpoint, opts), do: retrieve(%{}, endpoint, opts)
+
+  @spec retrieve(map, String.t, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
+  def retrieve(changes, endpoint, opts) do
+    changes
     |> Stripe.request(:get, endpoint, %{}, opts)
     |> handle_result
   end
