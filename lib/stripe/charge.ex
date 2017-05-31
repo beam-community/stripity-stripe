@@ -4,6 +4,7 @@ defmodule Stripe.Charge do
 
   You can:
 
+  - Capture a charge
   - Retrieve a charge
 
   Stripe API reference: https://stripe.com/docs/api#charge
@@ -76,6 +77,15 @@ defmodule Stripe.Charge do
     status: [:retrieve],
     transfer: [:retrieve]
   }
+
+  @doc """
+  Capture a charge.
+  """
+  @spec capture(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def capture(id, opts \\ []) do
+    endpoint = @plural_endpoint <> "/" <> id <> "/capture"
+    Stripe.Request.create(endpoint, %{}, @schema, opts)
+  end
 
   @doc """
   Create a charge.
