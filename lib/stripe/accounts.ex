@@ -81,6 +81,60 @@ defmodule Stripe.Accounts do
   end
 
   @doc """
+  Updates an Account with the given parameters
+
+  https://stripe.com/docs/connect/managed-accounts
+
+  ## Example
+
+  ```
+    updated_account = [
+      email: "test@example.com",
+      managed: true,
+      tos_acceptance: [
+        date: :os.system_time(:seconds),
+        ip: "127.0.0.1"
+      ],
+      legal_entity: [
+        type: "individual",
+        dob: [
+          day: 1,
+          month: 1,
+          year: 1991
+        ],
+        first_name: "John",
+        last_name: "Doe"
+      ],
+      external_account: [
+        object: "bank_account",
+        country: "US",
+        currency: "usd",
+        routing_number: "110000000",
+        account_number: "000123456789"
+      ]
+    ]
+    {:ok, res} = Stripe.Accounts.update account_id, updated_account
+  ```
+
+  """
+  def update(id, params) do
+    update id, params, Stripe.config_or_env_key
+  end
+
+  @doc """
+  Save as update(id, params).
+  Accepts a stripe api key (for connect workflow)
+  # Example
+  ```
+  {:ok, resp} = Stripe.Account.update(id,params,key)
+  ```
+  """
+  def update(id, params, key) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{id}", key, params)
+    |> Stripe.Util.handle_stripe_response
+  end
+
+  @doc """
   Get an account.
 
   Gets an account using account ID.
@@ -155,7 +209,7 @@ defmodule Stripe.Accounts do
 
   """
   def all( accum \\ [], starting_after \\ "") do
-    all Stripe.config_or_env_key, accum, starting_after 
+    all Stripe.config_or_env_key, accum, starting_after
   end
 
   @doc """
