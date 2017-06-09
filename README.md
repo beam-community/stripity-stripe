@@ -41,21 +41,9 @@ optional platform client id if you are using Stripe Connect):
 ```ex
 use Mix.Config
 
-config :stripity_stripe, secret_key: "YOUR SECRET KEY"
-config :stripity_stripe, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
-```
-
-To customize the underlying HTTPoison library, you may optionally add an
-`:httpoison_options` key to the stripity_stripe configuration.  For a full list
-of configuration options, please refer to the
-[HTTPoison documentation](https://github.com/edgurgel/httpoison).
-
-```ex
-config :stripity_stripe, httpoison_options: [
-  timeout: 10000,
-  recv_timeout: 10000,
-  proxy: {"proxy.mydomain.com", 8080}
-]
+config :stripity_stripe,
+  api_key: "YOUR SECRET KEY",
+  connect_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
 ```
 
 ## Testing
@@ -73,7 +61,7 @@ The API attempts to model the official Ruby library as closely as makes sense
 while adhering to Elixir syntax and principles.
 
 ```ex
-{:ok, object} = Stripe.Customer.delete "cus_8Pq6iJMrd4M0AD"
+{:ok, object} = Stripe.Customer.delete("cus_8Pq6iJMrd4M0AD")
 ```
 
 For optional arguments, you can send in a Keyword list that will get translated
@@ -82,7 +70,7 @@ send in the `customer_id` and `subscription_id` with the list of changes:
 
 ```ex
 # Change customer to the Premium subscription
-{:ok, customer} = Stripe.Customer.update %{email: "dan@strumber.com"}
+{:ok, customer} = Stripe.Customer.update(%{email: "dan@strumber.com"})
 ```
 
 Metadata (metadata: %{}) key is supported on most object type and allow the
@@ -115,11 +103,11 @@ fill the information to activate your connect platform settings. Then select the
 `client_id` in the config file under
 
 ```ex
-config :stripity_stripe, platform_client_id: "ac_???"
+config :stripity_stripe,
+  connect_client_id: "ac_???"
 ```
-or in an env var named `STRIPE_PLATFORM_CLIENT_ID`.
 
-Then you send your users to sign up for the stripe account using a link.
+Then you send your users to sign up for the Stripe account using a link.
 
 Here's an example of a button to start the workflow:
 <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_32D88BD1qLklliziD7gYQvctJIhWBSQ7&scope=read_write">Connect with Stripe</a>
