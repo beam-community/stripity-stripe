@@ -42,7 +42,7 @@ defmodule Stripe.Mixfile do
 
   defp apps(:test), do: [:bypass | apps()]
   defp apps(_), do: apps()
-  defp apps(), do: [:hackney, :logger, :poison]
+  defp apps(), do: [:hackney, :logger, :poison, :uri_query]
 
   defp deps do
     [
