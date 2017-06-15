@@ -9,13 +9,34 @@ defmodule Stripe.InvoicesTest do
       customer1 = Helper.create_test_customer "invoices_test1@localhost"
       {:ok, sub1} = Stripe.Subscriptions.create customer1.id, [plan: "test-std"]
 
-      params = [
+      invoice_items1_params = [
         customer: customer1.id,
         amount: 10,
         currency: "usd",
         subscription: sub1.id
       ]
-      {:ok, _ } = Stripe.InvoiceItems.create params
+      {:ok, _ } = Stripe.InvoiceItems.create invoice_items1_params
+
+      customer2 = Helper.create_test_customer "invoices_test2@localhost"
+      {:ok, sub2} = Stripe.Subscriptions.create customer2.id, [plan: "test-std"]
+
+      invoice_items2_params = [
+        customer: customer2.id,
+        amount: 10,
+        currency: "usd",
+        subscription: sub2.id
+      ]
+      {:ok, _ } = Stripe.InvoiceItems.create invoice_items2_params
+
+      invoice_params = [
+        subscription: sub2.id,
+        metadata: [
+          app_order_id: "ABC1234",
+          app_attr1: "xyz1"
+        ]
+      ]
+      {:ok, invoice1} = Stripe.Invoices.create customer2.id, invoice_params
+
       on_exit fn ->
         use_cassette "invoices_test/teardown", match_requests_on: [:query, :request_body] do
           Stripe.Subscriptions.cancel customer1.id, sub1.id
@@ -23,7 +44,7 @@ defmodule Stripe.InvoicesTest do
           Helper.delete_test_plans
         end
       end
-      {:ok, [customer1: customer1, sub1: sub1]}
+      {:ok, [customer1: customer1, sub1: sub1, invoice1: invoice1]}
     end
   end
 
@@ -167,6 +188,29 @@ defmodule Stripe.InvoicesTest do
         assert invoice.attempted == true
         assert invoice.closed == true
         assert invoice.object == "invoice"
+    end
+  end
+
+  @tag disabled: false
+  test "Invoice change", %{invoice1: invoice1} do
+    use_cassette "invoices_test/change", match_requests_on: [:query, :request_body] do
+      case Stripe.Invoices.change(invoice1.id, [closed: true]) do
+        {:ok, invoice} -> assert invoice.closed == true
+        {:error, err} -> flunk err
+      end
+    end
+  end
+
+  @tag disabled: false
+  test "Invoice change w/key", %{invoice1: invoice1} do
+    use_cassette "invoices_test/change_with_key", match_requests_on: [:query, :request_body] do
+      params = [description: "Some description", closed: true]
+      case Stripe.Invoices.change(invoice1.id, params, Stripe.config_or_env_key) do
+        {:ok, invoice} ->
+          assert invoice.description == "Some description"
+          assert invoice.closed == true
+        {:error, err} -> flunk err
+      end
     end
   end
 end
