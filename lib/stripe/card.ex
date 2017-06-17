@@ -80,7 +80,8 @@ defmodule Stripe.Card do
   defp endpoint_for_owner(owner_type, owner_id) do
     case owner_type do
       :customer -> "customers/#{owner_id}/sources"
-      :recipient -> "recipients/#{owner_id}/cards"
+      :account -> "accounts/#{owner_id}/external_accounts"
+      :recipient -> "recipients/#{owner_id}/cards" # Deprecated
     end
   end
 
@@ -137,5 +138,15 @@ defmodule Stripe.Card do
   def delete(owner_type, owner_id, card_id, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
     Stripe.Request.delete(endpoint, %{}, opts)
+  end
+
+  @doc """
+  List all cards.
+  """
+  @spec list(source, String.t, map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  def list(owner_type, owner_id, params \\ %{}, opts \\ []) do
+    endpoint = endpoint_for_owner(owner_type, owner_id)
+    params = Map.merge(params, %{"object" => "card"})
+    Stripe.Request.retrieve(params, endpoint, opts)
   end
 end

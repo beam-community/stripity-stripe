@@ -101,4 +101,13 @@ defmodule Stripe.Invoice do
     endpoint = @plural_endpoint <> "/upcoming"
     Stripe.Request.retrieve(changes, endpoint, opts)
   end
+
+  @doc """
+  List all invoices.
+  """
+  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  def list(params \\ %{}, opts \\ []) do
+    endpoint = @plural_endpoint
+    Stripe.Request.retrieve(params, endpoint, opts)
+  end
 end

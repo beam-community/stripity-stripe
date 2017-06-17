@@ -88,4 +88,14 @@ defmodule Stripe.ExternalAccount do
     endpoint = endpoint(managed_account_id) <> "/" <> id
     Stripe.Request.delete(endpoint, %{}, opts)
   end
+
+  @doc """
+  List all external accounts.
+  """
+  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  def list(params \\ %{}, opts = [connect_account: managed_account_id]) do
+    endpoint = endpoint(managed_account_id)
+    params = Map.merge(params, %{"object" => "bank_account"})
+    Stripe.Request.retrieve(params, endpoint, opts)
+  end
 end

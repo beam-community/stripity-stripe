@@ -29,4 +29,13 @@ defmodule Stripe.Event do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.retrieve(endpoint, opts)
   end
+
+  @doc """
+  List all events.
+  """
+  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  def list(params \\ %{}, opts \\ []) do
+    endpoint = @plural_endpoint
+    Stripe.Request.retrieve(params, endpoint, opts)
+  end
 end

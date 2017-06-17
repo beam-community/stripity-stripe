@@ -95,4 +95,13 @@ defmodule Stripe.Subscription do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.delete(endpoint, params, opts)
   end
+
+  @doc """
+  List all subscriptions.
+  """
+  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  def list(params \\ %{}, opts \\ []) do
+    endpoint = @plural_endpoint
+    Stripe.Request.retrieve(endpoint, opts)
+  end
 end
