@@ -15,7 +15,7 @@ defmodule Stripe.Mixfile do
         "coveralls.html": :test
       ],
       test_coverage: [tool: ExCoveralls],
-      version: "2.0.0-alpha.8"
+      version: "2.0.0-alpha.9"
     ]
   end
 
