@@ -138,6 +138,19 @@ Using the code request parameter, you make the following call:
 resp[:access_token]
 ```
 
+# Webhooks
+
+Stripe uses webhooks to notify your web app with events. `Stripe.Webhook`
+provides `construct_event/3` to authenticate the request and convert the
+payload to a `Stripe.Event` struct.
+
+```ex
+payload = # HTTP content body (e.g. from Plug.Conn.read_body/3)
+signature = # 'Stripe-Signature' HTTP header (e.g. from Plug.Conn.get_req_header/2)
+secret = # Provided by Stripe
+{:ok, %Stripe.Event{}} = Stripe.Webhook.construct_event(payload, signature, secret)
+```
+
 ## Contributing
 
 Feedback, feature requests, and fixes are welcomed and encouraged.  Please make
