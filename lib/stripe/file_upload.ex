@@ -38,4 +38,12 @@ defmodule Stripe.FileUpload do
     Stripe.Request.retrieve_file_upload(endpoint, opts)
   end
 
+  @doc """
+  List all file uploads.
+  """
+  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  def list(params \\ %{}, opts \\ []) do
+    endpoint = @plural_endpoint
+    Stripe.Request.retrieve(params, endpoint, opts)
+  end
 end
