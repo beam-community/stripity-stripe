@@ -3,7 +3,7 @@ defmodule Stripe.Mixfile do
 
   def project do
     [ app: :stripity_stripe,
-      version: "1.4.0",
+      version: "1.5.0",
       description: description(),
       package: package(),
       deps: deps(),
