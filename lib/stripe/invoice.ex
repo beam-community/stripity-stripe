@@ -8,9 +8,7 @@ defmodule Stripe.Invoice do
   - Retrieve an invoice
   - Update an invoice
 
-  Does not yet implement `lines`.
-
-  Does not yet render lists or take options.
+  Does not take options yet.
 
   Stripe API reference: https://stripe.com/docs/api#invoice
   """
@@ -21,7 +19,7 @@ defmodule Stripe.Invoice do
     :id, :object,
     :amount_due, :application_fee, :attempt_count, :attempted,
     :charge, :closed, :currency, :customer, :date, :description, :discount,
-    :ending_balance, :forgiven, :livemode, :metadata,
+    :ending_balance, :forgiven, :lines, :livemode, :metadata,
     :next_payment_attempt, :paid, :period_end, :period_start,
     :receipt_number, :starting_balance, :statement_descriptor,
     :subscription, :subscription_proration_date, :subtotal, :tax,
@@ -45,6 +43,7 @@ defmodule Stripe.Invoice do
     ending_balance: [:retrieve],
     forgiven: [:retrieve, :update],
     id: [:retrieve],
+    lines: [:retrieve],
     livemode: [:retrieve],
     metadata: [:create, :retrieve, :update],
     next_payment_attempt: [:retrieve],
