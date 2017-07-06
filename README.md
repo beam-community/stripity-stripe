@@ -2,6 +2,10 @@
 
 An Elixir library for working with [Stripe](https://stripe.com/).
 
+NOTE: While the 1.x.x releases are the stable releases and this branch is being maintained and updated, **we are currently focusing on the 2.0.0.alpha-X releases**.
+
+This alternative branch is a complete rewrite of the library and is in many ways ahead of the stable branch. Feel free to give it a try before requesting changes in the stable branch.
+
 Features:
 
 * manage accounts (your own, standalone/managed via connect) [Stripe.Accounts](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/accounts.ex)

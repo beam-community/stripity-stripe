@@ -3,32 +3,32 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stripe – stripity_stripe v1.3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.10.0">
-    <link rel="stylesheet" href="dist/app.css" />
+    <meta name="generator" content="ExDoc v0.13.0">
+    <title>Stripe – stripity_stripe v1.6.0</title>
+    <link rel="stylesheet" href="dist/app-9c1e3d5aa2.css" />
+    
+      <link rel="canonical" href="https://hexdocs.pm/stripity_stripe/Stripe.html" />
+    
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
-  <a href="extra-api-reference.html" class="sidebar-projectLink">
+  <a href="api-reference.html" class="sidebar-projectLink">
     <div class="sidebar-projectDetails">
       <h1 class="sidebar-projectName">
         stripity_stripe
       </h1>
       <h2 class="sidebar-projectVersion">
-        v1.3.0
+        v1.6.0
       </h2>
     </div>
     
@@ -47,6 +47,8 @@
     
 
     
+      <li><a id="exceptions-list" href="#full-list">Exceptions</a></li>
+    
 
     
   </ul>
@@ -56,10 +58,12 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
+        <small class="visible-xs">stripity_stripe v1.6.0</small>
         Stripe
         
         
@@ -67,7 +71,17 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>A HTTP client for Stripe.</p>
+          <p>  A HTTP client for Stripe.
+  This module contains the Application that you can use to perform
+  transactions on stripe API.
+  ### Configuring
+  By default the STRIPE_SECRET_KEY environment variable is used to find
+  your API key for Stripe. You can also manually set your API key by
+  configuring the :stripity_stripe application. You can see the default
+  configuration in the default_config/0 private function at the bottom of
+  this file. The value for platform client id is optional.</p>
+<pre><code class="elixir">config :stripity_stripe, secret_key: YOUR_STRIPE_KEY
+config :stripity_stripe, platform_client_id: STRIPE_PLATFORM_CLIENT_ID</code></pre>
 
         </section>
       
@@ -86,6 +100,12 @@
       <a href="#types">Types</a>
     </h2>
     <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:body/0">body()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature">
     <a href="#t:headers/0">headers()</a>
   </div>
@@ -182,16 +202,20 @@ failure</p>
     <a href="#make_oauth_deauthorize_request/1">make_oauth_deauthorize_request(stripe_user_id)</a>
   </div>
   
+    <div class="summary-synopsis"></div>
+  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#make_oauth_token_callback_request/1">make_oauth_token_callback_request(body)</a>
   </div>
   
+    <div class="summary-synopsis"></div>
+  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#make_request/5">make_request(method, endpoint, body \\ [], headers \\ [], options \\ [])</a>
+    <a href="#make_request/5">make_request(method, endpoint, body \\ %{}, headers \\ %{}, options \\ [])</a>
   </div>
   
     <div class="summary-synopsis"><p>Boilerplate code to make requests with the key read from config or env.see config_or_env_key/0
@@ -208,7 +232,7 @@ Args:</p>
 <li>headers - request headers
 </li>
 <li>options - request options
-Returns dict
+Returns tuple
 </li>
 </ul>
 </div>
@@ -216,7 +240,7 @@ Returns dict
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#make_request_with_key/6">make_request_with_key(method, endpoint, key, body \\ [], headers \\ [], options \\ [])</a>
+    <a href="#make_request_with_key/6">make_request_with_key(method, endpoint, key, body \\ %{}, headers \\ %{}, options \\ [])</a>
   </div>
   
     <div class="summary-synopsis"><p>Boilerplate code to make requests with a given key.
@@ -233,7 +257,7 @@ Args:</p>
 <li>headers - request headers
 </li>
 <li>options - request options
-Returns dict
+Returns tuple
 </li>
 </ul>
 </div>
@@ -316,13 +340,10 @@ Returns Record or ArgumentError
     <a href="#process_url/1">process_url(endpoint)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Creates the URL for our endpoint.
-Args:</p>
-<ul>
-<li>endpoint - part of the API we’re hitting
-Returns string
-</li>
-</ul>
+    <div class="summary-synopsis"><p>Creates the URL for our endpoint. You can also manually set API base url
+for testing purpose by configuring the :stripity_stripe application
+with <code class="inline">:api_base_url</code> key. By default <code class="inline">https://api.stripe.com/v1/</code>.
+Here is an example</p>
 </div>
   
 </div>
@@ -382,15 +403,6 @@ exception in case of failure</p>
 </div>
   
 </div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#start/2">start(type, args)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c::application.start/2</code></p>
-</div>
-  
-</div>
 
   </div>
 
@@ -411,8 +423,17 @@ exception in case of failure</p>
             Types
           </h1>
           <div class="types-list">
-            <div id="t:headers/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:headers/0">headers</a> :: [{binary, binary}]</code></pre>
+            <div id="t:body/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:body/0">body</a> ::
+  binary |
+  {:form, [{atom, any}]} |
+  {:file, binary}</code></pre>
+  
+</div>
+<div id="t:headers/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:headers/0">headers</a> ::
+  [{binary, binary}] |
+  %{optional(binary) => binary}</code></pre>
   
 </div>
 
@@ -434,7 +455,8 @@ exception in case of failure</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">config_or_env_key()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -449,7 +471,8 @@ Returns binary</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">config_or_env_platform_client_id()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -464,7 +487,8 @@ Returns binary</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">delete(url, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -492,7 +516,8 @@ otherwise.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">delete!(url, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -520,7 +545,8 @@ failure.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">get(url, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -548,7 +574,8 @@ otherwise.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">get!(url, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -576,7 +603,8 @@ failure.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">head(url, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -604,7 +632,8 @@ otherwise.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">head!(url, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -632,7 +661,8 @@ failure.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">make_oauth_deauthorize_request(stripe_user_id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -645,7 +675,8 @@ failure.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">make_oauth_token_callback_request(body)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -657,8 +688,9 @@ failure.</p>
     <a href="#make_request/5" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">make_request(method, endpoint, body \\ [], headers \\ [], options \\ [])</span>
-      
+    <span class="signature">make_request(method, endpoint, body \\ %{}, headers \\ %{}, options \\ [])</span>
+    
+    
   </div>
   
   <section class="docstring">
@@ -676,7 +708,7 @@ Args:</p>
 <li>headers - request headers
 </li>
 <li>options - request options
-Returns dict
+Returns tuple
 </li>
 </ul>
 
@@ -687,8 +719,9 @@ Returns dict
     <a href="#make_request_with_key/6" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">make_request_with_key(method, endpoint, key, body \\ [], headers \\ [], options \\ [])</span>
-      
+    <span class="signature">make_request_with_key(method, endpoint, key, body \\ %{}, headers \\ %{}, options \\ [])</span>
+    
+    
   </div>
   
   <section class="docstring">
@@ -706,7 +739,7 @@ Args:</p>
 <li>headers - request headers
 </li>
 <li>options - request options
-Returns dict
+Returns tuple
 </li>
 </ul>
 
@@ -718,7 +751,8 @@ Returns dict
       <i class="icon-link"></i>
     </a>
     <span class="signature">options(url, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -746,7 +780,8 @@ otherwise.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">options!(url, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -774,14 +809,15 @@ failure.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">patch(url, body, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">patch(binary, binary, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
+          <pre><code class="elixir">patch(binary, <a href="#t:body/0">body</a>, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
   {:ok, HTTPoison.Response.t | HTTPoison.AsyncResponse.t} |
   {:error, HTTPoison.Error.t}</code></pre>
         
@@ -802,14 +838,15 @@ otherwise.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">patch!(url, body, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">patch!(binary, binary, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
+          <pre><code class="elixir">patch!(binary, <a href="#t:body/0">body</a>, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
   HTTPoison.Response.t |
   HTTPoison.AsyncResponse.t</code></pre>
         
@@ -830,14 +867,15 @@ failure.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">post(url, body, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">post(binary, binary, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
+          <pre><code class="elixir">post(binary, <a href="#t:body/0">body</a>, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
   {:ok, HTTPoison.Response.t | HTTPoison.AsyncResponse.t} |
   {:error, HTTPoison.Error.t}</code></pre>
         
@@ -858,14 +896,15 @@ otherwise.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">post!(url, body, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">post!(binary, binary, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
+          <pre><code class="elixir">post!(binary, <a href="#t:body/0">body</a>, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
   HTTPoison.Response.t |
   HTTPoison.AsyncResponse.t</code></pre>
         
@@ -886,7 +925,8 @@ failure.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">process_response_body(body)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -906,17 +946,26 @@ Returns Record or ArgumentError
       <i class="icon-link"></i>
     </a>
     <span class="signature">process_url(endpoint)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Creates the URL for our endpoint.
-Args:</p>
+    <p>Creates the URL for our endpoint. You can also manually set API base url
+for testing purpose by configuring the :stripity_stripe application
+with <code class="inline">:api_base_url</code> key. By default <code class="inline">https://api.stripe.com/v1/</code>.
+Here is an example:</p>
+<pre><code class="iex elixir">iex&gt; Application.put_env(:stripity_stripe, :api_base_url, &quot;http://localhost:4004&quot;)
+:ok
+
+iex&gt; Stripe.process_url(&quot;/plans&quot;)
+&quot;http://localhost:4004/plans&quot;</code></pre>
+<p>Args:</p>
 <ul>
 <li>endpoint - part of the API we’re hitting
-Returns string
 </li>
 </ul>
+<p>Returns string</p>
 
   </section>
 </div>
@@ -926,14 +975,15 @@ Returns string
       <i class="icon-link"></i>
     </a>
     <span class="signature">put(url, body, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">put(binary, binary, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
+          <pre><code class="elixir">put(binary, <a href="#t:body/0">body</a>, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
   {:ok, HTTPoison.Response.t | HTTPoison.AsyncResponse.t} |
   {:error, HTTPoison.Error.t}</code></pre>
         
@@ -954,14 +1004,15 @@ otherwise.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">put!(url, body, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">put!(binary, binary, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
+          <pre><code class="elixir">put!(binary, <a href="#t:body/0">body</a>, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
   HTTPoison.Response.t |
   HTTPoison.AsyncResponse.t</code></pre>
         
@@ -982,7 +1033,8 @@ failure.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">req_headers(key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -996,14 +1048,15 @@ failure.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">request(method, url, body \\ &quot;&quot;, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">request(atom, binary, binary, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
+          <pre><code class="elixir">request(atom, binary, <a href="#t:body/0">body</a>, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
   {:ok, HTTPoison.Response.t | HTTPoison.AsyncResponse.t} |
   {:error, HTTPoison.Error.t}</code></pre>
         
@@ -1044,7 +1097,7 @@ failure.</p>
 </li>
 <li><code class="inline">:stream_to</code> - a PID to stream the response to
 </li>
-<li><code class="inline">:proxy</code> - a proxy to be used for the request; it can by a regular url
+<li><code class="inline">:proxy</code> - a proxy to be used for the request; it can be a regular url
 or a <code class="inline">{Host, Proxy}</code> tuple
 </li>
 <li><code class="inline">:proxy_auth</code> - proxy authentication <code class="inline">{User, Password}</code> tuple
@@ -1054,6 +1107,8 @@ or a <code class="inline">{Host, Proxy}</code> tuple
 <li><code class="inline">:follow_redirect</code> - a boolean that causes redirects to be followed
 </li>
 <li><code class="inline">:max_redirect</code> - an integer denoting the maximum number of redirects to follow
+</li>
+<li><code class="inline">:params</code> - an enumerable consisting of two-item tuples that will be appended to the url as query string parameters
 </li>
 </ul>
 <p>Timeouts can be an integer or <code class="inline">:infinity</code></p>
@@ -1070,14 +1125,15 @@ request is successful, <code class="inline">{:error, reason}</code> otherwise.</
       <i class="icon-link"></i>
     </a>
     <span class="signature">request!(method, url, body \\ &quot;&quot;, headers \\ [], options \\ [])</span>
-      
+    
+    
   </div>
   
     <div class="specs">
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">request!(atom, binary, binary, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) :: HTTPoison.Response.t</code></pre>
+          <pre><code class="elixir">request!(atom, binary, <a href="#t:body/0">body</a>, <a href="#t:headers/0">headers</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) :: HTTPoison.Response.t</code></pre>
         
       </div>
     </div>
@@ -1097,25 +1153,12 @@ request fails.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">start()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
     <p>Starts HTTPoison and its dependencies.</p>
-
-  </section>
-</div>
-<div class="detail" id="start/2">
-  <div class="detail-header">
-    <a href="#start/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">start(type, args)</span>
-      
-  </div>
-  
-  <section class="docstring">
-    <p>Callback implementation for <code class="inline">c::application.start/2</code>.</p>
 
   </section>
 </div>
@@ -1126,22 +1169,24 @@ request fails.</p>
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.10.0),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.0),
           </span>
-      </p>
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-    <script src="dist/app.js"></script>
+  <script src="dist/app-21f1a20b9e.js"></script>
   </body>
 </html>
 

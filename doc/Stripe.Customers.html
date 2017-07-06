@@ -3,32 +3,32 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stripe.Customers – stripity_stripe v1.3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.10.0">
-    <link rel="stylesheet" href="dist/app.css" />
+    <meta name="generator" content="ExDoc v0.13.0">
+    <title>Stripe.Customers – stripity_stripe v1.6.0</title>
+    <link rel="stylesheet" href="dist/app-9c1e3d5aa2.css" />
+    
+      <link rel="canonical" href="https://hexdocs.pm/stripity_stripe/Stripe.Customers.html" />
+    
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
-  <a href="extra-api-reference.html" class="sidebar-projectLink">
+  <a href="api-reference.html" class="sidebar-projectLink">
     <div class="sidebar-projectDetails">
       <h1 class="sidebar-projectName">
         stripity_stripe
       </h1>
       <h2 class="sidebar-projectVersion">
-        v1.3.0
+        v1.6.0
       </h2>
     </div>
     
@@ -47,6 +47,8 @@
     
 
     
+      <li><a id="exceptions-list" href="#full-list">Exceptions</a></li>
+    
 
     
   </ul>
@@ -56,10 +58,12 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
+        <small class="visible-xs">stripity_stripe v1.6.0</small>
         Stripe.Customers
         
         
@@ -213,7 +217,7 @@ Using a given stripe key to apply against the account associated.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#list/2">list(starting_after, limit \\ 10)</a>
+    <a href="#list/2">list(starting_after \\ &quot;&quot;, limit \\ 10)</a>
   </div>
   
     <div class="summary-synopsis"><p>Returns a list of Customers with a default limit of 10 which you can override with <code class="inline">list/1</code></p>
@@ -276,7 +280,8 @@ Using a given stripe key to apply against the account associated</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">all(accum \\ [], starting_after \\ &quot;&quot;)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -292,7 +297,8 @@ Using a given stripe key to apply against the account associated</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">all(key, accum, starting_after)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -309,7 +315,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">count()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -325,7 +332,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">count(key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -342,13 +350,14 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">create(params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
     <p>Creates a Customer with the given parameters - all of which are optional.</p>
 <h2>Example</h2>
-<pre><code class="elixir">new_customer = [
+<pre><code class="elixir">  new_customer = [
     email: &quot;test@test.com&quot;,
     description: &quot;An Test Account&quot;,
     metadata:[
@@ -373,7 +382,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">create(params, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -390,7 +400,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">delete(id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -406,7 +417,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">delete(id, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -423,7 +435,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">delete_all()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -439,7 +452,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">delete_all(key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -456,13 +470,14 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">get(id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
     <p>Retrieves a given Customer with the specified ID. Returns 404 if not found.</p>
 <h2>Example</h2>
-<pre><code class="elixir">{:ok, cust} = Stripe.Customers.get &quot;customer_id&quot;</code></pre>
+<pre><code class="elixir">  {:ok, cust} = Stripe.Customers.get &quot;customer_id&quot;</code></pre>
 
   </section>
 </div>
@@ -472,7 +487,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">get(id, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -488,14 +504,15 @@ Using a given stripe key to apply against the account associated.</p>
     <a href="#list/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">list(starting_after, limit \\ 10)</span>
-      
+    <span class="signature">list(starting_after \\ &quot;&quot;, limit \\ 10)</span>
+    
+    
   </div>
   
   <section class="docstring">
     <p>Returns a list of Customers with a default limit of 10 which you can override with <code class="inline">list/1</code></p>
 <h2>Example</h2>
-<pre><code class="elixir">{:ok, customers} = Stripe.Customers.list(starting_after, 20)</code></pre>
+<pre><code class="elixir">  {:ok, customers} = Stripe.Customers.list(starting_after, 20)</code></pre>
 
   </section>
 </div>
@@ -505,7 +522,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">list(key, starting_after, limit)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -522,13 +540,14 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">update(customer_id, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
     <p>Updates a Customer with the given parameters - all of which are optional.</p>
 <h2>Example</h2>
-<pre><code class="elixir">new_fields = [
+<pre><code class="elixir">  new_fields = [
     email: &quot;new_email@test.com&quot;,
     description: &quot;New description&quot;,
   ]
@@ -542,7 +561,8 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">update(customer_id, params, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -560,22 +580,24 @@ Using a given stripe key to apply against the account associated.</p>
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.10.0),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.0),
           </span>
-      </p>
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-    <script src="dist/app.js"></script>
+  <script src="dist/app-21f1a20b9e.js"></script>
   </body>
 </html>
 

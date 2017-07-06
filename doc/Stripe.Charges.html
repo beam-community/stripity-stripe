@@ -3,32 +3,32 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stripe.Charges – stripity_stripe v1.3.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.10.0">
-    <link rel="stylesheet" href="dist/app.css" />
+    <meta name="generator" content="ExDoc v0.13.0">
+    <title>Stripe.Charges – stripity_stripe v1.6.0</title>
+    <link rel="stylesheet" href="dist/app-9c1e3d5aa2.css" />
+    
+      <link rel="canonical" href="https://hexdocs.pm/stripity_stripe/Stripe.Charges.html" />
+    
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
-  <a href="extra-api-reference.html" class="sidebar-projectLink">
+  <a href="api-reference.html" class="sidebar-projectLink">
     <div class="sidebar-projectDetails">
       <h1 class="sidebar-projectName">
         stripity_stripe
       </h1>
       <h2 class="sidebar-projectVersion">
-        v1.3.0
+        v1.6.0
       </h2>
     </div>
     
@@ -47,6 +47,8 @@
     
 
     
+      <li><a id="exceptions-list" href="#full-list">Exceptions</a></li>
+    
 
     
   </ul>
@@ -56,10 +58,12 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
+        <small class="visible-xs">stripity_stripe v1.6.0</small>
         Stripe.Charges
         
         
@@ -67,25 +71,24 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Handles charges to the Stripe API.
-(API ref: <a href="https://stripe.com/docs/api#charges">https://stripe.com/docs/api#charges</a>)</p>
-<p>Operations:</p>
+          <p>Functions for working with charges at Stripe. Through this API you can:</p>
 <ul>
-<li>create
+<li>create a charge,
 </li>
-<li>update
+<li>update a charge,
 </li>
-<li>get one 
+<li>get a charge,
 </li>
-<li>list 
+<li>list charges,
 </li>
-<li>count
+<li>count charges,
 </li>
-<li>refund 
+<li>refund a charge,
 </li>
-<li>refund partial 
+<li>partially refund a charge.
 </li>
 </ul>
+<p>Stripe API reference: <a href="https://stripe.com/docs/api#charges">https://stripe.com/docs/api#charges</a></p>
 
         </section>
       
@@ -110,7 +113,7 @@
     <a href="#capture/1">capture(id)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Captures a charge that is currently pending. Note: you can default a charge to be automatically captured by setting  <code class="inline">capture: true</code> in the charge create params</p>
+    <div class="summary-synopsis"><p>Capture a charge</p>
 </div>
   
 </div>
@@ -119,7 +122,7 @@
     <a href="#capture/2">capture(id, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Captures a charge that is currently pending. Note: you can default a charge to be automatically captured by setting  <code class="inline">capture: true</code> in the charge create params</p>
+    <div class="summary-synopsis"><p>Capture a charge. Accepts Stripe API key</p>
 </div>
   
 </div>
@@ -128,8 +131,7 @@
     <a href="#change/2">change(id, params)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Updates a charge with changeable information (see the Stripe docs on what you can change)</p>
-<h2>Examples</h2>
+    <div class="summary-synopsis"><p>Update a charge</p>
 </div>
   
 </div>
@@ -138,9 +140,7 @@
     <a href="#change/3">change(id, params, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Updates a charge with changeable information (see the Stripe docs on what you can change)
-Using a given stripe key to apply against the account associated.</p>
-<h2>Examples</h2>
+    <div class="summary-synopsis"><p>Update a charge. Accepts Stripe API key</p>
 </div>
   
 </div>
@@ -149,8 +149,7 @@ Using a given stripe key to apply against the account associated.</p>
     <a href="#count/0">count()</a>
   </div>
   
-    <div class="summary-synopsis"><p>Count number of charges.</p>
-<h2>Example</h2>
+    <div class="summary-synopsis"><p>Get total number of charges</p>
 </div>
   
 </div>
@@ -159,9 +158,7 @@ Using a given stripe key to apply against the account associated.</p>
     <a href="#count/1">count(key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Count number of charges.
-Using a given stripe key to apply against the account associated.</p>
-<h2>Example</h2>
+    <div class="summary-synopsis"><p>Get total number of charges. Accepts Stripe API key</p>
 </div>
   
 </div>
@@ -170,8 +167,7 @@ Using a given stripe key to apply against the account associated.</p>
     <a href="#create/2">create(amount, params)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Creates a charge for a customer or card. You must pass in the amount, and also a source for the charge
-that can be a token or customer. See the Stripe docs for proper source specs</p>
+    <div class="summary-synopsis"><p>Create a charge</p>
 </div>
   
 </div>
@@ -180,9 +176,7 @@ that can be a token or customer. See the Stripe docs for proper source specs</p>
     <a href="#create/3">create(amount, params, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Creates a charge for a customer or card. You must pass in the amount, and also a source for the charge
-  that can be a token or customer. See the Stripe docs for proper source specs.
-  Using a given stripe key to apply against the account associated</p>
+    <div class="summary-synopsis"><p>Create a charge. Accepts Stripe API key</p>
 </div>
   
 </div>
@@ -191,7 +185,7 @@ that can be a token or customer. See the Stripe docs for proper source specs</p>
     <a href="#get/1">get(id)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Retrieves a given charge</p>
+    <div class="summary-synopsis"><p>Get a charge</p>
 </div>
   
 </div>
@@ -200,17 +194,16 @@ that can be a token or customer. See the Stripe docs for proper source specs</p>
     <a href="#get/2">get(id, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Retrieves a given charge.
-Using a given stripe key to apply against the account associated</p>
+    <div class="summary-synopsis"><p>Get a charge. Accepts Stripe API key</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#list/1">list(limit \\ 10)</a>
+    <a href="#list/1">list(params \\ [])</a>
   </div>
   
-    <div class="summary-synopsis"><p>Lists out charges from your account with a default limit of 10. You can override this by passing in a limit</p>
+    <div class="summary-synopsis"><p>Get a list of charges</p>
 </div>
   
 </div>
@@ -219,8 +212,7 @@ Using a given stripe key to apply against the account associated</p>
     <a href="#list/2">list(key, limit)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Lists out charges from your account with a default limit of 10. You can override this by passing in a limit.
-Using a given stripe key to apply against the account associated</p>
+    <div class="summary-synopsis"><p>Get a list of charges. Accepts Stripe API key</p>
 </div>
   
 </div>
@@ -229,7 +221,7 @@ Using a given stripe key to apply against the account associated</p>
     <a href="#refund/1">refund(id)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Refunds a charge completely. Use <code class="inline">refund_partial</code> if you just want to… you know… partially refund</p>
+    <div class="summary-synopsis"><p>Refund a charge</p>
 </div>
   
 </div>
@@ -238,8 +230,7 @@ Using a given stripe key to apply against the account associated</p>
     <a href="#refund/2">refund(id, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Refunds a charge completely. Use <code class="inline">refund_partial</code> if you just want to… you know… partially refund
-Using a given stripe key to apply against the account associated</p>
+    <div class="summary-synopsis"><p>Refund a charge. Accepts Stripe API key</p>
 </div>
   
 </div>
@@ -248,7 +239,7 @@ Using a given stripe key to apply against the account associated</p>
     <a href="#refund_partial/2">refund_partial(id, amount)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Refunds a charge partially; the amount is required</p>
+    <div class="summary-synopsis"><p>Partially refund a charge</p>
 </div>
   
 </div>
@@ -257,9 +248,7 @@ Using a given stripe key to apply against the account associated</p>
     <a href="#refund_partial/3">refund_partial(id, amount, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Refunds a charge partially; the amount is required.
-Using a given stripe key to apply against the account associated.</p>
-<h2>Example</h2>
+    <div class="summary-synopsis"><p>Partially refund a charge. Accepts Stripe API key</p>
 </div>
   
 </div>
@@ -290,12 +279,16 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">capture(id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Captures a charge that is currently pending. Note: you can default a charge to be automatically captured by setting  <code class="inline">capture: true</code> in the charge create params.</p>
-<h2>Example</h2>
+    <p>Capture a charge.</p>
+<p>Captures a charge that is currently pending.</p>
+<p>Note: you can default a charge to be automatically captured by setting <code class="inline">capture: true</code> in the charge create params.</p>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
+<h2>Examples</h2>
 <pre><code class="elixir">{:ok, charge} = Stripe.Charges.capture(&quot;charge_id&quot;)</code></pre>
 
   </section>
@@ -306,14 +299,17 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">capture(id, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Captures a charge that is currently pending. Note: you can default a charge to be automatically captured by setting  <code class="inline">capture: true</code> in the charge create params.</p>
-<p>Using a given stripe key to apply against the account associated.</p>
-<h2>Example</h2>
-<pre><code class="elixir">{:ok, charge} = Stripe.Charges.capture(&quot;charge_id&quot;, key)</code></pre>
+    <p>Capture a charge. Accepts Stripe API key.</p>
+<p>Captures a charge that is currently pending.</p>
+<p>Note: you can default a charge to be automatically captured by setting <code class="inline">capture: true</code> in the charge create params.</p>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
+<h2>Examples</h2>
+<pre><code class="elixir">{:ok, charge} = Stripe.Charges.capture(&quot;charge_id&quot;, &quot;my_key&quot;)</code></pre>
 
   </section>
 </div>
@@ -323,14 +319,27 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">change(id, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Updates a charge with changeable information (see the Stripe docs on what you can change)</p>
+    <p>Update a charge.</p>
+<p>Updates a charge with changeable information.</p>
+<p>Accepts the following parameters:</p>
+<ul>
+<li><code class="inline">params</code> - a list of params to be updated (optional; defaults to <code class="inline">[]</code>).
+Available parameters are: <code class="inline">description</code>, <code class="inline">metadata</code>, <code class="inline">receipt_email</code>,
+<code class="inline">fraud_details</code> and <code class="inline">shipping</code>.
+</li>
+</ul>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
 <h2>Examples</h2>
-<pre><code class="elixir">params = [description: &quot;Changed charge&quot;]
-  {:ok, charge} = Stripe.Charges.change(&quot;charge_id&quot;, params)</code></pre>
+<pre><code class="elixir">params = [
+  description: &quot;Changed charge&quot;
+]
+
+{:ok, charge} = Stripe.Charges.change(&quot;charge_id&quot;, params)</code></pre>
 
   </section>
 </div>
@@ -340,15 +349,27 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">change(id, params, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Updates a charge with changeable information (see the Stripe docs on what you can change)
-Using a given stripe key to apply against the account associated.</p>
+    <p>Update a charge. Accepts Stripe API key.</p>
+<p>Updates a charge with changeable information.</p>
+<p>Accepts the following parameters:</p>
+<ul>
+<li><code class="inline">params</code> - a list of params to be updated (optional; defaults to <code class="inline">[]</code>).
+Available parameters are: <code class="inline">description</code>, <code class="inline">metadata</code>, <code class="inline">receipt_email</code>,
+<code class="inline">fraud_details</code> and <code class="inline">shipping</code>.
+</li>
+</ul>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
 <h2>Examples</h2>
-<pre><code class="elixir">params = [description: &quot;Changed charge&quot;]
-{:ok, charge} = Stripe.Charges.change(&quot;charge_id&quot;, params, key)</code></pre>
+<pre><code class="elixir">params = [
+  description: &quot;Changed charge&quot;
+]
+
+{:ok, charge} = Stripe.Charges.change(&quot;charge_id&quot;, params, &quot;my_key&quot;)</code></pre>
 
   </section>
 </div>
@@ -358,13 +379,16 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">count()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Count number of charges.</p>
-<h2>Example</h2>
-<pre><code class="elixir">{:ok, cnt} = Stripe.Charges.count</code></pre>
+    <p>Get total number of charges.</p>
+<p>Gets total number of charges.</p>
+<p>Returns <code class="inline">{:ok, count}</code> tuple.</p>
+<h2>Examples</h2>
+<pre><code class="elixir">{:ok, count} = Stripe.Charges.count()</code></pre>
 
   </section>
 </div>
@@ -374,14 +398,16 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">count(key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Count number of charges.
-Using a given stripe key to apply against the account associated.</p>
-<h2>Example</h2>
-<pre><code class="elixir">{:ok, cnt} = Stripe.Charges.count key</code></pre>
+    <p>Get total number of charges. Accepts Stripe API key.</p>
+<p>Gets total number of charges.</p>
+<p>Returns <code class="inline">{:ok, count}</code> tuple.</p>
+<h2>Examples</h2>
+<pre><code class="elixir">{:ok, count} = Stripe.Charges.count(&quot;key&quot;)</code></pre>
 
   </section>
 </div>
@@ -391,27 +417,30 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">create(amount, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Creates a charge for a customer or card. You must pass in the amount, and also a source for the charge
-that can be a token or customer. See the Stripe docs for proper source specs.</p>
+    <p>Create a charge.</p>
+<p>Creates a charge for a customer or card using amount and params. <code class="inline">params</code>
+must include a source.</p>
+<p>Returns <code class="inline">{:ok, charge}</code> tuple.</p>
 <h2>Examples</h2>
 <pre><code class="elixir">params = [
-    source: [
-      object: &quot;card&quot;,
-      number: &quot;4111111111111111&quot;,
-      exp_month: 10,
-      exp_year: 2020,
-      country: &quot;US&quot;,
-      name: &quot;Ducky Test&quot;,
-      cvc: 123
-    ],
-    description: &quot;1000 Widgets&quot;
-  ]
+  source: [
+    object: &quot;card&quot;,
+    number: &quot;4111111111111111&quot;,
+    exp_month: 10,
+    exp_year: 2020,
+    country: &quot;US&quot;,
+    name: &quot;Ducky Test&quot;,
+    cvc: 123
+  ],
+  description: &quot;1000 Widgets&quot;
+]
 
-  {:ok, result} = Stripe.Charges.create 1000,params</code></pre>
+{:ok, charge} = Stripe.Charges.create(1000, params)</code></pre>
 
   </section>
 </div>
@@ -421,15 +450,17 @@ that can be a token or customer. See the Stripe docs for proper source specs.</p
       <i class="icon-link"></i>
     </a>
     <span class="signature">create(amount, params, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>  Creates a charge for a customer or card. You must pass in the amount, and also a source for the charge
-  that can be a token or customer. See the Stripe docs for proper source specs.
-  Using a given stripe key to apply against the account associated.</p>
-<p>  ## Examples</p>
-<p>  {:ok, result} = Stripe.Charges.create 1000,params, key</p>
+    <p>Create a charge. Accepts Stripe API key.</p>
+<p>Creates a charge for a customer or card using amount and params. <code class="inline">params</code>
+must include a source.</p>
+<p>Returns <code class="inline">{:ok, charge}</code> tuple.</p>
+<h2>Examples</h2>
+<pre><code class="elixir">{:ok, charge} = Stripe.Charges.create(1000, params, key)</code></pre>
 
   </section>
 </div>
@@ -439,12 +470,15 @@ that can be a token or customer. See the Stripe docs for proper source specs.</p
       <i class="icon-link"></i>
     </a>
     <span class="signature">get(id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Retrieves a given charge.</p>
-<h2>Example</h2>
+    <p>Get a charge.</p>
+<p>Gets a charge.</p>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
+<h2>Examples</h2>
 <pre><code class="elixir">{:ok, charge} = Stripe.Charges.get(&quot;charge_id&quot;)</code></pre>
 
   </section>
@@ -455,14 +489,16 @@ that can be a token or customer. See the Stripe docs for proper source specs.</p
       <i class="icon-link"></i>
     </a>
     <span class="signature">get(id, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Retrieves a given charge.
-Using a given stripe key to apply against the account associated.</p>
-<h2>Example</h2>
-<pre><code class="elixir">{:ok, charge} = Stripe.Charges.get(&quot;charge_id&quot;, key)</code></pre>
+    <p>Get a charge. Accepts Stripe API key.</p>
+<p>Gets a charge.</p>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
+<h2>Examples</h2>
+<pre><code class="elixir">{:ok, charge} = Stripe.Charges.get(&quot;charge_id&quot;, &quot;my_key&quot;)</code></pre>
 
   </section>
 </div>
@@ -471,14 +507,23 @@ Using a given stripe key to apply against the account associated.</p>
     <a href="#list/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">list(limit \\ 10)</span>
-      
+    <span class="signature">list(params \\ [])</span>
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Lists out charges from your account with a default limit of 10. You can override this by passing in a limit.</p>
+    <p>Get a list of charges.</p>
+<p>Gets a list of charges.</p>
+<p>Accepts the following parameters:</p>
+<ul>
+<li><code class="inline">params</code> - a list of params supported by Stripe (optional; defaults to []). Available parameters are:
+<code class="inline">customer</code>, <code class="inline">ending_before</code>, <code class="inline">limit</code> and <code class="inline">source</code>.
+</li>
+</ul>
+<p>Returns a <code class="inline">{:ok, charges}</code> tuple, where <code class="inline">charges</code> is a list of charges.</p>
 <h2>Examples</h2>
-<pre><code class="elixir">{:ok, charges} = Stripe.Charges.list(100)</code></pre>
+<pre><code class="elixir">{:ok, charges} = Stripe.Charges.list(source: &quot;card&quot;) # Get a list of charges for cards</code></pre>
 
   </section>
 </div>
@@ -488,14 +533,23 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">list(key, limit)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Lists out charges from your account with a default limit of 10. You can override this by passing in a limit.
-Using a given stripe key to apply against the account associated.</p>
+    <p>Get a list of charges. Accepts Stripe API key.</p>
+<p>Gets a list of charges.</p>
+<p>Accepts the following parameters:</p>
+<ul>
+<li><code class="inline">params</code> - a list of params supported by Stripe (optional; defaults to
+<code class="inline">[]</code>). Available parameters are: <code class="inline">customer</code>, <code class="inline">ending_before</code>, <code class="inline">limit</code> and
+<code class="inline">source</code>.
+</li>
+</ul>
+<p>Returns a <code class="inline">{:ok, charges}</code> tuple, where <code class="inline">charges</code> is a list of charges.</p>
 <h2>Examples</h2>
-<pre><code class="elixir">{:ok, charges} = Stripe.Charges.list(key, 100)</code></pre>
+<pre><code class="elixir">{:ok, charges} = Stripe.Charges.list(&quot;my_key&quot;, source: &quot;card&quot;) # Get a list of charges for cards</code></pre>
 
   </section>
 </div>
@@ -505,12 +559,16 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">refund(id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Refunds a charge completely. Use <code class="inline">refund_partial</code> if you just want to… you know… partially refund</p>
-<h2>Example</h2>
+    <p>Refund a charge.</p>
+<p>Refunds a charge completely.</p>
+<p>Note: use <code class="inline">refund_partial</code> if you just want to perform a partial refund.</p>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
+<h2>Examples</h2>
 <pre><code class="elixir">{:ok, charge} = Stripe.Charges.refund(&quot;charge_id&quot;)</code></pre>
 
   </section>
@@ -521,14 +579,17 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">refund(id, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Refunds a charge completely. Use <code class="inline">refund_partial</code> if you just want to… you know… partially refund
-Using a given stripe key to apply against the account associated.</p>
-<h2>Example</h2>
-<pre><code class="elixir">{:ok, charge} = Stripe.Charges.refund(&quot;charge_id&quot;, key)</code></pre>
+    <p>Refund a charge. Accepts Stripe API key.</p>
+<p>Refunds a charge completely.</p>
+<p>Note: use <code class="inline">refund_partial</code> if you just want to perform a partial refund.</p>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
+<h2>Examples</h2>
+<pre><code class="elixir">{:ok, charge} = Stripe.Charges.refund(&quot;charge_id&quot;, &quot;my_key&quot;)</code></pre>
 
   </section>
 </div>
@@ -538,13 +599,21 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">refund_partial(id, amount)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Refunds a charge partially; the amount is required.</p>
-<h2>Example</h2>
-<pre><code class="elixir">{:ok, charge} = Stripe.Charges.refund_partial(&quot;charge_id&quot;,500)</code></pre>
+    <p>Partially refund a charge.</p>
+<p>Refunds a charge partially.</p>
+<p>Accepts the following parameters:</p>
+<ul>
+<li><code class="inline">amount</code> - amount to be refunded (required).
+</li>
+</ul>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
+<h2>Examples</h2>
+<pre><code class="elixir">{:ok, charge} = Stripe.Charges.refund_partial(&quot;charge_id&quot;, 500)</code></pre>
 
   </section>
 </div>
@@ -554,14 +623,21 @@ Using a given stripe key to apply against the account associated.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">refund_partial(id, amount, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Refunds a charge partially; the amount is required.
-Using a given stripe key to apply against the account associated.</p>
-<h2>Example</h2>
-<pre><code class="elixir">{:ok, charge} = Stripe.Charges.refund_partial(&quot;charge_id&quot;,500, key)</code></pre>
+    <p>Partially refund a charge. Accepts Stripe API key.</p>
+<p>Refunds a charge partially.</p>
+<p>Accepts the following parameters:</p>
+<ul>
+<li><code class="inline">amount</code> - amount to be refunded (required).
+</li>
+</ul>
+<p>Returns a <code class="inline">{:ok, charge}</code> tuple.</p>
+<h2>Examples</h2>
+<pre><code class="elixir">{:ok, charge} = Stripe.Charges.refund_partial(&quot;charge_id&quot;, 500, &quot;my_key&quot;)</code></pre>
 
   </section>
 </div>
@@ -572,22 +648,24 @@ Using a given stripe key to apply against the account associated.</p>
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.10.0),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.0),
           </span>
-      </p>
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-    <script src="dist/app.js"></script>
+  <script src="dist/app-21f1a20b9e.js"></script>
   </body>
 </html>
 
