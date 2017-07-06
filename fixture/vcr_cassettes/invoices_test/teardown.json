@@ -3,30 +3,30 @@
     "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer non_empty_secret_key_string",
+        "Authorization": "Bearer STRIPE_SECRET_KEY",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
       "method": "delete",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/customers/cus_8r2jCf6wk8YLyU/subscriptions/sub_8r2j78r42DD6xb"
+      "url": "https://api.stripe.com/v1/customers/cus_Ay3G4eTAX3FgXd/subscriptions/sub_Ay3GRYIf5J5VBt"
     },
     "response": {
-      "body": "{\n  \"id\": \"sub_8r2j78r42DD6xb\",\n  \"object\": \"subscription\",\n  \"application_fee_percent\": null,\n  \"cancel_at_period_end\": false,\n  \"canceled_at\": 1469020934,\n  \"created\": 1469020924,\n  \"current_period_end\": 1471699324,\n  \"current_period_start\": 1469020924,\n  \"customer\": \"cus_8r2jCf6wk8YLyU\",\n  \"discount\": null,\n  \"ended_at\": 1469020934,\n  \"livemode\": false,\n  \"metadata\": {},\n  \"plan\": {\n    \"id\": \"test-std\",\n    \"object\": \"plan\",\n    \"amount\": 100,\n    \"created\": 1469020923,\n    \"currency\": \"usd\",\n    \"interval\": \"month\",\n    \"interval_count\": 1,\n    \"livemode\": false,\n    \"metadata\": {},\n    \"name\": \"Test Plan Standard\",\n    \"statement_descriptor\": null,\n    \"trial_period_days\": null\n  },\n  \"quantity\": 1,\n  \"start\": 1469020924,\n  \"status\": \"canceled\",\n  \"tax_percent\": null,\n  \"trial_end\": null,\n  \"trial_start\": null\n}\n",
+      "body": "{\n  \"id\": \"sub_Ay3GRYIf5J5VBt\",\n  \"object\": \"subscription\",\n  \"application_fee_percent\": null,\n  \"cancel_at_period_end\": false,\n  \"canceled_at\": 1499236735,\n  \"created\": 1499236725,\n  \"current_period_end\": 1501915125,\n  \"current_period_start\": 1499236725,\n  \"customer\": \"cus_Ay3G4eTAX3FgXd\",\n  \"discount\": null,\n  \"ended_at\": 1499236735,\n  \"items\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"si_1Ac79tCM35SG8uZjJW619dXs\",\n        \"object\": \"subscription_item\",\n        \"created\": 1499236725,\n        \"plan\": {\n          \"id\": \"test-std\",\n          \"object\": \"plan\",\n          \"amount\": 100,\n          \"created\": 1499236723,\n          \"currency\": \"usd\",\n          \"interval\": \"month\",\n          \"interval_count\": 1,\n          \"livemode\": false,\n          \"metadata\": {},\n          \"name\": \"Test Plan Standard\",\n          \"statement_descriptor\": null,\n          \"trial_period_days\": null\n        },\n        \"quantity\": 1\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/subscription_items?subscription=sub_Ay3GRYIf5J5VBt\"\n  },\n  \"livemode\": false,\n  \"metadata\": {},\n  \"plan\": {\n    \"id\": \"test-std\",\n    \"object\": \"plan\",\n    \"amount\": 100,\n    \"created\": 1499236723,\n    \"currency\": \"usd\",\n    \"interval\": \"month\",\n    \"interval_count\": 1,\n    \"livemode\": false,\n    \"metadata\": {},\n    \"name\": \"Test Plan Standard\",\n    \"statement_descriptor\": null,\n    \"trial_period_days\": null\n  },\n  \"quantity\": 1,\n  \"start\": 1499236725,\n  \"status\": \"canceled\",\n  \"tax_percent\": null,\n  \"trial_end\": null,\n  \"trial_start\": null\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 13:22:14 GMT",
+        "Date": "Wed, 05 Jul 2017 06:38:55 GMT",
         "Content-Type": "application/json",
-        "Content-Length": "830",
+        "Content-Length": "1562",
         "Connection": "keep-alive",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS, DELETE",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8r2jDwEyECrNId",
-        "Stripe-Version": "2016-07-06",
+        "Request-Id": "req_Ay3GUHQiuHgSCG",
+        "Stripe-Version": "2017-06-05",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,
@@ -37,20 +37,20 @@
     "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer non_empty_secret_key_string",
+        "Authorization": "Bearer STRIPE_SECRET_KEY",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
       "method": "delete",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/customers/cus_8r2jCf6wk8YLyU"
+      "url": "https://api.stripe.com/v1/customers/cus_Ay3G4eTAX3FgXd"
     },
     "response": {
-      "body": "{\n  \"deleted\": true,\n  \"id\": \"cus_8r2jCf6wk8YLyU\"\n}\n",
+      "body": "{\n  \"deleted\": true,\n  \"id\": \"cus_Ay3G4eTAX3FgXd\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 13:22:15 GMT",
+        "Date": "Wed, 05 Jul 2017 06:38:56 GMT",
         "Content-Type": "application/json",
         "Content-Length": "52",
         "Connection": "keep-alive",
@@ -59,8 +59,8 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8r2jEL8kcBQ1PG",
-        "Stripe-Version": "2016-07-06",
+        "Request-Id": "req_Ay3GM7w6STXSAc",
+        "Stripe-Version": "2017-06-05",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,
@@ -71,7 +71,7 @@
     "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer non_empty_secret_key_string",
+        "Authorization": "Bearer STRIPE_SECRET_KEY",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
@@ -84,7 +84,7 @@
       "body": "{\n  \"deleted\": true,\n  \"id\": \"test-std\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 13:22:15 GMT",
+        "Date": "Wed, 05 Jul 2017 06:38:56 GMT",
         "Content-Type": "application/json",
         "Content-Length": "42",
         "Connection": "keep-alive",
@@ -93,8 +93,8 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8r2jRFJ5YTfxR1",
-        "Stripe-Version": "2016-07-06",
+        "Request-Id": "req_Ay3GwBClTB3ixK",
+        "Stripe-Version": "2017-06-05",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,
@@ -105,7 +105,7 @@
     "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer non_empty_secret_key_string",
+        "Authorization": "Bearer STRIPE_SECRET_KEY",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
@@ -118,7 +118,7 @@
       "body": "{\n  \"deleted\": true,\n  \"id\": \"test-dlx\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Wed, 20 Jul 2016 13:22:15 GMT",
+        "Date": "Wed, 05 Jul 2017 06:38:57 GMT",
         "Content-Type": "application/json",
         "Content-Length": "42",
         "Connection": "keep-alive",
@@ -127,8 +127,8 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_8r2jvHtTAISYVR",
-        "Stripe-Version": "2016-07-06",
+        "Request-Id": "req_Ay3GoZKY0U9GNF",
+        "Stripe-Version": "2017-06-05",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,

@@ -1,9 +1,9 @@
 [
   {
     "request": {
-      "body": "customer=cus_8r2jCf6wk8YLyU&amount=10&currency=usd&subscription=sub_8r2j78r42DD6xb",
+      "body": "customer=cus_Ay3G4eTAX3FgXd&amount=10&currency=usd&subscription=sub_Ay3GRYIf5J5VBt",
       "headers": {
-        "Authorization": "Bearer non_empty_secret_key_string",
+        "Authorization": "Bearer STRIPE_SECRET_KEY",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
@@ -13,10 +13,10 @@
       "url": "https://api.stripe.com/v1/invoiceitems"
     },
     "response": {
-      "body": "{\n  \"id\": \"ii_18joevGTLcoLJlYWnw0wFBA1\",\n  \"object\": \"invoiceitem\",\n  \"amount\": 10,\n  \"currency\": \"usd\",\n  \"customer\": \"cus_8r2jCf6wk8YLyU\",\n  \"date\": 1471519565,\n  \"description\": null,\n  \"discountable\": true,\n  \"invoice\": null,\n  \"livemode\": false,\n  \"metadata\": {},\n  \"period\": {\n    \"start\": 1471519565,\n    \"end\": 1471519565\n  },\n  \"plan\": null,\n  \"proration\": false,\n  \"quantity\": null,\n  \"subscription\": \"sub_8r2j78r42DD6xb\"\n}\n",
+      "body": "{\n  \"id\": \"ii_1Ac7A0CM35SG8uZjh7T3IVLA\",\n  \"object\": \"invoiceitem\",\n  \"amount\": 10,\n  \"currency\": \"usd\",\n  \"customer\": \"cus_Ay3G4eTAX3FgXd\",\n  \"date\": 1499236732,\n  \"description\": null,\n  \"discountable\": true,\n  \"invoice\": null,\n  \"livemode\": false,\n  \"metadata\": {},\n  \"period\": {\n    \"start\": 1499236732,\n    \"end\": 1499236732\n  },\n  \"plan\": null,\n  \"proration\": false,\n  \"quantity\": null,\n  \"subscription\": \"sub_Ay3GRYIf5J5VBt\"\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Thu, 18 Aug 2016 11:26:05 GMT",
+        "Date": "Wed, 05 Jul 2017 06:38:52 GMT",
         "Content-Type": "application/json",
         "Content-Length": "433",
         "Connection": "keep-alive",
@@ -25,8 +25,8 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_91sP1taoWesj9j",
-        "Stripe-Version": "2016-03-07",
+        "Request-Id": "req_Ay3GH3CJwV1qc2",
+        "Stripe-Version": "2017-06-05",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,
@@ -35,9 +35,9 @@
   },
   {
     "request": {
-      "body": "customer=cus_8r2jCf6wk8YLyU&subscription=sub_8r2j78r42DD6xb",
+      "body": "customer=cus_Ay3G4eTAX3FgXd&subscription=sub_Ay3GRYIf5J5VBt",
       "headers": {
-        "Authorization": "Bearer non_empty_secret_key_string",
+        "Authorization": "Bearer STRIPE_SECRET_KEY",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
@@ -47,10 +47,10 @@
       "url": "https://api.stripe.com/v1/invoices"
     },
     "response": {
-      "body": "{\n  \"id\": \"in_18joevGTLcoLJlYWh0wfFUIS\",\n  \"object\": \"invoice\",\n  \"amount_due\": 10,\n  \"application_fee\": null,\n  \"attempt_count\": 0,\n  \"attempted\": false,\n  \"charge\": null,\n  \"closed\": false,\n  \"currency\": \"usd\",\n  \"customer\": \"cus_8r2jCf6wk8YLyU\",\n  \"date\": 1471519565,\n  \"description\": null,\n  \"discount\": null,\n  \"ending_balance\": null,\n  \"forgiven\": false,\n  \"lines\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"ii_18joevGTLcoLJlYWnw0wFBA1\",\n        \"object\": \"line_item\",\n        \"amount\": 10,\n        \"currency\": \"usd\",\n        \"description\": null,\n        \"discountable\": true,\n        \"livemode\": false,\n        \"metadata\": {},\n        \"period\": {\n          \"start\": 1471519565,\n          \"end\": 1471519565\n        },\n        \"plan\": null,\n        \"proration\": false,\n        \"quantity\": null,\n        \"subscription\": \"sub_8r2j78r42DD6xb\",\n        \"type\": \"invoiceitem\"\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/invoices/in_18joevGTLcoLJlYWh0wfFUIS/lines\"\n  },\n  \"livemode\": false,\n  \"metadata\": {},\n  \"next_payment_attempt\": 1471523165,\n  \"paid\": false,\n  \"period_end\": 1471519565,\n  \"period_start\": 1471519559,\n  \"receipt_number\": null,\n  \"starting_balance\": 0,\n  \"statement_descriptor\": null,\n  \"subscription\": \"sub_8r2j78r42DD6xb\",\n  \"subtotal\": 10,\n  \"tax\": null,\n  \"tax_percent\": null,\n  \"total\": 10,\n  \"webhooks_delivered_at\": null\n}\n",
+      "body": "{\n  \"id\": \"in_1Ac7A0CM35SG8uZjOA88KTjb\",\n  \"object\": \"invoice\",\n  \"amount_due\": 10,\n  \"application_fee\": null,\n  \"attempt_count\": 0,\n  \"attempted\": false,\n  \"charge\": null,\n  \"closed\": false,\n  \"currency\": \"usd\",\n  \"customer\": \"cus_Ay3G4eTAX3FgXd\",\n  \"date\": 1499236732,\n  \"description\": null,\n  \"discount\": null,\n  \"ending_balance\": null,\n  \"forgiven\": false,\n  \"lines\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"ii_1Ac7A0CM35SG8uZjh7T3IVLA\",\n        \"object\": \"line_item\",\n        \"amount\": 10,\n        \"currency\": \"usd\",\n        \"description\": null,\n        \"discountable\": true,\n        \"livemode\": false,\n        \"metadata\": {},\n        \"period\": {\n          \"start\": 1499236732,\n          \"end\": 1499236732\n        },\n        \"plan\": null,\n        \"proration\": false,\n        \"quantity\": null,\n        \"subscription\": \"sub_Ay3GRYIf5J5VBt\",\n        \"type\": \"invoiceitem\"\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/invoices/in_1Ac7A0CM35SG8uZjOA88KTjb/lines\"\n  },\n  \"livemode\": false,\n  \"metadata\": {},\n  \"next_payment_attempt\": 1499240332,\n  \"paid\": false,\n  \"period_end\": 1499236732,\n  \"period_start\": 1499236725,\n  \"receipt_number\": null,\n  \"starting_balance\": 0,\n  \"statement_descriptor\": null,\n  \"subscription\": \"sub_Ay3GRYIf5J5VBt\",\n  \"subtotal\": 10,\n  \"tax\": null,\n  \"tax_percent\": null,\n  \"total\": 10,\n  \"webhooks_delivered_at\": null\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Thu, 18 Aug 2016 11:26:05 GMT",
+        "Date": "Wed, 05 Jul 2017 06:38:52 GMT",
         "Content-Type": "application/json",
         "Content-Length": "1400",
         "Connection": "keep-alive",
@@ -59,8 +59,8 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_91sP4o4cjeggzt",
-        "Stripe-Version": "2016-03-07",
+        "Request-Id": "req_Ay3GHre3bvMf8c",
+        "Stripe-Version": "2017-06-05",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,
@@ -71,20 +71,20 @@
     "request": {
       "body": "",
       "headers": {
-        "Authorization": "Bearer non_empty_secret_key_string",
+        "Authorization": "Bearer STRIPE_SECRET_KEY",
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Stripe/v1 stripity-stripe/1.4.0"
       },
       "method": "post",
       "options": [],
       "request_body": "",
-      "url": "https://api.stripe.com/v1/invoices/in_18joevGTLcoLJlYWh0wfFUIS/pay"
+      "url": "https://api.stripe.com/v1/invoices/in_1Ac7A0CM35SG8uZjOA88KTjb/pay"
     },
     "response": {
-      "body": "{\n  \"id\": \"in_18joevGTLcoLJlYWh0wfFUIS\",\n  \"object\": \"invoice\",\n  \"amount_due\": 0,\n  \"application_fee\": null,\n  \"attempt_count\": 0,\n  \"attempted\": true,\n  \"charge\": null,\n  \"closed\": true,\n  \"currency\": \"usd\",\n  \"customer\": \"cus_8r2jCf6wk8YLyU\",\n  \"date\": 1471519565,\n  \"description\": null,\n  \"discount\": null,\n  \"ending_balance\": 10,\n  \"forgiven\": false,\n  \"lines\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"ii_18joevGTLcoLJlYWnw0wFBA1\",\n        \"object\": \"line_item\",\n        \"amount\": 10,\n        \"currency\": \"usd\",\n        \"description\": null,\n        \"discountable\": true,\n        \"livemode\": false,\n        \"metadata\": {},\n        \"period\": {\n          \"start\": 1471519565,\n          \"end\": 1471519565\n        },\n        \"plan\": null,\n        \"proration\": false,\n        \"quantity\": null,\n        \"subscription\": \"sub_8r2j78r42DD6xb\",\n        \"type\": \"invoiceitem\"\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/invoices/in_18joevGTLcoLJlYWh0wfFUIS/lines\"\n  },\n  \"livemode\": false,\n  \"metadata\": {},\n  \"next_payment_attempt\": null,\n  \"paid\": true,\n  \"period_end\": 1471519565,\n  \"period_start\": 1471519559,\n  \"receipt_number\": null,\n  \"starting_balance\": 0,\n  \"statement_descriptor\": null,\n  \"subscription\": \"sub_8r2j78r42DD6xb\",\n  \"subtotal\": 10,\n  \"tax\": null,\n  \"tax_percent\": null,\n  \"total\": 10,\n  \"webhooks_delivered_at\": 1471519565\n}\n",
+      "body": "{\n  \"id\": \"in_1Ac7A0CM35SG8uZjOA88KTjb\",\n  \"object\": \"invoice\",\n  \"amount_due\": 0,\n  \"application_fee\": null,\n  \"attempt_count\": 0,\n  \"attempted\": true,\n  \"charge\": null,\n  \"closed\": true,\n  \"currency\": \"usd\",\n  \"customer\": \"cus_Ay3G4eTAX3FgXd\",\n  \"date\": 1499236732,\n  \"description\": null,\n  \"discount\": null,\n  \"ending_balance\": 10,\n  \"forgiven\": false,\n  \"lines\": {\n    \"object\": \"list\",\n    \"data\": [\n      {\n        \"id\": \"ii_1Ac7A0CM35SG8uZjh7T3IVLA\",\n        \"object\": \"line_item\",\n        \"amount\": 10,\n        \"currency\": \"usd\",\n        \"description\": null,\n        \"discountable\": true,\n        \"livemode\": false,\n        \"metadata\": {},\n        \"period\": {\n          \"start\": 1499236732,\n          \"end\": 1499236732\n        },\n        \"plan\": null,\n        \"proration\": false,\n        \"quantity\": null,\n        \"subscription\": \"sub_Ay3GRYIf5J5VBt\",\n        \"type\": \"invoiceitem\"\n      }\n    ],\n    \"has_more\": false,\n    \"total_count\": 1,\n    \"url\": \"/v1/invoices/in_1Ac7A0CM35SG8uZjOA88KTjb/lines\"\n  },\n  \"livemode\": false,\n  \"metadata\": {},\n  \"next_payment_attempt\": null,\n  \"paid\": true,\n  \"period_end\": 1499236732,\n  \"period_start\": 1499236725,\n  \"receipt_number\": null,\n  \"starting_balance\": 0,\n  \"statement_descriptor\": null,\n  \"subscription\": \"sub_Ay3GRYIf5J5VBt\",\n  \"subtotal\": 10,\n  \"tax\": null,\n  \"tax_percent\": null,\n  \"total\": 10,\n  \"webhooks_delivered_at\": 1499236732\n}\n",
       "headers": {
         "Server": "nginx",
-        "Date": "Thu, 18 Aug 2016 11:26:06 GMT",
+        "Date": "Wed, 05 Jul 2017 06:38:53 GMT",
         "Content-Type": "application/json",
         "Content-Length": "1394",
         "Connection": "keep-alive",
@@ -93,8 +93,8 @@
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Max-Age": "300",
         "Cache-Control": "no-cache, no-store",
-        "Request-Id": "req_91sP6YoQEIPIRz",
-        "Stripe-Version": "2016-03-07",
+        "Request-Id": "req_Ay3GBI1IKrTn0s",
+        "Stripe-Version": "2017-06-05",
         "Strict-Transport-Security": "max-age=31556926; includeSubDomains"
       },
       "status_code": 200,

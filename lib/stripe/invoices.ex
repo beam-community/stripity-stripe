@@ -2,6 +2,7 @@
   @moduledoc """
   Main API for working with Invoices at Stripe. Through this API you can:
   -create
+  -update
   -retrieve single
   -list (paged, 100 max/page)
   -count
@@ -151,6 +152,24 @@
   def create(customer_id, params, key) do
     params = Keyword.put_new params, :customer, customer_id
     Stripe.make_request_with_key(:post, "invoices", key, params)
+    |> Stripe.Util.handle_stripe_response
+  end
+
+  @doc """
+  Changes Invoice. See Stripe docs as to what you can change.
+
+  ## Example
+
+  ```
+    {:ok, invoice} = Stripe.Invoices.change("invoice_id", [closed: true])
+  ```
+  """
+  def change(id, params) do
+    change(id, params, Stripe.config_or_env_key)
+  end
+
+  def change(id, params, key) do
+    Stripe.make_request_with_key(:post, "#{@endpoint}/#{id}", key, params)
     |> Stripe.Util.handle_stripe_response
   end
 
