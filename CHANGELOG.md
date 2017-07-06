@@ -1,3 +1,11 @@
+## 1.6.0 (2017-07-06)
+
+Changes:
+
+- Added support to update invoices (`&Stripe.Invoices.change/2`, `&Stripe.Invoices.change/3`)
+  - https://github.com/code-corps/stripity_stripe/pull/241
+  - credit to https://github.com/TakteS
+
 ## 1.5.0 (2017-07-04)
 
 Changes:
@@ -7,7 +15,7 @@ Changes:
 ## 1.0.0 to 1.4.0
 
 - Sadly the changes have not been properly tracked here. We will compile a list
-as soon as we are able 
+as soon as we are able
 
 ## 1.0.0 (2015-12-22)
 
