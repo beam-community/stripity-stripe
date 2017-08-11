@@ -5,3 +5,7 @@ erl_crash.dump
 config/config.secret.exs
 /doc
 .DS_Store
+
+# IntelliJ IDEA files
+/.idea
+*.iml
