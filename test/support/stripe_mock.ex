@@ -22,32 +22,65 @@ defmodule Stripe.StripeMock do
 
   @impl true
   def init(opts) do
+    {:ok, manager_pid, os_pid} = start_stripe_mock(opts)
+    {:ok, %{manager_pid: manager_pid, os_pid: os_pid, opts: opts, restarting: false}}
+  end
+
+  @impl true
+  def handle_call(:reset, from, %{manager_pid: manager_pid, os_pid: os_pid} = state) do
+    kill_stripe_mock(manager_pid)
+    # restart automatically happens on receiving confirmation of death
+    {:noreply, %{state | manager_pid: manager_pid, os_pid: os_pid, restarting: {true, from}}}
+  end
+
+  @impl true
+  def terminate(_reason, %{manager_pid: manager_pid}) do
+    Logger.debug("Terminating StripeMock")
+    kill_stripe_mock(manager_pid)
+  end
+
+  @impl true
+  def handle_info({:stdout, os_pid, msg}, %{os_pid: os_pid} = state) do
+    Logger.debug("[stripe-mock:out] #{String.trim msg}")
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_info({:stderr, os_pid, msg}, %{os_pid: os_pid} = state) do
+    Logger.debug("[stripe-mock] #{String.trim msg}")
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_info({:DOWN, os_pid, :process, _ex_pid, _reason}, %{os_pid: os_pid, opts: opts, restarting: {true, from}} = state) do
+    {:ok, manager_pid, os_pid} = start_stripe_mock(opts)
+    GenServer.reply(from, :ok)
+    {:noreply, %{state | manager_pid: manager_pid, os_pid: os_pid, restarting: false}}
+  end
+
+  defp start_stripe_mock(opts) do
+    executable = opts[:stripe_mock_path] || System.find_executable "stripe-mock"
+    unless executable, do: raise "Could not find stripe-mock. Make sure it's in your PATH or pass the :stripe_mock_path option."
+    port = opts[:port] || 12111
+
     port_args =
-      case opts[:port] do
+      case port do
         nil -> []
         port when is_number(port) -> ["-port", Integer.to_string(port)]
         _ -> raise "port must be a number"
       end
 
-    executable = opts[:stripe_mock_path] || System.find_executable "stripe-mock"
-    unless executable, do: raise "Could not find stripe-mock. Make sure it's in your PATH or pass the :stripe_mock_path option."
-
-    mock = Port.open({:spawn_executable, executable}, [:binary, args: port_args])
-    Logger.debug("Starting stripe_mock")
-    {:ok, %{mock: mock, port_args: port_args, executable: executable}}
+    Logger.debug("Starting stripe_mock on port #{port}")
+    Exexec.run([executable | port_args], monitor: true, stdout: true, stderr: true)
   end
 
-  @impl true
-  def handle_call(:reset, _from, %{mock: mock, port_args: port_args, executable: executable} = state) do
-    Port.close(mock)
-    Process.sleep(500) # allow external process to close
-    mock = Port.open({:spawn_executable, executable}, [:binary, args: port_args])
-    {:reply, :ok, %{state | mock: mock}}
-  end
-
-  @impl true
-  def terminate(_reason, %{mock: mock}) do
-    Logger.debug("Terminating StripeMock")
-    if Port.info(mock), do: Port.close(mock)
+  defp kill_stripe_mock(manager_pid) do
+    Logger.debug("Killing stripe_mock")
+    case Exexec.stop manager_pid do
+      :ok -> :ok
+      {:error, err} ->
+        Logger.error("Error killing stripe_mock: #{inspect err}")
+        :ok
+    end
   end
 end

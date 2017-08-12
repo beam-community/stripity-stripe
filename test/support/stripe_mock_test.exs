@@ -3,13 +3,13 @@ defmodule Stripe.StripeMockTest do
   alias Stripe.StripeMock
   require StripeMock
 
-  # needed because the external process takes a while to spin up and shut down
-  defp delay(time \\ 5000) do
+  # needed because the external process takes a while to spin up
+  defp delay(time \\ 100) do
     Process.sleep(time)
   end
 
   defp assert_port_open(port) do
-    delay(100)
+    delay()
     assert {:ok, socket} = :gen_tcp.connect('localhost', port, [])
     :gen_tcp.close(socket)
   end
@@ -19,7 +19,6 @@ defmodule Stripe.StripeMockTest do
     assert Process.whereis(StripeMock) == pid
     assert_port_open 12111
     StripeMock.stop()
-    delay()
   end
 
   test "mock can be started locally" do
@@ -27,14 +26,12 @@ defmodule Stripe.StripeMockTest do
     refute Process.whereis(StripeMock) == pid
     assert_port_open 12111
     StripeMock.stop(pid)
-    delay()
   end
 
   test "mock can be started with a specific port" do
     assert {:ok, pid} = StripeMock.start_link(port: 19275)
     assert_port_open 19275
     StripeMock.stop(pid)
-    delay()
   end
 
   test "mock can be reset" do
@@ -43,6 +40,5 @@ defmodule Stripe.StripeMockTest do
     assert :ok = StripeMock.reset(pid)
     assert_port_open 19275
     StripeMock.stop(pid)
-    delay()
   end
 end
