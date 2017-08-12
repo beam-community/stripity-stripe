@@ -14,6 +14,7 @@ defmodule Stripe.StripeMockTest do
     :gen_tcp.close(socket)
   end
 
+  @tag :disabled
   test "mock can be started globally and defaults to port 12111" do
     assert {:ok, pid} = StripeMock.start_link(global: true)
     assert Process.whereis(StripeMock) == pid
@@ -21,6 +22,7 @@ defmodule Stripe.StripeMockTest do
     StripeMock.stop()
   end
 
+  @tag :disabled
   test "mock can be started locally" do
     assert {:ok, pid} = StripeMock.start_link()
     refute Process.whereis(StripeMock) == pid
@@ -28,12 +30,14 @@ defmodule Stripe.StripeMockTest do
     StripeMock.stop(pid)
   end
 
+  @tag :disabled
   test "mock can be started with a specific port" do
     assert {:ok, pid} = StripeMock.start_link(port: 19275)
     assert_port_open 19275
     StripeMock.stop(pid)
   end
 
+  @tag :disabled
   test "mock can be reset" do
     assert {:ok, pid} = StripeMock.start_link(port: 19275)
     assert_port_open 19275
