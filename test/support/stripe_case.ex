@@ -5,7 +5,7 @@ defmodule Stripe.StripeCase do
 
   use ExUnit.CaseTemplate
 
-  def assert_stripe_requested(_method, _url) do
+  def assert_stripe_requested(_method, _url, _extra \\ []) do
     # TODO: use something akin to WebMock to check the API calls are correct
     assert true
   end
@@ -21,7 +21,7 @@ defmodule Stripe.StripeCase do
 
   using do
     quote do
-      import Stripe.StripeCase, only: [assert_stripe_requested: 2, stripe_base_url: 0, reset_stripe: 0]
+      import Stripe.StripeCase, only: [assert_stripe_requested: 2, assert_stripe_requested: 3, stripe_base_url: 0, reset_stripe: 0]
     end
   end
 
