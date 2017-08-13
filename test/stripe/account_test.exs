@@ -23,7 +23,7 @@ defmodule Stripe.AccountTest do
     assert {:ok, %Stripe.Account{} = raccount} = Stripe.Account.reject(account)
     assert_stripe_requested :post, "/v1/accounts/#{account.id}/reject"
     assert account.id == raccount.id
-    refute raccount.tratransfers_enabled
+    refute raccount.transfers_enabled
     refute raccount.charges_enabled
   end
 
