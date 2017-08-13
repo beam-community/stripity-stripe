@@ -45,10 +45,10 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested :post, "/v1/accounts/#{id}"
   end
 
-  @tag :reset_stripe_after
   test "is deletable" do
     assert :ok = Stripe.Account.delete("acct_123")
     assert_stripe_requested :delete, "/v1/accounts/acct_123"
+    reset_stripe()
   end
 
   test "can be deauthorized" do

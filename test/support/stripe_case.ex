@@ -14,22 +14,19 @@ defmodule Stripe.StripeCase do
     Application.get_env(:stripity_stripe, :api_base_url)
   end
 
-  using do
-    quote do
-      import Stripe.StripeCase, only: [assert_stripe_requested: 2, stripe_base_url: 0]
-    end
-  end
-
-  setup_all do
+  def reset_stripe() do
     Stripe.StripeMock.reset()
     Process.sleep(250)
   end
 
-  setup tags do
-    on_exit fn ->
-      if tags[:reset_stripe_after] do
-        Stripe.StripeMock.reset()
-      end
+  using do
+    quote do
+      import Stripe.StripeCase, only: [assert_stripe_requested: 2, stripe_base_url: 0, reset_stripe: 0]
     end
   end
+
+  setup_all do
+    reset_stripe()
+  end
+
 end
