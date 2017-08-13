@@ -1,4 +1,5 @@
 language: elixir
+dist: trusty
 elixir:
   - 1.3
 otp_release:
