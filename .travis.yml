@@ -8,7 +8,7 @@ sudo: false
 env:
   global:
     - STRIPE_MOCK_VERSION=0.1.14
-  - MIX_ENV=test STRIPE_SECRET_KEY=non_empty_secret_key_string
+    - MIX_ENV=test STRIPE_SECRET_KEY=non_empty_secret_key_string
 cache:
   directories:
     - stripe-mock
