@@ -21,10 +21,10 @@ defmodule Stripe.ApplePayDomainTest do
 #    assert_stripe_requested :post, "/v1/apple_pay/domains"
 #  end
 #
-#  @tag :reset_stripe_after
 #  test "is deletable" do
 #    {:ok, domain} = Stripe.ApplePayDomain.retrieve("apwc_123")
 #    assert :ok = Stripe.ApplePayDomain.delete(domain)
 #    assert_stripe_requested :delete, "/v1/apple_pay/domains/#{domain.id}"
+#    reset_stripe
 #  end
 end
