@@ -24,6 +24,7 @@ defmodule Stripe.PlanTest do
     assert_stripe_requested :post, "/v1/plans"
   end
 
+  @tag :disabled
   test "is saveable" do
     {:ok, plan} = Stripe.Plan.retrieve("sapphire-elite")
     plan = put_in(plan.metadata["key"], "value")

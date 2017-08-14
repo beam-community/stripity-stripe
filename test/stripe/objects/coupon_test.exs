@@ -23,6 +23,7 @@ defmodule Stripe.CouponTest do
     assert_stripe_requested :post, "/v1/coupons"
   end
 
+  @tag :disabled
   test "is saveable" do
     {:ok, coupon} = Stripe.Coupon.retrieve("25OFF")
     coupon = put_in(coupon.metadata["key"], "value")
