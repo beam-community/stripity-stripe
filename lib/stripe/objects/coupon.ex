@@ -22,33 +22,12 @@ defmodule Stripe.Coupon do
 
   @plural_endpoint "coupons"
 
-  @schema %{
-    id: [:retrieve, :create],
-    object: [:retrieve],
-    amount_off: [:create, :retrieve],
-    created: [:retrieve],
-    currency: [:create, :retrieve],
-    duration: [:create, :retrieve],
-    duration_in_months: [:create, :retrieve],
-    livemode: [:retrieve],
-    max_redemptions: [:create, :retrieve],
-    metadata: [:create, :retrieve, :update],
-    percent_off: [:create, :retrieve],
-    redeem_by: [:create, :retrieve],
-    times_redeemed: [:create, :retrieve]
-  }
-
-  @nullable_keys [
-    :amount_off, :currency, :duration_in_months, :max_redemptions,
-    :metadata, :percent_off, :redeem_by, :times_redeemed
-  ]
-
   @doc """
   Create a coupon.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """
@@ -68,7 +47,7 @@ defmodule Stripe.Coupon do
   @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """

@@ -12,6 +12,75 @@ defmodule Stripe.Subscription do
   Does not yet render lists or take options.
 
   Stripe API reference: https://stripe.com/docs/api#subscription
+
+  ```
+  {
+    "id": "sub_A5GH4y0tqOZorL",
+    "object": "subscription",
+    "application_fee_percent": null,
+    "cancel_at_period_end": false,
+    "canceled_at": 1486599980,
+    "created": 1486599925,
+    "current_period_end": 1489019125,
+    "current_period_start": 1486599925,
+    "customer": "cus_A5GEGcroKA82CE",
+    "discount": null,
+    "ended_at": 1486599980,
+    "items": {
+      "object": "list",
+      "data": [
+        {
+          "id": "si_19l5kX2eZvKYlo2COV9VLK3B",
+          "object": "subscription_item",
+          "created": 1486599925,
+          "plan": {
+            "id": "gold-extended-3221748186322061931",
+            "object": "plan",
+            "amount": 5000,
+            "created": 1486599923,
+            "currency": "usd",
+            "interval": "month",
+            "interval_count": 1,
+            "livemode": false,
+            "metadata": {
+            },
+            "name": "Bronze complete",
+            "statement_descriptor": null,
+            "trial_period_days": null
+          },
+          "quantity": 1
+        }
+      ],
+      "has_more": false,
+      "total_count": 1,
+      "url": "/v1/subscription_items?subscription=sub_A5GH4y0tqOZorL"
+    },
+    "livemode": false,
+    "metadata": {
+    },
+    "plan": {
+      "id": "gold-extended-3221748186322061931",
+      "object": "plan",
+      "amount": 5000,
+      "created": 1486599923,
+      "currency": "usd",
+      "interval": "month",
+      "interval_count": 1,
+      "livemode": false,
+      "metadata": {
+      },
+      "name": "Bronze complete",
+      "statement_descriptor": null,
+      "trial_period_days": null
+    },
+    "quantity": 1,
+    "start": 1486599925,
+    "status": "canceled",
+    "tax_percent": null,
+    "trial_end": null,
+    "trial_start": null
+  }
+  ```
   """
 
   @type t :: %__MODULE__{}
@@ -26,43 +95,12 @@ defmodule Stripe.Subscription do
 
   @plural_endpoint "subscriptions"
 
-  @schema %{
-    application_fee_percent: [:create, :retrieve, :update],
-    cancel_at_period_end: [:retrieve],
-    canceled_at: [:retrieve],
-    coupon: [:create, :update],
-    created: [:retrieve],
-    current_period_end: [:retrieve],
-    current_period_start: [:retrieve],
-    customer: [:create, :retrieve],
-    discount: [:retrieve],
-    ended_at: [:retrieve],
-    id: [:retrieve],
-    livemode: [:retrieve],
-    metadata: [:create, :retrieve, :update],
-    object: [:retrieve],
-    plan: [:create, :retrieve, :update],
-    prorate: [:create],
-    quantity: [:create, :retrieve, :update],
-    source: [:create, :update],
-    start: [:retrieve],
-    status: [:retrieve],
-    tax_percent: [:create, :retrieve, :update],
-    trial_end: [:create, :retrieve, :update],
-    trial_period_days: [:create],
-    trial_start: [:create, :retrieve]
-  }
-
-  @nullable_keys [
-    :metadata
-  ]
-
   @doc """
   Create a subscription.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """
@@ -82,7 +120,7 @@ defmodule Stripe.Subscription do
   @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """
@@ -102,6 +140,8 @@ defmodule Stripe.Subscription do
   @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
   def list(params \\ %{}, opts \\ []) do
     endpoint = @plural_endpoint
-    Stripe.Request.retrieve(endpoint, opts)
+
+    params
+    |> Stripe.Request.retrieve(endpoint, opts)
   end
 end

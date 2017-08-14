@@ -1,11 +1,9 @@
 defmodule Stripe.Request do
-  alias Stripe.Changeset
   alias Stripe.Converter
 
-  @spec create(String.t, map, map, Keyword.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
-  def create(endpoint, changes, schema, opts) do
+  @spec create(String.t, map, Keyword.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
+  def create(endpoint, changes, opts) do
     changes
-    |> Changeset.cast(schema, :create)
     |> Stripe.request(:post, endpoint, %{}, opts)
     |> handle_result
   end
@@ -36,10 +34,9 @@ defmodule Stripe.Request do
     |> handle_result
   end
 
-  @spec update(String.t, map, map, list, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
-  def update(endpoint, changes, schema, nullable_keys, opts) do
+  @spec update(String.t, map, Keyword.t) :: {:ok, struct} | {:error, Stripe.api_error_struct}
+  def update(endpoint, changes, opts) do
     changes
-    |> Changeset.cast(schema, :update, nullable_keys)
     |> Stripe.request(:post, endpoint, %{}, opts)
     |> handle_result
   end
@@ -51,6 +48,6 @@ defmodule Stripe.Request do
     |> handle_result
   end
 
-  defp handle_result({:ok, result = %{}}), do: {:ok, Converter.convert_result(result)}
-  defp handle_result({:error, error}), do: {:error, error}
+  def handle_result({:ok, result = %{}}), do: {:ok, Converter.convert_result(result)}
+  def handle_result({:error, error}), do: {:error, error}
 end
