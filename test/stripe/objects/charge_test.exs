@@ -1,5 +1,5 @@
 defmodule Stripe.ChargeTest do
-  use Stripe.StripeCase
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: charges}} = Stripe.Charge.list()

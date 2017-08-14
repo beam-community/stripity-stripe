@@ -1,5 +1,5 @@
 defmodule Stripe.InvoiceTest do
-  use Stripe.StripeCase
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: invoices}} = Stripe.Invoice.list()
