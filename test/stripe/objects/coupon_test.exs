@@ -1,5 +1,5 @@
 defmodule Stripe.CouponTest do
-  use Stripe.StripeCase
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: coupons}} = Stripe.Coupon.list()

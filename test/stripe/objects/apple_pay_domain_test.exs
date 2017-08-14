@@ -1,5 +1,5 @@
 defmodule Stripe.ApplePayDomainTest do
-  use Stripe.StripeCase
+  use Stripe.StripeCase, async: true
 
 # Uncommenting below breaks compilation of whole test suite
 # TODO: Uncomment once Stripe.ApplePayDomain is implemented
@@ -25,6 +25,5 @@ defmodule Stripe.ApplePayDomainTest do
 #    {:ok, domain} = Stripe.ApplePayDomain.retrieve("apwc_123")
 #    assert :ok = Stripe.ApplePayDomain.delete(domain)
 #    assert_stripe_requested :delete, "/v1/apple_pay/domains/#{domain.id}"
-#    reset_stripe
 #  end
 end

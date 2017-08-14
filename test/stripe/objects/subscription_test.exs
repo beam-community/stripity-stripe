@@ -1,5 +1,5 @@
 defmodule Stripe.SubscriptionTest do
-  use Stripe.StripeCase
+  use Stripe.StripeCase, async: true
 
     test "is listable" do
       assert {:ok, %Stripe.List{data: subscriptions}} = Stripe.Subscription.list()
@@ -38,7 +38,6 @@ defmodule Stripe.SubscriptionTest do
       {:ok, subscription} = Stripe.Subscription.retrieve("sub_123")
       assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.delete(subscription)
       assert_stripe_requested :delete, "/v1/subscriptions/#{subscription.id}"
-      reset_stripe()
     end
 
     test ".delete_discount deletes a subscription's discount" do
