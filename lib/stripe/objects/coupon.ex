@@ -19,7 +19,7 @@ defmodule Stripe.Coupon do
 
   defstruct [
     :id, :object, :amount_off, :created, :currency, :duration, :duration_in_months,
-    :livemode, :max_redemptions, :metadata, :percent_off, :redeem_by, :times_redeemed
+    :livemode, :max_redemptions, :metadata, :percent_off, :redeem_by, :times_redeemed, :valid
   ]
 
   @plural_endpoint "coupons"

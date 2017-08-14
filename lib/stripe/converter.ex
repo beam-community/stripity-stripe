@@ -35,6 +35,7 @@ defmodule Stripe.Converter do
   defp convert_stripe_object(%{"object" => object_name} = value) do
     module = Stripe.Util.object_name_to_module(object_name)
     struct_keys = Map.keys(module.__struct__) |> List.delete(:__struct__)
+    check_for_extra_keys(struct_keys, value)
 
     processed_map =
       Enum.reduce(struct_keys, %{}, fn key, acc ->
@@ -48,4 +49,32 @@ defmodule Stripe.Converter do
 
   @spec convert_list(list) :: list
   defp convert_list(list), do: list |> Enum.map(&convert_value/1)
+
+  if Mix.env() == "prod" do
+    defp check_for_extra_keys(_, _), do: :ok
+  else
+    defp check_for_extra_keys(struct_keys, map) do
+      require Logger
+
+      map_keys =
+        map
+        |> Map.keys
+        |> Enum.map(&String.to_atom/1)
+        |> MapSet.new
+
+      struct_keys =
+        struct_keys
+        |> MapSet.new
+
+      extra_keys =
+        map_keys
+        |> MapSet.difference(struct_keys)
+        |> Enum.to_list
+
+      unless Enum.empty?(extra_keys) do
+        Logger.error("Extra keys were received but ignored when converting Stripe object #{map["object"]}: #{inspect extra_keys}")
+      end
+      :ok
+    end
+  end
 end
