@@ -26,43 +26,12 @@ defmodule Stripe.Subscription do
 
   @plural_endpoint "subscriptions"
 
-  @schema %{
-    application_fee_percent: [:create, :retrieve, :update],
-    cancel_at_period_end: [:retrieve],
-    canceled_at: [:retrieve],
-    coupon: [:create, :update],
-    created: [:retrieve],
-    current_period_end: [:retrieve],
-    current_period_start: [:retrieve],
-    customer: [:create, :retrieve],
-    discount: [:retrieve],
-    ended_at: [:retrieve],
-    id: [:retrieve],
-    livemode: [:retrieve],
-    metadata: [:create, :retrieve, :update],
-    object: [:retrieve],
-    plan: [:create, :retrieve, :update],
-    prorate: [:create, :update],
-    quantity: [:create, :retrieve, :update],
-    source: [:create, :update],
-    start: [:retrieve],
-    status: [:retrieve],
-    tax_percent: [:create, :retrieve, :update],
-    trial_end: [:create, :retrieve, :update],
-    trial_period_days: [:create],
-    trial_start: [:create, :retrieve]
-  }
-
-  @nullable_keys [
-    :metadata
-  ]
-
   @doc """
   Create a subscription.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """
@@ -82,7 +51,7 @@ defmodule Stripe.Subscription do
   @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """
@@ -102,6 +71,8 @@ defmodule Stripe.Subscription do
   @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
   def list(params \\ %{}, opts \\ []) do
     endpoint = @plural_endpoint
-    Stripe.Request.retrieve(params, endpoint, opts)
+
+    params
+    |> Stripe.Request.retrieve(endpoint, opts)
   end
 end

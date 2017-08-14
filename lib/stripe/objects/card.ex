@@ -27,7 +27,39 @@ defmodule Stripe.Card do
   if you're creating a new platform.
 
   Stripe API reference: https://stripe.com/docs/api#cards
+
+  Example:
+
+  ```
+  {
+    "id": "card_19l8f52eZvKYlo2CLNWCS4RU",
+    "object": "card",
+    "address_city": null,
+    "address_country": null,
+    "address_line1": null,
+    "address_line1_check": null,
+    "address_line2": null,
+    "address_state": null,
+    "address_zip": "19006",
+    "address_zip_check": "pass",
+    "brand": "Visa",
+    "country": "US",
+    "customer": null,
+    "cvc_check": "pass",
+    "dynamic_last4": null,
+    "exp_month": 10,
+    "exp_year": 2018,
+    "funding": "credit",
+    "last4": "4242",
+    "metadata": {
+    },
+    "name": "wjefalkwjefaiwojf@example.com",
+    "tokenization_method": null
+  }
+  ```
   """
+
+  alias Stripe.Util
 
   @type t :: %__MODULE__{}
   @type source :: :customer | :recipient
@@ -41,41 +73,6 @@ defmodule Stripe.Card do
     :fingerprint, :funding, :last4, :metadata, :name, :recipient,
     :tokenization_method
   ]
-
-  @schema %{
-    account: [:retrieve],
-    address_city: [:retrieve, :update],
-    address_country: [:retrieve, :update],
-    address_line1: [:retrieve, :update],
-    address_line1_check: [:retrieve],
-    address_line2: [:retrieve, :update],
-    address_state: [:retrieve, :update],
-    address_zip: [:retrieve, :update],
-    address_zip_check: [:retrieve],
-    brand: [:retrieve, :update],
-    country: [:retrieve, :update],
-    currency: [:retrieve, :update],
-    customer: [:retrieve, :update],
-    cvc_check: [:retrieve, :update],
-    default_for_currency: [:create, :retrieve, :update],
-    dynamic_last4: [:retrieve],
-    exp_month: [:retrieve, :update],
-    exp_year: [:retrieve, :update],
-    external_account: [:create],
-    fingerprint: [:retrieve],
-    funding: [:retrieve],
-    id: [:retrieve],
-    last4: [:retrieve],
-    metadata: [:create, :retrieve, :update],
-    name: [:retrieve, :update],
-    object: [:retrieve],
-    recipient: [:retrieve],
-    source: [:create],
-    three_d_secure: [:retrieve],
-    tokenization_method: [:retrieve]
-  }
-
-  @nullable_keys []
 
   defp endpoint_for_owner(owner_type, owner_id) do
     case owner_type do
@@ -99,8 +96,11 @@ defmodule Stripe.Card do
   @spec create(source, String.t, String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(owner_type, owner_id, token, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id)
-    changes = to_create_body(owner_type, token)
-    Stripe.Request.create(endpoint, changes, @schema, opts)
+
+    to_create_body(owner_type, token)
+    |> Util.map_keys_to_atoms()
+    |> Stripe.request(:post, endpoint, %{}, opts)
+    |> Stripe.Request.handle_result
   end
 
   @spec to_create_body(source, String.t) :: map
@@ -128,7 +128,7 @@ defmodule Stripe.Card do
   @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(owner_type, owner_id, card_id, changes, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """

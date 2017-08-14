@@ -20,25 +20,12 @@ defmodule Stripe.Refund do
 
   @plural_endpoint "refunds"
 
-  @schema %{
-    charge: [:create],
-    amount: [:create],
-    metadata: [:create, :update],
-    reason: [:create],
-    refund_application_fee: [:create],
-    reverse_transfer: [:create],
-  }
-
-  @nullable_keys [
-    :metadata
-  ]
-
   @doc """
   Create a refund.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """
@@ -56,7 +43,7 @@ defmodule Stripe.Refund do
   @spec update(binary, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """

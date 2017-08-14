@@ -312,7 +312,10 @@ defmodule Stripe do
 
     base_url = get_base_url()
     req_url = base_url <> endpoint
-    req_body = Stripe.URI.encode_query(body)
+    req_body =
+      body
+      |> Stripe.Util.map_keys_to_atoms()
+      |> Stripe.URI.encode_query()
     req_headers =
       headers
       |> add_default_headers()
