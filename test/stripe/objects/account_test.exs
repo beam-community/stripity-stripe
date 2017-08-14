@@ -1,5 +1,5 @@
 defmodule Stripe.AccountTest do
-  use Stripe.StripeCase
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: accounts}} = Stripe.Account.list()
@@ -49,7 +49,6 @@ defmodule Stripe.AccountTest do
   test "is deletable" do
     assert :ok = Stripe.Account.delete("acct_123")
     assert_stripe_requested :delete, "/v1/accounts/acct_123"
-    reset_stripe()
   end
 
   test "can be deauthorized" do

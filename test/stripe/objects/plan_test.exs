@@ -1,5 +1,5 @@
 defmodule Stripe.PlanTest do
-  use Stripe.StripeCase
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: plans}} = Stripe.Plan.list()
@@ -42,6 +42,5 @@ defmodule Stripe.PlanTest do
     {:ok, plan} = Stripe.Plan.retrieve("sapphire-elite")
     assert :ok = Stripe.Plan.delete(plan)
     assert_stripe_requested :delete, "/v1/plans/#{plan.id}"
-    reset_stripe()
   end
 end

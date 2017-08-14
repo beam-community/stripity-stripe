@@ -1,5 +1,5 @@
 defmodule Stripe.CustomerTest do
-  use Stripe.StripeCase
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: customers}} = Stripe.Customer.list()
@@ -36,7 +36,6 @@ defmodule Stripe.CustomerTest do
     {:ok, customer} = Stripe.Customer.retrieve("cus_123")
     assert :ok = Stripe.Customer.delete(customer)
     assert_stripe_requested :delete, "/v1/customers/#{customer.id}"
-    reset_stripe()
   end
 
   test ".create_subscription creates a new subscription" do
