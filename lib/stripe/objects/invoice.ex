@@ -13,6 +13,8 @@ defmodule Stripe.Invoice do
   Stripe API reference: https://stripe.com/docs/api#invoice
   """
 
+  alias Stripe.Util
+
   @type t :: %__MODULE__{}
 
   defstruct [
@@ -72,5 +74,15 @@ defmodule Stripe.Invoice do
   def list(params \\ %{}, opts \\ []) do
     endpoint = @plural_endpoint
     Stripe.Request.retrieve(params, endpoint, opts)
+  end
+
+  @doc """
+  Pay an invoice.
+  """
+  @spec pay(t | String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def pay(invoice, params \\ %{}, opts \\ []) do
+    id = Util.normalize_id(invoice)
+    endpoint = @plural_endpoint <> "/" <> id <> "/pay"
+    Stripe.Request.create(endpoint, params, opts)
   end
 end
