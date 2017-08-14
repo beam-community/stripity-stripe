@@ -34,6 +34,8 @@ defmodule Stripe.Plan do
   ```
   """
 
+  alias Stripe.Util
+
   @type t :: %__MODULE__{}
 
   defstruct [
@@ -55,7 +57,7 @@ defmodule Stripe.Plan do
   @doc """
   Retrieve a plan.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.retrieve(endpoint, opts)
@@ -66,7 +68,7 @@ defmodule Stripe.Plan do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(String.t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.update(endpoint, changes, opts)
@@ -75,8 +77,9 @@ defmodule Stripe.Plan do
   @doc """
   Delete a plan.
   """
-  @spec delete(binary, list) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(id, opts \\ []) do
+  @spec delete(t | String.t, list) :: :ok | {:error, Stripe.api_error_struct}
+  def delete(plan, opts \\ []) do
+    id = Util.normalize_id(plan)
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.delete(endpoint, %{}, opts)
   end

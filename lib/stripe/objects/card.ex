@@ -62,7 +62,9 @@ defmodule Stripe.Card do
   alias Stripe.Util
 
   @type t :: %__MODULE__{}
-  @type source :: :customer | :recipient
+  @type source :: :customer | :recipient | :account
+  @sources [:customer, :recipient, :account]
+  @type owner :: Stripe.Customer.t | Stripe.Account.t
 
   defstruct [
     :id, :object,
@@ -134,8 +136,15 @@ defmodule Stripe.Card do
   @doc """
   Delete a card.
   """
-  @spec delete(source, String.t, String.t, Keyword.t) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(owner_type, owner_id, card_id, opts \\ []) do
+  @spec delete(source, owner_or_id, card_or_id, Keyword.t) :: :ok | {:error, Stripe.api_error_struct}
+      when owner_or_id: owner | String.t, card_or_id: t | String.t
+  def delete(owner_type, owner, card, opts \\ []) when owner_type in @sources do
+    owner_id = Util.normalize_id(owner)
+    card_id = Util.normalize_id(card)
+    do_delete(owner_type, owner_id, card_id, opts)
+  end
+
+  defp do_delete(owner_type, owner_id, card_id, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
     Stripe.Request.delete(endpoint, %{}, opts)
   end
