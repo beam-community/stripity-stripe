@@ -90,8 +90,8 @@ defmodule Stripe.Subscription do
   defstruct [
     :id, :object,
     :application_fee_percent, :cancel_at_period_end, :canceled_at,
-    :created, :current_period_end, :current_period_start, :customer,
-    :ended_at, :livemode, :metadata, :plan, :quantity, :source,
+    :created, :current_period_end, :current_period_start, :customer, :discount,
+    :ended_at, :items, :livemode, :metadata, :plan, :quantity, :source,
     :start, :status, :tax_percent, :trial_end, :trial_start
   ]
 
@@ -146,5 +146,18 @@ defmodule Stripe.Subscription do
 
     params
     |> Stripe.Request.retrieve(endpoint, opts)
+  end
+
+  @doc """
+  Deletes the discount on a subscription.
+  """
+  @spec delete_discount(t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def delete_discount(%Stripe.Subscription{id: id} = subscription, opts \\ []) do
+    endpoint = @plural_endpoint <> "/#{id}/discount"
+
+    with {:ok, _} <- Stripe.Request.delete(endpoint, %{}, opts)
+    do
+      {:ok, %{subscription | discount: nil}}
+    end
   end
 end

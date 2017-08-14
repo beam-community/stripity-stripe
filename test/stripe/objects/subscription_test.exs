@@ -43,6 +43,6 @@ defmodule Stripe.SubscriptionTest do
 
     test ".delete_discount deletes a subscription's discount" do
       {:ok, subscription} = Stripe.Subscription.retrieve("sub_123")
-      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.delete_discount(subscription)
+      assert {:ok, %Stripe.Subscription{discount: nil}} = Stripe.Subscription.delete_discount(subscription)
     end
 end
