@@ -40,7 +40,7 @@ defmodule Stripe.PlanTest do
 
   test "is deletable" do
     {:ok, plan} = Stripe.Plan.retrieve("sapphire-elite")
-    assert :ok = Stripe.Plan.delete(plan)
+    assert {:ok, %Stripe.Plan{}} = Stripe.Plan.delete(plan)
     assert_stripe_requested :delete, "/v1/plans/#{plan.id}"
     reset_stripe()
   end

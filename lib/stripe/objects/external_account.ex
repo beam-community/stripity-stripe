@@ -16,6 +16,8 @@ defmodule Stripe.ExternalAccount do
   Stripe API reference: https://stripe.com/docs/api#external_accounts
   """
 
+  alias Stripe.Util
+
   @type t :: %__MODULE__{}
 
   defstruct [
@@ -41,7 +43,7 @@ defmodule Stripe.ExternalAccount do
   @doc """
   Retrieve an external account.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts = [connect_account: managed_account_id]) do
     endpoint = endpoint(managed_account_id) <> "/" <> id
     Stripe.Request.retrieve(endpoint, opts)
@@ -52,7 +54,7 @@ defmodule Stripe.ExternalAccount do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(String.t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts = [connect_account: managed_account_id]) do
     endpoint = endpoint(managed_account_id) <> "/" <> id
     Stripe.Request.update(endpoint, changes, opts)
@@ -61,8 +63,9 @@ defmodule Stripe.ExternalAccount do
   @doc """
   Delete an external account.
   """
-  @spec delete(binary, list) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(id, opts = [connect_account: managed_account_id]) do
+  @spec delete(t | String.t, list) :: :ok | {:error, Stripe.api_error_struct}
+  def delete(account, opts = [connect_account: managed_account_id]) do
+    id = Util.normalize_id(account)
     endpoint = endpoint(managed_account_id) <> "/" <> id
     Stripe.Request.delete(endpoint, %{}, opts)
   end

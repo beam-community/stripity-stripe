@@ -13,6 +13,8 @@ defmodule Stripe.Coupon do
   Stripe API reference: https://stripe.com/docs/api#coupons
   """
 
+  alias Stripe.Util
+
   @type t :: %__MODULE__{}
 
   defstruct [
@@ -33,7 +35,7 @@ defmodule Stripe.Coupon do
   @doc """
   Retrieve a coupon.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.retrieve(endpoint, opts)
@@ -44,7 +46,7 @@ defmodule Stripe.Coupon do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(String.t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.update(endpoint, changes, opts)
@@ -53,8 +55,9 @@ defmodule Stripe.Coupon do
   @doc """
   Delete a coupon.
   """
-  @spec delete(binary, list) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(id, opts \\ []) do
+  @spec delete(t | String.t, list) :: :ok | {:error, Stripe.api_error_struct}
+  def delete(coupon, opts \\ []) do
+    id = Util.normalize_id(coupon)
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.delete(endpoint, %{}, opts)
   end

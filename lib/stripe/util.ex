@@ -58,4 +58,7 @@ defmodule Stripe.Util do
 
     Module.concat("Stripe", module_name)
   end
+
+  def normalize_id(%{id: id}) when id !== nil, do: id
+  def normalize_id(id) when is_binary(id), do: id
 end

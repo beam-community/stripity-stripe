@@ -36,7 +36,7 @@ defmodule Stripe.SubscriptionTest do
 
     test "is deletable" do
       {:ok, subscription} = Stripe.Subscription.retrieve("sub_123")
-      assert :ok = Stripe.Subscription.delete(subscription)
+      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.delete(subscription)
       assert_stripe_requested :delete, "/v1/subscriptions/#{subscription.id}"
       reset_stripe()
     end

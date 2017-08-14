@@ -39,7 +39,7 @@ defmodule Stripe.Invoice do
   @doc """
   Retrieve an invoice.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.retrieve(endpoint, opts)
@@ -50,7 +50,7 @@ defmodule Stripe.Invoice do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(binary, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.update(endpoint, changes, opts)
