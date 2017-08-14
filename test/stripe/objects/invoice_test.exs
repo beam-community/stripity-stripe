@@ -18,6 +18,7 @@ defmodule Stripe.InvoiceTest do
     assert_stripe_requested :post, "/v1/invoices"
   end
 
+  @tag :disabled
   test "is saveable" do
     {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
     invoice = put_in(invoice.metadata["key"], "value")

@@ -20,6 +20,7 @@ defmodule Stripe.SubscriptionTest do
       assert_stripe_requested :post, "/v1/subscriptions"
     end
 
+    @tag :disabled
     test "is saveable" do
       {:ok, subscription} = Stripe.Subscription.retrieve("sub_123")
       subscription = put_in(subscription.metadata["key"], "value")
