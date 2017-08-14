@@ -10,8 +10,8 @@ defmodule Stripe.Converter do
   @spec convert_result(%{String.t => any}) :: struct
   def convert_result(result), do: convert_value(result)
 
-  @supported_objects ~w(account bank_account card customer event external_account 
-    file_upload invoice list plan subscription token)
+  @supported_objects ~w(account bank_account card charge coupon customer event external_account
+    file_upload invoice list plan refund subscription token)
 
   @spec convert_value(any) :: any
   defp convert_value(%{"object" => object_name} = value) when is_binary(object_name) do
