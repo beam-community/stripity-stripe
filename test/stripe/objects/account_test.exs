@@ -32,6 +32,7 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested :post, "/v1/accounts"
   end
 
+  @tag :disabled
   test "is saveable" do
     {:ok, account} = Stripe.Account.retrieve("acct_123")
     account = put_in(account.metadata["key"], "value")

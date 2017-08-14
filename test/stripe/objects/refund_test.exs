@@ -21,6 +21,7 @@ defmodule Stripe.RefundTest do
     reset_stripe()
   end
 
+  @tag :disabled
   test "is saveable" do
     {:ok, refund} = Stripe.Refund.retrieve("re_123")
     refund = put_in(refund.metadata["key"], "value")

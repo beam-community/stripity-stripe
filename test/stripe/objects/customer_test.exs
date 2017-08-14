@@ -18,6 +18,7 @@ defmodule Stripe.CustomerTest do
     assert_stripe_requested :post, "/v1/customers"
   end
 
+  @tag :disabled
   test "is saveable" do
     {:ok, customer} = Stripe.Customer.retrieve("cus_123")
     customer = put_in(customer.metadata["key"], "value")
