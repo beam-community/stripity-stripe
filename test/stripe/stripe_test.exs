@@ -1,4 +1,4 @@
 defmodule Stripe.StripeTest do
-  use ExUnit.Case
+  use Stripe.StripeCase
 
 end
