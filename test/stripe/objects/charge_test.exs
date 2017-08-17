@@ -18,15 +18,6 @@ defmodule Stripe.ChargeTest do
     assert_stripe_requested :post, "/v1/charges"
   end
 
-  @tag :disabled
-  test "is saveable" do
-    {:ok, charge} = Stripe.Charge.retrieve("ch_123")
-    charge = put_in(charge.metadata["key"], "value")
-    assert {:ok, %Stripe.Charge{} = scharge} = Stripe.Charge.save(charge)
-    assert scharge.id == charge.id
-    assert_stripe_requested :post, "/v1/charges/#{charge.id}"
-  end
-
   test "is updateable" do
     assert {:ok, %Stripe.Charge{}} = Stripe.Charge.update("ch_123", %{metadata: %{foo: "bar"}})
     assert_stripe_requested :post, "/v1/charges/ch_123"

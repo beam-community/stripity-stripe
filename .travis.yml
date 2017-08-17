@@ -7,7 +7,7 @@ otp_release:
 sudo: false
 env:
   global:
-    - STRIPE_MOCK_VERSION=0.1.14
+    - STRIPE_MOCK_VERSION=0.1.17
     - MIX_ENV=test STRIPE_SECRET_KEY=non_empty_secret_key_string
 cache:
   directories:
