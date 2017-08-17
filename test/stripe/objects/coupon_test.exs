@@ -1,5 +1,5 @@
 defmodule Stripe.CouponTest do
-  use Stripe.StripeCase, async: false
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: coupons}} = Stripe.Coupon.list()
@@ -21,15 +21,6 @@ defmodule Stripe.CouponTest do
       id: "25OFF"
     })
     assert_stripe_requested :post, "/v1/coupons"
-  end
-
-  @tag :disabled
-  test "is saveable" do
-    {:ok, coupon} = Stripe.Coupon.retrieve("25OFF")
-    coupon = put_in(coupon.metadata["key"], "value")
-    assert {:ok, %Stripe.Coupon{} = scoupon} = Stripe.Coupon.save(coupon)
-    assert coupon.id == scoupon.id
-    assert_stripe_requested :post, "/v1/coupons/#{coupon.id}"
   end
 
   test "is updateable" do

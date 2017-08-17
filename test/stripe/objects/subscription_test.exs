@@ -1,5 +1,5 @@
 defmodule Stripe.SubscriptionTest do
-  use Stripe.StripeCase, async: false
+  use Stripe.StripeCase, async: true
 
     test "is listable" do
       assert {:ok, %Stripe.List{data: subscriptions}} = Stripe.Subscription.list()
@@ -18,15 +18,6 @@ defmodule Stripe.SubscriptionTest do
         customer: "cus_123"
       })
       assert_stripe_requested :post, "/v1/subscriptions"
-    end
-
-    @tag :disabled
-    test "is saveable" do
-      {:ok, subscription} = Stripe.Subscription.retrieve("sub_123")
-      subscription = put_in(subscription.metadata["key"], "value")
-      assert {:ok, %Stripe.Subscription{} = ssubscription} = Stripe.Subscription.save(subscription)
-      assert ssubscription.id == subscription.id
-      assert_stripe_requested :post, "/v1/subscriptions/#{subscription.id}"
     end
 
     test "is updateable" do

@@ -1,5 +1,5 @@
 defmodule Stripe.RefundTest do
-  use Stripe.StripeCase, async: false
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: refunds}} = Stripe.Refund.list()
@@ -18,15 +18,6 @@ defmodule Stripe.RefundTest do
       charge: "ch_123"
     })
     assert_stripe_requested :post, "/v1/refunds"
-  end
-
-  @tag :disabled
-  test "is saveable" do
-    {:ok, refund} = Stripe.Refund.retrieve("re_123")
-    refund = put_in(refund.metadata["key"], "value")
-    assert {:ok, %Stripe.Refund{} = srefund} = Stripe.Refund.save(refund)
-    assert srefund.id == refund.id
-    assert_stripe_requested :post, "/v1/refunds/#{refund.id}"
   end
 
   test "is updateable" do

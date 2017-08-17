@@ -1,5 +1,5 @@
 defmodule Stripe.PlanTest do
-  use Stripe.StripeCase, async: false
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: plans}} = Stripe.Plan.list()
@@ -22,15 +22,6 @@ defmodule Stripe.PlanTest do
       id: "sapphire-elite"
     })
     assert_stripe_requested :post, "/v1/plans"
-  end
-
-  @tag :disabled
-  test "is saveable" do
-    {:ok, plan} = Stripe.Plan.retrieve("sapphire-elite")
-    plan = put_in(plan.metadata["key"], "value")
-    assert {:ok, %Stripe.Plan{} = splan} = Stripe.Plan.save(plan)
-    assert splan.id == plan.id
-    assert_stripe_requested :post, "/v1/plans/#{plan.id}"
   end
 
   test "is updateable" do
