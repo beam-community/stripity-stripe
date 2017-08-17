@@ -1,5 +1,5 @@
 defmodule Stripe.InvoiceTest do
-  use Stripe.StripeCase, async: false
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: invoices}} = Stripe.Invoice.list()
@@ -32,7 +32,7 @@ defmodule Stripe.InvoiceTest do
     assert_stripe_requested :post, "/v1/invoices/in_123"
   end
 
-  describe "Invoice.pay" do
+  describe "Invoice.pay/3" do
     test "pays invoice" do
       {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
       assert {:ok, %Stripe.Invoice{} = paid_invoice} = Stripe.Invoice.pay(invoice)
@@ -48,7 +48,7 @@ defmodule Stripe.InvoiceTest do
     end
   end
 
-  describe "Invoice.upcoming" do
+  describe "Invoice.upcoming/2" do
     test "retrieves upcoming invoices" do
       assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.upcoming(%{customer: "cus_123", subscription: "sub_123"})
       assert_stripe_requested :get, "/v1/invoices/upcoming", query: %{customer: "cust_123", subscription: "sub_123"}

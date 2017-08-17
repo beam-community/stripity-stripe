@@ -1,5 +1,5 @@
 defmodule Stripe.CustomerTest do
-  use Stripe.StripeCase, async: false
+  use Stripe.StripeCase, async: true
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: customers}} = Stripe.Customer.list()
@@ -38,37 +38,22 @@ defmodule Stripe.CustomerTest do
     assert_stripe_requested :delete, "/v1/customers/#{customer.id}"
   end
 
-  test ".create_subscription creates a new subscription" do
+  test "create_subscription/3 creates a new subscription" do
     {:ok, customer} = Stripe.Customer.retrieve("cus_123")
     assert {:ok, %Stripe.Subscription{}} = Stripe.Customer.create_subscription(customer, %{plan: "silver"})
   end
 
-  test ".create_upcoming_invoice creates a new invoice" do
+  test "create_upcoming_invoice/2 creates a new invoice" do
     {:ok, customer} = Stripe.Customer.retrieve("cus_123")
     assert {:ok, %Stripe.Invoice{}} = Stripe.Customer.create_upcoming_invoice(customer)
   end
 
-  test ".update_subscription updates a subscription" do
-    # Deprecated call, don't expect it to be there
-    assert true
-  end
-
-  test ".cancel_subscription cancels a subscription" do
-    # Deprecated call, don't expect it to be there
-    assert true
-  end
-
-  test ".delete_discount deletes a discount" do
-    # Deprecated call, don't expect it to be there
-    assert true
-  end
-
   describe "Customer.source" do
-    test "can be set using a token" do
+    test "can be updated using a token" do
       flunk "Changeset tests not yet implemented"
     end
 
-    test "can be set using a card" do
+    test "can be updated using a card" do
       flunk "Changeset tests not yet implemented"
     end
   end

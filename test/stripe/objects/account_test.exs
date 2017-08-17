@@ -32,15 +32,6 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested :post, "/v1/accounts"
   end
 
-  @tag :disabled
-  test "is saveable" do
-    {:ok, account} = Stripe.Account.retrieve("acct_123")
-    account = put_in(account.metadata["key"], "value")
-    assert {:ok, %Stripe.Account{} = saccount} = Stripe.Account.save(account)
-    assert saccount.id == account.id
-    assert_stripe_requested :post, "/v1/accounts/#{account.id}"
-  end
-
   test "is updateable" do
     assert {:ok, %Stripe.Account{id: id}} = Stripe.Account.update("acct_123", %{metadata: %{foo: "bar"}})
     assert_stripe_requested :post, "/v1/accounts/#{id}"
@@ -55,7 +46,7 @@ defmodule Stripe.AccountTest do
     flunk "Connect calls not tested"
   end
 
-  test "serialization of params (additional owners)" do
-    flunk "todo: check if this is applicable"
+  test "additional_owners is handled correctly" do
+    flunk "todo: test this"
   end
 end
