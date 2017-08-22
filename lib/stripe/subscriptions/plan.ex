@@ -12,7 +12,29 @@ defmodule Stripe.Plan do
   Does not yet render lists or take options.
 
   Stripe API reference: https://stripe.com/docs/api#plan
+
+  Example:
+
+  ```
+  {
+    "id": "quartz-enterprise",
+    "object": "plan",
+    "amount": 5000,
+    "created": 1486598337,
+    "currency": "usd",
+    "interval": "month",
+    "interval_count": 1,
+    "livemode": false,
+    "metadata": {
+    },
+    "name": "Quartz enterprise",
+    "statement_descriptor": null,
+    "trial_period_days": null
+  }
+  ```
   """
+
+  alias Stripe.Util
 
   @type t :: %__MODULE__{}
 
@@ -24,37 +46,18 @@ defmodule Stripe.Plan do
 
   @plural_endpoint "plans"
 
-  @schema %{
-    amount: [:create, :retrieve],
-    created: [:retrieve],
-    currency: [:create, :retrieve],
-    id: [:create, :retrieve],
-    interval: [:create, :retrieve],
-    interval_count: [:create, :retrieve],
-    livemode: [:retrieve],
-    metadata: [:create, :retrieve, :update],
-    name: [:create, :retrieve, :update],
-    object: [:retrieve],
-    statement_descriptor: [:create, :retrieve, :update],
-    trial_period_days: [:create, :retrieve, :update]
-  }
-
-  @nullable_keys [
-    :metadata, :statement_descriptor
-  ]
-
   @doc """
   Create a plan.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """
   Retrieve a plan.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.retrieve(endpoint, opts)
@@ -65,17 +68,18 @@ defmodule Stripe.Plan do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(String.t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """
   Delete a plan.
   """
-  @spec delete(binary, list) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(id, opts \\ []) do
+  @spec delete(t | String.t, list) :: :ok | {:error, Stripe.api_error_struct}
+  def delete(plan, opts \\ []) do
+    id = Util.normalize_id(plan)
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.delete(endpoint, %{}, opts)
   end

@@ -8,6 +8,7 @@ defmodule Stripe.Mixfile do
       description: description(),
       elixir: "~> 1.3",
       package: package(),
+      elixirc_paths: elixirc_paths(Mix.env),
       preferred_cli_env: [
         "coveralls": :test,
         "coveralls.detail": :test,
@@ -27,6 +28,10 @@ defmodule Stripe.Mixfile do
       mod: {Stripe, []}
     ]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_),     do: ["lib"]
 
   defp env() do
     [
@@ -54,7 +59,8 @@ defmodule Stripe.Mixfile do
       {:hackney, "~> 1.6"},
       {:inch_ex, "~> 0.5", only: [:dev, :test]},
       {:poison, "~> 2.0 or ~> 3.0"},
-      {:uri_query, "~> 0.1.2"}
+      {:uri_query, "~> 0.1.2"},
+      {:exexec, "~> 0.1.0", only: :test}
     ]
   end
 

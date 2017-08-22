@@ -13,6 +13,8 @@ defmodule Stripe.Invoice do
   Stripe API reference: https://stripe.com/docs/api#invoice
   """
 
+  alias Stripe.Util
+
   @type t :: %__MODULE__{}
 
   defstruct [
@@ -28,54 +30,18 @@ defmodule Stripe.Invoice do
 
   @plural_endpoint "invoices"
 
-  @schema %{
-    amount_due: [:retrieve],
-    application_fee: [:create, :retrieve, :update],
-    attempt_count: [:retrieve],
-    attempted: [:retrieve],
-    charge: [:retrieve],
-    closed: [:retrieve],
-    currency: [:retrieve],
-    customer: [:retrieve],
-    date: [:retrieve],
-    description: [:create, :retrieve, :update],
-    discount: [:retrieve],
-    ending_balance: [:retrieve],
-    forgiven: [:retrieve, :update],
-    id: [:retrieve],
-    lines: [:retrieve],
-    livemode: [:retrieve],
-    metadata: [:create, :retrieve, :update],
-    next_payment_attempt: [:retrieve],
-    paid: [:retrieve],
-    period_end: [:retrieve],
-    period_start: [:retrieve],
-    receipt_number: [:retrieve],
-    starting_balance: [:retrieve],
-    statement_descriptor: [:retrieve, :update],
-    subscription: [:create, :retrieve],
-    subscription_proration_date: [:retrieve],
-    subtotal: [:retrieve],
-    tax: [:retrieve],
-    tax_percent: [:create, :retrieve, :update],
-    total: [:retrieve],
-    webhooks_delivered_at: [:retrieve]
-  }
-
-  @nullable_keys []
-
   @doc """
   Create an invoice.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
+    Stripe.Request.create(@plural_endpoint, changes, opts)
   end
 
   @doc """
   Retrieve an invoice.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.retrieve(endpoint, opts)
@@ -86,10 +52,10 @@ defmodule Stripe.Invoice do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(binary, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(id, changes, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """
@@ -108,5 +74,15 @@ defmodule Stripe.Invoice do
   def list(params \\ %{}, opts \\ []) do
     endpoint = @plural_endpoint
     Stripe.Request.retrieve(params, endpoint, opts)
+  end
+
+  @doc """
+  Pay an invoice.
+  """
+  @spec pay(t | String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  def pay(invoice, params \\ %{}, opts \\ []) do
+    id = Util.normalize_id(invoice)
+    endpoint = @plural_endpoint <> "/" <> id <> "/pay"
+    Stripe.Request.create(endpoint, params, opts)
   end
 end
