@@ -12,6 +12,7 @@ defmodule Stripe.List do
   - Support multiple types of objects in its collection
   - Support fetching the next set of objects (pagination)
   """
+  use Stripe.Entity
 
   @type t :: %__MODULE__{}
 

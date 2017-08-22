@@ -10,8 +10,13 @@ defmodule Stripe.Converter do
   @spec convert_result(%{String.t => any}) :: struct
   def convert_result(result), do: convert_value(result)
 
-  @supported_objects ~w(account bank_account card charge coupon customer event external_account
-    file_upload invoice list plan refund subscription token)
+  @supported_objects ~w(
+    list
+    account external_account oauth
+    balance balance_transaction charge customer event file_upload refund token
+    card source
+    coupon invoice line_item plan subscription
+  )
 
   @spec convert_value(any) :: any
   defp convert_value(%{"object" => object_name} = value) when is_binary(object_name) do
@@ -38,11 +43,13 @@ defmodule Stripe.Converter do
     check_for_extra_keys(struct_keys, value)
 
     processed_map =
-      Enum.reduce(struct_keys, %{}, fn key, acc ->
-        string_key = to_string(key)
-        converted_value = Map.get(value, string_key) |> convert_value()
-        Map.put(acc, key, converted_value)
-      end)
+      struct_keys
+      |> Enum.reduce(%{}, fn key, acc ->
+          string_key = to_string(key)
+          converted_value = Map.get(value, string_key) |> convert_value()
+          Map.put(acc, key, converted_value)
+        end)
+      |> module.__from_json__()
 
     struct(module, processed_map)
   end
