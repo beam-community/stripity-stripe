@@ -1,6 +1,4 @@
 defmodule Stripe.BalanceTransaction do
-  import Stripe.Request
-
   @moduledoc """
   Work with [Stripe `balance_transaction` objects]  (https://stripe.com/docs/api#balance_transaction_object).
 
@@ -9,6 +7,7 @@ defmodule Stripe.BalanceTransaction do
   - [List all balance history](https://stripe.com/docs/api#balance_history)
   """
   use Stripe.Entity
+  import Stripe.Request
 
   @type transaction_type :: :adjustment | :application_fee | :application_fee_refund | :charge
   | :payment | :payment_failure_refund | :payment_refund | :refund | :transfer | :transfer_refund
