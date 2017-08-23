@@ -7,7 +7,7 @@ defmodule Stripe.Entity do
       import Stripe.Entity, only: [from_json: 2]
       @behaviour Stripe.Entity
       def __from_json__(data), do: data
-      defoverridable Stripe.Entity
+      defoverridable [__from_json__: 1]
     end
   end
 
