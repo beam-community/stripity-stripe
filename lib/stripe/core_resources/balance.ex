@@ -6,6 +6,9 @@ defmodule Stripe.Balance do
   - [Retrieve the current balance](https://stripe.com/docs/api#retrieve_balance)
 
   """
+  use Stripe.Entity
+  import Stripe.Request
+
   @type funds :: %{
                    currency: String.t,
                    amount: integer,
@@ -26,10 +29,17 @@ defmodule Stripe.Balance do
   @endpoint "balance"
 
   @doc """
-  Retrieves the current account balance, based on the authentication that was used to make the request.
+  Retrieves the current account balance.
+
+  This is based on the authentication that was used to make the request.
+
+  See the [Stripe docs](https://stripe.com/docs/api#retrieve_balance).
   """
   @spec retrieve(Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
   def retrieve(opts \\ []) do
-    Stripe.Request.retrieve(%{}, @endpoint, nil, opts)
+    new_request(opts)
+    |> put_endpoint(@endpoint)
+    |> put_method(:get)
+    |> make_request()
   end
 end
