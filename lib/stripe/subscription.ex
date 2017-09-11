@@ -20,7 +20,7 @@ defmodule Stripe.Subscription do
     :id, :object,
     :application_fee_percent, :cancel_at_period_end, :canceled_at,
     :created, :current_period_end, :current_period_start, :customer,
-    :ended_at, :livemode, :metadata, :plan, :quantity, :source,
+    :ended_at, :livemode, :metadata, :plan, :prorate, :quantity, :source,
     :start, :status, :tax_percent, :trial_end, :trial_start
   ]
 
@@ -42,7 +42,7 @@ defmodule Stripe.Subscription do
     metadata: [:create, :retrieve, :update],
     object: [:retrieve],
     plan: [:create, :retrieve, :update],
-    prorate: [:create],
+    prorate: [:create, :update],
     quantity: [:create, :retrieve, :update],
     source: [:create, :update],
     start: [:retrieve],
