@@ -37,4 +37,8 @@ defmodule Stripe.Entity do
     key = List.wrap(key)
     update_in(data, key, &Enum.map(&1, fun))
   end
+
+  def cast_path(%{} = data, path, fun) when is_function(fun) do
+    update_in(data, path, &Enum.map(&1, fun))
+  end
 end
