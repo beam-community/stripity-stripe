@@ -46,7 +46,11 @@ defmodule Stripe.Converter do
       struct_keys
       |> Enum.reduce(%{}, fn key, acc ->
           string_key = to_string(key)
-          converted_value = Map.get(value, string_key) |> convert_value()
+          converted_value =
+            case string_key do
+              "metadata" -> Map.get(value, string_key)
+              _ -> Map.get(value, string_key) |> convert_value()
+            end
           Map.put(acc, key, converted_value)
         end)
       |> module.__from_json__()
