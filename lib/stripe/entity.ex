@@ -14,7 +14,7 @@ defmodule Stripe.Entity do
   defmacro from_json(param, do: block) do
     quote do
       def __from_json__(unquote(param)) do
-        import Stripe.Entity, only: [cast_to_atom: 2, cast_each: 3]
+        import Stripe.Entity, only: [cast_to_atom: 2, cast_each: 3, cast_path: 3]
         unquote(block)
       end
     end
@@ -26,7 +26,7 @@ defmodule Stripe.Entity do
 
   def cast_to_atom(%{} = data, key) do
     key = List.wrap(key)
-    update_in(data, key, &String.to_atom/1)
+    maybe_update_in(data, key, maybe(&String.to_atom/1))
   end
 
   def cast_each(%{} = data, keys, fun) when is_list(keys) and is_function(fun) do
@@ -35,10 +35,21 @@ defmodule Stripe.Entity do
 
   def cast_each(%{} = data, key, fun) when is_function(fun) do
     key = List.wrap(key)
-    update_in(data, key, &Enum.map(&1, fun))
+    maybe_update_in(data, key, maybe(&Enum.map(&1, fun)))
   end
 
   def cast_path(%{} = data, path, fun) when is_function(fun) do
-    update_in(data, path, &Enum.map(&1, fun))
+    maybe_update_in(data, path, fun)
+  end
+
+  defp maybe(fun) do
+    fn nil -> nil; arg -> fun.(arg) end
+  end
+
+  defp maybe_update_in(data, path, fun) do
+    case get_in(data, path) do
+      nil -> data
+      val -> put_in(data, path, fun.(val))
+    end
   end
 end
