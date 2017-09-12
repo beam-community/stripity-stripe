@@ -89,8 +89,6 @@ defmodule Stripe.BalanceTransaction do
     |> put_endpoint(@endpoint)
     |> put_method(:get)
     |> put_params(params)
-    |> valid_keys([:available_on, :created, :currency, :ending_before, :limit, :payout, :source,
-      :starting_after, :type])
     |> cast_to_id([:ending_before, :payout, :source, :starting_after])
     |> make_request()
   end
