@@ -9,55 +9,13 @@ defmodule Stripe.Card do
   - Update a card
   - Delete a card
 
-  All requests require `owner_type` and `owner_id` parameters to be specified.
+  If you have been using an old version of the library, note that the functions which take an
+  `owner_type` argument are now deprecated.
 
-  `owner_type` must be one of the following:
-    * `:customer`,
-    * `:recipient`.
-
-  `owner_id` must be the ID of the owning object.
-
-  This module does not yet support managed accounts.
-
-  Does not yet render lists or take options.
-
-  Recipients may be deprecated for your version of the API. They have
-  been replaced by managed accounts (see
-  https://stripe.com/docs/connect/managed-accounts), which you should use
-  if you're creating a new platform.
-
-  Stripe API reference: https://stripe.com/docs/api#cards
-
-  Example:
-
-  ```
-  {
-    "id": "card_19l8f52eZvKYlo2CLNWCS4RU",
-    "object": "card",
-    "address_city": null,
-    "address_country": null,
-    "address_line1": null,
-    "address_line1_check": null,
-    "address_line2": null,
-    "address_state": null,
-    "address_zip": "19006",
-    "address_zip_check": "pass",
-    "brand": "Visa",
-    "country": "US",
-    "customer": null,
-    "cvc_check": "pass",
-    "dynamic_last4": null,
-    "exp_month": 10,
-    "exp_year": 2018,
-    "funding": "credit",
-    "last4": "4242",
-    "metadata": {
-    },
-    "name": "wjefalkwjefaiwojf@example.com",
-    "tokenization_method": null
-  }
+  The owner type is indicated by setting either the `recipient` or `customer`
   ```
   """
+  use Stripe.Entity
 
   alias Stripe.Util
 
@@ -75,6 +33,11 @@ defmodule Stripe.Card do
     :fingerprint, :funding, :last4, :metadata, :name, :recipient,
     :tokenization_method
   ]
+
+  from_json data do
+    # todo convert this appropriately
+    data
+  end
 
   defp endpoint_for_owner(owner_type, owner_id) do
     case owner_type do
