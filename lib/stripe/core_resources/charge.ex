@@ -11,6 +11,7 @@ defmodule Stripe.Charge do
   """
   use Stripe.Entity
   import Stripe.Request
+  require Stripe.Util
 
   @type user_fraud_report :: %{
                                user_report: :safe | :fraudulent
@@ -199,6 +200,7 @@ defmodule Stripe.Charge do
   """
   @spec capture(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
   def capture(id, opts) when is_list(opts) do
+    Stripe.Util.log_deprecation("Please use `capture/3` instead.")
     capture(id, %{}, opts)
   end
 
@@ -207,6 +209,7 @@ defmodule Stripe.Charge do
   end
 
   def capture(id) do
+    Stripe.Util.log_deprecation("Please use `capture/3` instead.")
     capture(id, %{}, [])
   end
 
