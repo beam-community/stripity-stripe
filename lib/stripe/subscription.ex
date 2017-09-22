@@ -102,6 +102,6 @@ defmodule Stripe.Subscription do
   @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
   def list(params \\ %{}, opts \\ []) do
     endpoint = @plural_endpoint
-    Stripe.Request.retrieve(endpoint, opts)
+    Stripe.Request.retrieve(params, endpoint, opts)
   end
 end
