@@ -8,7 +8,7 @@ defmodule Stripe.Customers do
   -delete all customer
   -count customers
 
-  Supports Connect workflow by allowing to pass in any API key explicitely (vs using the one from env/config).
+  Supports Connect workflow by allowing to pass in any API key explicitly (vs using the one from env/config).
 
 
   (API ref: https://stripe.com/docs/api/curl#customer_object

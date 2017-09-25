@@ -5,7 +5,7 @@ defmodule Stripe.Tokens do
   -retrieve
   tokens for both credit card and bank account allowing you to use them instead of a credit card number in various operations.
 
-  Supports Connect workflow by allowing to pass in any API key explicitely (vs using the one from env/config).
+  Supports Connect workflow by allowing to pass in any API key explicitly (vs using the one from env/config).
 
   (API ref https://stripe.com/docs/api#tokens)
   """
