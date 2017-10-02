@@ -4,7 +4,8 @@ defmodule Stripe do
     This module contains the Application that you can use to perform
     transactions on stripe API.
     
-    ### Configuring
+    **Configuring**
+    
     By default the STRIPE_SECRET_KEY environment variable is used to find
     your API key for Stripe. You can also manually set your API key by
     configuring the :stripity_stripe application. You can see the default
