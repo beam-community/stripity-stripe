@@ -23,7 +23,7 @@ defmodule Stripe.Account do
     :display_name, :email, :legal_entity, :external_accounts, :managed,
     :metadata, :statement_descriptor, :support_email, :support_phone,
     :support_url, :timezone, :tos_acceptance, :transfers_enabled,
-    :verification
+    :payouts_enabled, :verification
   ]
 
   @singular_endpoint "account"
@@ -122,6 +122,7 @@ defmodule Stripe.Account do
       ip: [:create, :retrieve, :update],
       user_agent: [:create, :retrieve, :update]
     },
+    payouts_enabled: [:retrieve],
     transfer_schedule: %{
       delay_days: [:create, :retrieve, :update],
       interval: [:create, :retrieve, :update],
@@ -144,7 +145,7 @@ defmodule Stripe.Account do
   def schema, do: @schema
 
   @nullable_keys [
-    :metadata, :transfer_statement_descriptor
+    :metadata
   ]
 
   @doc """
@@ -178,7 +179,6 @@ defmodule Stripe.Account do
 
   @doc """
   Update an account.
-
   Takes the `id` and a map of changes.
   """
   @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
