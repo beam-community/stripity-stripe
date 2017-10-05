@@ -13,8 +13,8 @@ Changes:
 - Added basic webhook support - https://github.com/code-corps/stripity_stripe/pull/244
 
 ## 1.0.0 to 1.4.0
-
-- Sadly the changes have not been properly tracked here. We will compile a list
+- Added support to generate connect button URLs - https://github.com/code-corps/stripity_stripe/pull/231
+- Sadly, other changes have not been properly tracked here. We will compile a list
 as soon as we are able
 
 ## 1.0.0 (2015-12-22)
