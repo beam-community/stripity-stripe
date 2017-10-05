@@ -1,19 +1,20 @@
 defmodule Stripe do
   @moduledoc """
-    A HTTP client for Stripe.
-    This module contains the Application that you can use to perform
-    transactions on stripe API.
-    
-    **Configuring**
-    
-    By default the STRIPE_SECRET_KEY environment variable is used to find
-    your API key for Stripe. You can also manually set your API key by
-    configuring the :stripity_stripe application. You can see the default
-    configuration in the default_config/0 private function at the bottom of
-    this file. The value for platform client id is optional.
+  A HTTP client for Stripe.
+  This module contains the Application that you can use to perform
+  transactions on stripe API.
 
-      config :stripity_stripe, secret_key: YOUR_STRIPE_KEY
-      config :stripity_stripe, platform_client_id: STRIPE_PLATFORM_CLIENT_ID
+  ## Configuring
+  By default the STRIPE_SECRET_KEY environment variable is used to find
+  your API key for Stripe. You can also manually set your API key by
+  configuring the :stripity_stripe application. You can see the default
+  configuration in the default_config/0 private function at the bottom of
+  this file. The value for platform client id is optional.
+
+  ```
+    config :stripity_stripe, secret_key: YOUR_STRIPE_KEY
+    config :stripity_stripe, platform_client_id: STRIPE_PLATFORM_CLIENT_ID
+  ```
   """
 
   # Let's build on top of HTTPoison
