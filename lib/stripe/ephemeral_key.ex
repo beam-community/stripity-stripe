@@ -24,7 +24,7 @@ defmodule Stripe.EphemeralKey do
     customer: [:create]
   }
   @doc """
-  Create a customer.
+  Create a ephemeral key.
   """
   @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(changes, api_version, opts \\ []) do
