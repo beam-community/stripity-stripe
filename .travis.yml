@@ -2,12 +2,16 @@ language: elixir
 dist: trusty
 elixir:
   - 1.3
+  - 1.4
+  - 1.5
 otp_release:
-  - 18.2
+  - 18.3
+  - 19.3
+  - 20.1
 sudo: false
 env:
   global:
-    - STRIPE_MOCK_VERSION=0.1.17
+    - STRIPE_MOCK_VERSION=0.3.0
     - MIX_ENV=test STRIPE_SECRET_KEY=non_empty_secret_key_string
 cache:
   directories:
