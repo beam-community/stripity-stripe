@@ -90,8 +90,8 @@ defmodule Stripe.Subscription do
   defstruct [
     :id, :object,
     :application_fee_percent, :cancel_at_period_end, :canceled_at,
-    :created, :current_period_end, :current_period_start, :customer,
-    :ended_at, :livemode, :metadata, :plan, :quantity, :source,
+    :created, :current_period_end, :current_period_start, :customer, :discount,
+    :ended_at, :items, :livemode, :metadata, :plan, :quantity, :source,
     :start, :status, :tax_percent, :trial_end, :trial_start
   ]
 
