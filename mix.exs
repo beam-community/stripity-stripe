@@ -52,7 +52,7 @@ defmodule Stripe.Mixfile do
   defp deps do
     [
       {:bypass, "~> 0.5", only: :test},
-      {:dialyxir, "~> 0.4", only: [:dev], runtime: false},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:earmark, "~> 1.0", only: :dev},
       {:ex_doc, "~> 0.14", only: :dev},
       {:excoveralls, "~> 0.5", only: :test},

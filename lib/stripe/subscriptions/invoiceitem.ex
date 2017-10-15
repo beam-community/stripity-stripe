@@ -1,8 +1,11 @@
-defmodule Stripe.LineItem do
+defmodule Stripe.Invoiceitem do
   @moduledoc """
-  Work with Stripe (invoice) line item objects.
+  Work with Stripe invoiceitem objects.
 
-  Stripe API reference: https://stripe.com/docs/api/ruby#invoice_line_item_object
+  Stripe API reference: https://stripe.com/docs/api#invoiceitems
+
+  Note: this module is named `Invoiceitem` and not `InvoiceItem` on purpose, to
+  match the Stripe terminology of `invoiceitem`.
   """
   use Stripe.Entity
 
@@ -11,8 +14,11 @@ defmodule Stripe.LineItem do
                object: String.t,
                amount: integer,
                currency: String.t,
+               customer: Stripe.id | Stripe.Customer.t,
+               date: Stripe.timestamp,
                description: String.t,
                discountable: boolean,
+               invoice: Stripe.id | Stripe.Invoice.t,
                livemode: boolean,
                metadata: %{
                  optional(String.t) => String.t
@@ -24,9 +30,8 @@ defmodule Stripe.LineItem do
                plan: Stripe.Plan.t | nil,
                proration: boolean,
                quantity: integer,
-               subscription: Stripe.id | nil,
-               subscription_item: Stripe.id | nil,
-               type: :invoiceitem | :subscription
+               subscription: Stripe.id | Stripe.Subscription.t | nil,
+               subscription_item: Stripe.id | Stripe.SubscriptionItem.t | nil
              }
 
   defstruct [
@@ -34,8 +39,11 @@ defmodule Stripe.LineItem do
     :object,
     :amount,
     :currency,
+    :customer,
+    :date,
     :description,
     :discountable,
+    :invoice,
     :livemode,
     :metadata,
     :period,
@@ -43,12 +51,6 @@ defmodule Stripe.LineItem do
     :proration,
     :quantity,
     :subscription,
-    :subscription_item,
-    :type
+    :subscription_item
   ]
-
-  from_json data do
-    data
-    |> cast_to_atom([:type])
-  end
 end

@@ -82,17 +82,58 @@ defmodule Stripe.Subscription do
   }
   ```
   """
-
+  use Stripe.Entity
+  import Stripe.Request
   alias Stripe.Util
 
-  @type t :: %__MODULE__{}
+  @type t :: %__MODULE__{
+               id: Stripe.id,
+               object: String.t,
+               application_fee_percent: float | nil,
+               cancel_at_period_end: boolean,
+               canceled_at: Stripe.timestamp | nil,
+               created: Stripe.timestamp,
+               current_period_end: Stripe.timestamp,
+               current_period_start: Stripe.timestamp,
+               customer: Stripe.id | Stripe.Customer.t,
+               discount: Stripe.Discount.t,
+               ended_at: Stripe.timestamp | nil,
+               items: Stripe.List.of(Stripe.SubscriptionItem.t),
+               livemode: boolean,
+               metadata: %{
+                 optional(String.t) => String.t
+               },
+               plan: Stripe.Plan.t,
+               quantity: integer,
+               start: Stripe.timestamp,
+               status: :trialing | :active | :past_due | :canceled | :unpaid,
+               tax_percent: float | nil,
+               trial_end: Stripe.timestamp,
+               trial_start: Stripe.timestamp
+             }
 
   defstruct [
-    :id, :object,
-    :application_fee_percent, :cancel_at_period_end, :canceled_at,
-    :created, :current_period_end, :current_period_start, :customer, :discount,
-    :ended_at, :items, :livemode, :metadata, :plan, :quantity, :source,
-    :start, :status, :tax_percent, :trial_end, :trial_start
+    :id,
+    :object,
+    :application_fee_percent,
+    :cancel_at_period_end,
+    :canceled_at,
+    :created,
+    :current_period_end,
+    :current_period_start,
+    :customer,
+    :discount,
+    :ended_at,
+    :items,
+    :livemode,
+    :metadata,
+    :plan,
+    :quantity,
+    :start,
+    :status,
+    :tax_percent,
+    :trial_end,
+    :trial_start
   ]
 
   @plural_endpoint "subscriptions"
@@ -100,18 +141,41 @@ defmodule Stripe.Subscription do
   @doc """
   Create a subscription.
   """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, opts)
+  @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+        when params: %{
+               application_fee_percent: float,
+               coupon: Stripe.id | Stripe.Coupon.t,
+               items: [
+                 %{
+                   :plan => Stripe.id | Stripe.Plan.t,
+                   optional(:quantity) => non_neg_integer
+                 }
+               ],
+               metadata: %{
+                 optional(String.t) => String.t
+               },
+               tax_percent: float,
+               trial_end: Stripe.timestamp,
+               trial_period_days: non_neg_integer
+             }
+  def create(params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_params(params)
+    |> put_method(:post)
+    |> cast_to_id([:coupon])
+    |> make_request()
   end
 
   @doc """
   Retrieve a subscription.
   """
-  @spec retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
   def retrieve(id, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve(endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
   end
 
   @doc """
@@ -119,10 +183,32 @@ defmodule Stripe.Subscription do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(String.t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def update(id, changes, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, opts)
+  @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+        when params: %{
+               application_fee_percent: float,
+               coupon: Stripe.id | Stripe.Coupon.t,
+               items: [
+                 %{
+                   :plan => Stripe.id | Stripe.Plan.t,
+                   optional(:quantity) => non_neg_integer
+                 }
+               ],
+               metadata: %{
+                 optional(String.t) => String.t
+               },
+               prorate: boolean,
+               proration_date: Stripe.timestamp,
+               source: Stripe.id | Stripe.Source.t,
+               tax_percent: float,
+               trial_end: Stripe.timestamp
+             }
+  def update(id, params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:post)
+    |> put_params(params)
+    |> cast_to_id([:coupon, :source])
+    |> make_request()
   end
 
   @doc """
@@ -130,34 +216,44 @@ defmodule Stripe.Subscription do
 
   Takes the `id` and an optional map of `params`.
   """
-  @spec delete(String.t, map, list) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(subscription, params \\ %{}, opts \\ []) do
-    id = Util.normalize_id(subscription)
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.delete(endpoint, params, opts)
+  @spec delete(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def delete(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:delete)
+    |> make_request()
   end
 
   @doc """
   List all subscriptions.
   """
-  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+        when params: %{
+               created: Stripe.date_query,
+               customer: Stripe.Customer.t | Stripe.id,
+               ending_before: t | Stripe.id,
+               limit: 1..100,
+               plan: Stripe.Plan.t | Stripe.id,
+               starting_after: t | Stripe.id,
+               status: :trialing | :active | :past_due | :canceled | :unpaid | :all
+             }
   def list(params \\ %{}, opts \\ []) do
-    endpoint = @plural_endpoint
-
-    params
-    |> Stripe.Request.retrieve(endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:get)
+    |> put_params(params)
+    |> cast_to_id([:customer, :ending_before, :plan, :starting_after])
+    |> make_request()
   end
 
   @doc """
   Deletes the discount on a subscription.
   """
-  @spec delete_discount(t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def delete_discount(%Stripe.Subscription{id: id} = subscription, opts \\ []) do
-    endpoint = @plural_endpoint <> "/#{id}/discount"
-
-    with {:ok, _} <- Stripe.Request.delete(endpoint, %{}, opts)
-    do
-      {:ok, %{subscription | discount: nil}}
-    end
+  @spec delete_discount(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def delete_discount(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/discount")
+    |> put_method(:delete)
+    |> make_request()
   end
 end

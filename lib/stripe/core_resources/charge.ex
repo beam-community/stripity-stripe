@@ -13,6 +13,9 @@ defmodule Stripe.Charge do
   import Stripe.Request
   require Stripe.Util
 
+  @type network_status :: :approved_by_network | :declined_by_network |
+                          :not_sent_to_network | :reversed_after_approval
+
   @type user_fraud_report :: %{
                                user_report: :safe | :fraudulent
                              }
@@ -22,32 +25,13 @@ defmodule Stripe.Charge do
                                }
 
   @type outcome :: %{
-                     network_status:
-                       :approved_by_network | :declined_by_network | :not_sent_to_network
-                       | :reversed_after_approval,
+                     network_status: network_status,
                      reason: String.t,
                      risk_level: :normal | :elevated | :highest | :not_assessed | :unknown,
                      rule: Stripe.id | Stripe.Rule.t,
                      seller_message: String.t,
                      type: :authorized | :manual_review | :issuer_declined | :blocked | :invalid
                    }
-
-  @type address :: %{
-                     city: String.t,
-                     country: String.t,
-                     line1: String.t,
-                     line2: String.t,
-                     postal_code: String.t,
-                     state: String.t
-                   }
-
-  @type shipping :: %{
-                      address: address,
-                      carrier: String.t,
-                      name: String.t,
-                      phone: String.t,
-                      tracking_number: String.t
-                    }
 
   @type card_info :: %{
                        exp_month: number,
@@ -63,6 +47,20 @@ defmodule Stripe.Charge do
                        address_state: String.t,
                        address_zip: String.t
                      }
+  @type shipping :: %{
+                       address: %{
+                         city: String.t | nil,
+                         country: String.t | nil,
+                         line1: String.t | nil,
+                         line2: String.t | nil,
+                         postal_code: String.t | nil,
+                         state: String.t | nil
+                       },
+                       carrier: String.t | nil,
+                       name: String.t | nil,
+                       phone: String.t | nil,
+                       tracking_number: String.t | nil
+                     }
 
   @type t :: %__MODULE__{
                id: Stripe.id,
@@ -70,38 +68,39 @@ defmodule Stripe.Charge do
                amount: non_neg_integer,
                amount_refunded: non_neg_integer,
                application: Stripe.id | Stripe.Application.t,
-               application_fee: Stripe.id | Stripe.ApplicationFee.t,
+               application_fee: Stripe.id | Stripe.ApplicationFee.t | nil,
                balance_transaction: Stripe.id | Stripe.BalanceTransaction.t,
                captured: boolean,
                created: Stripe.timestamp,
                currency: String.t,
-               customer: Stripe.id | Stripe.Customer.t,
-               description: String.t,
-               destination: Stripe.id | Stripe.Account.t,
-               dispute: Stripe.id | Stripe.Dispute.t,
-               failure_code: Stripe.Error.card_error_code,
-               failure_message: String.t,
-               fraud_details: %{} | user_fraud_report | stripe_fraud_report,
-               invoice: Stripe.id | Stripe.Invoice.t,
+               customer: Stripe.id | Stripe.Customer.t | nil,
+               description: String.t | nil,
+               destination: Stripe.id | Stripe.Account.t | nil,
+               dispute: Stripe.id | Stripe.Dispute.t | nil,
+               failure_code: Stripe.Error.card_error_code | nil,
+               failure_message: String.t | nil,
+               fraud_details: user_fraud_report | stripe_fraud_report | %{},
+               invoice: Stripe.id | Stripe.Invoice.t | nil,
                livemode: boolean,
                metadata: %{
                  optional(String.t) => String.t
                },
-               on_behalf_of: Stripe.id | Stripe.Account.t,
-               order: Stripe.id | Stripe.Order.t,
-               outcome: outcome,
+               on_behalf_of: Stripe.id | Stripe.Account.t | nil,
+               order: Stripe.id | Stripe.Order.t | nil,
+               outcome: outcome | nil,
                paid: boolean,
-               receipt_email: String.t,
+               receipt_email: String.t | nil,
                receipt_number: String.t | nil,
                refunded: boolean,
                refunds: Stripe.List.of(Stripe.Refund.t),
-               review: Stripe.id | Stripe.Review.t,
+               review: Stripe.id | Stripe.Review.t | nil,
+               shipping: shipping | nil,
                source: Stripe.Card.t | map,
-               source_transfer: Stripe.id | Stripe.Transfer.t,
-               statement_descriptor: String.t,
+               source_transfer: Stripe.id | Stripe.Transfer.t | nil,
+               statement_descriptor: String.t | nil,
                status: :succeeded | :pending | :failed,
-               transfer: Stripe.id | Stripe.Transfer.t,
-               transfer_group: String.t
+               transfer: Stripe.id | Stripe.Transfer.t | nil,
+               transfer_group: String.t | nil
              }
 
   defstruct [
@@ -237,7 +236,7 @@ defmodule Stripe.Charge do
                on_behalf_of: Stripe.id | Stripe.Account.t,
                metadata: map,
                receipt_email: String.t,
-               shipping: shipping,
+               shipping: Stripe.Customer.shipping,
                customer: Stripe.id | Stripe.Customer.t,
                source: Stripe.id | Stripe.Card.t | card_info,
                statement_descriptor: String.t
@@ -292,7 +291,7 @@ defmodule Stripe.Charge do
                  optional(atom) => String.t
                },
                receipt_email: String.t,
-               shipping: shipping,
+               shipping: Stripe.Customer.shipping,
                transfer_group: String.t
              }
   def update(id, params, opts \\ []) do

@@ -19,5 +19,4 @@ defmodule Stripe.StripeCase do
       import Stripe.StripeCase, only: [assert_stripe_requested: 2, assert_stripe_requested: 3, stripe_base_url: 0]
     end
   end
-
 end

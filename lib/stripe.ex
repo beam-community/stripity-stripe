@@ -47,6 +47,9 @@ defmodule Stripe do
   """
   use Application
 
+  @type id :: String.t
+  @type timestamp :: pos_integer
+
   @doc """
   Callback for the application
 
@@ -69,5 +72,4 @@ defmodule Stripe do
     opts = [strategy: :one_for_one, name: Stripe.Supervisor]
     Supervisor.start_link(children, opts)
   end
-
 end

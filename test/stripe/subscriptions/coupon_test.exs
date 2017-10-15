@@ -27,4 +27,9 @@ defmodule Stripe.CouponTest do
     assert {:ok, %Stripe.Coupon{}} = Stripe.Coupon.update("25OFF", %{metadata: %{key: "value"}})
     assert_stripe_requested :post, "/v1/coupons/25OFF"
   end
+
+  test "is deleteable" do
+    assert {:ok, %Stripe.Coupon{}} = Stripe.Coupon.delete("25OFF")
+    assert_stripe_requested :delete, "/v1/coupons/25OFF"
+  end
 end

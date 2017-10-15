@@ -2,16 +2,17 @@ defmodule Stripe.Request do
   @moduledoc """
   A module for working with requests to the Stripe API.
 
-  Requests are composed in a functional manner. The request does not happen until it is configured
-  and passed to `make_request/1`.
+  Requests are composed in a functional manner. The request does not happen
+  until it is configured and passed to `make_request/1`.
 
-  Currently encompasses only requests to the normal Stripe API, the OAuth endpoint is not yet
-  supported.
+  Currently encompasses only requests to the normal Stripe API. The OAuth
+  endpoint is not yet supported.
 
-  Generally intended to be used internally, but can also be used by end-users to work around missing
-  endpoints (if any).
+  Generally intended to be used internally, but can also be used by end-users
+  to work around missing endpoints (if any).
 
-  At a minimum, a request must have the endpoint and method specified to be valid.
+  At a minimum, a request must have the endpoint and method specified to be
+  valid.
   """
   alias Stripe.{API, Request, Converter}
 
@@ -42,12 +43,13 @@ defmodule Stripe.Request do
   @doc """
   Specifies an endpoint for the request.
 
-  The endpoint should not include the `v1` prefix or an initial slash, for example
-  `put_endpoint(request, "charges")`.
+  The endpoint should not include the `v1` prefix or an initial slash, for
+  example `put_endpoint(request, "charges")`.
 
-  The endpoint can be a binary or a function which takes the parameters of the query and returns
-  and endpoint. The function is not evaluated until just before the request is made so the actual
-  parameters can be specified after the endpoint.
+  The endpoint can be a binary or a function which takes the parameters of the
+  query and returns an endpoint. The function is not evaluated until just
+  before the request is made so the actual parameters can be specified after
+  the endpoint.
   """
   @spec put_endpoint(t, String.t | (map -> String.t)) :: t
   def put_endpoint(%Request{} = request, endpoint) do
@@ -57,8 +59,8 @@ defmodule Stripe.Request do
   @doc """
   Specifies a method to use for the request.
 
-  Accepts any of the standard HTTP methods as atoms, that is `:get`, `:post`, `:put`, `:patch` or
-  `:delete`.
+  Accepts any of the standard HTTP methods as atoms, that is `:get`, `:post`,
+  `:put`, `:patch` or `:delete`.
   """
   @spec put_method(t, Stripe.API.method) :: t
   def put_method(%Request{} = request, method) when method in [:get, :post, :put, :patch, :delete] do
@@ -68,10 +70,11 @@ defmodule Stripe.Request do
   @doc """
   Specifies the parameters to be used for the request.
 
-  If the request is a POST request, these are encoded in the request body. Otherwise, they are
-  encoded in the URL.
+  If the request is a POST request, these are encoded in the request body.
+  Otherwise, they are encoded in the URL.
 
-  Calling this function multiple times will merge, not replace, the params currently specified.
+  Calling this function multiple times will merge, not replace, the params
+  currently specified.
   """
   @spec put_params(t, map) :: t
   def put_params(%Request{params: params} = request, new_params) do
@@ -89,13 +92,15 @@ defmodule Stripe.Request do
   @doc """
   Specify that a given set of parameters should be cast to a simple ID.
 
-  Sometimes, it may be convenient to allow end-users to pass in structs (say, the card to charge)
-  but the API requires only the ID of the object. This function will ensure that before the request
-  is made, the parameters specified here will be cast to IDs – if the value of a parameter is a
-  struct with an `:id` field, the value of that field will replace the struct in the parameter list.
+  Sometimes, it may be convenient to allow end-users to pass in structs (say,
+  the card to charge) but the API requires only the ID of the object. This
+  function will ensure that before the request is made, the parameters
+  specified here will be cast to IDs – if the value of a parameter is a
+  struct with an `:id` field, the value of that field will replace the struct
+  in the parameter list.
 
-  If the function is called multiple times, the set of parameters to cast to ID is merged between
-  the multiple calls.
+  If the function is called multiple times, the set of parameters to cast to
+  ID is merged between the multiple calls.
   """
   @spec cast_to_id(t, [atom]) :: t
   def cast_to_id(%Request{cast_to_id: cast_to_id} = request, new_cast_to_id) do
@@ -105,8 +110,9 @@ defmodule Stripe.Request do
   @doc """
   Specify that a given path in the parameters should be cast to a simple ID.
 
-  Acts similar to `cast_to_id/2` but specifies only one parameter to be cast, by specifying its path
-  (as in the `Access` protocol). Used to cast nested objects to their IDs.
+  Acts similar to `cast_to_id/2` but specifies only one parameter to be cast,
+  by specifying its path (as in the `Access` protocol). Used to cast nested
+  objects to their IDs.
   """
   @spec cast_path_to_id(t, [atom]) :: t
   def cast_path_to_id(%Request{cast_to_id: cast_to_id} = request, new_cast_to_id) do
@@ -116,11 +122,11 @@ defmodule Stripe.Request do
   @doc ~S"""
   Normalise the argument to a simple Stripe ID.
 
-  Actively extracts the ID, given a struct with an `:id` field, or returns the binary if one is
-  passed in.
+  Actively extracts the ID, given a struct with an `:id` field, or returns the
+  binary if one is passed in.
 
-  Useful for eagerly getting the ID of an object passed in, for example when computing the endpoint
-  to use:
+  Useful for eagerly getting the ID of an object passed in, for example when
+  computing the endpoint to use:
 
   ```
   def capture(id, params, opts) do
@@ -175,6 +181,4 @@ defmodule Stripe.Request do
     {:error, Stripe.Error.new(source: :internal, code: :invalid_endpoint,
       message: "endpoint must be a string or a function from params to a string")}
   end
-
-
 end

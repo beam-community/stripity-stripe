@@ -9,12 +9,26 @@ defmodule Stripe.FileUpload do
 
   Stripe API reference: https://stripe.com/docs/api#file_uploads
   """
+  use Stripe.Entity
 
-  @type t :: %__MODULE__{}
+  @type t :: %__MODULE__{
+               id: Stripe.id,
+               object: String.t,
+               created: Stripe.timestamp,
+               purpose: :dispute_evidence | :identity_document | :business_logo,
+               size: integer,
+               type: :pdf | :jpg | :png,
+               url: String.t
+             }
 
   defstruct [
-    :id, :object,
-    :created, :purpose, :size, :type, :metadata
+    :id,
+    :object,
+    :created,
+    :purpose,
+    :size,
+    :type,
+    :url
   ]
 
   @plural_endpoint "files"

@@ -14,23 +14,79 @@ defmodule Stripe.Card do
 
   The owner type is indicated by setting either the `recipient` or `customer`
   ```
+
+  Stripe API reference: https://stripe.com/docs/api#cards
   """
   use Stripe.Entity
 
   alias Stripe.Util
 
-  @type t :: %__MODULE__{}
+  @type check_result :: :pass | :fail | :unavailable | :unchecked
+
+  @type t :: %__MODULE__{
+               id: Stripe.id,
+               object: String.t,
+               account: Stripe.id | Stripe.Account.t,
+               address_city: String.t,
+               address_country: String.t,
+               address_line1: String.t,
+               address_line1_check: check_result,
+               address_line2: String.t,
+               address_state: String.t,
+               address_zip: String.t,
+               address_zip_check: check_result,
+               available_payout_methods: [:standard | :instant],
+               brand: String.t,
+               country: String.t,
+               currency: String.t,
+               customer: Stripe.id | Stripe.Customer.t,
+               cvc_check: check_result,
+               default_for_currency: boolean,
+               dynamic_last4: String.t,
+               exp_month: integer,
+               exp_year: integer,
+               fingerprint: String.t,
+               funding: :credit | :debit | :prepaid | :unknown,
+               last4: String.t,
+               metadata: %{
+                 optional(String.t) => String.t
+               },
+               name: String.t,
+               recipient: Stripe.id | Stripe.Recipient.t,
+               tokenization_method: :apple_pay | :android_pay | nil
+             }
   @type source :: :customer | :recipient | :account
   @sources [:customer, :recipient, :account]
   @type owner :: Stripe.Customer.t | Stripe.Account.t
 
   defstruct [
-    :id, :object,
-    :address_city, :address_country, :address_line1,
-    :address_line1_check, :address_line2, :address_state,
-    :address_zip, :address_zip_check, :brand, :country,
-    :customer, :cvc_check, :dynamic_last4, :exp_month, :exp_year,
-    :fingerprint, :funding, :last4, :metadata, :name, :recipient,
+    :id,
+    :object,
+    :account,
+    :address_city,
+    :address_country,
+    :address_line1,
+    :address_line1_check,
+    :address_line2,
+    :address_state,
+    :address_zip,
+    :address_zip_check,
+    :available_payout_methods,
+    :brand,
+    :country,
+    :currency,
+    :customer,
+    :cvc_check,
+    :default_for_currency,
+    :dynamic_last4,
+    :exp_month,
+    :exp_year,
+    :fingerprint,
+    :funding,
+    :last4,
+    :metadata,
+    :name,
+    :recipient,
     :tokenization_method
   ]
 
@@ -58,7 +114,10 @@ defmodule Stripe.Card do
   If you want to create a card with your server without a token, you
   can use the low-level API.
   """
-  @spec create(source, String.t, String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec create(source, String.t, String.t, Keyword.t) :: {:ok, t} | {
+    :error,
+    Stripe.api_error_struct
+  }
   def create(owner_type, owner_id, token, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id)
 
@@ -79,7 +138,10 @@ defmodule Stripe.Card do
   @doc """
   Retrieve a card.
   """
-  @spec retrieve(source, String.t, String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(source, String.t, String.t, Keyword.t) :: {:ok, t} | {
+    :error,
+    Stripe.api_error_struct
+  }
   def retrieve(owner_type, owner_id, card_id, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
     Stripe.Request.retrieve(endpoint, opts)
@@ -90,7 +152,10 @@ defmodule Stripe.Card do
 
   Takes the `id` and a map of changes
   """
-  @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {
+    :error,
+    Stripe.api_error_struct
+  }
   def update(owner_type, owner_id, card_id, changes, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
     Stripe.Request.update(endpoint, changes, opts)
@@ -99,8 +164,11 @@ defmodule Stripe.Card do
   @doc """
   Delete a card.
   """
-  @spec delete(source, owner_or_id, card_or_id, Keyword.t) :: :ok | {:error, Stripe.api_error_struct}
-      when owner_or_id: owner | String.t, card_or_id: t | String.t
+  @spec delete(source, owner_or_id, card_or_id, Keyword.t) :: :ok | {
+    :error,
+    Stripe.api_error_struct
+  }
+        when owner_or_id: owner | String.t, card_or_id: t | String.t
   def delete(owner_type, owner, card, opts \\ []) when owner_type in @sources do
     owner_id = Util.normalize_id(owner)
     card_id = Util.normalize_id(card)
@@ -115,7 +183,10 @@ defmodule Stripe.Card do
   @doc """
   List all cards.
   """
-  @spec list(source, String.t, map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  @spec list(source, String.t, map, Keyword.t) :: {:ok, Stripe.List.t} | {
+    :error,
+    Stripe.api_error_struct
+  }
   def list(owner_type, owner_id, params \\ %{}, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id)
     params = Map.merge(params, %{"object" => "card"})

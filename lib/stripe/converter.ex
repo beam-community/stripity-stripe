@@ -18,6 +18,8 @@ defmodule Stripe.Converter do
     coupon invoice line_item plan subscription
   )
 
+  @no_convert_maps ~w(metadata supported_bank_account_currencies)
+
   @spec convert_value(any) :: any
   defp convert_value(%{"object" => object_name} = value) when is_binary(object_name) do
     case Enum.member?(@supported_objects, object_name) do
@@ -48,7 +50,7 @@ defmodule Stripe.Converter do
           string_key = to_string(key)
           converted_value =
             case string_key do
-              "metadata" -> Map.get(value, string_key)
+              string_key when string_key in @no_convert_maps -> Map.get(value, string_key)
               _ -> Map.get(value, string_key) |> convert_value()
             end
           Map.put(acc, key, converted_value)
