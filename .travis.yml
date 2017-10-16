@@ -11,7 +11,7 @@ otp_release:
 matrix:
   exclude:
     - elixir: 1.3
-      otp: 20.1
+      otp_release: 20.1
 sudo: false
 env:
   global:
