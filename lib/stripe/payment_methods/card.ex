@@ -9,28 +9,20 @@ defmodule Stripe.Card do
   - Update a card
   - Delete a card
 
-  All requests require `owner_type` and `owner_id` parameters to be specified.
+  If you have been using an old version of the library, note that the functions which take an
+  `owner_type` argument are now deprecated.
 
-  `owner_type` must be one of the following:
-    * `:customer`,
-    * `:recipient`.
-
-  `owner_id` must be the ID of the owning object.
-
-  This module does not yet support managed accounts.
-
-  Does not yet render lists or take options.
-
-  Recipients may be deprecated for your version of the API. They have
-  been replaced by managed accounts (see
-  https://stripe.com/docs/connect/managed-accounts), which you should use
-  if you're creating a new platform.
-
-  Stripe API reference: https://stripe.com/docs/api#cards
+  The owner type is indicated by setting either the `recipient` or `customer`
+  ```
   """
+  use Stripe.Entity
+
+  alias Stripe.Util
 
   @type t :: %__MODULE__{}
-  @type source :: :customer | :recipient
+  @type source :: :customer | :recipient | :account
+  @sources [:customer, :recipient, :account]
+  @type owner :: Stripe.Customer.t | Stripe.Account.t
 
   defstruct [
     :id, :object,
@@ -42,40 +34,10 @@ defmodule Stripe.Card do
     :tokenization_method
   ]
 
-  @schema %{
-    account: [:retrieve],
-    address_city: [:retrieve, :update],
-    address_country: [:retrieve, :update],
-    address_line1: [:retrieve, :update],
-    address_line1_check: [:retrieve],
-    address_line2: [:retrieve, :update],
-    address_state: [:retrieve, :update],
-    address_zip: [:retrieve, :update],
-    address_zip_check: [:retrieve],
-    brand: [:retrieve, :update],
-    country: [:retrieve, :update],
-    currency: [:retrieve, :update],
-    customer: [:retrieve, :update],
-    cvc_check: [:retrieve, :update],
-    default_for_currency: [:create, :retrieve, :update],
-    dynamic_last4: [:retrieve],
-    exp_month: [:retrieve, :update],
-    exp_year: [:retrieve, :update],
-    external_account: [:create],
-    fingerprint: [:retrieve],
-    funding: [:retrieve],
-    id: [:retrieve],
-    last4: [:retrieve],
-    metadata: [:create, :retrieve, :update],
-    name: [:retrieve, :update],
-    object: [:retrieve],
-    recipient: [:retrieve],
-    source: [:create],
-    three_d_secure: [:retrieve],
-    tokenization_method: [:retrieve]
-  }
-
-  @nullable_keys []
+  from_json data do
+    # todo convert this appropriately
+    data
+  end
 
   defp endpoint_for_owner(owner_type, owner_id) do
     case owner_type do
@@ -99,8 +61,11 @@ defmodule Stripe.Card do
   @spec create(source, String.t, String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def create(owner_type, owner_id, token, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id)
-    changes = to_create_body(owner_type, token)
-    Stripe.Request.create(endpoint, changes, @schema, opts)
+
+    to_create_body(owner_type, token)
+    |> Util.map_keys_to_atoms()
+    |> Stripe.request(:post, endpoint, %{}, opts)
+    |> Stripe.Request.handle_result
   end
 
   @spec to_create_body(source, String.t) :: map
@@ -128,14 +93,21 @@ defmodule Stripe.Card do
   @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
   def update(owner_type, owner_id, card_id, changes, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.update(endpoint, changes, @schema, @nullable_keys, opts)
+    Stripe.Request.update(endpoint, changes, opts)
   end
 
   @doc """
   Delete a card.
   """
-  @spec delete(source, String.t, String.t, Keyword.t) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(owner_type, owner_id, card_id, opts \\ []) do
+  @spec delete(source, owner_or_id, card_or_id, Keyword.t) :: :ok | {:error, Stripe.api_error_struct}
+      when owner_or_id: owner | String.t, card_or_id: t | String.t
+  def delete(owner_type, owner, card, opts \\ []) when owner_type in @sources do
+    owner_id = Util.normalize_id(owner)
+    card_id = Util.normalize_id(card)
+    do_delete(owner_type, owner_id, card_id, opts)
+  end
+
+  defp do_delete(owner_type, owner_id, card_id, opts \\ []) do
     endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
     Stripe.Request.delete(endpoint, %{}, opts)
   end

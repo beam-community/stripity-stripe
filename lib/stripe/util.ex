@@ -58,4 +58,18 @@ defmodule Stripe.Util do
 
     Module.concat("Stripe", module_name)
   end
+
+  def normalize_id(%{id: id}) when id !== nil, do: id
+  def normalize_id(id) when is_binary(id), do: id
+
+  defmacro log_deprecation(msg \\ "") do
+    if Mix.env() in [:test, :dev] do
+      {fun, arity} = __CALLER__.function
+      mod = __CALLER__.module
+      quote bind_quoted: [mod: mod, fun: fun, arity: arity, msg: msg] do
+        require Logger
+        Logger.warn("[DEPRECATION] The function #{mod}.#{fun}/#{arity} is deprecated. #{msg}")
+      end
+    end
+  end
 end
