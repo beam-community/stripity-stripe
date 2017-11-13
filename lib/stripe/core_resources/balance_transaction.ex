@@ -9,15 +9,18 @@ defmodule Stripe.BalanceTransaction do
   use Stripe.Entity
   import Stripe.Request
 
-  @type transaction_type :: :adjustment | :application_fee | :application_fee_refund | :charge
-  | :payment | :payment_failure_refund | :payment_refund | :refund | :transfer | :transfer_refund
-  | :payout | :payout_cancel | :payout_failure | :validation
+  @type transaction_type :: :adjustment | :application_fee |
+                            :application_fee_refund | :charge | :payment |
+                            :payment_failure_refund | :payment_refund |
+                            :refund | :transfer | :transfer_refund | :payout |
+                            :payout_cancel | :payout_failure | :validation |
+                            :stripe_fee
 
   @type fee :: %{
                  amount: integer,
                  application: String.t,
                  currency: String.t,
-                 description: String.t,
+                 description: String.t | nil,
                  type: :application_fee | :stripe_fee | :tax
                }
 
@@ -28,17 +31,30 @@ defmodule Stripe.BalanceTransaction do
                available_on: Stripe.timestamp,
                created: Stripe.timestamp,
                currency: String.t,
-               description: String.t,
+               description: String.t | nil,
                fee: integer,
-               fee_details: [fee],
+               fee_details: list(fee) | [],
                net: integer,
                source: Stripe.id | Stripe.Source.t,
                status: :available | :pending,
                type: transaction_type
              }
 
-  defstruct [:id, :object, :amount, :available_on, :created, :currency, :description, :fee,
-    :fee_details, :net, :source, :status, :type]
+  defstruct [
+    :id,
+    :object,
+    :amount,
+    :available_on,
+    :created,
+    :currency,
+    :description,
+    :fee,
+    :fee_details,
+    :net,
+    :source,
+    :status,
+    :type
+  ]
 
   from_json data do
     data
@@ -74,15 +90,15 @@ defmodule Stripe.BalanceTransaction do
   """
   @spec all(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
         when params: %{
-               available_on: Stripe.date_query,
-               created: Stripe.date_query,
-               currency: String.t,
-               ending_before: Stripe.id | Stripe.BalanceTransaction.t,
-               limit: 1..100,
-               payout: Stripe.id | Stripe.Payout.t,
-               source: Stripe.id | Stripe.Source.t,
-               starting_after: Stripe.id | Stripe.BalanceTransaction.t,
-               type: Stripe.BalanceTransaction.transaction_type
+               available_on: Stripe.date_query | nil,
+               created: Stripe.date_query | nil,
+               currency: String.t | nil,
+               ending_before: Stripe.id | Stripe.BalanceTransaction.t | nil,
+               limit: 1..100 | nil,
+               payout: Stripe.id | Stripe.Payout.t | nil,
+               source: Stripe.id | Stripe.Source.t | nil,
+               starting_after: Stripe.id | Stripe.BalanceTransaction.t | nil,
+               type: Stripe.BalanceTransaction.transaction_type | nil
              }
   def all(params \\ %{}, opts \\ []) do
     new_request(opts)

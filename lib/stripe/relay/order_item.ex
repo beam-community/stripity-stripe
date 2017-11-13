@@ -1,0 +1,28 @@
+defmodule Stripe.OrderItem do
+  @moduledoc """
+  Work with Stripe order items.
+
+  Stripe API reference: https://stripe.com/docs/api#order_items
+  """
+  use Stripe.Entity
+
+  @type t :: %__MODULE__{
+               object: String.t,
+               amount: pos_integer,
+               currency: String.t,
+               description: String.t,
+               parent: nil | Stripe.id | Stripe.SKU.t,
+               quantity: nil | pos_integer,
+               type: :sku | :tax | :shipping | :discount
+             }
+
+  defstruct [
+    :object,
+    :amount,
+    :currency,
+    :description,
+    :parent,
+    :quantity,
+    :type
+  ]
+end

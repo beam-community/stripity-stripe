@@ -18,18 +18,11 @@ defmodule Stripe.ExternalAccount do
 
   alias Stripe.Util
 
-  @type t :: %__MODULE__{}
-
-  defstruct [
-    :id, :object,
-    :account, :account_holder_name, :account_holder_type,
-    :bank_name, :country, :currency, :default_for_currency, :fingerprint,
-    :last4, :metadata, :routing_number, :status
-  ]
-
   defp endpoint(managed_account_id) do
     "accounts/#{managed_account_id}/external_accounts"
   end
+
+  @type t :: Stripe.BankAccount.t | Stripe.Card.t
 
   @doc """
   Create an external account.

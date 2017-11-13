@@ -10,13 +10,37 @@ defmodule Stripe.Event do
 
   Stripe API reference: https://stripe.com/docs/api#event
   """
+  use Stripe.Entity
 
-  @type t :: %__MODULE__{}
+  @type t :: %__MODULE__{
+               id: Stripe.id,
+               object: String.t,
+               api_version: String.t,
+               created: Stripe.timestamp,
+               data: %{
+                 object: map,
+                 previous_attributes: map
+               },
+               livemode: boolean,
+               pending_webhooks: non_neg_integer,
+               request: %{
+                 id: String.t,
+                 idempotency_key: String.t
+               },
+               type: String.t
+             }
 
   defstruct [
-    :id, :object,
-    :api_version, :created, :data, :livemode, :pending_webhooks,
-    :request, :type, :user_id
+    :id,
+    :object,
+    :api_version,
+    :created,
+    :data,
+    :livemode,
+    :pending_webhooks,
+    :request,
+    :type,
+    :user_id
   ]
 
   @plural_endpoint "events"

@@ -13,79 +13,66 @@ defmodule Stripe.Customer do
 
   Stripe API reference: https://stripe.com/docs/api#customer
 
-  Example:
-
-  ```
-  {
-    "id": "cus_A5IzRTlo2DcV1J",
-    "object": "customer",
-    "account_balance": 0,
-    "created": 1486610024,
-    "currency": "usd",
-    "default_source": "card_19l8NQ2eZvKYlo2CiYWILX4R",
-    "delinquent": false,
-    "description": "Sample user",
-    "discount": null,
-    "email": "jaylen@example.com",
-    "livemode": false,
-    "metadata": {
-    },
-    "shipping": null,
-    "sources": {
-      "object": "list",
-      "data": [
-        {
-          "id": "card_19l8NQ2eZvKYlo2CiYWILX4R",
-          "object": "card",
-          "address_city": null,
-          "address_country": null,
-          "address_line1": null,
-          "address_line1_check": null,
-          "address_line2": null,
-          "address_state": null,
-          "address_zip": null,
-          "address_zip_check": null,
-          "brand": "Visa",
-          "country": "US",
-          "customer": "cus_A5IzRTlo2DcV1J",
-          "cvc_check": "pass",
-          "dynamic_last4": null,
-          "exp_month": 2,
-          "exp_year": 2018,
-          "funding": "credit",
-          "last4": "1881",
-          "metadata": {
-          },
-          "name": null,
-          "tokenization_method": null
-        }
-      ],
-      "has_more": false,
-      "total_count": 1,
-      "url": "/v1/customers/cus_A5IzRTlo2DcV1J/sources"
-    },
-    "subscriptions": {
-      "object": "list",
-      "data": [
-
-      ],
-      "has_more": false,
-      "total_count": 0,
-      "url": "/v1/customers/cus_A5IzRTlo2DcV1J/subscriptions"
-    }
-  }
-  ```
   """
-
+  use Stripe.Entity
+  import Stripe.Request
   alias Stripe.Util
 
-  @type t :: %__MODULE__{}
+  @type address :: %{
+                     city: String.t,
+                     country: String.t,
+                     line1: String.t,
+                     line2: String.t,
+                     postal_code: String.t,
+                     state: String.t
+                   }
+
+  @type shipping :: %{
+                      address: address,
+                      carrier: String.t,
+                      name: String.t,
+                      phone: String.t,
+                      tracking_number: String.t
+                    }
+
+  @type t :: %__MODULE__{
+               id: Stripe.id,
+               object: String.t,
+               account_balance: integer,
+               business_vat_id: String.t,
+               created: Stripe.timestamp,
+               currency: String.t,
+               default_source: Stripe.id | Stripe.Source.t,
+               delinquent: boolean,
+               description: String.t,
+               discount: Stripe.Discount.t | nil,
+               email: String.t,
+               livemode: boolean,
+               metadata: %{
+                 optional(String.t) => String.t
+               },
+               shipping: shipping,
+               sources: Stripe.List.of(Stripe.Source.t),
+               subscriptions: Stripe.List.of(Stripe.Subscription.t)
+             }
 
   defstruct [
-    :id, :object,
-    :account_balance, :business_vat_id, :created, :currency,
-    :default_source, :delinquent, :description, :discount, :email,
-    :livemode, :metadata, :shipping, :sources, :subscriptions
+    :id,
+    :object,
+    :account_balance,
+    :business_vat_id,
+    :created,
+    :currency,
+    :default_source,
+    :delinquent,
+    :description,
+    :discount,
+    :email,
+    :livemode,
+    :metadata,
+    :shipping,
+    :sources,
+    :subscriptions
   ]
 
   @plural_endpoint "customers"
@@ -93,18 +80,38 @@ defmodule Stripe.Customer do
   @doc """
   Create a customer.
   """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, opts)
+  @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+        when params: %{
+               account_balance: integer | nil,
+               business_vat_id: String.t | nil,
+               coupon: Stripe.id | Stripe.Coupon.t | nil,
+               default_source: Stripe.id | Stripe.Source.t |nil,
+               description: String.t | nil,
+               email: String.t | nil,
+               metadata: %{
+                 optional(String.t) => String.t
+               },
+               shipping: shipping | nil,
+               source: Stripe.Source.t | nil
+             }
+  def create(params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_params(params)
+    |> put_method(:post)
+    |> cast_to_id([:coupon, :default_source, :source])
+    |> make_request()
   end
 
   @doc """
   Retrieve a customer.
   """
-  @spec retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
   def retrieve(id, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve(endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
   end
 
   @doc """
@@ -112,28 +119,55 @@ defmodule Stripe.Customer do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(String.t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def update(id, changes, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, opts)
+  @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+        when params: %{
+               account_balance: integer | nil,
+               business_vat_id: String.t | nil,
+               coupon: Stripe.id | Stripe.Coupon.t | nil,
+               default_source: Stripe.id | Stripe.Source.t |nil,
+               description: String.t | nil,
+               email: String.t | nil,
+               metadata: %{
+                 optional(String.t) => String.t
+               },
+               shipping: shipping | nil,
+               source: Stripe.Source.t | nil
+             }
+  def update(id, params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:post)
+    |> put_params(params)
+    |> make_request()
   end
 
   @doc """
   Delete a customer.
   """
-  @spec delete(t | String.t, list) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(customer, opts \\ []) do
-    id = Util.normalize_id(customer)
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.delete(endpoint, %{}, opts)
+  @spec delete(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def delete(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:delete)
+    |> make_request()
   end
 
   @doc """
   List all customers.
   """
-  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+        when params: %{
+               created: Stripe.date_query,
+               ending_before: t | Stripe.id,
+               limit: 1..100,
+               starting_after: t | Stripe.id
+             }
   def list(params \\ %{}, opts \\ []) do
-    endpoint = @plural_endpoint
-    Stripe.Request.retrieve(params, endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:get)
+    |> put_params(params)
+    |> cast_to_id([:ending_before, :starting_after])
+    |> make_request()
   end
 end
