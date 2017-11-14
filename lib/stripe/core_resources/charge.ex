@@ -17,91 +17,77 @@ defmodule Stripe.Charge do
                           :not_sent_to_network | :reversed_after_approval
 
   @type user_fraud_report :: %{
-                               user_report: :safe | :fraudulent
-                             }
+    user_report: :safe | :fraudulent
+  }
 
   @type stripe_fraud_report :: %{
-                                 stripe_report: :fraudulent
-                               }
+    stripe_report: :fraudulent
+  }
 
-  @type outcome :: %{
-                     network_status: network_status,
-                     reason: String.t,
-                     risk_level: :normal | :elevated | :highest | :not_assessed | :unknown,
-                     rule: Stripe.id | Stripe.Rule.t,
-                     seller_message: String.t,
-                     type: :authorized | :manual_review | :issuer_declined | :blocked | :invalid
-                   }
+  @type charge_outcome :: %{
+    network_status: network_status | nil,
+    reason: String.t | nil,
+    risk_level: :normal | :elevated | :highest | :not_assessed | :unknown,
+    rule: Stripe.id | Stripe.Rule.t,
+    seller_message: String.t | nil,
+    type: :authorized | :manual_review | :issuer_declined | :blocked | :invalid
+  }
 
   @type card_info :: %{
-                       exp_month: number,
-                       exp_year: number,
-                       number: String.t,
-                       object: String.t,
-                       cvc: String.t,
-                       address_city: String.t,
-                       address_country: String.t,
-                       address_line1: String.t,
-                       address_line2: String.t,
-                       name: String.t,
-                       address_state: String.t,
-                       address_zip: String.t
-                     }
-  @type shipping :: %{
-                       address: %{
-                         city: String.t | nil,
-                         country: String.t | nil,
-                         line1: String.t | nil,
-                         line2: String.t | nil,
-                         postal_code: String.t | nil,
-                         state: String.t | nil
-                       },
-                       carrier: String.t | nil,
-                       name: String.t | nil,
-                       phone: String.t | nil,
-                       tracking_number: String.t | nil
-                     }
+    exp_month: number,
+    exp_year: number,
+    number: String.t,
+    object: String.t,
+    cvc: String.t,
+    address_city: String.t | nil,
+    address_country: String.t | nil,
+    address_line1: String.t | nil,
+    address_line2: String.t | nil,
+    name: String.t | nil,
+    address_state: String.t | nil,
+    address_zip: String.t | nil
+  }
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: non_neg_integer,
-               amount_refunded: non_neg_integer,
-               application: Stripe.id | Stripe.Application.t,
-               application_fee: Stripe.id | Stripe.ApplicationFee.t | nil,
-               balance_transaction: Stripe.id | Stripe.BalanceTransaction.t,
-               captured: boolean,
-               created: Stripe.timestamp,
-               currency: String.t,
-               customer: Stripe.id | Stripe.Customer.t | nil,
-               description: String.t | nil,
-               destination: Stripe.id | Stripe.Account.t | nil,
-               dispute: Stripe.id | Stripe.Dispute.t | nil,
-               failure_code: Stripe.Error.card_error_code | nil,
-               failure_message: String.t | nil,
-               fraud_details: user_fraud_report | stripe_fraud_report | %{},
-               invoice: Stripe.id | Stripe.Invoice.t | nil,
-               livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               on_behalf_of: Stripe.id | Stripe.Account.t | nil,
-               order: Stripe.id | Stripe.Order.t | nil,
-               outcome: outcome | nil,
-               paid: boolean,
-               receipt_email: String.t | nil,
-               receipt_number: String.t | nil,
-               refunded: boolean,
-               refunds: Stripe.List.of(Stripe.Refund.t),
-               review: Stripe.id | Stripe.Review.t | nil,
-               shipping: shipping | nil,
-               source: Stripe.Card.t | map,
-               source_transfer: Stripe.id | Stripe.Transfer.t | nil,
-               statement_descriptor: String.t | nil,
-               status: :succeeded | :pending | :failed,
-               transfer: Stripe.id | Stripe.Transfer.t | nil,
-               transfer_group: String.t | nil
-             }
+    id: Stripe.id,
+    object: String.t,
+    amount: non_neg_integer,
+    amount_refunded: non_neg_integer,
+    application: Stripe.id | Stripe.Application.t | nil,
+    application_fee: Stripe.id | Stripe.ApplicationFee.t | nil,
+    balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
+    captured: boolean,
+    created: Stripe.timestamp,
+    currency: String.t,
+    customer: Stripe.id | Stripe.Customer.t | nil,
+    description: String.t | nil,
+    destination: Stripe.id | Stripe.Account.t | nil,
+    dispute: Stripe.id | Stripe.Dispute.t | nil,
+    failure_code: Stripe.Error.card_error_code | nil,
+    failure_message: String.t | nil,
+    fraud_details: user_fraud_report | stripe_fraud_report | %{},
+    invoice: Stripe.id | Stripe.Invoice.t | nil,
+    livemode: boolean,
+    metadata: %{
+      optional(String.t) => String.t
+    },
+    on_behalf_of: Stripe.id | Stripe.Account.t | nil,
+    order: Stripe.id | Stripe.Order.t | nil,
+    outcome: charge_outcome | nil,
+    paid: boolean,
+    receipt_email: String.t | nil,
+    receipt_number: String.t | nil,
+    refunded: boolean,
+    refunds: Stripe.List.of(Stripe.Refund.t),
+    review: Stripe.id | Stripe.Review.t | nil,
+    shipping: Stripe.Types.shipping | nil,
+    source: Stripe.Card.t | map,
+    source_transfer: Stripe.id | Stripe.Transfer.t | nil,
+    statement_descriptor: String.t | nil,
+    status: :succeeded | :pending | :failed,
+    transfer: Stripe.id | Stripe.Transfer.t | nil,
+    transfer_group: String.t | nil
+  }
 
   defstruct [
     :id,
