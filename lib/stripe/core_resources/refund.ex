@@ -12,22 +12,22 @@ defmodule Stripe.Refund do
   import Stripe.Request
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: non_neg_integer,
-               balance_transaction: Stripe.id | Stripe.BalanceTransaction.t,
-               charge: Stripe.id | Stripe.Charge.t,
-               created: Stripe.timestamp,
-               currency: String.t,
-               failure_balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
-               failure_reason: :lost_or_stolen_card | :expired_or_canceled_card | :unknown | nil,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               reason: :duplicate | :fraudulent | :requested_by_customer | nil,
-               receipt_number: String.t,
-               status: :pending | :succeeded | :failed | :cancelled
-             }
+    id: Stripe.id,
+    object: String.t,
+    amount: non_neg_integer,
+    balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
+    charge: Stripe.id | Stripe.Charge.t | nil,
+    created: Stripe.timestamp,
+    currency: String.t,
+    failure_balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
+    failure_reason: :lost_or_stolen_card | :expired_or_canceled_card | :unknown | nil,
+    metadata: %{
+      optional(String.t) => String.t
+    },
+    reason: :duplicate | :fraudulent | :requested_by_customer | nil,
+    receipt_number: String.t | nil,
+    status: :pending | :succeeded | :failed | :cancelled | nil
+  }
 
   defstruct [
     :id,
