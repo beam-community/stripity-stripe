@@ -12,14 +12,14 @@ defmodule Stripe.FileUpload do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               created: Stripe.timestamp,
-               purpose: :dispute_evidence | :identity_document | :business_logo,
-               size: integer,
-               type: :pdf | :jpg | :png,
-               url: String.t
-             }
+    id: Stripe.id,
+    object: String.t,
+    created: Stripe.timestamp,
+    purpose: :dispute_evidence | :identity_document | atom,
+    size: integer,
+    type: :pdf | :jpg | :png | nil,
+    url: String.t | nil
+  }
 
   defstruct [
     :id,
