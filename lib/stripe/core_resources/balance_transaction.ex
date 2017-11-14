@@ -16,29 +16,21 @@ defmodule Stripe.BalanceTransaction do
                             :payout_cancel | :payout_failure | :validation |
                             :stripe_fee
 
-  @type fee :: %{
-                 amount: integer,
-                 application: String.t,
-                 currency: String.t,
-                 description: String.t | nil,
-                 type: :application_fee | :stripe_fee | :tax
-               }
-
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: integer,
-               available_on: Stripe.timestamp,
-               created: Stripe.timestamp,
-               currency: String.t,
-               description: String.t | nil,
-               fee: integer,
-               fee_details: list(fee) | [],
-               net: integer,
-               source: Stripe.id | Stripe.Source.t,
-               status: :available | :pending,
-               type: transaction_type
-             }
+    id: Stripe.id,
+    object: String.t,
+    amount: integer,
+    available_on: Stripe.timestamp,
+    created: Stripe.timestamp,
+    currency: String.t,
+    description: String.t | nil,
+    fee: integer,
+    fee_details: list(Stripe.Types.fee) | [],
+    net: integer,
+    source: Stripe.id | Stripe.Source.t | nil, # TODO: clarify these
+    status: :available | :pending,
+    type: transaction_type
+  }
 
   defstruct [
     :id,

@@ -12,6 +12,14 @@ defmodule Stripe.Types do
     state: String.t | nil
   }
 
+  @type fee :: %{
+    amount: integer,
+    application: String.t | nil,
+    currency: String.t,
+    description: String.t | nil,
+    type: :application_fee | :stripe_fee | :tax
+  }
+
   @type shipping :: %{
     address: Stripe.Types.address,
     carrier: String.t | nil,
