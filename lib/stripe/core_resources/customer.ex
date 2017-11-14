@@ -18,43 +18,26 @@ defmodule Stripe.Customer do
   import Stripe.Request
   alias Stripe.Util
 
-  @type address :: %{
-                     city: String.t,
-                     country: String.t,
-                     line1: String.t,
-                     line2: String.t,
-                     postal_code: String.t,
-                     state: String.t
-                   }
-
-  @type shipping :: %{
-                      address: address,
-                      carrier: String.t,
-                      name: String.t,
-                      phone: String.t,
-                      tracking_number: String.t
-                    }
-
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               account_balance: integer,
-               business_vat_id: String.t,
-               created: Stripe.timestamp,
-               currency: String.t,
-               default_source: Stripe.id | Stripe.Source.t,
-               delinquent: boolean,
-               description: String.t,
-               discount: Stripe.Discount.t | nil,
-               email: String.t,
-               livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               shipping: shipping,
-               sources: Stripe.List.of(Stripe.Source.t),
-               subscriptions: Stripe.List.of(Stripe.Subscription.t)
-             }
+    id: Stripe.id,
+    object: String.t,
+    account_balance: integer,
+    business_vat_id: String.t,
+    created: Stripe.timestamp,
+    currency: String.t | nil,
+    default_source: Stripe.id | Stripe.Source.t, # TODO: verify this
+    delinquent: boolean | nil,
+    description: String.t | nil,
+    discount: Stripe.Discount.t | nil,
+    email: String.t | nil,
+    livemode: boolean,
+    metadata: %{
+      optional(String.t) => String.t
+    },
+    shipping: Stripe.Types.shipping | nil,
+    sources: Stripe.List.of(Stripe.Source.t),
+    subscriptions: Stripe.List.of(Stripe.Subscription.t)
+  }
 
   defstruct [
     :id,
