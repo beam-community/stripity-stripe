@@ -9,22 +9,28 @@ defmodule Stripe.Balance do
   import Stripe.Request
 
   @type funds :: %{
-                   currency: String.t,
-                   amount: integer,
-                   source_types: %{
-                     Stripe.Source.source_type => integer
-                   }
-                 }
+    currency: String.t,
+    amount: integer,
+    source_types: %{
+      Stripe.Source.source_type => integer
+    }
+  }
 
   @type t :: %__MODULE__{
-               object: String.t,
-               available: list(funds),
-               connect_reserved: list(funds),
-               livemode: boolean,
-               pending: list(funds)
-             }
+    object: String.t,
+    available: list(funds),
+    connect_reserved: list(funds) | nil,
+    livemode: boolean,
+    pending: list(funds)
+  }
 
-  defstruct [:object, :available, :connect_reserved, :livemode, :pending]
+  defstruct [
+    :object,
+    :available,
+    :connect_reserved,
+    :livemode,
+    :pending
+  ]
 
   @endpoint "balance"
 
