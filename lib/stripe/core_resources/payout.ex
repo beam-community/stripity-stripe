@@ -14,25 +14,25 @@ defmodule Stripe.Payout do
                         atom
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: integer,
-               arrival_date: Stripe.timestamp,
-               balance_transaction: Stripe.id | Stripe.BalanceTransaction.t,
-               created: Stripe.timestamp,
-               currency: String.t,
-               description: String.t,
-               destination: Stripe.id | Stripe.Card.t | Stripe.BankAccount.t,
-               failure_balance_transaction: Stripe.id | Stripe.BalanceTransaction.t,
-               failure_code: failure_code,
-               failure_message: String.t,
-               livemode: boolean,
-               method: :standard | :instant,
-               source_type: :card | :bank_account | :bitcoin_receiver | :alipay_account,
-               statement_descriptor: String.t,
-               status: :paid | :pending | :in_transit | :canceled | :failed,
-               type: :bank_account | :card
-             }
+    id: Stripe.id,
+    object: String.t,
+    amount: integer,
+    arrival_date: Stripe.timestamp,
+    balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
+    created: Stripe.timestamp,
+    currency: String.t,
+    description: String.t | nil,
+    destination: Stripe.id | Stripe.Card.t | Stripe.BankAccount.t | nil,
+    failure_balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
+    failure_code: failure_code | nil,
+    failure_message: String.t | nil,
+    livemode: boolean,
+    method: :standard | :instant,
+    source_type: :card | :bank_account | :bitcoin_receiver | :alipay_account,
+    statement_descriptor: String.t | nil,
+    status: :paid | :pending | :in_transit | :canceled | :failed,
+    type: :bank_account | :card
+  }
 
   defstruct [
     :id,
