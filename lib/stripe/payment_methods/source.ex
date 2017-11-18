@@ -6,98 +6,180 @@ defmodule Stripe.Source do
   """
   use Stripe.Entity
 
-  @type source_type :: :card | :three_d_secure | :giropay | :sepa_debit | :ideal | :sofort
-  | :bancontact | :alipay | :bitcoin
+  @type source_type :: :ach_credit_transfer | :alipay | :bancontact |
+                       :bitcoin | :card | :giropay | :ideal | :p24 |
+                       :sofort | :three_d_secure
 
-  @type address :: %{
-                     city: String.t,
-                     country: String.t,
-                     line1: String.t,
-                     line2: String.t,
-                     postal_code: String.t,
-                     state: String.t
-                   }
+  @type ach_credit_transfer :: %{
+    account_number: String.t | nil,
+    bank_name: String.t | nil,
+    fingerprint: String.t | nil,
+    routing_number: String.t | nil,
+    swift_code: String.t | nil
+  }
+
+  @type alipay :: %{
+    data_string: String.t | nil,
+    native_url: String.t | nil,
+    statement_descriptor: String.t | nil
+  }
+
+  @type bancontact :: %{
+    bank_code: String.t | nil,
+    bank_name: String.t | nil,
+    bic: String.t | nil,
+    preferred_language: String.t | nil,
+    statement_descriptor: String.t | nil
+  }
+
+  @type bitcoin :: %{
+    address: String.t | nil,
+    amount: String.t | nil,
+    amount_charged: String.t | nil,
+    amount_received: String.t | nil,
+    amount_returned: String.t | nil,
+    refund_address: String.t | nil,
+    uri: String.t | nil
+  }
+
+  @type card :: %{
+    address_line1_check: Stripe.Card.check_result | nil,
+    address_zip_check: Stripe.Card.check_result | nil,
+    brand: String.t | nil,
+    country: String.t | nil,
+    cvc_check: Stripe.Card.check_result | nil,
+    dynamic_last4: String.t | nil,
+    exp_month: integer | nil,
+    exp_year: integer | nil,
+    fingerprint: String.t,
+    funding: Stripe.Card.funding | nil,
+    last4: String.t | nil,
+    skip_validation: boolean,
+    three_d_secure: String.t,
+    tokenization_method: Stripe.Card.tokenization_method | nil
+  }
+
+  @type code_verification_flow :: %{
+    attempts_remaining: integer,
+    status: :pending | :succeeded | :failed
+  }
+
+  @type giropay :: %{
+    bank_code: String.t | nil,
+    bank_name: String.t | nil,
+    bic: String.t | nil,
+    statement_descriptor: String.t | nil
+  }
+
+  @type ideal :: %{
+    bank: String.t | nil,
+    bic: String.t | nil,
+    iban_last4: String.t | nil,
+    statement_descriptor: String.t | nil
+  }
+
+  @type owner :: %{
+    address: Stripe.Types.address | nil,
+    email: String.t | nil,
+    name: String.t | nil,
+    phone: String.t | nil,
+    verifired_address: Stripe.Types.address | nil,
+    verified_email: String.t | nil,
+    verified_name: String.t | nil,
+    verified_phone: String.t | nil
+  }
+
+  @type p24 :: %{
+    reference: String.t | nil
+  }
+
+  @type receiver_flow :: %{
+    address: String.t | nil,
+    amount_charged: integer,
+    amount_received: integer,
+    amount_returned: integer
+  }
+
+  @type redirect_flow :: %{
+    failure_reason: :user_abort | :declined | :processing_error | nil,
+    return_url: String.t,
+    status: :prending | :succeeded | :not_required | :failed,
+    url: String.t
+  }
+
+  @type sofort :: %{
+    bank_code: String.t | nil,
+    bank_name: String.t | nil,
+    bic: String.t | nil,
+    country: String.t | nil,
+    iban_last4: String.t | nil,
+    preferred_language: String.t | nil,
+    statement_descriptor: String.t | nil
+  }
+
+  @type three_d_secure :: %{
+    authenticated: boolean | nil,
+    card: String.t | nil,
+    customer: String.t | nil
+  }
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: integer,
-               client_secret: String.t,
-               code_verification: %{
-                 attempts_remaining: integer,
-                 status: :pending | :succeeded | :failed
-               },
-               created: Stripe.timestamp,
-               currency: String.t,
-               flow: :redirect | :receiver | :code_verification | :none,
-               livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               owner: %{
-                 address: address,
-                 email: String.t,
-                 name: String.t,
-                 phone: String.t,
-                 verifired_address: address,
-                 verified_email: String.t,
-                 verified_name: String.t,
-                 verified_phone: String.t
-               },
-               receiver: %{
-                 address: String.t,
-                 amount_charged: integer,
-                 amount_received: integer,
-                 amount_returned: integer
-               },
-               redirect: %{
-                 failure_reason: :user_abort | :declined | :processing_error,
-                 return_url: String.t,
-                 status: :prending | :succeeded | :not_required | :failed,
-                 url: String.t
-               },
-               statement_descriptor: String.t,
-               status: :canceled | :chargeable | :consumed | :failed | :pending,
-               type: source_type,
-               usage: :reusable | :single_use,
-               card: map | nil,
-               three_d_secure: map | nil,
-               giropay: map | nil,
-               sepa_debit: map | nil,
-               ideal: map | nil,
-               sofort: map | nil,
-               bancontact: map | nil,
-               alipay: map | nil,
-               bitcoin: map | nil
-             }
-  # TODO: find out the inner structure of the type-specific fields
+    id: Stripe.id,
+    object: String.t,
+    ach_credit_transfer: ach_credit_transfer | nil,
+    alipay: alipay | nil,
+    amount: integer | nil,
+    bancontact: bancontact | nil,
+    bitcoin: bitcoin | nil,
+    card: card | nil,
+    client_secret: String.t,
+    code_verification: code_verification_flow | nil,
+    created: Stripe.timestamp,
+    currency: String.t | nil,
+    flow: :redirect | :receiver | :code_verification | :none,
+    giropay: giropay | nil,
+    ideal: ideal | nil,
+    livemode: boolean,
+    metadata: Stripe.Types.metadata,
+    owner: owner | nil,
+    p24: p24 | nil,
+    receiver: receiver_flow | nil,
+    redirect: redirect_flow | nil,
+    sofort: sofort | nil,
+    statement_descriptor: String.t | nil,
+    status: :canceled | :chargeable | :consumed | :failed | :pending,
+    three_d_secure: three_d_secure | nil,
+    type: source_type,
+    usage: :reusable | :single_use | nil,
+  }
 
   defstruct [
     :id,
     :object,
+    :ach_credit_transfer,
+    :alipay,
     :amount,
+    :bancontact,
+    :bitcoin,
+    :card,
     :client_secret,
     :code_verification,
     :created,
     :currency,
     :flow,
+    :giropay,
+    :ideal,
     :livemode,
     :metadata,
     :owner,
+    :p24,
     :receiver,
     :redirect,
+    :sofort,
     :statement_descriptor,
     :status,
-    :type,
-    :usage,
-    :card,
     :three_d_secure,
-    :giropay,
-    :sepa_debit,
-    :ideal,
-    :sofort,
-    :bancontact,
-    :alipay,
-    :bitcoin
+    :type,
+    :usage
   ]
 end
