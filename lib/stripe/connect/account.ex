@@ -9,137 +9,132 @@ defmodule Stripe.Account do
 
   This module does not yet support managed accounts.
 
-  Does not yet render lists or take options.
-
   Stripe API reference: https://stripe.com/docs/api#account
   """
   use Stripe.Entity
 
+  @type decline_charge_on :: %{
+    avs_failure: boolean,
+    cvc_failure: boolean
+  }
 
+  @type legal_entity :: %{
+    additional_owners: [legal_entity_additional_owner] | nil,
+    address: legal_entity_address,
+    address_kana: legal_entity_japan_address | nil,
+    address_kanji: legal_entity_japan_address | nil,
+    business_name: String.t | nil,
+    business_name_kana: String.t | nil,
+    business_name_kanji: String.t | nil,
+    business_tax_id_provided: boolean,
+    business_vat_id_provided: boolean,
+    dob: legal_entity_dob,
+    first_name: String.t | nil,
+    first_name_kana: String.t | nil,
+    first_name_kanji: String.t | nil,
+    gender: String.t | nil,
+    last_name: String.t | nil,
+    last_name_kana: String.t | nil,
+    last_name_kanji: String.t | nil,
+    maiden_name: String.t | nil,
+    personal_address: legal_entity_address,
+    personal_address_kana: legal_entity_japan_address | nil,
+    personal_address_kanji: legal_entity_japan_address | nil,
+    personal_id_number_provided: boolean,
+    phone_number: String.t | nil,
+    ssn_last_4_provided: String.t,
+    tax_id_registar: String.t,
+    type: :individual | :company | nil,
+    verification: legal_entity_verification
+  }
 
-  @type address :: %{
-                     city: String.t,
-                     country: String.t,
-                     line1: String.t,
-                     line2: String.t,
-                     postal_code: String.t,
-                     state: String.t
-                   }
+  @type legal_entity_additional_owner :: %{
+    address: legal_entity_address,
+    dob: legal_entity_dob,
+    first_name: String.t | nil,
+    last_name: String.t | nil,
+    maiden_name: String.t | nil,
+    verification: legal_entity_verification
+  }
 
-  @type address_jp :: %{
-                        city: String.t,
-                        country: String.t,
-                        line1: String.t,
-                        line2: String.t,
-                        postal_code: String.t,
-                        state: String.t,
-                        town: String.t
-                      }
+  @type legal_entity_address :: %{
+    city: String.t | nil,
+    country: String.t | nil,
+    line1: String.t | nil,
+    line2: String.t | nil,
+    postal_code: String.t | nil,
+    state: String.t | nil
+  }
+
+  @type legal_entity_dob :: %{
+    day: 1..31 | nil,
+    month: 1..12 | nil,
+    year: pos_integer | nil
+  }
+
+  @type legal_entity_japan_address :: %{
+    city: String.t | nil,
+    country: String.t | nil,
+    line1: String.t | nil,
+    line2: String.t | nil,
+    postal_code: String.t | nil,
+    state: String.t | nil,
+    town: String.t | nil
+  }
+
+  @type legal_entity_verification :: %{
+    details: String.t | nil,
+    details_code: :scan_corrupt | :scan_not_readable | :scan_failed_greyscale |
+                  :scan_not_uploaded | :scan_id_type_not_supported |
+                  :scan_id_country_not_supported | :scan_name_mismatch |
+                  :scan_failed_other | :failed_keyed_identity | :failed_other |
+                  nil,
+    document: Stripe.id | Stripe.FileUpload.t | nil,
+    status: :unverified | :pending | :verified
+  }
+
+  @type tos_acceptance :: %{
+    date: Stripe.timestamp | nil,
+    ip: String.t | nil,
+    user_agent: String.t | nil
+  }
 
   @type verification :: %{
-                          details: String.t,
-                          details_code:
-                            :scan_corrupt | :scan_not_readable | :scan_failed_greyscale
-                            | :scan_not_uploaded | :scan_id_type_not_supported
-                            | :scan_id_country_not_supported | :scan_name_mismatch
-                            | :scan_failed_other | :failed_keyed_identity | :failed_other,
-                          document: Stripe.id | Stripe.FileUpload.t,
-                          status: :unverified | :pending | :verified
-                        }
-
-  @type additional_owner :: %{
-                              address: address,
-                              dob: %{
-                                day: pos_integer,
-                                month: pos_integer,
-                                year: pos_integer
-                              },
-                              first_name: String.t,
-                              last_name: String.t,
-                              maiden_name: String.t,
-                              verification: verification
-                            }
+    disabled_reason: :"rejected.fraud" | :"rejected.terms_of_service" |
+                     :"rejected.listed" | :"rejected.other" | :fields_needed |
+                     :listed | :under_review | :other | nil,
+    due_by: Stripe.timestamp | nil,
+    fields_needed: [String.t]
+  }
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               business_name: String.t,
-               business_url: String.t,
-               charges_enabled: boolean,
-               country: String.t,
-               debit_negative_balances: boolean,
-               decline_charge_on: %{
-                 avs_failure: boolean,
-                 cvc_failure: boolean
-               },
-               default_currency: String.t,
-               details_submitted: boolean,
-               display_name: String.t,
-               email: String.t,
-               external_accounts: Stripe.List.of(Stripe.BankAccount.t | Stripe.Card.t),
-               legal_entity: %{
-                 additional_owners: [additional_owner],
-                 address: address,
-                 address_kana: address_jp,
-                 address_kanji: address_jp,
-                 business_name: String.t,
-                 business_name_kana: String.t,
-                 business_name_kanji: String.t,
-                 business_tax_id_provided: boolean,
-                 business_vat_id_provided: boolean,
-                 dob: %{
-                   day: pos_integer,
-                   month: pos_integer,
-                   year: pos_integer
-                 },
-                 first_name: String.t,
-                 first_name_kanji: String.t,
-                 first_name_kana: String.t,
-                 gender: String.t,
-                 last_name: String.t,
-                 last_name_kana: String.t,
-                 last_name_kanji: String.t,
-                 maiden_name: String.t,
-                 personal_address: address,
-                 personal_address_kana: address_jp,
-                 personal_address_kanji: address_jp,
-                 personal_id_number_provided: boolean,
-                 phone_number: String.t,
-                 ssn_last_4_provided: String.t,
-                 tax_id_registar: String.t,
-                 type: :individual | :company,
-                 verification: verification
-               },
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               payout_schedule: %{
-                 delay_days: non_neg_integer,
-                 interval: :manual | :daily | :weekly | :monthly,
-                 monthly_anchor: non_neg_integer,
-                 weekly_anchor: String.t
-               },
-               payout_statement_descriptor: String.t,
-               payouts_enabled: boolean,
-               product_description: String.t,
-               statement_descriptor: String.t,
-               support_email: String.t,
-               support_phone: String.t,
-               timezone: String.t,
-               tos_acceptance: %{
-                 date: Stripe.timestamp,
-                 ip: String.t,
-                 user_agent: String.t
-               },
-               type: :standard | :express | :custom,
-               verification: %{
-                 disabled_reason:
-                   :"rejected.fraud" | :"rejected.terms_of_service" | :"rejected.listed"
-                   | :"rejected.other" | :fields_needed | :listed | :under_review | :other,
-                 due_by: Stripe.timestamp,
-                 fields_needed: [String.t]
-               }
-             }
+    id: Stripe.id,
+    object: String.t,
+    business_name: String.t | nil,
+    business_url: String.t | nil,
+    charges_enabled: boolean,
+    country: String.t,
+    debit_negative_balances: boolean,
+    decline_charge_on: decline_charge_on,
+    default_currency: String.t,
+    details_submitted: boolean,
+    display_name: String.t | nil,
+    email: String.t | nil,
+    external_accounts: Stripe.List.of(Stripe.BankAccount.t | Stripe.Card.t),
+    legal_entity: legal_entity,
+    metadata: Stripe.Types.metdata,
+    payout_schedule: Stripe.Types.transfer_schedule,
+    payout_statement_descriptor: String.t | nil,
+    payouts_enabled: boolean,
+    product_description: String.t | nil,
+    statement_descriptor: String.t | nil,
+    support_email: String.t | nil,
+    support_phone: String.t | nil,
+    timezone: String.t | nil,
+    tos_acceptance: tos_acceptance,
+    type: :standard | :express | :custom,
+    verification: verification
+  }
 
   defstruct [
     :id,
@@ -154,8 +149,8 @@ defmodule Stripe.Account do
     :details_submitted,
     :display_name,
     :email,
-    :legal_entity,
     :external_accounts,
+    :legal_entity,
     :metadata,
     :payout_schedule,
     :payout_statement_descriptor,
