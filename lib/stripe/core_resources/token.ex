@@ -19,14 +19,14 @@ defmodule Stripe.Token do
     id: Stripe.id,
     object: String.t,
     account_holder_name: String.t | nil,
-    account_holder_type: :individual | :company | nil,
+    account_holder_type: Stripe.BankAccount.account_holder_type | nil,
     bank_name: String.t | nil,
     country: String.t,
     currency: String.t,
     fingerprint: String.t | nil,
     last4: String.t,
     routing_number: String.t | nil,
-    status: :new | :validated | :verified | :verification_failed | :errored
+    status: Stripe.BankAccount.status
   }
 
   @type token_card :: %{
