@@ -63,7 +63,7 @@ defmodule Stripe.Dispute do
     created: Stripe.timestamp,
     currency: String.t,
     evidence: dispute_evidence,
-    dispute_evidence_details: dispute_evidence_details,
+    evidence_details: dispute_evidence_details,
     is_charge_refundable: boolean,
     livemode: boolean,
     metadata: %{

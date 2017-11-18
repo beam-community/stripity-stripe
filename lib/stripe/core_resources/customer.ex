@@ -74,7 +74,7 @@ defmodule Stripe.Customer do
                metadata: %{
                  optional(String.t) => String.t
                },
-               shipping: shipping | nil,
+               shipping: Stripe.Types.shipping | nil,
                source: Stripe.Source.t | nil
              }
   def create(params, opts \\ []) do
@@ -113,7 +113,7 @@ defmodule Stripe.Customer do
                metadata: %{
                  optional(String.t) => String.t
                },
-               shipping: shipping | nil,
+               shipping: Stripe.Types.shipping | nil,
                source: Stripe.Source.t | nil
              }
   def update(id, params, opts \\ []) do
