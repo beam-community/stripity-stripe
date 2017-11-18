@@ -38,21 +38,19 @@ defmodule Stripe.Plan do
   alias Stripe.Util
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: non_neg_integer,
-               created: Stripe.timestamp,
-               currency: String.t,
-               interval: :day | :week | :month | :year,
-               interval_count: pos_integer,
-               livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               name: String.t,
-               statement_descriptor: String.t,
-               trial_period_days: integer
-             }
+    id: Stripe.id,
+    object: String.t,
+    amount: non_neg_integer,
+    created: Stripe.timestamp,
+    currency: String.t,
+    interval: :day | :week | :month | :year,
+    interval_count: pos_integer,
+    livemode: boolean,
+    metadata: Stripe.Types.metadata,
+    name: String.t,
+    statement_descriptor: String.t | nil,
+    trial_period_days: integer | nil
+  }
 
   defstruct [
     :id,
