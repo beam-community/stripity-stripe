@@ -18,15 +18,6 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested :get, "/v1/accounts/acct_123"
   end
 
-  test "is rejectable" do
-    {:ok, account} = Stripe.Account.create(%{metadata: %{}, type: "standard"})
-    assert {:ok, %Stripe.Account{} = raccount} = Stripe.Account.reject(account)
-    assert_stripe_requested :post, "/v1/accounts/#{account.id}/reject"
-    assert account.id == raccount.id
-    refute raccount.transfers_enabled
-    refute raccount.charges_enabled
-  end
-
   test "is creatable" do
     assert {:ok, %Stripe.Account{}} = Stripe.Account.create(%{metadata: %{}, type: "standard"})
     assert_stripe_requested :post, "/v1/accounts"
@@ -42,11 +33,21 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested :delete, "/v1/accounts/acct_123"
   end
 
-  test "can be deauthorized" do
-    flunk "Connect calls not tested"
+  test "is rejectable" do
+    {:ok, account} = Stripe.Account.create(%{metadata: %{}, type: "standard"})
+    assert {:ok, %Stripe.Account{} = rejected_account} =
+      Stripe.Account.reject(account, "terms_of_service")
+    assert_stripe_requested :post, "/v1/accounts/#{account.id}/reject"
+    assert account.id == rejected_account.id
+    refute rejected_account.transfers_enabled
+    refute rejected_account.charges_enabled
   end
 
   test "additional_owners is handled correctly" do
+    flunk "todo: test this"
+  end
+
+  test "can create a login link" do
     flunk "todo: test this"
   end
 end
