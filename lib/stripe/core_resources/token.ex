@@ -48,11 +48,11 @@ defmodule Stripe.Token do
     exp_month: integer,
     exp_year: integer,
     fingerprint: String.t | nil,
-    funding: :credit | :debit | :prepaid | :unknown,
+    funding: Stripe.Card.funding,
     last4: String.t,
     metadata: Stripe.Types.metadata,
     name: String.t | nil,
-    tokenization_method: :apple_pay | :android_pay | nil
+    tokenization_method: Stripe.Card.tokenization_method | nil
   }
 
   @type t :: %__MODULE__{

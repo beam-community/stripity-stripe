@@ -23,38 +23,41 @@ defmodule Stripe.Card do
 
   @type check_result :: :pass | :fail | :unavailable | :unchecked
 
+  @type funding :: :credit | :debit | :prepaid | :unknown
+
+  @type tokenization_method :: :apple_pay | :android_pay
+
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               account: Stripe.id | Stripe.Account.t,
-               address_city: String.t,
-               address_country: String.t,
-               address_line1: String.t,
-               address_line1_check: check_result,
-               address_line2: String.t,
-               address_state: String.t,
-               address_zip: String.t,
-               address_zip_check: check_result,
-               available_payout_methods: [:standard | :instant],
-               brand: String.t,
-               country: String.t,
-               currency: String.t,
-               customer: Stripe.id | Stripe.Customer.t,
-               cvc_check: check_result,
-               default_for_currency: boolean,
-               dynamic_last4: String.t,
-               exp_month: integer,
-               exp_year: integer,
-               fingerprint: String.t,
-               funding: :credit | :debit | :prepaid | :unknown,
-               last4: String.t,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               name: String.t,
-               recipient: Stripe.id | Stripe.Recipient.t,
-               tokenization_method: :apple_pay | :android_pay | nil
-             }
+    id: Stripe.id,
+    object: String.t,
+    account: Stripe.id | Stripe.Account.t | nil,
+    address_city: String.t | nil,
+    address_country: String.t | nil,
+    address_line1: String.t | nil,
+    address_line1_check: check_result | nil,
+    address_line2: String.t | nil,
+    address_state: String.t | nil,
+    address_zip: String.t | nil,
+    address_zip_check: check_result | nil,
+    available_payout_methods: [:standard | :instant] | nil,
+    brand: String.t,
+    country: String.t | nil,
+    currency: String.t | nil,
+    customer: Stripe.id | Stripe.Customer.t | nil,
+    cvc_check: check_result | nil,
+    default_for_currency: boolean | nil,
+    dynamic_last4: String.t | nil,
+    exp_month: integer,
+    exp_year: integer,
+    fingerprint: String.t | nil,
+    funding: funding,
+    last4: String.t,
+    metadata: Stripe.Types.metadata,
+    name: String.t | nil,
+    recipient: Stripe.id | Stripe.Recipient.t | nil,
+    tokenization_method: tokenization_method | nil
+  }
+
   @type source :: :customer | :recipient | :account
   @sources [:customer, :recipient, :account]
   @type owner :: Stripe.Customer.t | Stripe.Account.t
