@@ -20,6 +20,10 @@ defmodule Stripe.Types do
     type: :application_fee | :stripe_fee | :tax
   }
 
+  @type metadata :: %{
+    optional(String.t) => String.t
+  }
+
   @type shipping :: %{
     address: Stripe.Types.address,
     carrier: String.t | nil,
