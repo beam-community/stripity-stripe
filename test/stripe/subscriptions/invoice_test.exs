@@ -35,7 +35,7 @@ defmodule Stripe.InvoiceTest do
   describe "Invoice.pay/3" do
     test "pays invoice" do
       {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
-      assert {:ok, %Stripe.Invoice{} = paid_invoice} = Stripe.Invoice.pay(invoice)
+      assert {:ok, %Stripe.Invoice{} = paid_invoice} = Stripe.Invoice.pay(invoice, %{})
       assert_stripe_requested :post, "/v1/invoices/#{invoice.id}/pay"
       assert paid_invoice.paid
     end
