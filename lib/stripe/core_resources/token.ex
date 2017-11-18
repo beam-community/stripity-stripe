@@ -15,17 +15,57 @@ defmodule Stripe.Token do
   """
   use Stripe.Entity
 
+  @type token_bank_account :: %{
+    id: Stripe.id,
+    object: String.t,
+    account_holder_name: String.t | nil,
+    account_holder_type: :individual | :company | nil,
+    bank_name: String.t | nil,
+    country: String.t,
+    currency: String.t,
+    fingerprint: String.t | nil,
+    last4: String.t,
+    routing_number: String.t | nil,
+    status: :new | :validated | :verified | :verification_failed | :errored
+  }
+
+  @type token_card :: %{
+    id: Stripe.id,
+    object: String.t,
+    address_city: String.t | nil,
+    address_country: String.t | nil,
+    address_line1: String.t | nil,
+    address_line1_check: Stripe.Card.check_result | nil,
+    address_line2: String.t | nil,
+    address_state: String.t | nil,
+    address_zip: String.t | nil,
+    address_zip_check: Stripe.Card.check_result | nil,
+    brand: String.t,
+    country: String.t | nil,
+    currency: String.t,
+    cvc_check: Stripe.Card.check_result | nil,
+    dynamic_last4: String.t | nil,
+    exp_month: integer,
+    exp_year: integer,
+    fingerprint: String.t | nil,
+    funding: :credit | :debit | :prepaid | :unknown,
+    last4: String.t,
+    metadata: Stripe.Types.metadata,
+    name: String.t | nil,
+    tokenization_method: :apple_pay | :android_pay | nil
+  }
+
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               bank_account: Stripe.BankAccount.t,
-               card: Stripe.Card.t,
-               client_ip: String.t,
-               created: Stripe.timestamp,
-               livemode: boolean,
-               type: :card | :bank_account,
-               used: boolean
-             }
+    id: Stripe.id,
+    object: String.t,
+    bank_account: token_bank_account,
+    card: token_card,
+    client_ip: String.t | nil,
+    created: Stripe.timestamp,
+    livemode: boolean,
+    type: :card | :bank_account,
+    used: boolean
+  }
 
   defstruct [
     :id,
