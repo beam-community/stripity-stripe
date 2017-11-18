@@ -31,4 +31,11 @@ defmodule Stripe.Types do
     phone: String.t | nil,
     tracking_number: String.t | nil
   }
+
+  @type transfer_schedule :: %{
+    delay_days: non_neg_integer,
+    interval: :manual | :daily | :weekly | :monthly,
+    monthly_anchor: non_neg_integer | nil,
+    weekly_anchor: String.t | nil
+  }
 end
