@@ -3,32 +3,33 @@ defmodule Stripe.Event do
   Work with Stripe event objects.
 
   You can:
-
   - Retrieve an event
-
-  Does not yet render the `data` object.
 
   Stripe API reference: https://stripe.com/docs/api#event
   """
   use Stripe.Entity
 
+  @type event_data :: %{
+    object: map,
+    previous_attributes: map
+  }
+
+  @type event_request :: %{
+    id: String.t | nil,
+    idempotency_key: String.t | nil
+  }
+
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               api_version: String.t,
-               created: Stripe.timestamp,
-               data: %{
-                 object: map,
-                 previous_attributes: map
-               },
-               livemode: boolean,
-               pending_webhooks: non_neg_integer,
-               request: %{
-                 id: String.t,
-                 idempotency_key: String.t
-               },
-               type: String.t
-             }
+    id: Stripe.id,
+    object: String.t,
+    api_version: String.t | nil,
+    created: Stripe.timestamp,
+    data: event_data,
+    livemode: boolean,
+    pending_webhooks: non_neg_integer,
+    request: event_request | nil,
+    type: String.t
+  }
 
   defstruct [
     :id,
