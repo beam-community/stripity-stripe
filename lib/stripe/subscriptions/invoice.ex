@@ -150,10 +150,13 @@ defmodule Stripe.Invoice do
   @doc """
   Retrieve an upcoming invoice.
   """
-  @spec upcoming(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def upcoming(changes = %{customer: _customer}, opts \\ []) do
-    endpoint = @plural_endpoint <> "/upcoming"
-    Stripe.Request.retrieve(changes, endpoint, opts)
+  @spec upcoming(map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def upcoming(params = %{customer: _customer}, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/upcoming")
+    |> put_method(:get)
+    |> put_params(params)
+    |> make_request()
   end
 
   @doc """
@@ -182,7 +185,7 @@ defmodule Stripe.Invoice do
   """
   @spec pay(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
         when params: %{
-               source: Stripe.id | Stripe.Source.t
+               source: Stripe.id | Stripe.Source.t | nil
              }
   def pay(id, params, opts \\ []) do
     new_request(opts)
