@@ -8,12 +8,11 @@ defmodule Stripe.Token do
   - Create a token with all options - Only for Unit Tests with Stripe
   - Retrieve a token
 
-  Does not yet render lists or take options.
-
   Stripe API reference: https://stripe.com/docs/api#token
 
   """
   use Stripe.Entity
+  import Stripe.Request
 
   @type token_bank_account :: %{
     id: Stripe.id,
@@ -58,12 +57,12 @@ defmodule Stripe.Token do
   @type t :: %__MODULE__{
     id: Stripe.id,
     object: String.t,
-    bank_account: token_bank_account,
-    card: token_card,
+    bank_account: token_bank_account | nil,
+    card: token_card | nil,
     client_ip: String.t | nil,
     created: Stripe.timestamp,
     livemode: boolean,
-    type: :card | :bank_account,
+    type: :card | :bank_account | :pii,
     used: boolean
   }
 
@@ -82,59 +81,31 @@ defmodule Stripe.Token do
   @plural_endpoint "tokens"
 
   @doc """
-  Create a token for a Connect customer with a card belonging to the platform
-  customer.
+  Creates a single use token that wraps the details of a credit card. This
+  token can be used in place of a credit card dictionary with any API method.
+  These tokens can only be used once: by creating a new charge object, or
+  attaching them to a customer.
 
-  You must pass in the account number for the Stripe Connect account in `opts`.
+  In most cases, you should create tokens client-side using Checkout, Elements,
+  or Stripe's mobile libraries, instead of using the API.
   """
-  @spec create_on_connect_account(String.t, String.t, Keyword.t) :: {:ok, t} | {
-    :error,
-    Stripe.api_error_struct
-  }
-  def create_on_connect_account(customer_id, customer_card_id, opts = [connect_account: _]) do
-    body = %{
-      card: customer_card_id,
-      customer: customer_id
-    }
-    Stripe.Request.create(@plural_endpoint, body, opts)
-  end
-
-  @doc """
-  Create a token for a Connect customer using the default card.
-
-  You must pass in the account number for the Stripe Connect account in `opts`.
-  """
-  @spec create_with_default_card(String.t, Keyword.t) :: {:ok, t} | {
-    :error,
-    Stripe.api_error_struct
-  }
-  def create_with_default_card(customer_id, opts \\ []) do
-    body = %{
-      customer: customer_id
-    }
-    Stripe.Request.create(@plural_endpoint, body, opts)
-  end
-
-  @doc """
-  Create a token.
-
-  WARNING: This function is mainly for testing purposes only, you should not
-  use it on a production server, unless you are able to transfer and store
-  credit card data on your server in a PCI compliant way.
-
-  Use the Stripe.js library on the client device instead.
-  """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, opts)
+  @spec create(map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def create(params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_params(params)
+    |> put_method(:post)
+    |> make_request()
   end
 
   @doc """
   Retrieve a token.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
   def retrieve(id, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve(endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
   end
 end
