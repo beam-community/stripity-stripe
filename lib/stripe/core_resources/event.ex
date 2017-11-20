@@ -4,10 +4,13 @@ defmodule Stripe.Event do
 
   You can:
   - Retrieve an event
+  - List all events
 
   Stripe API reference: https://stripe.com/docs/api#event
   """
+
   use Stripe.Entity
+  import Stripe.Request
 
   @type event_data :: %{
     object: map,
@@ -49,18 +52,24 @@ defmodule Stripe.Event do
   @doc """
   Retrieve an event.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
   def retrieve(id, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve(endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
   end
 
   @doc """
-  List all events.
+  List all events, going back up to 30 days.
   """
-  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  @spec list(map, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
   def list(params \\ %{}, opts \\ []) do
-    endpoint = @plural_endpoint
-    Stripe.Request.retrieve(params, endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:get)
+    |> put_params(params)
+    |> cast_to_id([:ending_before, :starting_after])
+    |> make_request()
   end
 end
