@@ -12,6 +12,7 @@ defmodule Stripe.Account do
   Stripe API reference: https://stripe.com/docs/api#account
   """
   use Stripe.Entity
+  import Stripe.Request
 
   @type decline_charge_on :: %{
     avs_failure: boolean,
@@ -132,6 +133,7 @@ defmodule Stripe.Account do
     support_phone: String.t | nil,
     timezone: String.t | nil,
     tos_acceptance: tos_acceptance,
+    transfers_enabled: boolean | nil,
     type: :standard | :express | :custom,
     verification: verification
   }
@@ -161,6 +163,7 @@ defmodule Stripe.Account do
     :support_phone,
     :timezone,
     :tos_acceptance,
+    :transfers_enabled,
     :type,
     :verification
   ]
@@ -168,52 +171,164 @@ defmodule Stripe.Account do
   @singular_endpoint "account"
   @plural_endpoint "accounts"
 
+  @type create_params :: %{
+    type: :standard | :express | :custom,
+    account_token: String.t | nil,
+    business_logo: String.t | nil,
+    business_name: String.t | nil,
+    business_primary_color: String.t | nil,
+    business_url: String.t | nil,
+    country: String.t | nil,
+    debit_negative_balances: boolean | nil,
+    decline_charge_on: decline_charge_on | nil,
+    default_currency: String.t | nil,
+    email: String.t | nil,
+    external_account:
+      Stripe.ExternalAccount.create_params_for_bank_account |
+      Stripe.ExternalAccount.create_params_for_card |
+      String.t |
+      nil,
+    legal_entity: legal_entity,
+    metadata: Stripe.Types.metdata | nil,
+    payout_schedule: Stripe.Types.transfer_schedule | nil,
+    payout_statement_descriptor: String.t | nil,
+    product_description: String.t | nil,
+    statement_descriptor: String.t | nil,
+    support_email: String.t | nil,
+    support_phone: String.t | nil,
+    support_url: String.t | nil,
+    tos_acceptance: tos_acceptance | nil
+  }
+
   @doc """
   Create an account.
   """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, opts)
+  @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+        when params: create_params
+  def create(params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_params(params)
+    |> put_method(:post)
+    |> cast_to_id([:coupon, :default_source, :source])
+    |> make_request()
   end
 
   @doc """
   Retrieve your own account without options.
   """
-  @spec retrieve :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve :: {:ok, t} | {:error, Stripe.Error.t}
   def retrieve, do: retrieve([])
 
   @doc """
   Retrieve your own account with options.
   """
-  @spec retrieve(list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(list) :: {:ok, t} | {:error, Stripe.Error.t}
   def retrieve(opts) when is_list(opts), do: do_retrieve(@singular_endpoint, opts)
 
   @doc """
   Retrieve an account with a specified `id`.
   """
-  @spec retrieve(binary, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(binary, list) :: {:ok, t} | {:error, Stripe.Error.t}
   def retrieve(id, opts \\ []), do: do_retrieve(@plural_endpoint <> "/" <> id, opts)
 
-  @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  defp do_retrieve(endpoint, opts), do: Stripe.Request.retrieve(endpoint, opts)
+  @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Stripe.Error.t}
+  defp do_retrieve(endpoint, opts) do
+    new_request(opts)
+    |> put_endpoint(endpoint)
+    |> put_method(:get)
+    |> make_request()
+  end
+
+  @type update_params :: %{
+    account_token: String.t | nil,
+    business_logo: String.t | nil,
+    business_name: String.t | nil,
+    business_primary_color: String.t | nil,
+    business_url: String.t | nil,
+    country: String.t | nil,
+    debit_negative_balances: boolean | nil,
+    decline_charge_on: decline_charge_on | nil,
+    default_currency: String.t | nil,
+    email: String.t | nil,
+    external_account:
+      Stripe.ExternalAccount.create_params_for_bank_account |
+      Stripe.ExternalAccount.create_params_for_card |
+      String.t |
+      nil,
+    legal_entity: legal_entity,
+    metadata: Stripe.Types.metdata | nil,
+    payout_schedule: Stripe.Types.transfer_schedule | nil,
+    payout_statement_descriptor: String.t | nil,
+    product_description: String.t | nil,
+    statement_descriptor: String.t | nil,
+    support_email: String.t | nil,
+    support_phone: String.t | nil,
+    support_url: String.t | nil,
+    tos_acceptance: tos_acceptance | nil
+  }
 
   @doc """
-                                      Update an account.
+  Update an account.
 
   Takes the `id` and a map of changes.
   """
-  @spec update(binary, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def update(id, changes, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.update(endpoint, changes, opts)
+  @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+        when params: update_params
+  def update(id, params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:post)
+    |> put_params(params)
+    |> make_request()
+  end
+
+  @doc """
+  Delete an account.
+  """
+  @spec delete(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def delete(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:delete)
+    |> make_request()
+  end
+
+  @doc """
+  Reject an account.
+
+  Takes the `id` and `reason`.
+  """
+  @spec reject(Stripe.id | t, String.t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def reject(id, reason, opts \\ []) do
+    params = %{
+      account: id,
+      reason: reason
+    }
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/reject")
+    |> put_method(:post)
+    |> put_params(params)
+    |> cast_to_id([:account])
+    |> make_request()
   end
 
   @doc """
   List all connected accounts.
   """
-  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+        when params: %{
+               created: Stripe.date_query,
+               ending_before: t | Stripe.id,
+               limit: 1..100,
+               starting_after: t | Stripe.id
+             }
   def list(params \\ %{}, opts \\ []) do
-    endpoint = @plural_endpoint
-    Stripe.Request.retrieve(params, endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:get)
+    |> put_params(params)
+    |> cast_to_id([:ending_before, :starting_after])
+    |> make_request()
   end
 end

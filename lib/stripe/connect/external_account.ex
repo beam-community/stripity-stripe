@@ -24,6 +24,42 @@ defmodule Stripe.ExternalAccount do
 
   @type t :: Stripe.BankAccount.t | Stripe.Card.t
 
+  @type create_params :: %{
+    external_account: create_params_for_bank_account |
+                      create_params_for_card |
+                      String.t,
+    default_for_currency: boolean | nil,
+    metadata: Stripe.Types.metadata | nil
+  }
+
+  @type create_params_for_bank_account :: %{
+    object: String.t,
+    account_number: String.t,
+    country: String.t,
+    currency: String.t,
+    account_holder_name: String.t | nil,
+    account_holder_type: String.t | nil,
+    routing_number: String.t | nil
+  }
+
+  @type create_params_for_card :: %{
+    object: String.t,
+    exp_month: String.t,
+    exp_year: String.t,
+    number: String.t,
+    address_city: String.t | nil,
+    address_country: String.t | nil,
+    address_line1: String.t | nil,
+    address_line2: String.t | nil,
+    address_state: String.t | nil,
+    address_zip: String.t | nil,
+    currency: String.t | nil,
+    cvc: String.t | nil,
+    default_for_currency: String.t | nil,
+    metadata: Stripe.Types.metadata | nil,
+    name: String.t | nil
+  }
+
   @doc """
   Create an external account.
   """

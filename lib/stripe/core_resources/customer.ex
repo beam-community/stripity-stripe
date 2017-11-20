@@ -140,10 +140,9 @@ defmodule Stripe.Customer do
   """
   @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
         when params: %{
-               created: Stripe.date_query,
-               ending_before: t | Stripe.id,
-               limit: 1..100,
-               starting_after: t | Stripe.id
+               ending_before: t | Stripe.id | nil,
+               limit: 1..100 | nil,
+               starting_after: t | Stripe.id | nil
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
