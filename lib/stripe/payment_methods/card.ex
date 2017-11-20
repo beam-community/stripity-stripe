@@ -18,7 +18,7 @@ defmodule Stripe.Card do
   Stripe API reference: https://stripe.com/docs/api#cards
   """
   use Stripe.Entity
-
+  import Stripe.Request
   alias Stripe.Util
 
   @type check_result :: :pass | :fail | :unavailable | :unchecked
@@ -98,12 +98,8 @@ defmodule Stripe.Card do
     data
   end
 
-  defp endpoint_for_owner(owner_type, owner_id) do
-    case owner_type do
-      :customer -> "customers/#{owner_id}/sources"
-      :account -> "accounts/#{owner_id}/external_accounts"
-      :recipient -> "recipients/#{owner_id}/cards" # Deprecated
-    end
+  defp plural_endpoint(%{customer: id}) do
+    "customers/" <> id <> "/sources"
   end
 
   @doc """
@@ -117,37 +113,25 @@ defmodule Stripe.Card do
   If you want to create a card with your server without a token, you
   can use the low-level API.
   """
-  @spec create(source, String.t, String.t, Keyword.t) :: {:ok, t} | {
-    :error,
-    Stripe.api_error_struct
-  }
-  def create(owner_type, owner_id, token, opts \\ []) do
-    endpoint = endpoint_for_owner(owner_type, owner_id)
-
-    to_create_body(owner_type, token)
-    |> Util.map_keys_to_atoms()
-    |> Stripe.request(:post, endpoint, %{}, opts)
-    |> Stripe.Request.handle_result
-  end
-
-  @spec to_create_body(source, String.t) :: map
-  defp to_create_body(owner_type, token) do
-    case owner_type do
-      :customer -> %{source: token}
-      :recipient -> %{external_account: token}
-    end
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.Error.t}
+  def create(%{customer: _, source: _} = params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(params |> plural_endpoint())
+    |> put_params(params |> Map.delete(:customer))
+    |> put_method(:post)
+    |> make_request()
   end
 
   @doc """
   Retrieve a card.
   """
-  @spec retrieve(source, String.t, String.t, Keyword.t) :: {:ok, t} | {
-    :error,
-    Stripe.api_error_struct
-  }
-  def retrieve(owner_type, owner_id, card_id, opts \\ []) do
-    endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.retrieve(endpoint, opts)
+  @spec retrieve(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def retrieve(id, %{customer: _} = params, opts \\ []) do
+    endpoint = params |> plural_endpoint()
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
   end
 
   @doc """
@@ -155,44 +139,39 @@ defmodule Stripe.Card do
 
   Takes the `id` and a map of changes
   """
-  @spec update(source, String.t, String.t, map, Keyword.t) :: {:ok, t} | {
-    :error,
-    Stripe.api_error_struct
-  }
-  def update(owner_type, owner_id, card_id, changes, opts \\ []) do
-    endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.update(endpoint, changes, opts)
+  @spec update(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def update(id, %{customer: _} = params, opts \\ []) do
+    endpoint = params |> plural_endpoint()
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:post)
+    |> put_params(params |> Map.delete(:customer))
+    |> make_request()
   end
 
   @doc """
   Delete a card.
   """
-  @spec delete(source, owner_or_id, card_or_id, Keyword.t) :: :ok | {
-    :error,
-    Stripe.api_error_struct
-  }
-        when owner_or_id: owner | String.t, card_or_id: t | String.t
-  def delete(owner_type, owner, card, opts \\ []) when owner_type in @sources do
-    owner_id = Util.normalize_id(owner)
-    card_id = Util.normalize_id(card)
-    do_delete(owner_type, owner_id, card_id, opts)
-  end
-
-  defp do_delete(owner_type, owner_id, card_id, opts \\ []) do
-    endpoint = endpoint_for_owner(owner_type, owner_id) <> "/" <> card_id
-    Stripe.Request.delete(endpoint, %{}, opts)
+  @spec delete(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def delete(id, %{customer: _} = params, opts \\ []) do
+    endpoint = params |> plural_endpoint()
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:delete)
+    |> make_request()
   end
 
   @doc """
   List all cards.
   """
-  @spec list(source, String.t, map, Keyword.t) :: {:ok, Stripe.List.t} | {
-    :error,
-    Stripe.api_error_struct
-  }
-  def list(owner_type, owner_id, params \\ %{}, opts \\ []) do
-    endpoint = endpoint_for_owner(owner_type, owner_id)
-    params = Map.merge(params, %{"object" => "card"})
-    Stripe.Request.retrieve(params, endpoint, opts)
+  @spec list(map, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  def list(%{customer: _} = params, opts \\ []) do
+    endpoint = params |> plural_endpoint()
+    params = params |> Map.put(:object, "card")
+    new_request(opts)
+    |> put_endpoint(endpoint)
+    |> put_method(:get)
+    |> put_params(params |> Map.delete(:customer))
+    |> make_request()
   end
 end
