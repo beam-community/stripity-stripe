@@ -1,13 +1,6 @@
 defmodule Stripe.AccountTest do
   use Stripe.StripeCase, async: true
 
-  test "is listable" do
-    assert {:ok, %Stripe.List{data: accounts}} = Stripe.Account.list()
-    assert_stripe_requested :get, "/v1/accounts"
-    assert is_list(accounts)
-    assert %Stripe.Account{} = hd(accounts)
-  end
-
   test "is retrievable using singular endpoint" do
     assert {:ok, %Stripe.Account{}} = Stripe.Account.retrieve()
     assert_stripe_requested :get, "/v1/account"
@@ -33,6 +26,13 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested :delete, "/v1/accounts/acct_123"
   end
 
+  test "is listable" do
+    assert {:ok, %Stripe.List{data: accounts}} = Stripe.Account.list()
+    assert_stripe_requested :get, "/v1/accounts"
+    assert is_list(accounts)
+    assert %Stripe.Account{} = hd(accounts)
+  end
+
   test "is rejectable" do
     {:ok, account} = Stripe.Account.create(%{metadata: %{}, type: "standard"})
     assert {:ok, %Stripe.Account{} = rejected_account} =
@@ -43,11 +43,8 @@ defmodule Stripe.AccountTest do
     refute rejected_account.charges_enabled
   end
 
-  test "additional_owners is handled correctly" do
-    flunk "todo: test this"
-  end
-
   test "can create a login link" do
-    flunk "todo: test this"
+    assert {:ok, _login_link} = Stripe.Account.create_login_link("acct_123", %{})
+    assert_stripe_requested :post, "/v1/accounts/acct_123/login_links"
   end
 end

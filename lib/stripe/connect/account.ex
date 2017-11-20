@@ -331,4 +331,12 @@ defmodule Stripe.Account do
     |> cast_to_id([:ending_before, :starting_after])
     |> make_request()
   end
+
+  @doc """
+  Create a login link.
+  """
+  @spec create_login_link(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def create_login_link(id, params, opts \\ []) do
+    Stripe.LoginLink.create(id, params, opts)
+  end
 end
