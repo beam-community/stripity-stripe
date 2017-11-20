@@ -23,17 +23,9 @@ defmodule Stripe.ChargeTest do
     assert_stripe_requested :post, "/v1/charges/ch_123"
   end
 
-  @tag :non_core
-  test "can be marked fraudulent" do
-    {:ok, charge} = Stripe.Charge.retrieve("ch_123")
-    assert {:ok, %Stripe.Charge{} = charge} = Stripe.Charge.mark_as_fraudulent(charge)
-    flunk "what properties does a fraudulent charge have?"
-  end
-
-  @tag :non_core
-  test "can be marked safe" do
-    {:ok, charge} = Stripe.Charge.retrieve("ch_123")
-    assert {:ok, %Stripe.Charge{} = charge} = Stripe.Charge.mark_as_safe(charge)
-    flunk "what properties does a safe charge have?"
+  test "is captureable" do
+    {:ok, %Stripe.Charge{} = charge} = Stripe.Charge.retrieve("ch_123")
+    assert {:ok, %Stripe.Charge{}} = Stripe.Charge.capture(charge, %{amount: 1000})
+    assert_stripe_requested :post, "/v1/charges/ch_123/capture"
   end
 end
