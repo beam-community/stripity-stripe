@@ -9,10 +9,7 @@ defmodule Stripe.Customer do
   - Update a customer
   - Delete a customer
 
-  Does not yet render lists or take options.
-
   Stripe API reference: https://stripe.com/docs/api#customer
-
   """
   use Stripe.Entity
   import Stripe.Request
@@ -99,8 +96,6 @@ defmodule Stripe.Customer do
 
   @doc """
   Update a customer.
-
-  Takes the `id` and a map of changes.
   """
   @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
         when params: %{
