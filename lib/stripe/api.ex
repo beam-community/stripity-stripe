@@ -180,7 +180,10 @@ defmodule Stripe.API do
 
     base_url = get_upload_url()
     req_url = base_url <> endpoint
-
+    req_body =
+      body
+      |> Stripe.Util.map_keys_to_atoms()
+      |> Stripe.URI.encode_query()
     req_headers =
       headers
       |> add_multipart_form_headers()
@@ -193,7 +196,7 @@ defmodule Stripe.API do
       |> add_default_options()
       |> add_pool_option()
 
-    @http_module.request(method, req_url, req_headers, body, req_opts)
+    @http_module.request(method, req_url, req_headers, req_body, req_opts)
     |> handle_response()
   end
 
