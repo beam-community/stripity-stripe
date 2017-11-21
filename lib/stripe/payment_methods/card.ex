@@ -17,15 +17,9 @@ defmodule Stripe.Card do
 
   Stripe API reference: https://stripe.com/docs/api#cards
   """
+
   use Stripe.Entity
   import Stripe.Request
-  alias Stripe.Util
-
-  @type check_result :: :pass | :fail | :unavailable | :unchecked
-
-  @type funding :: :credit | :debit | :prepaid | :unknown
-
-  @type tokenization_method :: :apple_pay | :android_pay
 
   @type t :: %__MODULE__{
     id: Stripe.id,
@@ -34,33 +28,29 @@ defmodule Stripe.Card do
     address_city: String.t | nil,
     address_country: String.t | nil,
     address_line1: String.t | nil,
-    address_line1_check: check_result | nil,
+    address_line1_check: String.t | nil,
     address_line2: String.t | nil,
     address_state: String.t | nil,
     address_zip: String.t | nil,
-    address_zip_check: check_result | nil,
-    available_payout_methods: [:standard | :instant] | nil,
+    address_zip_check: String.t | nil,
+    available_payout_methods: list(String.t) | nil,
     brand: String.t,
     country: String.t | nil,
     currency: String.t | nil,
     customer: Stripe.id | Stripe.Customer.t | nil,
-    cvc_check: check_result | nil,
+    cvc_check: String.t | nil,
     default_for_currency: boolean | nil,
     dynamic_last4: String.t | nil,
     exp_month: integer,
     exp_year: integer,
     fingerprint: String.t | nil,
-    funding: funding,
+    funding: String.t,
     last4: String.t,
     metadata: Stripe.Types.metadata,
     name: String.t | nil,
     recipient: Stripe.id | Stripe.Recipient.t | nil,
-    tokenization_method: tokenization_method | nil
+    tokenization_method: String.t | nil
   }
-
-  @type source :: :customer | :recipient | :account
-  @sources [:customer, :recipient, :account]
-  @type owner :: Stripe.Customer.t | Stripe.Account.t
 
   defstruct [
     :id,
@@ -92,11 +82,6 @@ defmodule Stripe.Card do
     :recipient,
     :tokenization_method
   ]
-
-  from_json data do
-    # todo convert this appropriately
-    data
-  end
 
   defp plural_endpoint(%{customer: id}) do
     "customers/" <> id <> "/sources"

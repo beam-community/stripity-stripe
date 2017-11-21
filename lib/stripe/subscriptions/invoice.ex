@@ -12,9 +12,9 @@ defmodule Stripe.Invoice do
 
   Stripe API reference: https://stripe.com/docs/api#invoice
   """
+
   use Stripe.Entity
   import Stripe.Request
-  alias Stripe.Util
 
   @type t :: %__MODULE__{
     id: Stripe.id,

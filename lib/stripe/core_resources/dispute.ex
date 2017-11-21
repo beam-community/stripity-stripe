@@ -4,6 +4,7 @@ defmodule Stripe.Dispute do
 
   Stripe API reference: https://stripe.com/docs/api#disputes
   """
+
   use Stripe.Entity
 
   @type dispute_evidence :: %{
@@ -43,16 +44,9 @@ defmodule Stripe.Dispute do
     submission_count: integer
   }
 
-  @type dispute_reason :: :duplicate | :fraudulent | :subscription_canceled |
-                          :product_unacceptable | :product_not_received |
-                          :unrecognized | :credit_not_processed | :general |
-                          :incorrect_account_details | :insufficient_funds |
-                          :bank_cannot_process | :debit_not_authorized |
-                          :customer_initiated
+  @type dispute_reason :: String.t
 
-  @type dispute_status :: :warning_needs_response | :warning_under_review |
-                          :warning_closed | :needs_response | :under_review |
-                          :charge_refunded | :won | :lost
+  @type dispute_status :: String.t
 
   @type t :: %__MODULE__{
     id: Stripe.id,

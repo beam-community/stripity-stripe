@@ -11,6 +11,7 @@ defmodule Stripe.Token do
   Stripe API reference: https://stripe.com/docs/api#token
 
   """
+
   use Stripe.Entity
   import Stripe.Request
 
@@ -62,7 +63,7 @@ defmodule Stripe.Token do
     client_ip: String.t | nil,
     created: Stripe.timestamp,
     livemode: boolean,
-    type: :card | :bank_account | :pii,
+    type: String.t,
     used: boolean
   }
 

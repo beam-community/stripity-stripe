@@ -4,6 +4,7 @@ defmodule Stripe.ApplicationFee do
 
   Stripe API reference: https://stripe.com/docs/api#application_fees
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{

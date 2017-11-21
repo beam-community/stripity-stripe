@@ -4,6 +4,7 @@ defmodule Stripe.SKU do
 
   Stripe API reference: https://stripe.com/docs/api#sku_object
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -17,20 +18,18 @@ defmodule Stripe.SKU do
                currency: String.t,
                image: String.t,
                inventory: %{
-                 quantity: nil | non_neg_integer,
-                 type: :finite | :bucket | :infinite,
-                 value: nil | :in_stock | :limited | :out_of_stock
+                 quantity: non_neg_integer | nil,
+                 type: String.t,
+                 value: String.t | nil,
                },
                livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               package_dimensions: nil | %{
+               metadata: Stripe.Types.metadata,
+               package_dimensions: %{
                  height: float,
                  length: float,
                  weight: float,
                  width: float
-               },
+               } | nil,
                price: non_neg_integer,
                product: Stripe.id | Stripe.Product.t,
                updated: Stripe.timestamp

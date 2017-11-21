@@ -4,6 +4,7 @@ defmodule Stripe.OrderReturn do
 
   Stripe API reference: https://stripe.com/docs/api#order_return_object
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{

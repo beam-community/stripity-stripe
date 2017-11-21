@@ -8,6 +8,7 @@ defmodule Stripe.Refund do
   - [Update a refund](https://stripe.com/docs/api#update_refund)
   - [List all refunds](https://stripe.com/docs/api#list_refunds)
   """
+
   use Stripe.Entity
   import Stripe.Request
 
@@ -20,13 +21,13 @@ defmodule Stripe.Refund do
     created: Stripe.timestamp,
     currency: String.t,
     failure_balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
-    failure_reason: :lost_or_stolen_card | :expired_or_canceled_card | :unknown | nil,
+    failure_reason: String.t | nil,
     metadata: %{
       optional(String.t) => String.t
     },
-    reason: :duplicate | :fraudulent | :requested_by_customer | nil,
+    reason: String.t | nil,
     receipt_number: String.t | nil,
-    status: :pending | :succeeded | :failed | :cancelled | nil
+    status: String.t | nil
   }
 
   defstruct [
@@ -44,11 +45,6 @@ defmodule Stripe.Refund do
     :receipt_number,
     :status
   ]
-
-  from_json data do
-    data
-    |> cast_to_atom([:failure_reason, :reason, :status])
-  end
 
   @plural_endpoint "refunds"
 
@@ -78,7 +74,7 @@ defmodule Stripe.Refund do
                  optional(String.t) => String.t,
                  optional(atom) => String.t
                },
-               reason: :duplicate | :fraudulent | :requested_by_customer,
+               reason: String.t,
                refund_application_fee: boolean,
                reverse_transfer: boolean
              }

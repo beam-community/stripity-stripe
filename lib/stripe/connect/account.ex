@@ -11,6 +11,7 @@ defmodule Stripe.Account do
 
   Stripe API reference: https://stripe.com/docs/api#account
   """
+
   use Stripe.Entity
   import Stripe.Request
 
@@ -166,7 +167,7 @@ defmodule Stripe.Account do
   @plural_endpoint "accounts"
 
   @type create_params :: %{
-    type: :standard | :express | :custom,
+    type: String.t,
     account_token: String.t | nil,
     business_logo: String.t | nil,
     business_name: String.t | nil,

@@ -4,6 +4,7 @@ defmodule Stripe.Order do
 
   Stripe API reference: https://stripe.com/docs/api#orders
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -20,9 +21,7 @@ defmodule Stripe.Order do
                external_coupon_code: String.t,
                items: Stripe.List.of(Stripe.OrderItem.t),
                livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                returns: Stripe.List.of(Stripe.Return.t),
                selected_shipping_method: String.t,
                shipping: %{
@@ -48,12 +47,12 @@ defmodule Stripe.Order do
                      date: String.t,
                      earliest: String.t,
                      latest: String.t,
-                     type: :range | :exact
+                     type: String.t
                    },
                    description: String.t,
                  }
                ],
-               status: :created | :paid | :canceled | :fulfilled | :returned,
+               status: String.t,
                status_transitions: %{
                  canceled: Stripe.timestamp,
                  fulfiled: Stripe.timestamp,

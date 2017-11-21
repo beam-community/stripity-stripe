@@ -5,6 +5,7 @@ defmodule Stripe.FeeRefund do
   Stripe API reference: https://stripe.com/docs/api#fee_refunds
 
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -15,9 +16,7 @@ defmodule Stripe.FeeRefund do
                created: Stripe.timestamp,
                currency: String.t,
                fee: Stripe.id | Stripe.ApplicationFee.t,
-               metadata: %{
-                 optional(String.t) => String.t
-               }
+               metadata: Stripe.Types.metadata
              }
 
   defstruct [

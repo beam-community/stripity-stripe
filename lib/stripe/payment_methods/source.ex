@@ -4,11 +4,10 @@ defmodule Stripe.Source do
 
   Stripe API reference: https://stripe.com/docs/api#sources
   """
+
   use Stripe.Entity
 
-  @type source_type :: :ach_credit_transfer | :alipay | :bancontact |
-                       :bitcoin | :card | :giropay | :ideal | :p24 |
-                       :sofort | :three_d_secure
+  @type source_type :: String.t
 
   @type ach_credit_transfer :: %{
     account_number: String.t | nil,
@@ -61,7 +60,7 @@ defmodule Stripe.Source do
 
   @type code_verification_flow :: %{
     attempts_remaining: integer,
-    status: :pending | :succeeded | :failed
+    status: String.t
   }
 
   @type giropay :: %{
@@ -101,9 +100,9 @@ defmodule Stripe.Source do
   }
 
   @type redirect_flow :: %{
-    failure_reason: :user_abort | :declined | :processing_error | nil,
+    failure_reason: String.t | nil,
     return_url: String.t,
-    status: :prending | :succeeded | :not_required | :failed,
+    status: String.t,
     url: String.t
   }
 
@@ -136,7 +135,7 @@ defmodule Stripe.Source do
     code_verification: code_verification_flow | nil,
     created: Stripe.timestamp,
     currency: String.t | nil,
-    flow: :redirect | :receiver | :code_verification | :none,
+    flow: String.t,
     giropay: giropay | nil,
     ideal: ideal | nil,
     livemode: boolean,
@@ -147,10 +146,10 @@ defmodule Stripe.Source do
     redirect: redirect_flow | nil,
     sofort: sofort | nil,
     statement_descriptor: String.t | nil,
-    status: :canceled | :chargeable | :consumed | :failed | :pending,
+    status: String.t,
     three_d_secure: three_d_secure | nil,
     type: source_type,
-    usage: :reusable | :single_use | nil,
+    usage: String.t | nil,
   }
 
   defstruct [

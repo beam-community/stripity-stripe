@@ -6,15 +6,9 @@ defmodule Stripe.BalanceTransaction do
   - [Retrieve a balance transaction](https://stripe.com/docs/api#balance_transaction_retrieve)
   - [List all balance history](https://stripe.com/docs/api#balance_history)
   """
+
   use Stripe.Entity
   import Stripe.Request
-
-  @type transaction_type :: :adjustment | :application_fee |
-                            :application_fee_refund | :charge | :payment |
-                            :payment_failure_refund | :payment_refund |
-                            :refund | :transfer | :transfer_refund | :payout |
-                            :payout_cancel | :payout_failure | :validation |
-                            :stripe_fee
 
   @type t :: %__MODULE__{
     id: Stripe.id,
@@ -28,8 +22,8 @@ defmodule Stripe.BalanceTransaction do
     fee_details: list(Stripe.Types.fee) | [],
     net: integer,
     source: Stripe.id | Stripe.Source.t | nil, # TODO: clarify these
-    status: :available | :pending,
-    type: transaction_type
+    status: String.t,
+    type: String.t
   }
 
   defstruct [
@@ -47,12 +41,6 @@ defmodule Stripe.BalanceTransaction do
     :status,
     :type
   ]
-
-  from_json data do
-    data
-    |> cast_to_atom([:type, :status])
-    |> cast_each(:fee_details, &cast_to_atom(&1, :type))
-  end
 
   @endpoint "balance/history"
 
@@ -90,7 +78,7 @@ defmodule Stripe.BalanceTransaction do
                payout: Stripe.id | Stripe.Payout.t | nil,
                source: Stripe.id | Stripe.Source.t | nil,
                starting_after: Stripe.id | Stripe.BalanceTransaction.t | nil,
-               type: Stripe.BalanceTransaction.transaction_type | nil
+               type: String.t | nil
              }
   def all(params \\ %{}, opts \\ []) do
     new_request(opts)

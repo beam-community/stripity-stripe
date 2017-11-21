@@ -4,6 +4,7 @@ defmodule Stripe.Product do
 
   Stripe API reference: https://stripe.com/docs/api#products
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -19,9 +20,7 @@ defmodule Stripe.Product do
                description: String.t,
                images: [String.t],
                livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                name: String.t,
                package_dimensions: nil | %{
                  height: float,

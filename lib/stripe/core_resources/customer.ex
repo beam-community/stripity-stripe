@@ -11,9 +11,9 @@ defmodule Stripe.Customer do
 
   Stripe API reference: https://stripe.com/docs/api#customer
   """
+
   use Stripe.Entity
   import Stripe.Request
-  alias Stripe.Util
 
   @type t :: %__MODULE__{
     id: Stripe.id,
@@ -68,9 +68,7 @@ defmodule Stripe.Customer do
                default_source: Stripe.id | Stripe.Source.t |nil,
                description: String.t | nil,
                email: String.t | nil,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                shipping: Stripe.Types.shipping | nil,
                source: Stripe.Source.t | nil
              }
@@ -105,9 +103,7 @@ defmodule Stripe.Customer do
                default_source: Stripe.id | Stripe.Source.t |nil,
                description: String.t | nil,
                email: String.t | nil,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                shipping: Stripe.Types.shipping | nil,
                source: Stripe.Source.t | nil
              }

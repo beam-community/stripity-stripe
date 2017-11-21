@@ -4,6 +4,7 @@ defmodule Stripe.Recipient do
 
   Stripe API reference: https://stripe.com/docs/api#recipients
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -14,7 +15,7 @@ defmodule Stripe.Recipient do
                  object: String.t,
                  account: Stripe.id,
                  account_holder_name: String.t,
-                 account_holder_type: :indivdual | :company,
+                 account_holder_type: String.t,
                  bank_name: String.t,
                  country: String.t,
                  currency: String.t,
@@ -26,7 +27,7 @@ defmodule Stripe.Recipient do
                    optional(String.t) => String.t
                  },
                  routing_number: String.t,
-                 status: :new | :validated | :verified | :verification_failed | :errored
+                 status: String.t
                },
                cards: Stripe.List.of(Stripe.Card.t),
                created: Stripe.timestamp,
@@ -34,9 +35,7 @@ defmodule Stripe.Recipient do
                description: String.t,
                email: String.t,
                livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                migrated_to: Stripe.id | Stripe.Account.t,
                name: String.t,
                rolled_back_from: String.t,
