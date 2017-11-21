@@ -17,6 +17,7 @@ defmodule Stripe.Converter do
     bank_account
     card
     charge
+    country_spec
     coupon
     customer
     event
