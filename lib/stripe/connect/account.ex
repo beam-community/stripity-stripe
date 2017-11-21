@@ -16,122 +16,122 @@ defmodule Stripe.Account do
   import Stripe.Request
 
   @type decline_charge_on :: %{
-    avs_failure: boolean,
-    cvc_failure: boolean
-  }
+          avs_failure: boolean,
+          cvc_failure: boolean
+        }
 
   @type legal_entity :: %{
-    additional_owners: [legal_entity_additional_owner] | nil,
-    address: legal_entity_address,
-    address_kana: legal_entity_japan_address | nil,
-    address_kanji: legal_entity_japan_address | nil,
-    business_name: String.t | nil,
-    business_name_kana: String.t | nil,
-    business_name_kanji: String.t | nil,
-    business_tax_id_provided: boolean,
-    business_vat_id_provided: boolean,
-    dob: legal_entity_dob,
-    first_name: String.t | nil,
-    first_name_kana: String.t | nil,
-    first_name_kanji: String.t | nil,
-    gender: String.t | nil,
-    last_name: String.t | nil,
-    last_name_kana: String.t | nil,
-    last_name_kanji: String.t | nil,
-    maiden_name: String.t | nil,
-    personal_address: legal_entity_address,
-    personal_address_kana: legal_entity_japan_address | nil,
-    personal_address_kanji: legal_entity_japan_address | nil,
-    personal_id_number_provided: boolean,
-    phone_number: String.t | nil,
-    ssn_last_4_provided: String.t,
-    tax_id_registar: String.t,
-    type: String.t | nil,
-    verification: legal_entity_verification
-  }
+          additional_owners: [legal_entity_additional_owner] | nil,
+          address: legal_entity_address,
+          address_kana: legal_entity_japan_address | nil,
+          address_kanji: legal_entity_japan_address | nil,
+          business_name: String.t() | nil,
+          business_name_kana: String.t() | nil,
+          business_name_kanji: String.t() | nil,
+          business_tax_id_provided: boolean,
+          business_vat_id_provided: boolean,
+          dob: legal_entity_dob,
+          first_name: String.t() | nil,
+          first_name_kana: String.t() | nil,
+          first_name_kanji: String.t() | nil,
+          gender: String.t() | nil,
+          last_name: String.t() | nil,
+          last_name_kana: String.t() | nil,
+          last_name_kanji: String.t() | nil,
+          maiden_name: String.t() | nil,
+          personal_address: legal_entity_address,
+          personal_address_kana: legal_entity_japan_address | nil,
+          personal_address_kanji: legal_entity_japan_address | nil,
+          personal_id_number_provided: boolean,
+          phone_number: String.t() | nil,
+          ssn_last_4_provided: String.t(),
+          tax_id_registar: String.t(),
+          type: String.t() | nil,
+          verification: legal_entity_verification
+        }
 
   @type legal_entity_additional_owner :: %{
-    address: legal_entity_address,
-    dob: legal_entity_dob,
-    first_name: String.t | nil,
-    last_name: String.t | nil,
-    maiden_name: String.t | nil,
-    verification: legal_entity_verification
-  }
+          address: legal_entity_address,
+          dob: legal_entity_dob,
+          first_name: String.t() | nil,
+          last_name: String.t() | nil,
+          maiden_name: String.t() | nil,
+          verification: legal_entity_verification
+        }
 
   @type legal_entity_address :: %{
-    city: String.t | nil,
-    country: String.t | nil,
-    line1: String.t | nil,
-    line2: String.t | nil,
-    postal_code: String.t | nil,
-    state: String.t | nil
-  }
+          city: String.t() | nil,
+          country: String.t() | nil,
+          line1: String.t() | nil,
+          line2: String.t() | nil,
+          postal_code: String.t() | nil,
+          state: String.t() | nil
+        }
 
   @type legal_entity_dob :: %{
-    day: 1..31 | nil,
-    month: 1..12 | nil,
-    year: pos_integer | nil
-  }
+          day: 1..31 | nil,
+          month: 1..12 | nil,
+          year: pos_integer | nil
+        }
 
   @type legal_entity_japan_address :: %{
-    city: String.t | nil,
-    country: String.t | nil,
-    line1: String.t | nil,
-    line2: String.t | nil,
-    postal_code: String.t | nil,
-    state: String.t | nil,
-    town: String.t | nil
-  }
+          city: String.t() | nil,
+          country: String.t() | nil,
+          line1: String.t() | nil,
+          line2: String.t() | nil,
+          postal_code: String.t() | nil,
+          state: String.t() | nil,
+          town: String.t() | nil
+        }
 
   @type legal_entity_verification :: %{
-    details: String.t | nil,
-    details_code: String.t | nil,
-    document: Stripe.id | Stripe.FileUpload.t | nil,
-    status: String.t
-  }
+          details: String.t() | nil,
+          details_code: String.t() | nil,
+          document: Stripe.id() | Stripe.FileUpload.t() | nil,
+          status: String.t()
+        }
 
   @type tos_acceptance :: %{
-    date: Stripe.timestamp | nil,
-    ip: String.t | nil,
-    user_agent: String.t | nil
-  }
+          date: Stripe.timestamp() | nil,
+          ip: String.t() | nil,
+          user_agent: String.t() | nil
+        }
 
   @type verification :: %{
-    disabled_reason: String.t | nil,
-    due_by: Stripe.timestamp | nil,
-    fields_needed: [String.t]
-  }
+          disabled_reason: String.t() | nil,
+          due_by: Stripe.timestamp() | nil,
+          fields_needed: [String.t()]
+        }
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    business_name: String.t | nil,
-    business_url: String.t | nil,
-    charges_enabled: boolean,
-    country: String.t,
-    debit_negative_balances: boolean,
-    decline_charge_on: decline_charge_on,
-    default_currency: String.t,
-    details_submitted: boolean,
-    display_name: String.t | nil,
-    email: String.t | nil,
-    external_accounts: Stripe.List.of(Stripe.BankAccount.t | Stripe.Card.t),
-    legal_entity: legal_entity,
-    metadata: Stripe.Types.metdata,
-    payout_schedule: Stripe.Types.transfer_schedule,
-    payout_statement_descriptor: String.t | nil,
-    payouts_enabled: boolean,
-    product_description: String.t | nil,
-    statement_descriptor: String.t | nil,
-    support_email: String.t | nil,
-    support_phone: String.t | nil,
-    timezone: String.t | nil,
-    tos_acceptance: tos_acceptance,
-    transfers_enabled: boolean | nil,
-    type: String.t,
-    verification: verification
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          business_name: String.t() | nil,
+          business_url: String.t() | nil,
+          charges_enabled: boolean,
+          country: String.t(),
+          debit_negative_balances: boolean,
+          decline_charge_on: decline_charge_on,
+          default_currency: String.t(),
+          details_submitted: boolean,
+          display_name: String.t() | nil,
+          email: String.t() | nil,
+          external_accounts: Stripe.List.of(Stripe.BankAccount.t() | Stripe.Card.t()),
+          legal_entity: legal_entity,
+          metadata: Stripe.Types.metdata(),
+          payout_schedule: Stripe.Types.transfer_schedule(),
+          payout_statement_descriptor: String.t() | nil,
+          payouts_enabled: boolean,
+          product_description: String.t() | nil,
+          statement_descriptor: String.t() | nil,
+          support_email: String.t() | nil,
+          support_phone: String.t() | nil,
+          timezone: String.t() | nil,
+          tos_acceptance: tos_acceptance,
+          transfers_enabled: boolean | nil,
+          type: String.t(),
+          verification: verification
+        }
 
   defstruct [
     :id,
@@ -167,38 +167,38 @@ defmodule Stripe.Account do
   @plural_endpoint "accounts"
 
   @type create_params :: %{
-    type: String.t,
-    account_token: String.t | nil,
-    business_logo: String.t | nil,
-    business_name: String.t | nil,
-    business_primary_color: String.t | nil,
-    business_url: String.t | nil,
-    country: String.t | nil,
-    debit_negative_balances: boolean | nil,
-    decline_charge_on: decline_charge_on | nil,
-    default_currency: String.t | nil,
-    email: String.t | nil,
-    external_account:
-      Stripe.ExternalAccount.create_params_for_bank_account |
-      Stripe.ExternalAccount.create_params_for_card |
-      String.t |
-      nil,
-    legal_entity: legal_entity,
-    metadata: Stripe.Types.metdata | nil,
-    payout_schedule: Stripe.Types.transfer_schedule | nil,
-    payout_statement_descriptor: String.t | nil,
-    product_description: String.t | nil,
-    statement_descriptor: String.t | nil,
-    support_email: String.t | nil,
-    support_phone: String.t | nil,
-    support_url: String.t | nil,
-    tos_acceptance: tos_acceptance | nil
-  }
+          type: String.t(),
+          account_token: String.t() | nil,
+          business_logo: String.t() | nil,
+          business_name: String.t() | nil,
+          business_primary_color: String.t() | nil,
+          business_url: String.t() | nil,
+          country: String.t() | nil,
+          debit_negative_balances: boolean | nil,
+          decline_charge_on: decline_charge_on | nil,
+          default_currency: String.t() | nil,
+          email: String.t() | nil,
+          external_account:
+            Stripe.ExternalAccount.create_params_for_bank_account()
+            | Stripe.ExternalAccount.create_params_for_card()
+            | String.t()
+            | nil,
+          legal_entity: legal_entity,
+          metadata: Stripe.Types.metdata() | nil,
+          payout_schedule: Stripe.Types.transfer_schedule() | nil,
+          payout_statement_descriptor: String.t() | nil,
+          product_description: String.t() | nil,
+          statement_descriptor: String.t() | nil,
+          support_email: String.t() | nil,
+          support_phone: String.t() | nil,
+          support_url: String.t() | nil,
+          tos_acceptance: tos_acceptance | nil
+        }
 
   @doc """
   Create an account.
   """
-  @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: create_params
   def create(params, opts \\ []) do
     new_request(opts)
@@ -212,22 +212,22 @@ defmodule Stripe.Account do
   @doc """
   Retrieve your own account without options.
   """
-  @spec retrieve :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve, do: retrieve([])
 
   @doc """
   Retrieve your own account with options.
   """
-  @spec retrieve(list) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(list) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(opts) when is_list(opts), do: do_retrieve(@singular_endpoint, opts)
 
   @doc """
   Retrieve an account with a specified `id`.
   """
-  @spec retrieve(binary, list) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(binary, list) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []), do: do_retrieve(@plural_endpoint <> "/" <> id, opts)
 
-  @spec do_retrieve(String.t, list) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec do_retrieve(String.t(), list) :: {:ok, t} | {:error, Stripe.Error.t()}
   defp do_retrieve(endpoint, opts) do
     new_request(opts)
     |> put_endpoint(endpoint)
@@ -236,39 +236,39 @@ defmodule Stripe.Account do
   end
 
   @type update_params :: %{
-    account_token: String.t | nil,
-    business_logo: String.t | nil,
-    business_name: String.t | nil,
-    business_primary_color: String.t | nil,
-    business_url: String.t | nil,
-    country: String.t | nil,
-    debit_negative_balances: boolean | nil,
-    decline_charge_on: decline_charge_on | nil,
-    default_currency: String.t | nil,
-    email: String.t | nil,
-    external_account:
-      Stripe.ExternalAccount.create_params_for_bank_account |
-      Stripe.ExternalAccount.create_params_for_card |
-      String.t |
-      nil,
-    legal_entity: legal_entity,
-    metadata: Stripe.Types.metdata | nil,
-    payout_schedule: Stripe.Types.transfer_schedule | nil,
-    payout_statement_descriptor: String.t | nil,
-    product_description: String.t | nil,
-    statement_descriptor: String.t | nil,
-    support_email: String.t | nil,
-    support_phone: String.t | nil,
-    support_url: String.t | nil,
-    tos_acceptance: tos_acceptance | nil
-  }
+          account_token: String.t() | nil,
+          business_logo: String.t() | nil,
+          business_name: String.t() | nil,
+          business_primary_color: String.t() | nil,
+          business_url: String.t() | nil,
+          country: String.t() | nil,
+          debit_negative_balances: boolean | nil,
+          decline_charge_on: decline_charge_on | nil,
+          default_currency: String.t() | nil,
+          email: String.t() | nil,
+          external_account:
+            Stripe.ExternalAccount.create_params_for_bank_account()
+            | Stripe.ExternalAccount.create_params_for_card()
+            | String.t()
+            | nil,
+          legal_entity: legal_entity,
+          metadata: Stripe.Types.metdata() | nil,
+          payout_schedule: Stripe.Types.transfer_schedule() | nil,
+          payout_statement_descriptor: String.t() | nil,
+          product_description: String.t() | nil,
+          statement_descriptor: String.t() | nil,
+          support_email: String.t() | nil,
+          support_phone: String.t() | nil,
+          support_url: String.t() | nil,
+          tos_acceptance: tos_acceptance | nil
+        }
 
   @doc """
   Update an account.
 
   Takes the `id` and a map of changes.
   """
-  @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: update_params
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -281,7 +281,7 @@ defmodule Stripe.Account do
   @doc """
   Delete an account.
   """
-  @spec delete(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -294,12 +294,14 @@ defmodule Stripe.Account do
 
   Takes the `id` and `reason`.
   """
-  @spec reject(Stripe.id | t, String.t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec reject(Stripe.id() | t, String.t(), Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
   def reject(id, reason, opts \\ []) do
     params = %{
       account: id,
       reason: reason
     }
+
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/reject")
     |> put_method(:post)
@@ -311,12 +313,12 @@ defmodule Stripe.Account do
   @doc """
   List all connected accounts.
   """
-  @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query,
-               ending_before: t | Stripe.id,
+               created: Stripe.date_query(),
+               ending_before: t | Stripe.id(),
                limit: 1..100,
-               starting_after: t | Stripe.id
+               starting_after: t | Stripe.id()
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
@@ -330,7 +332,8 @@ defmodule Stripe.Account do
   @doc """
   Create a login link.
   """
-  @spec create_login_link(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create_login_link(Stripe.id() | t, map, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
   def create_login_link(id, params, opts \\ []) do
     Stripe.LoginLink.create(id, params, opts)
   end
