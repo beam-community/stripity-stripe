@@ -6,10 +6,12 @@ defmodule Stripe.FileUpload do
 
   - Create a file
   - Retrieve a file
+  - List all files
 
   Stripe API reference: https://stripe.com/docs/api#file_uploads
   """
   use Stripe.Entity
+  import Stripe.Request
 
   @type t :: %__MODULE__{
     id: Stripe.id,
@@ -38,26 +40,36 @@ defmodule Stripe.FileUpload do
 
   Takes the filepath and the purpose.
   """
-  @spec create(Path.t, String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(filepath, purpose, opts \\ []) do
-    Stripe.Request.create_file_upload(@plural_endpoint, filepath, purpose, opts)
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.Error.t}
+  def create(%{file: _, purpose: _} = params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:post)
+    |> put_params(params)
+    |> make_request()
   end
 
   @doc """
   Retrieve a file_upload.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
   def retrieve(id, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve_file_upload(endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
   end
 
   @doc """
-  List all file uploads.
+  List all file uploads, going back up to 30 days.
   """
-  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  @spec list(map, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
   def list(params \\ %{}, opts \\ []) do
-    endpoint = @plural_endpoint
-    Stripe.Request.retrieve(params, endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:get)
+    |> put_params(params)
+    |> cast_to_id([:ending_before, :starting_after, :limit, :purpose])
+    |> make_request()
   end
 end
