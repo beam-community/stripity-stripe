@@ -72,8 +72,9 @@ defmodule Stripe.Webhook do
 
   defp check_timestamp(timestamp, tolerance) do
     now = System.system_time(:seconds)
+    tolerance_zone = now - tolerance
 
-    if timestamp < now - tolerance do
+    if timestamp < tolerance_zone do
       {:error, "Timestamp outside the tolerance zone (#{now})"}
     else
       {:ok, timestamp}
