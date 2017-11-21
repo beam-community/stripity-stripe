@@ -112,48 +112,32 @@ defmodule Stripe.Error do
       source: :stripe,
       code: code_from_status(status),
       request_id: request_id,
-      extra: %{
-        http_status: status
-      },
-      message: generate_message(status, nil)
+      extra: %{http_status: status},
+      message: status |> message_from_status()
     }
   end
 
   @spec from_stripe_error(400..599, map, String.t) :: t
   def from_stripe_error(status, error_data, request_id) do
-    %{
-      "type" => type,
-      "charge" => charge_id,
-      "message" => stripe_message,
-      "code" => card_code,
-      "decline_code" => decline_code,
-      "param" => param
-    } = maybe_pluck(error_data, ~w(type charge message code decline_code param))
-
-    case type do
+    case error_data |> Map.get("type") |> maybe_to_atom() do
       nil -> from_stripe_error(status, nil, request_id)
       type ->
-        [type, card_code, param] = Enum.map([type, card_code, param], &maybe_to_atom/1)
 
-        user_message =
-          if type == :card_error do
-            stripe_message
-          else
-            nil
-          end
+        stripe_message = error_data |> Map.get("message")
 
-        message =
-          case stripe_message do
-            nil -> generate_message(status, type)
-            message -> message
-          end
+        user_message = case type do
+          :card_error -> stripe_message
+          _ -> nil
+        end
+
+        message = stripe_message || message_from_type(type)
 
         extra =
           %{raw_error: error_data, http_status: status}
-          |> maybe_put(:card_code, card_code)
-          |> maybe_put(:decline_code, decline_code)
-          |> maybe_put(:param, param)
-          |> maybe_put(:charge_id, charge_id)
+          |> maybe_put(:card_code, error_data |> Map.get("code") |> maybe_to_atom())
+          |> maybe_put(:decline_code, error_data |> Map.get("decline_code"))
+          |> maybe_put(:param, error_data |> Map.get("param") |> maybe_to_atom())
+          |> maybe_put(:charge_id, error_data |> Map.get("charge"))
 
         %__MODULE__{
           source: :stripe,
@@ -166,67 +150,35 @@ defmodule Stripe.Error do
     end
   end
 
-  defp code_from_status(status) do
-    case status do
-      400 -> :bad_request
-      401 -> :unauthorized
-      402 -> :request_failed
-      404 -> :not_found
-      409 -> :conflict
-      429 -> :too_many_requests
-      s when s in [500, 502, 503, 504] -> :server_error
-      _ -> :unknown_error
-    end
-  end
+  defp code_from_status(400), do: :bad_request
+  defp code_from_status(401), do: :unauthorized
+  defp code_from_status(402), do: :request_failed
+  defp code_from_status(404), do: :not_found
+  defp code_from_status(409), do: :conflict
+  defp code_from_status(429), do: :too_many_requests
+  defp code_from_status(s) when s in [500, 502, 503, 504], do: :server_error
+  defp code_from_status(_), do:  :unknown_error
 
-  defp generate_message(status, nil) do
-    case status do
-      400 -> "The request was unacceptable, often due to missing a required parameter."
-      401 -> "No valid API key provided."
-      402 -> "The parameters were valid but the request failed."
-      404 -> "The requested resource doesn't exist."
-      409 -> "The request conflicts with another request (perhaps due to using the same idempotent key)."
-      429 -> "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
-      s when s in [500, 502, 503, 504] -> "Something went wrong on Stripe's end."
-      s -> "An unknown HTTP code of #{s} was received."
-    end
-  end
+  defp message_from_status(400), do: "The request was unacceptable, often due to missing a required parameter."
+  defp message_from_status(401), do: "No valid API key provided."
+  defp message_from_status(402), do: "The parameters were valid but the request failed."
+  defp message_from_status(404), do: "The requested resource doesn't exist."
+  defp message_from_status(409), do: "The request conflicts with another request (perhaps due to using the same idempotent key)."
+  defp message_from_status(429), do: "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
+  defp message_from_status(s) when s in [500, 502, 503, 504], do: "Something went wrong on Stripe's end."
+  defp message_from_status(s), do: "An unknown HTTP code of #{s} was received."
 
-  defp generate_message(_, type) do
-    case type do
-      :api_connection_error -> "The connection to Stripe's API failed."
-      :api_error -> "An internal Stripe error occurred. This is usually temporary."
-      :authentication_error -> "You failed to properly authenticate yourself in the request."
-      :card_error -> "The card could not be charged for some reason."
-      :invalid_request -> "Your request had invalid parameters."
-      :rate_limit_error -> "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
-      :validation_error -> "A client-side library failed to validate a field."
-    end
-  end
+  defp message_from_type(:api_connection_error), do: "The connection to Stripe's API failed."
+  defp message_from_type(:api_error), do: "An internal Stripe error occurred. This is usually temporary."
+  defp message_from_type(:authentication_error), do: "You failed to properly authenticate yourself in the request."
+  defp message_from_type(:card_error), do: "The card could not be charged for some reason."
+  defp message_from_type(:invalid_request_error), do: "Your request had invalid parameters."
+  defp message_from_type(:rate_limit_error), do: "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
+  defp message_from_type(:validation_error), do: "A client-side library failed to validate a field."
 
-  # receives a map and a list of keys
-  # returns a map with all the provided keys, with either the original value in the input map
-  # or `nil` if the value was missing
-  defp maybe_pluck(map, keys) do
-    Enum.reduce(keys, %{}, fn key, acc ->
-      case map[key] do
-        nil -> acc
-        value -> Map.put(acc, key, value)
-      end
-    end)
-  end
+  defp maybe_put(map, key, nil), do: map
+  defp maybe_put(map, key, value), do: map |> Map.put(key, value)
 
-  defp maybe_put(map, key, val) do
-    case val do
-      nil -> map
-      val -> Map.put(map, key, val)
-    end
-  end
-
-  defp maybe_to_atom(string) do
-    case string do
-      nil -> nil
-      string -> String.to_atom(string)
-    end
-  end
+  defp maybe_to_atom(nil), do: nil
+  defp maybe_to_atom(string) when is_binary(string), do: string |> String.to_atom
 end
