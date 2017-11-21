@@ -168,6 +168,32 @@ defmodule Stripe.Account do
     :verification
   ]
 
+  from_json data do
+    data
+    |> cast_to_atom([:type])
+    |> cast_path(
+         [:legal_entity],
+         fn legal_entity ->
+           legal_entity
+           |> cast_to_atom([:type])
+         end
+       )
+    |> cast_path(
+         [:payout_schedule],
+         fn payout_schedule ->
+           payout_schedule
+           |> cast_to_atom([:interval])
+         end
+       )
+    |> cast_path(
+         [:verification],
+         fn verification ->
+           verification
+           |> cast_to_atom([:disabled_reason])
+         end
+       )
+  end
+
   @singular_endpoint "account"
   @plural_endpoint "accounts"
 
