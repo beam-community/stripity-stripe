@@ -4,6 +4,7 @@ defmodule Stripe.LineItem do
 
   Stripe API reference: https://stripe.com/docs/api/ruby#invoice_line_item_object
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -26,7 +27,7 @@ defmodule Stripe.LineItem do
                quantity: integer,
                subscription: Stripe.id | nil,
                subscription_item: Stripe.id | nil,
-               type: :invoiceitem | :subscription
+               type: String.t
              }
 
   defstruct [
@@ -46,9 +47,4 @@ defmodule Stripe.LineItem do
     :subscription_item,
     :type
   ]
-
-  from_json data do
-    data
-    |> cast_to_atom([:type])
-  end
 end

@@ -4,6 +4,7 @@ defmodule Stripe.Transfer do
 
   Stripe API reference: https://stripe.com/docs/api#transfers
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -24,7 +25,7 @@ defmodule Stripe.Transfer do
                reversals: Stripe.List.of(Stripe.Reversal.t),
                reversed: boolean,
                source_transaction: Stripe.id | Stripe.Charge.t,
-               source_type: :card | :bank_account | :bitcoin_receiver | :alipay_account,
+               source_type: String.t,
                transfer_group: String.t,
              }
 

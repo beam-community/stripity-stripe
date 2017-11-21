@@ -7,6 +7,7 @@ defmodule Stripe.Invoiceitem do
   Note: this module is named `Invoiceitem` and not `InvoiceItem` on purpose, to
   match the Stripe terminology of `invoiceitem`.
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -20,9 +21,7 @@ defmodule Stripe.Invoiceitem do
                discountable: boolean,
                invoice: Stripe.id | Stripe.Invoice.t,
                livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                period: %{
                  start: Stripe.timestamp,
                  end: Stripe.timestamp

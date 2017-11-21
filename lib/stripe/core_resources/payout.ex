@@ -4,14 +4,8 @@ defmodule Stripe.Payout do
 
   Stripe API reference: https://stripe.com/docs/api#payouts
   """
-  use Stripe.Entity
 
-  @type failure_code :: :account_closed | :account_frozen |
-                        :bank_account_restricted | :bank_ownership_changed |
-                        :could_not_process | :debit_not_authorized |
-                        :insufficient_funds | :invalid_account_number |
-                        :invalid_currency | :no_account | :unsupported_card |
-                        atom
+  use Stripe.Entity
 
   @type t :: %__MODULE__{
     id: Stripe.id,
@@ -24,14 +18,14 @@ defmodule Stripe.Payout do
     description: String.t | nil,
     destination: Stripe.id | Stripe.Card.t | Stripe.BankAccount.t | nil,
     failure_balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
-    failure_code: failure_code | nil,
+    failure_code: String.t | nil,
     failure_message: String.t | nil,
     livemode: boolean,
-    method: :standard | :instant,
-    source_type: :card | :bank_account | :bitcoin_receiver | :alipay_account,
+    method: String.t,
+    source_type: String.t,
     statement_descriptor: String.t | nil,
-    status: :paid | :pending | :in_transit | :canceled | :failed,
-    type: :bank_account | :card
+    status: String.t,
+    type: String.t
   }
 
   defstruct [

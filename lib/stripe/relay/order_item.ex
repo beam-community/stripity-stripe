@@ -4,6 +4,7 @@ defmodule Stripe.OrderItem do
 
   Stripe API reference: https://stripe.com/docs/api#order_items
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -13,7 +14,7 @@ defmodule Stripe.OrderItem do
                description: String.t,
                parent: nil | Stripe.id | Stripe.SKU.t,
                quantity: nil | pos_integer,
-               type: :sku | :tax | :shipping | :discount
+               type: String.t
              }
 
   defstruct [

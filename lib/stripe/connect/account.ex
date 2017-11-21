@@ -11,6 +11,7 @@ defmodule Stripe.Account do
 
   Stripe API reference: https://stripe.com/docs/api#account
   """
+
   use Stripe.Entity
   import Stripe.Request
 
@@ -45,7 +46,7 @@ defmodule Stripe.Account do
     phone_number: String.t | nil,
     ssn_last_4_provided: String.t,
     tax_id_registar: String.t,
-    type: :individual | :company | nil,
+    type: String.t | nil,
     verification: legal_entity_verification
   }
 
@@ -85,13 +86,9 @@ defmodule Stripe.Account do
 
   @type legal_entity_verification :: %{
     details: String.t | nil,
-    details_code: :scan_corrupt | :scan_not_readable | :scan_failed_greyscale |
-                  :scan_not_uploaded | :scan_id_type_not_supported |
-                  :scan_id_country_not_supported | :scan_name_mismatch |
-                  :scan_failed_other | :failed_keyed_identity | :failed_other |
-                  nil,
+    details_code: String.t | nil,
     document: Stripe.id | Stripe.FileUpload.t | nil,
-    status: :unverified | :pending | :verified
+    status: String.t
   }
 
   @type tos_acceptance :: %{
@@ -101,9 +98,7 @@ defmodule Stripe.Account do
   }
 
   @type verification :: %{
-    disabled_reason: :"rejected.fraud" | :"rejected.terms_of_service" |
-                     :"rejected.listed" | :"rejected.other" | :fields_needed |
-                     :listed | :under_review | :other | nil,
+    disabled_reason: String.t | nil,
     due_by: Stripe.timestamp | nil,
     fields_needed: [String.t]
   }
@@ -134,7 +129,7 @@ defmodule Stripe.Account do
     timezone: String.t | nil,
     tos_acceptance: tos_acceptance,
     transfers_enabled: boolean | nil,
-    type: :standard | :express | :custom,
+    type: String.t,
     verification: verification
   }
 
@@ -168,37 +163,11 @@ defmodule Stripe.Account do
     :verification
   ]
 
-  from_json data do
-    data
-    |> cast_to_atom([:type])
-    |> cast_path(
-         [:legal_entity],
-         fn legal_entity ->
-           legal_entity
-           |> cast_to_atom([:type])
-         end
-       )
-    |> cast_path(
-         [:payout_schedule],
-         fn payout_schedule ->
-           payout_schedule
-           |> cast_to_atom([:interval])
-         end
-       )
-    |> cast_path(
-         [:verification],
-         fn verification ->
-           verification
-           |> cast_to_atom([:disabled_reason])
-         end
-       )
-  end
-
   @singular_endpoint "account"
   @plural_endpoint "accounts"
 
   @type create_params :: %{
-    type: :standard | :express | :custom,
+    type: String.t,
     account_token: String.t | nil,
     business_logo: String.t | nil,
     business_name: String.t | nil,

@@ -4,6 +4,7 @@ defmodule Stripe.TransferReversal do
 
   Stripe API reference: https://stripe.com/docs/api#transfer_reversal_object
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -14,9 +15,7 @@ defmodule Stripe.TransferReversal do
                created: Stripe.timestamp,
                currency: String.t,
                description: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                transfer: String.id | Stripe.Transfer.t
              }
 

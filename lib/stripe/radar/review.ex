@@ -4,6 +4,7 @@ defmodule Stripe.Review do
 
   Stripe API reference: https://stripe.com/docs/api#reviews
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
@@ -13,7 +14,7 @@ defmodule Stripe.Review do
                created: Stripe.timestamp,
                livemode: boolean,
                open: boolean,
-               reason: :rule | :manual | :approved | :refunded | :refunded_as_fraud | :disputed
+               reason: String.t
              }
 
   defstruct [

@@ -4,18 +4,15 @@ defmodule Stripe.BankAccount do
 
   Stripe API reference: https://stripe.com/docs/api#bank_accounts
   """
+
   use Stripe.Entity
-
-  @type account_holder_type :: :individual | :company
-
-  @type status :: :new | :validated | :verified | :verification_failed | :errored
 
   @type t :: %__MODULE__{
     id: Stripe.id,
     object: String.t,
     account: Stripe.id | Stripe.Account.t | nil,
     account_holder_name: String.t | nil,
-    account_holder_type: account_holder_type | nil,
+    account_holder_type: String.t | nil,
     bank_name: String.t | nil,
     country: String.t,
     currency: String.t,
@@ -25,7 +22,7 @@ defmodule Stripe.BankAccount do
     last4: String.t,
     metadata: Stripe.Types.metadata | nil,
     routing_number: String.t | nil,
-    status: status
+    status: String.t
   }
 
   defstruct [

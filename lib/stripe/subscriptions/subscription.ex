@@ -11,9 +11,9 @@ defmodule Stripe.Subscription do
 
   Stripe API reference: https://stripe.com/docs/api#subscription
   """
+
   use Stripe.Entity
   import Stripe.Request
-  alias Stripe.Util
 
   @type t :: %__MODULE__{
     id: Stripe.id,
@@ -33,7 +33,7 @@ defmodule Stripe.Subscription do
     plan: Stripe.Plan.t | nil,
     quantity: integer | nil,
     start: Stripe.timestamp,
-    status: :trialing | :active | :past_due | :canceled | :unpaid,
+    status: String.t,
     tax_percent: float | nil,
     trial_end: Stripe.timestamp | nil,
     trial_start: Stripe.timestamp | nil
@@ -78,9 +78,7 @@ defmodule Stripe.Subscription do
                    optional(:quantity) => non_neg_integer
                  }
                ],
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                tax_percent: float,
                trial_end: Stripe.timestamp,
                trial_period_days: non_neg_integer
@@ -120,9 +118,7 @@ defmodule Stripe.Subscription do
                    optional(:quantity) => non_neg_integer
                  }
                ],
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                prorate: boolean,
                proration_date: Stripe.timestamp,
                source: Stripe.id | Stripe.Source.t,
@@ -162,7 +158,7 @@ defmodule Stripe.Subscription do
                limit: 1..100,
                plan: Stripe.Plan.t | Stripe.id,
                starting_after: t | Stripe.id,
-               status: :trialing | :active | :past_due | :canceled | :unpaid | :all
+               status: String.t
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)

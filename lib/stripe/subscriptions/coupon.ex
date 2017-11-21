@@ -12,9 +12,9 @@ defmodule Stripe.Coupon do
 
   Stripe API reference: https://stripe.com/docs/api#coupons
   """
+
   use Stripe.Entity
   import Stripe.Request
-  alias Stripe.Util
 
   @type t :: %__MODULE__{
                id: Stripe.id,
@@ -22,13 +22,11 @@ defmodule Stripe.Coupon do
                amount_off: pos_integer,
                created: Stripe.timestamp,
                currency: String.t,
-               duration: :forever | :once | :repeating,
+               duration: String.t,
                duration_in_months: pos_integer | nil,
                livemode: boolean,
                max_redemptions: pos_integer,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                percent_off: pos_integer,
                redeem_by: Stripe.timestamp,
                times_redeemed: non_neg_integer,
@@ -60,14 +58,12 @@ defmodule Stripe.Coupon do
   @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
         when params: %{
                id: String.t,
-               duration: :forever | :once | :repeating,
+               duration: String.t,
                amount_off: pos_integer,
                currency: String.t,
                duration_in_months: pos_integer,
                max_redemptions: pos_integer,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                percent_off: pos_integer,
                redeem_by: Stripe.timestamp
              }
@@ -98,9 +94,7 @@ defmodule Stripe.Coupon do
   """
   @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
         when params: %{
-               metadata: %{
-                 optional(String.t) => String.t
-               }
+               metadata: Stripe.Types.metadata
              }
   def update(id, params, opts \\ []) do
     new_request(opts)

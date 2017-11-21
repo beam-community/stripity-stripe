@@ -5,6 +5,7 @@ defmodule Stripe.Balance do
   You can:
   - [Retrieve the current balance](https://stripe.com/docs/api#retrieve_balance)
   """
+
   use Stripe.Entity
   import Stripe.Request
 

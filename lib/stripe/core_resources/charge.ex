@@ -9,28 +9,26 @@ defmodule Stripe.Charge do
   - [Capture a charge](https://stripe.com/docs/api#capture_charge)
   - [List all charges](https://stripe.com/docs/api#list_charges)
   """
+
   use Stripe.Entity
   import Stripe.Request
   require Stripe.Util
 
-  @type network_status :: :approved_by_network | :declined_by_network |
-                          :not_sent_to_network | :reversed_after_approval
-
   @type user_fraud_report :: %{
-    user_report: :safe | :fraudulent
+    user_report: String.t
   }
 
   @type stripe_fraud_report :: %{
-    stripe_report: :fraudulent
+    stripe_report: String.t
   }
 
   @type charge_outcome :: %{
-    network_status: network_status | nil,
+    network_status: String.t | nil,
     reason: String.t | nil,
-    risk_level: :normal | :elevated | :highest | :not_assessed | :unknown,
+    risk_level: String.t,
     rule: Stripe.id | Stripe.Rule.t,
     seller_message: String.t | nil,
-    type: :authorized | :manual_review | :issuer_declined | :blocked | :invalid
+    type: String.t
   }
 
   @type card_info :: %{
@@ -68,9 +66,7 @@ defmodule Stripe.Charge do
     fraud_details: user_fraud_report | stripe_fraud_report | %{},
     invoice: Stripe.id | Stripe.Invoice.t | nil,
     livemode: boolean,
-    metadata: %{
-      optional(String.t) => String.t
-    },
+    metadata: Stripe.Types.metadata,
     on_behalf_of: Stripe.id | Stripe.Account.t | nil,
     order: Stripe.id | Stripe.Order.t | nil,
     outcome: charge_outcome | nil,
@@ -84,7 +80,7 @@ defmodule Stripe.Charge do
     source: Stripe.Card.t | map,
     source_transfer: Stripe.id | Stripe.Transfer.t | nil,
     statement_descriptor: String.t | nil,
-    status: :succeeded | :pending | :failed,
+    status: String.t,
     transfer: Stripe.id | Stripe.Transfer.t | nil,
     transfer_group: String.t | nil
   }
@@ -127,25 +123,6 @@ defmodule Stripe.Charge do
     :transfer,
     :transfer_group
   ]
-
-  from_json data do
-    data
-    |> cast_to_atom([:failure_code, :status])
-    |> cast_path(
-         [:fraud_details],
-         fn fraud ->
-           fraud
-           |> cast_to_atom([:user_report, :stripe_report])
-         end
-       )
-    |> cast_path(
-         [:outcome],
-         fn outcome ->
-           outcome
-           |> cast_to_atom([:network_status, :risk_level, :type])
-         end
-       )
-  end
 
   @plural_endpoint "charges"
 
@@ -303,7 +280,7 @@ defmodule Stripe.Charge do
                ending_before: t | Stripe.id,
                limit: 1..100,
                source: %{
-                 object: :all | :alipay_account | :bank_account | :bitcoin_receiver | :card
+                 object: String.t
                },
                starting_after: t | Stripe.id,
                transfer_group: String.t

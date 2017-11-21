@@ -17,7 +17,7 @@ defmodule Stripe.Types do
     application: String.t | nil,
     currency: String.t,
     description: String.t | nil,
-    type: :application_fee | :stripe_fee | :tax
+    type: String.t
   }
 
   @type metadata :: %{
@@ -34,7 +34,7 @@ defmodule Stripe.Types do
 
   @type transfer_schedule :: %{
     delay_days: non_neg_integer,
-    interval: :manual | :daily | :weekly | :monthly,
+    interval: String.t,
     monthly_anchor: non_neg_integer | nil,
     weekly_anchor: String.t | nil
   }

@@ -33,9 +33,9 @@ defmodule Stripe.Plan do
   }
   ```
   """
+
   use Stripe.Entity
   import Stripe.Request
-  alias Stripe.Util
 
   @type t :: %__MODULE__{
     id: Stripe.id,
@@ -43,7 +43,7 @@ defmodule Stripe.Plan do
     amount: non_neg_integer,
     created: Stripe.timestamp,
     currency: String.t,
-    interval: :day | :week | :month | :year,
+    interval: String.t,
     interval_count: pos_integer,
     livemode: boolean,
     metadata: Stripe.Types.metadata,
@@ -76,11 +76,9 @@ defmodule Stripe.Plan do
         when params: %{
                amount: non_neg_integer,
                currency: String.t,
-               interval: :day | :week | :month | :year,
+               interval: String.t,
                interval_count: pos_integer,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
+               metadata: Stripe.Types.metadata,
                name: String.t,
                statement_descriptor: String.t
              }

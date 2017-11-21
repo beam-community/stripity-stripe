@@ -4,6 +4,7 @@ defmodule Stripe.Discount do
 
   Stripe API reference: https://stripe.com/docs/api#discounts
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
