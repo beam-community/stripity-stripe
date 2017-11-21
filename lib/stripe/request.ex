@@ -17,17 +17,18 @@ defmodule Stripe.Request do
   alias Stripe.{API, Request, Converter}
 
   @opaque t :: %__MODULE__{
-    opts: Keyword.t,
-    endpoint: String.t | (map -> String.t),
-    method: Stripe.API.method,
-    params: %{optional(atom) => any},
-    cast_to_id: MapSet.t(atom)
-  }
+            opts: Keyword.t(),
+            endpoint: String.t() | (map -> String.t()),
+            method: Stripe.API.method(),
+            params: %{optional(atom) => any},
+            cast_to_id: MapSet.t(atom)
+          }
 
-  @type error_code ::  :endpoint_fun_invalid_result
-    | :invalid_endpoint
+  @type error_code ::
+          :endpoint_fun_invalid_result
+          | :invalid_endpoint
 
-  defstruct opts: [], endpoint: nil, method: nil, params: %{}, cast_to_id: MapSet.new
+  defstruct opts: [], endpoint: nil, method: nil, params: %{}, cast_to_id: MapSet.new()
 
   @doc """
   Creates a new request.
@@ -35,7 +36,7 @@ defmodule Stripe.Request do
   Optionally accepts options for the request, such as using a specific API key.
   See `t:Stripe.options` for details.
   """
-  @spec new_request(Stripe.options) :: t
+  @spec new_request(Stripe.options()) :: t
   def new_request(opts \\ []) do
     %Request{opts: opts}
   end
@@ -51,7 +52,7 @@ defmodule Stripe.Request do
   before the request is made so the actual parameters can be specified after
   the endpoint.
   """
-  @spec put_endpoint(t, String.t | (map -> String.t)) :: t
+  @spec put_endpoint(t, String.t() | (map -> String.t())) :: t
   def put_endpoint(%Request{} = request, endpoint) do
     %{request | endpoint: endpoint}
   end
@@ -62,7 +63,7 @@ defmodule Stripe.Request do
   Accepts any of the standard HTTP methods as atoms, that is `:get`, `:post`,
   `:put`, `:patch` or `:delete`.
   """
-  @spec put_method(t, Stripe.API.method) :: t
+  @spec put_method(t, Stripe.API.method()) :: t
   def put_method(%Request{} = request, method) when method in [:get, :post, :put, :patch, :delete] do
     %{request | method: method}
   end
@@ -135,50 +136,69 @@ defmodule Stripe.Request do
     ...
   ```
   """
-  @spec get_id!(Stripe.id | struct) :: Stripe.id
+  @spec get_id!(Stripe.id() | struct) :: Stripe.id()
   def get_id!(id) when is_binary(id), do: id
 
   def get_id!(%{id: id}) when is_binary(id), do: id
 
-  def get_id!(_), do: raise "You must provide an ID or a struct with an ID to this operation."
+  def get_id!(_), do: raise("You must provide an ID or a struct with an ID to this operation.")
 
   @doc """
   Executes the request and returns the response.
   """
-  @spec make_request(t) :: {:ok, struct} | {:error, Stripe.Error.t}
-  def make_request(%Request{params: params, endpoint: endpoint, method: method, opts: opts} = request) do
-    with\
-      {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
-      {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
-      {:ok, result} <- API.request(params, method, endpoint, %{}, opts)
-    do
+  @spec make_request(t) :: {:ok, struct} | {:error, Stripe.Error.t()}
+  def make_request(
+        %Request{params: params, endpoint: endpoint, method: method, opts: opts} = request
+      ) do
+    with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
+         {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
+         {:ok, result} <- API.request(params, method, endpoint, %{}, opts) do
       {:ok, Converter.convert_result(result)}
     end
   end
 
   defp do_cast_to_id(params, cast_to_id) do
     to_cast = MapSet.to_list(cast_to_id)
-    params = Enum.reduce(to_cast, params, fn
-      key, params ->
+
+    params =
+      Enum.reduce(to_cast, params, fn key, params ->
         case params[key] do
           %{__struct__: _, id: id} -> put_in(params[key], id)
           _ -> params
         end
-    end)
+      end)
+
     {:ok, params}
   end
 
   defp consolidate_endpoint(endpoint, _) when is_binary(endpoint), do: {:ok, endpoint}
+
   defp consolidate_endpoint(endpoint_fun, params) when is_function(endpoint_fun, 1) do
     case endpoint_fun.(params) do
-      result when is_binary(result) -> {:ok, result}
-      invalid -> {:error,
-                   Stripe.Error.new(source: :internal, code: :endpoint_fun_invalid_result,
-                    message: "calling the endpoint function produced an invalid result of #{inspect invalid} ")}
+      result when is_binary(result) ->
+        {:ok, result}
+
+      invalid ->
+        {
+          :error,
+          Stripe.Error.new(
+            source: :internal,
+            code: :endpoint_fun_invalid_result,
+            message:
+              "calling the endpoint function produced an invalid result of #{inspect(invalid)} "
+          )
+        }
     end
   end
+
   defp consolidate_endpoint(_, _) do
-    {:error, Stripe.Error.new(source: :internal, code: :invalid_endpoint,
-      message: "endpoint must be a string or a function from params to a string")}
+    {
+      :error,
+      Stripe.Error.new(
+        source: :internal,
+        code: :invalid_endpoint,
+        message: "endpoint must be a string or a function from params to a string"
+      )
+    }
   end
 end

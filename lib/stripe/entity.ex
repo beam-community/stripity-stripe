@@ -33,7 +33,7 @@ defmodule Stripe.Entity do
       import Stripe.Entity, only: [from_json: 2]
       @behaviour Stripe.Entity
       def __from_json__(data), do: data
-      defoverridable [__from_json__: 1]
+      defoverridable __from_json__: 1
     end
   end
 
@@ -164,7 +164,10 @@ defmodule Stripe.Entity do
   end
 
   defp maybe(fun) do
-    fn nil -> nil; arg -> fun.(arg) end
+    fn
+      nil -> nil
+      arg -> fun.(arg)
+    end
   end
 
   defp maybe_update_in(data, path, fun) do
