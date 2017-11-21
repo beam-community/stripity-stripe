@@ -4,38 +4,38 @@ defmodule Stripe.Types do
   """
 
   @type address :: %{
-    city: String.t | nil,
-    country: String.t | nil,
-    line1: String.t | nil,
-    line2: String.t | nil,
-    postal_code: String.t | nil,
-    state: String.t | nil
-  }
+          city: String.t() | nil,
+          country: String.t() | nil,
+          line1: String.t() | nil,
+          line2: String.t() | nil,
+          postal_code: String.t() | nil,
+          state: String.t() | nil
+        }
 
   @type fee :: %{
-    amount: integer,
-    application: String.t | nil,
-    currency: String.t,
-    description: String.t | nil,
-    type: String.t
-  }
+          amount: integer,
+          application: String.t() | nil,
+          currency: String.t(),
+          description: String.t() | nil,
+          type: String.t()
+        }
 
   @type metadata :: %{
-    optional(String.t) => String.t
-  }
+          optional(String.t()) => String.t()
+        }
 
   @type shipping :: %{
-    address: Stripe.Types.address,
-    carrier: String.t | nil,
-    name: String.t,
-    phone: String.t | nil,
-    tracking_number: String.t | nil
-  }
+          address: Stripe.Types.address(),
+          carrier: String.t() | nil,
+          name: String.t(),
+          phone: String.t() | nil,
+          tracking_number: String.t() | nil
+        }
 
   @type transfer_schedule :: %{
-    delay_days: non_neg_integer,
-    interval: String.t,
-    monthly_anchor: non_neg_integer | nil,
-    weekly_anchor: String.t | nil
-  }
+          delay_days: non_neg_integer,
+          interval: String.t(),
+          monthly_anchor: non_neg_integer | nil,
+          weekly_anchor: String.t() | nil
+        }
 end
