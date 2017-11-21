@@ -6,6 +6,7 @@ defmodule Stripe.Source do
   """
 
   use Stripe.Entity
+  import Stripe.Request
 
   @type source_type :: String.t
 
@@ -181,4 +182,73 @@ defmodule Stripe.Source do
     :type,
     :usage
   ]
+
+  @plural_endpoint "sources"
+
+  @doc """
+  Create a source.
+  """
+  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.Error.t}
+  def create(%{} = params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_params(params)
+    |> put_method(:post)
+    |> make_request()
+  end
+
+  @doc """
+  Retrieve a source.
+  """
+  @spec retrieve(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def retrieve(id, %{} = params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> put_params(params)
+    |> make_request()
+  end
+
+  @doc """
+  Update a source.
+
+  Takes the `id` and a map of changes
+  """
+  @spec update(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def update(id, %{} = params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:post)
+    |> put_params(params)
+    |> make_request()
+  end
+
+  defp customer_endpoint(%{customer: id}) do
+    "customers/" <> id <> "/sources"
+  end
+
+  @doc """
+  Attach a source to a customer.
+  """
+  @spec attach(map, Keyword.t) :: {:ok, t} | {:error, Stripe.Error.t}
+  def attach(%{customer: _, source: _} = params, opts \\ []) do
+    endpoint = params |> customer_endpoint()
+    new_request(opts)
+    |> put_endpoint(endpoint)
+    |> put_params(params |> Map.delete(:customer))
+    |> put_method(:post)
+    |> make_request()
+  end
+
+  @doc """
+  Detach a source from a customer.
+  """
+  @spec detach(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  def detach(id, %{customer: _} = params, opts \\ []) do
+    endpoint = params |> customer_endpoint()
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:delete)
+    |> make_request()
+  end
 end
