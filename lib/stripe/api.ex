@@ -230,8 +230,8 @@ defmodule Stripe.API do
     {:ok, decoded_body}
   end
 
-  defp handle_response({:ok, status, headers, body}) when status >= 400 and status <= 599 do
-    request_id = Map.get(headers, "Request-Id")
+  defp handle_response({:ok, status, headers, body}) when status >= 300 and status <= 599 do
+    request_id = headers |> List.keyfind("Request-Id", 0)
 
     error =
       case Poison.decode(body) do
