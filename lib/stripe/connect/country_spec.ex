@@ -9,25 +9,25 @@ defmodule Stripe.CountrySpec do
   import Stripe.Request
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    default_currency: String.t,
-    supported_bank_account_currencies: %{
-      String.t => list(String.t)
-    },
-    supported_payment_currencies: list(String.t),
-    supported_payment_methods: list(Stripe.Source.source_type | String.t),
-    verification_fields: %{
-      individual: %{
-        minimum: list(String.t),
-        additional: list(String.t)
-      },
-      company: %{
-        minimum: list(String.t),
-        additional: list(String.t)
-      }
-    }
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          default_currency: String.t(),
+          supported_bank_account_currencies: %{
+            String.t() => list(String.t())
+          },
+          supported_payment_currencies: list(String.t()),
+          supported_payment_methods: list(Stripe.Source.source_type() | String.t()),
+          verification_fields: %{
+            individual: %{
+              minimum: list(String.t()),
+              additional: list(String.t())
+            },
+            company: %{
+              minimum: list(String.t()),
+              additional: list(String.t())
+            }
+          }
+        }
 
   defstruct [
     :id,
@@ -44,7 +44,7 @@ defmodule Stripe.CountrySpec do
   @doc """
   Retrieve a country spec.
   """
-  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -55,7 +55,7 @@ defmodule Stripe.CountrySpec do
   @doc """
   List all country specs.
   """
-  @spec list(map, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(map, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
