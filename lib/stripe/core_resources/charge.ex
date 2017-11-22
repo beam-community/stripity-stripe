@@ -15,75 +15,75 @@ defmodule Stripe.Charge do
   require Stripe.Util
 
   @type user_fraud_report :: %{
-    user_report: String.t
-  }
+          user_report: String.t()
+        }
 
   @type stripe_fraud_report :: %{
-    stripe_report: String.t
-  }
+          stripe_report: String.t()
+        }
 
   @type charge_outcome :: %{
-    network_status: String.t | nil,
-    reason: String.t | nil,
-    risk_level: String.t,
-    rule: Stripe.id | Stripe.Rule.t,
-    seller_message: String.t | nil,
-    type: String.t
-  }
+          network_status: String.t() | nil,
+          reason: String.t() | nil,
+          risk_level: String.t(),
+          rule: Stripe.id() | Stripe.Rule.t(),
+          seller_message: String.t() | nil,
+          type: String.t()
+        }
 
   @type card_info :: %{
-    exp_month: number,
-    exp_year: number,
-    number: String.t,
-    object: String.t,
-    cvc: String.t,
-    address_city: String.t | nil,
-    address_country: String.t | nil,
-    address_line1: String.t | nil,
-    address_line2: String.t | nil,
-    name: String.t | nil,
-    address_state: String.t | nil,
-    address_zip: String.t | nil
-  }
+          exp_month: number,
+          exp_year: number,
+          number: String.t(),
+          object: String.t(),
+          cvc: String.t(),
+          address_city: String.t() | nil,
+          address_country: String.t() | nil,
+          address_line1: String.t() | nil,
+          address_line2: String.t() | nil,
+          name: String.t() | nil,
+          address_state: String.t() | nil,
+          address_zip: String.t() | nil
+        }
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    amount: non_neg_integer,
-    amount_refunded: non_neg_integer,
-    application: Stripe.id | Stripe.Application.t | nil,
-    application_fee: Stripe.id | Stripe.ApplicationFee.t | nil,
-    balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
-    captured: boolean,
-    created: Stripe.timestamp,
-    currency: String.t,
-    customer: Stripe.id | Stripe.Customer.t | nil,
-    description: String.t | nil,
-    destination: Stripe.id | Stripe.Account.t | nil,
-    dispute: Stripe.id | Stripe.Dispute.t | nil,
-    failure_code: Stripe.Error.card_error_code | nil,
-    failure_message: String.t | nil,
-    fraud_details: user_fraud_report | stripe_fraud_report | %{},
-    invoice: Stripe.id | Stripe.Invoice.t | nil,
-    livemode: boolean,
-    metadata: Stripe.Types.metadata,
-    on_behalf_of: Stripe.id | Stripe.Account.t | nil,
-    order: Stripe.id | Stripe.Order.t | nil,
-    outcome: charge_outcome | nil,
-    paid: boolean,
-    receipt_email: String.t | nil,
-    receipt_number: String.t | nil,
-    refunded: boolean,
-    refunds: Stripe.List.of(Stripe.Refund.t),
-    review: Stripe.id | Stripe.Review.t | nil,
-    shipping: Stripe.Types.shipping | nil,
-    source: Stripe.Card.t | map,
-    source_transfer: Stripe.id | Stripe.Transfer.t | nil,
-    statement_descriptor: String.t | nil,
-    status: String.t,
-    transfer: Stripe.id | Stripe.Transfer.t | nil,
-    transfer_group: String.t | nil
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          amount: non_neg_integer,
+          amount_refunded: non_neg_integer,
+          application: Stripe.id() | Stripe.Application.t() | nil,
+          application_fee: Stripe.id() | Stripe.ApplicationFee.t() | nil,
+          balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
+          captured: boolean,
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          customer: Stripe.id() | Stripe.Customer.t() | nil,
+          description: String.t() | nil,
+          destination: Stripe.id() | Stripe.Account.t() | nil,
+          dispute: Stripe.id() | Stripe.Dispute.t() | nil,
+          failure_code: Stripe.Error.card_error_code() | nil,
+          failure_message: String.t() | nil,
+          fraud_details: user_fraud_report | stripe_fraud_report | %{},
+          invoice: Stripe.id() | Stripe.Invoice.t() | nil,
+          livemode: boolean,
+          metadata: Stripe.Types.metadata(),
+          on_behalf_of: Stripe.id() | Stripe.Account.t() | nil,
+          order: Stripe.id() | Stripe.Order.t() | nil,
+          outcome: charge_outcome | nil,
+          paid: boolean,
+          receipt_email: String.t() | nil,
+          receipt_number: String.t() | nil,
+          refunded: boolean,
+          refunds: Stripe.List.of(Stripe.Refund.t()),
+          review: Stripe.id() | Stripe.Review.t() | nil,
+          shipping: Stripe.Types.shipping() | nil,
+          source: Stripe.Card.t() | map,
+          source_transfer: Stripe.id() | Stripe.Transfer.t() | nil,
+          statement_descriptor: String.t() | nil,
+          status: String.t(),
+          transfer: Stripe.id() | Stripe.Transfer.t() | nil,
+          transfer_group: String.t() | nil
+        }
 
   defstruct [
     :id,
@@ -137,15 +137,16 @@ defmodule Stripe.Charge do
 
   See the [Stripe docs](https://stripe.com/docs/api#capture_charge).
   """
-  @spec capture(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec capture(Stripe.id() | t, params, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                amount: non_neg_integer,
                application_fee: non_neg_integer,
                destination: %{
                  amount: non_neg_integer
                },
-               receipt_email: String.t,
-               statement_descriptor: String.t
+               receipt_email: String.t(),
+               statement_descriptor: String.t()
              }
   def capture(id, params, opts) do
     new_request(opts)
@@ -160,7 +161,7 @@ defmodule Stripe.Charge do
 
   This version of the function is deprecated. Please use `capture/3` instead.
   """
-  @spec capture(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec capture(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def capture(id, opts) when is_list(opts) do
     Stripe.Util.log_deprecation("Please use `capture/3` instead.")
     capture(id, %{}, opts)
@@ -184,25 +185,25 @@ defmodule Stripe.Charge do
 
   See the [Stripe docs](https://stripe.com/docs/api#create_charge).
   """
-  @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                amount: pos_integer,
-               currency: String.t,
+               currency: String.t(),
                application_fee: non_neg_integer,
                capture: boolean,
-               description: String.t,
+               description: String.t(),
                destination: %{
-                 :account => Stripe.id | Stripe.Account.t,
+                 :account => Stripe.id() | Stripe.Account.t(),
                  optional(:amount) => non_neg_integer
                },
-               transfer_group: String.t,
-               on_behalf_of: Stripe.id | Stripe.Account.t,
+               transfer_group: String.t(),
+               on_behalf_of: Stripe.id() | Stripe.Account.t(),
                metadata: map,
-               receipt_email: String.t,
-               shipping: Stripe.Customer.shipping,
-               customer: Stripe.id | Stripe.Customer.t,
-               source: Stripe.id | Stripe.Card.t | card_info,
-               statement_descriptor: String.t
+               receipt_email: String.t(),
+               shipping: Stripe.Customer.shipping(),
+               customer: Stripe.id() | Stripe.Customer.t(),
+               source: Stripe.id() | Stripe.Card.t() | card_info,
+               statement_descriptor: String.t()
              }
   def create(params, opts \\ []) do
     new_request(opts)
@@ -224,7 +225,7 @@ defmodule Stripe.Charge do
 
   See the [Stripe docs](https://stripe.com/docs/api#retrieve_charge).
   """
-  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -245,17 +246,14 @@ defmodule Stripe.Charge do
 
   See the [Stripe docs](https://stripe.com/docs/api#update_charge).
   """
-  @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               description: String.t,
+               description: String.t(),
                fraud_details: user_fraud_report,
-               metadata: %{
-                 optional(String.t) => String.t,
-                 optional(atom) => String.t
-               },
-               receipt_email: String.t,
-               shipping: Stripe.Customer.shipping,
-               transfer_group: String.t
+               metadata: Stripe.Types.metadata(),
+               receipt_email: String.t(),
+               shipping: Stripe.Customer.shipping(),
+               transfer_group: String.t()
              }
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -273,17 +271,17 @@ defmodule Stripe.Charge do
 
   See the [Stripe docs](https://stripe.com/docs/api#list_charges).
   """
-  @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query,
-               customer: Stripe.Customer.t | Stripe.id,
-               ending_before: t | Stripe.id,
+               created: Stripe.date_query(),
+               customer: Stripe.Customer.t() | Stripe.id(),
+               ending_before: t | Stripe.id(),
                limit: 1..100,
                source: %{
-                 object: String.t
+                 object: String.t()
                },
-               starting_after: t | Stripe.id,
-               transfer_group: String.t
+               starting_after: t | Stripe.id(),
+               transfer_group: String.t()
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
