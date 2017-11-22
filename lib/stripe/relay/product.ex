@@ -8,31 +8,33 @@ defmodule Stripe.Product do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               active: boolean,
-               attributes: %{
-                 optional(String.t) => String.t
-               },
-               caption: String.t,
-               created: Stripe.timestamp,
-               deactivate_on: [Stripe.id],
-               description: String.t,
-               images: [String.t],
-               livemode: boolean,
-               metadata: Stripe.Types.metadata,
-               name: String.t,
-               package_dimensions: nil | %{
-                 height: float,
-                 length: float,
-                 weight: float,
-                 width: float
-               },
-               shippable: boolean,
-               skus: Stripe.List.of(Stripe.SKU.t),
-               updated: Stripe.timestamp,
-               url: String.t
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          active: boolean,
+          attributes: %{
+            optional(String.t()) => String.t()
+          },
+          caption: String.t(),
+          created: Stripe.timestamp(),
+          deactivate_on: [Stripe.id()],
+          description: String.t(),
+          images: [String.t()],
+          livemode: boolean,
+          metadata: Stripe.Types.metadata(),
+          name: String.t(),
+          package_dimensions:
+            nil
+            | %{
+                height: float,
+                length: float,
+                weight: float,
+                width: float
+              },
+          shippable: boolean,
+          skus: Stripe.List.of(Stripe.SKU.t()),
+          updated: Stripe.timestamp(),
+          url: String.t()
+        }
 
   defstruct [
     :id,

@@ -8,14 +8,14 @@ defmodule Stripe.Review do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               charge: Stripe.id | Stripe.Charge.t,
-               created: Stripe.timestamp,
-               livemode: boolean,
-               open: boolean,
-               reason: String.t
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          charge: Stripe.id() | Stripe.Charge.t(),
+          created: Stripe.timestamp(),
+          livemode: boolean,
+          open: boolean,
+          reason: String.t()
+        }
 
   defstruct [
     :id,
