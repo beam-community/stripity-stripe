@@ -22,35 +22,35 @@ defmodule Stripe.Card do
   import Stripe.Request
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    account: Stripe.id | Stripe.Account.t | nil,
-    address_city: String.t | nil,
-    address_country: String.t | nil,
-    address_line1: String.t | nil,
-    address_line1_check: String.t | nil,
-    address_line2: String.t | nil,
-    address_state: String.t | nil,
-    address_zip: String.t | nil,
-    address_zip_check: String.t | nil,
-    available_payout_methods: list(String.t) | nil,
-    brand: String.t,
-    country: String.t | nil,
-    currency: String.t | nil,
-    customer: Stripe.id | Stripe.Customer.t | nil,
-    cvc_check: String.t | nil,
-    default_for_currency: boolean | nil,
-    dynamic_last4: String.t | nil,
-    exp_month: integer,
-    exp_year: integer,
-    fingerprint: String.t | nil,
-    funding: String.t,
-    last4: String.t,
-    metadata: Stripe.Types.metadata,
-    name: String.t | nil,
-    recipient: Stripe.id | Stripe.Recipient.t | nil,
-    tokenization_method: String.t | nil
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          account: Stripe.id() | Stripe.Account.t() | nil,
+          address_city: String.t() | nil,
+          address_country: String.t() | nil,
+          address_line1: String.t() | nil,
+          address_line1_check: String.t() | nil,
+          address_line2: String.t() | nil,
+          address_state: String.t() | nil,
+          address_zip: String.t() | nil,
+          address_zip_check: String.t() | nil,
+          available_payout_methods: list(String.t()) | nil,
+          brand: String.t(),
+          country: String.t() | nil,
+          currency: String.t() | nil,
+          customer: Stripe.id() | Stripe.Customer.t() | nil,
+          cvc_check: String.t() | nil,
+          default_for_currency: boolean | nil,
+          dynamic_last4: String.t() | nil,
+          exp_month: integer,
+          exp_year: integer,
+          fingerprint: String.t() | nil,
+          funding: String.t(),
+          last4: String.t(),
+          metadata: Stripe.Types.metadata(),
+          name: String.t() | nil,
+          recipient: Stripe.id() | Stripe.Recipient.t() | nil,
+          tokenization_method: String.t() | nil
+        }
 
   defstruct [
     :id,
@@ -98,7 +98,7 @@ defmodule Stripe.Card do
   If you want to create a card with your server without a token, you
   can use the low-level API.
   """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(map, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def create(%{customer: _, source: _} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(params |> plural_endpoint())
@@ -110,9 +110,10 @@ defmodule Stripe.Card do
   @doc """
   Retrieve a card.
   """
-  @spec retrieve(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
+
     new_request(opts)
     |> put_endpoint(endpoint <> "/#{get_id!(id)}")
     |> put_method(:get)
@@ -124,9 +125,10 @@ defmodule Stripe.Card do
 
   Takes the `id` and a map of changes
   """
-  @spec update(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec update(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def update(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
+
     new_request(opts)
     |> put_endpoint(endpoint <> "/#{get_id!(id)}")
     |> put_method(:post)
@@ -137,9 +139,10 @@ defmodule Stripe.Card do
   @doc """
   Delete a card.
   """
-  @spec delete(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec delete(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
+
     new_request(opts)
     |> put_endpoint(endpoint <> "/#{get_id!(id)}")
     |> put_method(:delete)
@@ -149,10 +152,11 @@ defmodule Stripe.Card do
   @doc """
   List all cards.
   """
-  @spec list(map, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(map, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
   def list(%{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
     params = params |> Map.put(:object, "card")
+
     new_request(opts)
     |> put_endpoint(endpoint)
     |> put_method(:get)
