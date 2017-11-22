@@ -6,6 +6,7 @@ defmodule Stripe.OrderReturn do
   """
 
   use Stripe.Entity
+  import Stripe.Request
 
   @type t :: %__MODULE__{
           id: Stripe.id(),
@@ -15,8 +16,8 @@ defmodule Stripe.OrderReturn do
           currency: String.t(),
           items: Stripe.List.of(Stripe.OrderItem.t()),
           livemode: boolean,
-          order: Stripe.id() | Stripe.Order.t(),
-          refund: Stripe.id() | Stripe.Refund.t()
+          order: Stripe.id() | Stripe.Order.t() | nil,
+          refund: Stripe.id() | Stripe.Refund.t() | nil
         }
 
   defstruct [
@@ -30,4 +31,28 @@ defmodule Stripe.OrderReturn do
     :order,
     :refund
   ]
+
+  @plural_endpoint "order_returns"
+
+  @doc """
+  Retrieve a return.
+  """
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def retrieve(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
+  end
+
+  @doc """
+  List all returns.
+  """
+  @spec list(Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  def list(opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:get)
+    |> make_request()
+  end
 end

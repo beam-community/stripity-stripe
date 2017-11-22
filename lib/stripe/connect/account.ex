@@ -20,6 +20,11 @@ defmodule Stripe.Account do
           cvc_failure: boolean
         }
 
+  @type keys :: %{
+          publishable: String.t(),
+          secret: String.t()
+        }
+
   @type legal_entity :: %{
           additional_owners: [legal_entity_additional_owner] | nil,
           address: legal_entity_address,
@@ -117,6 +122,7 @@ defmodule Stripe.Account do
           display_name: String.t() | nil,
           email: String.t() | nil,
           external_accounts: Stripe.List.of(Stripe.BankAccount.t() | Stripe.Card.t()),
+          keys: keys | nil,
           legal_entity: legal_entity,
           metadata: Stripe.Types.metdata(),
           payout_schedule: Stripe.Types.transfer_schedule(),
@@ -147,6 +153,7 @@ defmodule Stripe.Account do
     :display_name,
     :email,
     :external_accounts,
+    :keys,
     :legal_entity,
     :metadata,
     :payout_schedule,

@@ -10,7 +10,7 @@ defmodule Stripe.Discount do
   @type t :: %__MODULE__{
           object: String.t(),
           coupon: Stripe.Coupon.t(),
-          customer: Stripe.id(),
+          customer: Stripe.id() | Stripe.Customer.t() | nil,
           end: Stripe.timestamp() | nil,
           start: Stripe.timestamp(),
           subscription: Stripe.id() | nil
