@@ -14,27 +14,37 @@ defmodule Stripe.Connect.OAuth do
   alias Stripe.Converter
 
   @authorize_url_valid_keys [
-   :always_prompt,
-   :client_id,
-   :redirect_uri,
-   :response_type,
-   :scope,
-   :state,
-   :stripe_landing,
-   :stripe_user,
+    :always_prompt,
+    :client_id,
+    :redirect_uri,
+    :response_type,
+    :scope,
+    :state,
+    :stripe_landing,
+    :stripe_user
   ]
 
   defmodule AuthorizeResponse do
     defstruct [
-      :access_token, :livemode, :refresh_token, :scope, :stripe_user_id,
-      :stripe_publishable_key, :token_type
+      :access_token,
+      :livemode,
+      :refresh_token,
+      :scope,
+      :stripe_user_id,
+      :stripe_publishable_key,
+      :token_type
     ]
   end
 
   defmodule TokenResponse do
     defstruct [
-      :access_token, :livemode, :refresh_token, :scope, :stripe_user_id,
-      :stripe_publishable_key, :token_type
+      :access_token,
+      :livemode,
+      :refresh_token,
+      :scope,
+      :stripe_user_id,
+      :stripe_publishable_key,
+      :token_type
     ]
   end
 
@@ -62,7 +72,7 @@ defmodule Stripe.Connect.OAuth do
   }
   ```
   """
-  @spec token(String.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
+  @spec token(String.t()) :: {:ok, map} | {:error, Stripe.api_error_struct()}
   def token(code) do
     endpoint = "token"
 
@@ -73,9 +83,9 @@ defmodule Stripe.Connect.OAuth do
     }
 
     case Stripe.oauth_request(:post, endpoint, body) do
-       {:ok, result} -> {:ok, Converter.convert_result(result)}
-       {:error, error} -> {:error, error}
-     end
+      {:ok, result} -> {:ok, Converter.convert_result(result)}
+      {:error, error} -> {:error, error}
+    end
   end
 
   @doc """
@@ -89,9 +99,10 @@ defmodule Stripe.Connect.OAuth do
   ```
 
   """
-  @spec deauthorize(String.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
+  @spec deauthorize(String.t()) :: {:ok, map} | {:error, Stripe.api_error_struct()}
   def deauthorize(stripe_user_id) do
     endpoint = "deauthorize"
+
     body = %{
       client_id: get_client_id(),
       stripe_user_id: stripe_user_id
@@ -158,7 +169,7 @@ defmodule Stripe.Connect.OAuth do
   url = Stripe.Connect.OAuth.authorize_url(connect_opts)
   ```
   """
-  @spec authorize_url(map) :: String.t
+  @spec authorize_url(map) :: String.t()
   def authorize_url(options \\ %{}) do
     base_url = "https://connect.stripe.com/oauth/authorize?"
 
@@ -171,12 +182,12 @@ defmodule Stripe.Connect.OAuth do
     base_url <> param_string
   end
 
-  @spec get_client_id() :: String.t
+  @spec get_client_id() :: String.t()
   defp get_client_id() do
     Application.get_env(:stripity_stripe, :connect_client_id)
   end
 
-  @spec get_client_secret() :: String.t
+  @spec get_client_secret() :: String.t()
   defp get_client_secret() do
     Application.get_env(:stripity_stripe, :api_key)
   end
