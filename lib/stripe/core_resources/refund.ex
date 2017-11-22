@@ -13,22 +13,20 @@ defmodule Stripe.Refund do
   import Stripe.Request
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    amount: non_neg_integer,
-    balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
-    charge: Stripe.id | Stripe.Charge.t | nil,
-    created: Stripe.timestamp,
-    currency: String.t,
-    failure_balance_transaction: Stripe.id | Stripe.BalanceTransaction.t | nil,
-    failure_reason: String.t | nil,
-    metadata: %{
-      optional(String.t) => String.t
-    },
-    reason: String.t | nil,
-    receipt_number: String.t | nil,
-    status: String.t | nil
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          amount: non_neg_integer,
+          balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
+          charge: Stripe.id() | Stripe.Charge.t() | nil,
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          failure_balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
+          failure_reason: String.t() | nil,
+          metadata: Stripe.Types.metadata(),
+          reason: String.t() | nil,
+          receipt_number: String.t() | nil,
+          status: String.t() | nil
+        }
 
   defstruct [
     :id,
@@ -66,15 +64,12 @@ defmodule Stripe.Refund do
 
   See the [Stripe docs](https://stripe.com/docs/api#create_refund).
   """
-  @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               charge: Stripe.Charge.t | Stripe.id,
+               charge: Stripe.Charge.t() | Stripe.id(),
                amount: pos_integer,
-               metadata: %{
-                 optional(String.t) => String.t,
-                 optional(atom) => String.t
-               },
-               reason: String.t,
+               metadata: Stripe.Types.metadata(),
+               reason: String.t(),
                refund_application_fee: boolean,
                reverse_transfer: boolean
              }
@@ -94,7 +89,7 @@ defmodule Stripe.Refund do
 
   See the [Stripe docs](https://stripe.com/docs/api#retrieve_refund).
   """
-  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -112,12 +107,9 @@ defmodule Stripe.Refund do
 
   See the [Stripe docs](https://stripe.com/docs/api#update_refund).
   """
-  @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               metadata: %{
-                 optional(String.t) => String.t,
-                 optional(atom) => String.t
-               }
+               metadata: Stripe.Types.metadata()
              }
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -137,12 +129,12 @@ defmodule Stripe.Refund do
 
   See the [Stripe docs](https://stripe.com/docs/api#list_refunds).
   """
-  @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               charge: Stripe.id | Stripe.Charge.t,
-               ending_before: Stripe.id | t,
+               charge: Stripe.id() | Stripe.Charge.t(),
+               ending_before: Stripe.id() | t,
                limit: 1..100,
-               starting_after: Stripe.id | t
+               starting_after: Stripe.id() | t
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
