@@ -8,21 +8,21 @@ defmodule Stripe.ApplicationFee do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               account: Stripe.id | Stripe.Account.t,
-               amount: integer,
-               amount_refunded: integer,
-               application: Stripe.id | Stripe.Application.t,
-               balance_transaction: Stripe.id | Stripe.BalanceTransaction.t,
-               charge: Stripe.id | Stripe.Charge.t,
-               created: Stripe.timestamp,
-               currency: String.t,
-               livemode: boolean,
-               originating_transaction: Stripe.id | Stripe.Charge.t,
-               refunded: boolean,
-               refunds: Stripe.List.of(Stripe.FeeRefund.t)
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          account: Stripe.id() | Stripe.Account.t(),
+          amount: integer,
+          amount_refunded: integer,
+          application: Stripe.id() | Stripe.Application.t(),
+          balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t(),
+          charge: Stripe.id() | Stripe.Charge.t(),
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          livemode: boolean,
+          originating_transaction: Stripe.id() | Stripe.Charge.t(),
+          refunded: boolean,
+          refunds: Stripe.List.of(Stripe.FeeRefund.t())
+        }
 
   defstruct [
     :id,
