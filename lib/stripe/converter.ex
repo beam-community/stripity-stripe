@@ -27,6 +27,7 @@ defmodule Stripe.Converter do
     line_item
     list
     oauth
+    order_return
     payout
     plan
     refund

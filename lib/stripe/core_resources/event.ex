@@ -13,9 +13,31 @@ defmodule Stripe.Event do
   import Stripe.Request
 
   @type event_data :: %{
-          object: map,
+          object: event_data_object,
           previous_attributes: map
         }
+
+  # TODO: add Scheduled query run
+  @type event_data_object ::
+          Stripe.Account.t()
+          | Stripe.ApplicationFee.t()
+          | Stripe.Charge.t()
+          | Stripe.Coupon.t()
+          | Stripe.Customer.t()
+          | Stripe.File.t()
+          | Stripe.Invoice.t()
+          | Stripe.Invoiceitem.t()
+          | Stripe.Order.t()
+          | Stripe.OrderReturn.t()
+          | Stripe.Payout.t()
+          | Stripe.Plan.t()
+          | Stripe.Product.t()
+          | Stripe.Recipient.t()
+          | Stripe.Review.t()
+          | Stripe.SKU.t()
+          | Stripe.Source.t()
+          | Stripe.Transfer.t()
+          | map
 
   @type event_request :: %{
           id: String.t() | nil,
