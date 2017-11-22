@@ -8,14 +8,14 @@ defmodule Stripe.OrderItem do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               object: String.t,
-               amount: pos_integer,
-               currency: String.t,
-               description: String.t,
-               parent: nil | Stripe.id | Stripe.SKU.t,
-               quantity: nil | pos_integer,
-               type: String.t
-             }
+          object: String.t(),
+          amount: pos_integer,
+          currency: String.t(),
+          description: String.t(),
+          parent: nil | Stripe.id() | Stripe.SKU.t(),
+          quantity: nil | pos_integer,
+          type: String.t()
+        }
 
   defstruct [
     :object,
