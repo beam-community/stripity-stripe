@@ -4,7 +4,7 @@ defmodule Stripe.UtilTest do
   import Stripe.Util
 
   describe "object_name_to_module/1" do
-  	test "converts all object names to their proper modules" do
+    test "converts all object names to their proper modules" do
       assert object_name_to_module("account") == Stripe.Account
       assert object_name_to_module("bank_account") == Stripe.BankAccount
       assert object_name_to_module("card") == Stripe.Card
