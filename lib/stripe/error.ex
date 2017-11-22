@@ -225,7 +225,7 @@ defmodule Stripe.Error do
   defp message_from_type(:validation_error),
     do: "A client-side library failed to validate a field."
 
-  defp maybe_put(map, key, nil), do: map
+  defp maybe_put(map, _key, nil), do: map
   defp maybe_put(map, key, value), do: map |> Map.put(key, value)
 
   defp maybe_to_atom(nil), do: nil
