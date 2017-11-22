@@ -60,6 +60,11 @@ defmodule Stripe.Util do
     Module.concat("Stripe", module_name)
   end
 
+  @spec module_to_string(module) :: String.t()
+  def module_to_string(module) do
+    module |> Atom.to_string() |> String.trim_leading("Elixir.")
+  end
+
   def normalize_id(%{id: id}) when id !== nil, do: id
   def normalize_id(id) when is_binary(id), do: id
 

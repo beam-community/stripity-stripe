@@ -9,6 +9,7 @@ Logger.configure(level: :info)
 Process.sleep(250)
 Application.put_env(:stripity_stripe, :api_base_url, "http://localhost:12123/v1/")
 Application.put_env(:stripity_stripe, :api_key, "sk_test_123")
+Application.put_env(:stripity_stripe, :log_level, :debug)
 
 defmodule Helper do
   @fixture_path "./test/fixtures/"
