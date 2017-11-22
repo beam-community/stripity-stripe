@@ -6,14 +6,14 @@ defmodule Stripe.ConverterTest do
   test "converts a 'customer.updated' event response properly" do
     expected_result = %Stripe.Event{
       api_version: "2016-07-06",
-      created: 1483537031,
+      created: 1_483_537_031,
       data: %{
         object: %Stripe.Customer{
           id: "cus_9ryX7lUQ4Dcpf7",
           object: "customer",
           account_balance: 0,
           business_vat_id: nil,
-          created: 1483535628,
+          created: 1_483_535_628,
           currency: nil,
           default_source: nil,
           delinquent: false,
@@ -126,7 +126,7 @@ defmodule Stripe.ConverterTest do
       id: "cus_9ryX7lUQ4Dcpf7",
       object: "customer",
       account_balance: 0,
-      created: 1483535628,
+      created: 1_483_535_628,
       currency: "usd",
       default_source: nil,
       delinquent: false,

@@ -53,20 +53,23 @@ defmodule Stripe.EntityTest do
         bar: "abc"
       }
     }
+
     expected = %{
       foo: %{
         bar: :abc
       }
     }
+
     assert cast_path(map, [:foo], &cast_to_atom(&1, :bar)) == expected
 
     map = %{
       foo: nil
     }
+
     expected = %{
       foo: nil
     }
+
     assert cast_path(map, [:foo, :bar], &cast_to_atom(&1, :baz)) == expected
   end
-
 end

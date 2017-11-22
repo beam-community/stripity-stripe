@@ -10,7 +10,10 @@ defmodule Stripe.ErrorTest do
       error = Error.from_stripe_error(400, nil, "id")
       assert error.code == :bad_request
       assert error.extra.http_status == 400
-      assert error.message == "The request was unacceptable, often due to missing a required parameter."
+
+      message = "The request was unacceptable, often due to missing a required parameter."
+      assert error.message == message
+
       assert error.request_id == "id"
       assert error.source == :stripe
       assert error.user_message == nil
