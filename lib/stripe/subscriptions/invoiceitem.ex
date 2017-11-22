@@ -11,27 +11,27 @@ defmodule Stripe.Invoiceitem do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: integer,
-               currency: String.t,
-               customer: Stripe.id | Stripe.Customer.t,
-               date: Stripe.timestamp,
-               description: String.t,
-               discountable: boolean,
-               invoice: Stripe.id | Stripe.Invoice.t,
-               livemode: boolean,
-               metadata: Stripe.Types.metadata,
-               period: %{
-                 start: Stripe.timestamp,
-                 end: Stripe.timestamp
-               },
-               plan: Stripe.Plan.t | nil,
-               proration: boolean,
-               quantity: integer,
-               subscription: Stripe.id | Stripe.Subscription.t | nil,
-               subscription_item: Stripe.id | Stripe.SubscriptionItem.t | nil
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          amount: integer,
+          currency: String.t(),
+          customer: Stripe.id() | Stripe.Customer.t(),
+          date: Stripe.timestamp(),
+          description: String.t(),
+          discountable: boolean,
+          invoice: Stripe.id() | Stripe.Invoice.t(),
+          livemode: boolean,
+          metadata: Stripe.Types.metadata(),
+          period: %{
+            start: Stripe.timestamp(),
+            end: Stripe.timestamp()
+          },
+          plan: Stripe.Plan.t() | nil,
+          proration: boolean,
+          quantity: integer,
+          subscription: Stripe.id() | Stripe.Subscription.t() | nil,
+          subscription_item: Stripe.id() | Stripe.SubscriptionItem.t() | nil
+        }
 
   defstruct [
     :id,

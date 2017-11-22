@@ -8,13 +8,13 @@ defmodule Stripe.Discount do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               object: String.t,
-               coupon: Stripe.Coupon.t,
-               customer: Stripe.id,
-               end: Stripe.timestamp | nil,
-               start: Stripe.timestamp,
-               subscription: Stripe.id | nil
-             }
+          object: String.t(),
+          coupon: Stripe.Coupon.t(),
+          customer: Stripe.id(),
+          end: Stripe.timestamp() | nil,
+          start: Stripe.timestamp(),
+          subscription: Stripe.id() | nil
+        }
 
   defstruct [
     :object,
