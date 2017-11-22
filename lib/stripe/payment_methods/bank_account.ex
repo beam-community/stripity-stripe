@@ -9,22 +9,22 @@ defmodule Stripe.BankAccount do
   import Stripe.Request
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    account: Stripe.id | Stripe.Account.t | nil,
-    account_holder_name: String.t | nil,
-    account_holder_type: String.t | nil,
-    bank_name: String.t | nil,
-    country: String.t,
-    currency: String.t,
-    customer: Stripe.id | Stripe.Customer.t | nil,
-    default_for_currency: boolean | nil,
-    fingerprint: String.t | nil,
-    last4: String.t,
-    metadata: Stripe.Types.metadata | nil,
-    routing_number: String.t | nil,
-    status: String.t
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          account: Stripe.id() | Stripe.Account.t() | nil,
+          account_holder_name: String.t() | nil,
+          account_holder_type: String.t() | nil,
+          bank_name: String.t() | nil,
+          country: String.t(),
+          currency: String.t(),
+          customer: Stripe.id() | Stripe.Customer.t() | nil,
+          default_for_currency: boolean | nil,
+          fingerprint: String.t() | nil,
+          last4: String.t(),
+          metadata: Stripe.Types.metadata() | nil,
+          routing_number: String.t() | nil,
+          status: String.t()
+        }
 
   defstruct [
     :id,
@@ -51,7 +51,7 @@ defmodule Stripe.BankAccount do
   @doc """
   Create a bank account.
   """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(map, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def create(%{customer: _, source: _} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(params |> plural_endpoint())
@@ -63,9 +63,10 @@ defmodule Stripe.BankAccount do
   @doc """
   Retrieve a bank account.
   """
-  @spec retrieve(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
+
     new_request(opts)
     |> put_endpoint(endpoint <> "/#{get_id!(id)}")
     |> put_method(:get)
@@ -75,9 +76,10 @@ defmodule Stripe.BankAccount do
   @doc """
   Update a bank account.
   """
-  @spec update(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec update(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def update(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
+
     new_request(opts)
     |> put_endpoint(endpoint <> "/#{get_id!(id)}")
     |> put_method(:post)
@@ -88,9 +90,10 @@ defmodule Stripe.BankAccount do
   @doc """
   Delete a bank account.
   """
-  @spec delete(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec delete(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
+
     new_request(opts)
     |> put_endpoint(endpoint <> "/#{get_id!(id)}")
     |> put_method(:delete)
@@ -100,9 +103,10 @@ defmodule Stripe.BankAccount do
   @doc """
   Verify a bank account.
   """
-  @spec verify(Stripe.id | t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec verify(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def verify(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
+
     new_request(opts)
     |> put_endpoint(endpoint <> "/#{get_id!(id)}/verify")
     |> put_method(:post)
@@ -113,10 +117,11 @@ defmodule Stripe.BankAccount do
   @doc """
   List all bank accounts.
   """
-  @spec list(map, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(map, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
   def list(%{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
     params = params |> Map.put(:object, "card")
+
     new_request(opts)
     |> put_endpoint(endpoint)
     |> put_method(:get)
