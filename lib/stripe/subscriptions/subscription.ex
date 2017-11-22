@@ -16,28 +16,28 @@ defmodule Stripe.Subscription do
   import Stripe.Request
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    application_fee_percent: float | nil,
-    cancel_at_period_end: boolean,
-    canceled_at: Stripe.timestamp | nil,
-    created: Stripe.timestamp,
-    current_period_end: Stripe.timestamp | nil,
-    current_period_start: Stripe.timestamp | nil,
-    customer: Stripe.id | Stripe.Customer.t,
-    discount: Stripe.Discount.t | nil,
-    ended_at: Stripe.timestamp | nil,
-    items: Stripe.List.of(Stripe.SubscriptionItem.t),
-    livemode: boolean,
-    metadata: Stripe.Types.metadata,
-    plan: Stripe.Plan.t | nil,
-    quantity: integer | nil,
-    start: Stripe.timestamp,
-    status: String.t,
-    tax_percent: float | nil,
-    trial_end: Stripe.timestamp | nil,
-    trial_start: Stripe.timestamp | nil
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          application_fee_percent: float | nil,
+          cancel_at_period_end: boolean,
+          canceled_at: Stripe.timestamp() | nil,
+          created: Stripe.timestamp(),
+          current_period_end: Stripe.timestamp() | nil,
+          current_period_start: Stripe.timestamp() | nil,
+          customer: Stripe.id() | Stripe.Customer.t(),
+          discount: Stripe.Discount.t() | nil,
+          ended_at: Stripe.timestamp() | nil,
+          items: Stripe.List.of(Stripe.SubscriptionItem.t()),
+          livemode: boolean,
+          metadata: Stripe.Types.metadata(),
+          plan: Stripe.Plan.t() | nil,
+          quantity: integer | nil,
+          start: Stripe.timestamp(),
+          status: String.t(),
+          tax_percent: float | nil,
+          trial_end: Stripe.timestamp() | nil,
+          trial_start: Stripe.timestamp() | nil
+        }
 
   defstruct [
     :id,
@@ -68,19 +68,19 @@ defmodule Stripe.Subscription do
   @doc """
   Create a subscription.
   """
-  @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                application_fee_percent: float,
-               coupon: Stripe.id | Stripe.Coupon.t,
+               coupon: Stripe.id() | Stripe.Coupon.t(),
                items: [
                  %{
-                   :plan => Stripe.id | Stripe.Plan.t,
+                   :plan => Stripe.id() | Stripe.Plan.t(),
                    optional(:quantity) => non_neg_integer
                  }
                ],
-               metadata: Stripe.Types.metadata,
+               metadata: Stripe.Types.metadata(),
                tax_percent: float,
-               trial_end: Stripe.timestamp,
+               trial_end: Stripe.timestamp(),
                trial_period_days: non_neg_integer
              }
   def create(params, opts \\ []) do
@@ -95,7 +95,7 @@ defmodule Stripe.Subscription do
   @doc """
   Retrieve a subscription.
   """
-  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -108,22 +108,22 @@ defmodule Stripe.Subscription do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                application_fee_percent: float,
-               coupon: Stripe.id | Stripe.Coupon.t,
+               coupon: Stripe.id() | Stripe.Coupon.t(),
                items: [
                  %{
-                   :plan => Stripe.id | Stripe.Plan.t,
+                   :plan => Stripe.id() | Stripe.Plan.t(),
                    optional(:quantity) => non_neg_integer
                  }
                ],
-               metadata: Stripe.Types.metadata,
+               metadata: Stripe.Types.metadata(),
                prorate: boolean,
-               proration_date: Stripe.timestamp,
-               source: Stripe.id | Stripe.Source.t,
+               proration_date: Stripe.timestamp(),
+               source: Stripe.id() | Stripe.Source.t(),
                tax_percent: float,
-               trial_end: Stripe.timestamp
+               trial_end: Stripe.timestamp()
              }
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -139,7 +139,7 @@ defmodule Stripe.Subscription do
 
   Takes the `id` and an optional map of `params`.
   """
-  @spec delete(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -150,15 +150,15 @@ defmodule Stripe.Subscription do
   @doc """
   List all subscriptions.
   """
-  @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query,
-               customer: Stripe.Customer.t | Stripe.id,
-               ending_before: t | Stripe.id,
+               created: Stripe.date_query(),
+               customer: Stripe.Customer.t() | Stripe.id(),
+               ending_before: t | Stripe.id(),
                limit: 1..100,
-               plan: Stripe.Plan.t | Stripe.id,
-               starting_after: t | Stripe.id,
-               status: String.t
+               plan: Stripe.Plan.t() | Stripe.id(),
+               starting_after: t | Stripe.id(),
+               status: String.t()
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
@@ -172,7 +172,8 @@ defmodule Stripe.Subscription do
   @doc """
   Deletes the discount on a subscription.
   """
-  @spec delete_discount(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec delete_discount(Stripe.id() | t, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
   def delete_discount(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/discount")

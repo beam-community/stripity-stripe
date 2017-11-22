@@ -8,13 +8,13 @@ defmodule Stripe.SubscriptionItem do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    created: Stripe.timestamp,
-    metadata: Stripe.Types.metadata,
-    plan: Stripe.Plan.t,
-    quantity: non_neg_integer
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          created: Stripe.timestamp(),
+          metadata: Stripe.Types.metadata(),
+          plan: Stripe.Plan.t(),
+          quantity: non_neg_integer
+        }
 
   defstruct [
     :id,
