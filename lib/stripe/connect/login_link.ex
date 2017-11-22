@@ -7,10 +7,10 @@ defmodule Stripe.LoginLink do
   import Stripe.Request
 
   @type t :: %__MODULE__{
-    object: String.t,
-    created: Stripe.timestamp,
-    url: String.t
-  }
+          object: String.t(),
+          created: Stripe.timestamp(),
+          url: String.t()
+        }
 
   defstruct [
     :object,
@@ -18,7 +18,8 @@ defmodule Stripe.LoginLink do
     :url
   ]
 
-  @spec create(Stripe.id | Stripe.Account.t, map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(Stripe.id() | Stripe.Account.t(), map, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
   def create(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint("accounts/#{get_id!(id)}")
