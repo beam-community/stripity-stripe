@@ -11,20 +11,21 @@ defmodule Stripe.BalanceTransaction do
   import Stripe.Request
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    amount: integer,
-    available_on: Stripe.timestamp,
-    created: Stripe.timestamp,
-    currency: String.t,
-    description: String.t | nil,
-    fee: integer,
-    fee_details: list(Stripe.Types.fee) | [],
-    net: integer,
-    source: Stripe.id | Stripe.Source.t | nil, # TODO: clarify these
-    status: String.t,
-    type: String.t
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          amount: integer,
+          available_on: Stripe.timestamp(),
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          description: String.t() | nil,
+          fee: integer,
+          fee_details: list(Stripe.Types.fee()) | [],
+          net: integer,
+          # TODO: clarify these
+          source: Stripe.id() | Stripe.Source.t() | nil,
+          status: String.t(),
+          type: String.t()
+        }
 
   defstruct [
     :id,
@@ -51,7 +52,7 @@ defmodule Stripe.BalanceTransaction do
 
   See the [Stripe docs](https://stripe.com/docs/api#balance_transaction_retrieve).
   """
-  @spec retrieve(Stripe.id, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id(), Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@endpoint <> "/#{id}")
@@ -68,17 +69,17 @@ defmodule Stripe.BalanceTransaction do
   See `t:Stripe.BalanceTransaction.All.t/0` or the
   [Stripe docs](https://stripe.com/docs/api#balance_history) for parameter structure.
   """
-  @spec all(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec all(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               available_on: Stripe.date_query | nil,
-               created: Stripe.date_query | nil,
-               currency: String.t | nil,
-               ending_before: Stripe.id | Stripe.BalanceTransaction.t | nil,
+               available_on: Stripe.date_query() | nil,
+               created: Stripe.date_query() | nil,
+               currency: String.t() | nil,
+               ending_before: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
                limit: 1..100 | nil,
-               payout: Stripe.id | Stripe.Payout.t | nil,
-               source: Stripe.id | Stripe.Source.t | nil,
-               starting_after: Stripe.id | Stripe.BalanceTransaction.t | nil,
-               type: String.t | nil
+               payout: Stripe.id() | Stripe.Payout.t() | nil,
+               source: Stripe.id() | Stripe.Source.t() | nil,
+               starting_after: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
+               type: String.t() | nil
              }
   def all(params \\ %{}, opts \\ []) do
     new_request(opts)
