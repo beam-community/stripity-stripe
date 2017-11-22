@@ -8,16 +8,16 @@ defmodule Stripe.TransferReversal do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: integer,
-               balance_transaction: String.t | Stripe.BalanceTransaction.t,
-               created: Stripe.timestamp,
-               currency: String.t,
-               description: boolean,
-               metadata: Stripe.Types.metadata,
-               transfer: String.id | Stripe.Transfer.t
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          amount: integer,
+          balance_transaction: String.t() | Stripe.BalanceTransaction.t(),
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          description: boolean,
+          metadata: Stripe.Types.metadata(),
+          transfer: String.id() | Stripe.Transfer.t()
+        }
 
   defstruct [
     :id,
