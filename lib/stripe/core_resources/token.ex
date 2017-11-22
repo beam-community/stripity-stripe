@@ -16,56 +16,56 @@ defmodule Stripe.Token do
   import Stripe.Request
 
   @type token_bank_account :: %{
-    id: Stripe.id,
-    object: String.t,
-    account_holder_name: String.t | nil,
-    account_holder_type: Stripe.BankAccount.account_holder_type | nil,
-    bank_name: String.t | nil,
-    country: String.t,
-    currency: String.t,
-    fingerprint: String.t | nil,
-    last4: String.t,
-    routing_number: String.t | nil,
-    status: Stripe.BankAccount.status
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          account_holder_name: String.t() | nil,
+          account_holder_type: Stripe.BankAccount.account_holder_type() | nil,
+          bank_name: String.t() | nil,
+          country: String.t(),
+          currency: String.t(),
+          fingerprint: String.t() | nil,
+          last4: String.t(),
+          routing_number: String.t() | nil,
+          status: Stripe.BankAccount.status()
+        }
 
   @type token_card :: %{
-    id: Stripe.id,
-    object: String.t,
-    address_city: String.t | nil,
-    address_country: String.t | nil,
-    address_line1: String.t | nil,
-    address_line1_check: Stripe.Card.check_result | nil,
-    address_line2: String.t | nil,
-    address_state: String.t | nil,
-    address_zip: String.t | nil,
-    address_zip_check: Stripe.Card.check_result | nil,
-    brand: String.t,
-    country: String.t | nil,
-    currency: String.t,
-    cvc_check: Stripe.Card.check_result | nil,
-    dynamic_last4: String.t | nil,
-    exp_month: integer,
-    exp_year: integer,
-    fingerprint: String.t | nil,
-    funding: Stripe.Card.funding,
-    last4: String.t,
-    metadata: Stripe.Types.metadata,
-    name: String.t | nil,
-    tokenization_method: Stripe.Card.tokenization_method | nil
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          address_city: String.t() | nil,
+          address_country: String.t() | nil,
+          address_line1: String.t() | nil,
+          address_line1_check: Stripe.Card.check_result() | nil,
+          address_line2: String.t() | nil,
+          address_state: String.t() | nil,
+          address_zip: String.t() | nil,
+          address_zip_check: Stripe.Card.check_result() | nil,
+          brand: String.t(),
+          country: String.t() | nil,
+          currency: String.t(),
+          cvc_check: Stripe.Card.check_result() | nil,
+          dynamic_last4: String.t() | nil,
+          exp_month: integer,
+          exp_year: integer,
+          fingerprint: String.t() | nil,
+          funding: Stripe.Card.funding(),
+          last4: String.t(),
+          metadata: Stripe.Types.metadata(),
+          name: String.t() | nil,
+          tokenization_method: Stripe.Card.tokenization_method() | nil
+        }
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    bank_account: token_bank_account | nil,
-    card: token_card | nil,
-    client_ip: String.t | nil,
-    created: Stripe.timestamp,
-    livemode: boolean,
-    type: String.t,
-    used: boolean
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          bank_account: token_bank_account | nil,
+          card: token_card | nil,
+          client_ip: String.t() | nil,
+          created: Stripe.timestamp(),
+          livemode: boolean,
+          type: String.t(),
+          used: boolean
+        }
 
   defstruct [
     :id,
@@ -90,7 +90,7 @@ defmodule Stripe.Token do
   In most cases, you should create tokens client-side using Checkout, Elements,
   or Stripe's mobile libraries, instead of using the API.
   """
-  @spec create(map, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -102,7 +102,7 @@ defmodule Stripe.Token do
   @doc """
   Retrieve a token.
   """
-  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
