@@ -6,6 +6,7 @@ defmodule Stripe.Mixfile do
       app: :stripity_stripe,
       deps: deps(),
       description: description(),
+      dialyzer: [plt_add_apps: [:mix]],
       elixir: "~> 1.3",
       package: package(),
       elixirc_paths: elixirc_paths(Mix.env()),
