@@ -77,10 +77,10 @@ defmodule Stripe.Plan do
                amount: non_neg_integer,
                currency: String.t(),
                interval: String.t(),
-               interval_count: pos_integer,
-               metadata: Stripe.Types.metadata(),
+               interval_count: pos_integer | nil,
+               metadata: Stripe.Types.metadata() | nil,
                name: String.t(),
-               statement_descriptor: String.t()
+               statement_descriptor: String.t() | nil
              } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
@@ -108,11 +108,9 @@ defmodule Stripe.Plan do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               metadata: %{
-                 optional(String.t()) => String.t()
-               },
-               name: String.t(),
-               statement_descriptor: String.t()
+               metadata: Stripe.Types.metadata() | nil,
+               name: String.t() | nil,
+               statement_descriptor: String.t() | nil
              } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -138,10 +136,10 @@ defmodule Stripe.Plan do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query(),
-               ending_before: t | Stripe.id(),
-               limit: 1..100,
-               starting_after: t | Stripe.id()
+               created: Stripe.date_query() | nil,
+               ending_before: t | Stripe.id() | nil,
+               limit: 1..100 | nil,
+               starting_after: t | Stripe.id() | nil
              } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
