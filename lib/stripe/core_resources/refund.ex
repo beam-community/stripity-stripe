@@ -72,7 +72,7 @@ defmodule Stripe.Refund do
                reason: String.t(),
                refund_application_fee: boolean,
                reverse_transfer: boolean
-             }
+             } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -110,7 +110,7 @@ defmodule Stripe.Refund do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                metadata: Stripe.Types.metadata()
-             }
+             } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -135,7 +135,7 @@ defmodule Stripe.Refund do
                ending_before: Stripe.id() | t,
                limit: 1..100,
                starting_after: Stripe.id() | t
-             }
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

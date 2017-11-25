@@ -75,7 +75,7 @@ defmodule Stripe.Payout do
                metadata: map,
                source_type: String.t(),
                statement_descriptor: String.t()
-             }
+             } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -115,7 +115,7 @@ defmodule Stripe.Payout do
                  optional(String.t()) => String.t(),
                  optional(atom) => String.t()
                }
-             }
+             } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -141,7 +141,7 @@ defmodule Stripe.Payout do
                limit: 1..100,
                starting_after: t | Stripe.id(),
                status: String.t()
-             }
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

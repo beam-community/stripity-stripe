@@ -70,7 +70,7 @@ defmodule Stripe.Customer do
                metadata: Stripe.Types.metadata(),
                shipping: Stripe.Types.shipping() | nil,
                source: Stripe.Source.t() | nil
-             }
+             } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -105,7 +105,7 @@ defmodule Stripe.Customer do
                metadata: Stripe.Types.metadata(),
                shipping: Stripe.Types.shipping() | nil,
                source: Stripe.Source.t() | nil
-             }
+             } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -133,7 +133,7 @@ defmodule Stripe.Customer do
                ending_before: t | Stripe.id() | nil,
                limit: 1..100 | nil,
                starting_after: t | Stripe.id() | nil
-             }
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

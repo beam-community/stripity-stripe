@@ -66,7 +66,7 @@ defmodule Stripe.Coupon do
                metadata: Stripe.Types.metadata(),
                percent_off: pos_integer,
                redeem_by: Stripe.timestamp()
-             }
+             } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -95,7 +95,7 @@ defmodule Stripe.Coupon do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                metadata: Stripe.Types.metadata()
-             }
+             } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -124,7 +124,7 @@ defmodule Stripe.Coupon do
                ending_before: t | Stripe.id(),
                limit: 1..100,
                starting_after: t | Stripe.id()
-             }
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

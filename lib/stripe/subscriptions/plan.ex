@@ -81,7 +81,7 @@ defmodule Stripe.Plan do
                metadata: Stripe.Types.metadata(),
                name: String.t(),
                statement_descriptor: String.t()
-             }
+             } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -113,7 +113,7 @@ defmodule Stripe.Plan do
                },
                name: String.t(),
                statement_descriptor: String.t()
-             }
+             } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -142,7 +142,7 @@ defmodule Stripe.Plan do
                ending_before: t | Stripe.id(),
                limit: 1..100,
                starting_after: t | Stripe.id()
-             }
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

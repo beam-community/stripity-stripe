@@ -43,20 +43,20 @@ defmodule Stripe.Source do
         }
 
   @type card :: %{
-          address_line1_check: Stripe.Card.check_result() | nil,
-          address_zip_check: Stripe.Card.check_result() | nil,
+          address_line1_check: String.t() | nil,
+          address_zip_check: String.t() | nil,
           brand: String.t() | nil,
           country: String.t() | nil,
-          cvc_check: Stripe.Card.check_result() | nil,
+          cvc_check: String.t() | nil,
           dynamic_last4: String.t() | nil,
           exp_month: integer | nil,
           exp_year: integer | nil,
           fingerprint: String.t(),
-          funding: Stripe.Card.funding() | nil,
+          funding: String.t() | nil,
           last4: String.t() | nil,
           skip_validation: boolean,
           three_d_secure: String.t(),
-          tokenization_method: Stripe.Card.tokenization_method() | nil
+          tokenization_method: String.t() | nil
         }
 
   @type code_verification_flow :: %{

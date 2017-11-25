@@ -16,7 +16,7 @@ defmodule Stripe.TransferReversal do
           currency: String.t(),
           description: boolean,
           metadata: Stripe.Types.metadata(),
-          transfer: String.id() | Stripe.Transfer.t()
+          transfer: Stripe.id() | Stripe.Transfer.t()
         }
 
   defstruct [

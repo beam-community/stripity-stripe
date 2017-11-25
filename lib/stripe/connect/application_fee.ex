@@ -13,7 +13,7 @@ defmodule Stripe.ApplicationFee do
           account: Stripe.id() | Stripe.Account.t(),
           amount: integer,
           amount_refunded: integer,
-          application: Stripe.id() | Stripe.Application.t(),
+          application: Stripe.id(),
           balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t(),
           charge: Stripe.id() | Stripe.Charge.t(),
           created: Stripe.timestamp(),
