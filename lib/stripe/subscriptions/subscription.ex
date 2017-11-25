@@ -70,8 +70,11 @@ defmodule Stripe.Subscription do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
+               customer: Stripe.id() | Stripe.Customer.t(),
                application_fee_percent: float | nil,
+               billing: String.t() | nil,
                coupon: Stripe.id() | Stripe.Coupon.t() | nil,
+               days_until_due: non_neg_integer | nil,
                items: [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
@@ -84,12 +87,12 @@ defmodule Stripe.Subscription do
                trial_end: Stripe.timestamp() | nil,
                trial_period_days: non_neg_integer | nil
              }
-  def create(params, opts \\ []) do
+  def create(%{customer: _} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
-    |> cast_to_id([:coupon])
+    |> cast_to_id([:coupon, :customer, :source])
     |> make_request()
   end
 
