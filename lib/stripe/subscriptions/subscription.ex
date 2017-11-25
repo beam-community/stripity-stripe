@@ -124,7 +124,7 @@ defmodule Stripe.Subscription do
                source: Stripe.id() | Stripe.Source.t(),
                tax_percent: float,
                trial_end: Stripe.timestamp()
-             }
+             } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -159,7 +159,7 @@ defmodule Stripe.Subscription do
                plan: Stripe.Plan.t() | Stripe.id(),
                starting_after: t | Stripe.id(),
                status: String.t()
-             }
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

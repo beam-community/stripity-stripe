@@ -14,15 +14,15 @@ defmodule Stripe.Request do
   At a minimum, a request must have the endpoint and method specified to be
   valid.
   """
-  alias Stripe.{API, Request, Converter}
+  alias Stripe.{API, Converter, Request}
 
-  @opaque t :: %__MODULE__{
-            opts: Keyword.t(),
-            endpoint: String.t() | (map -> String.t()),
-            method: Stripe.API.method(),
-            params: %{optional(atom) => any},
-            cast_to_id: MapSet.t(atom)
-          }
+  @type t :: %__MODULE__{
+          cast_to_id: MapSet.t(),
+          endpoint: String.t() | nil,
+          method: Stripe.API.method() | nil,
+          opts: Keyword.t() | nil,
+          params: map
+        }
 
   @type error_code ::
           :endpoint_fun_invalid_result
@@ -52,7 +52,7 @@ defmodule Stripe.Request do
   before the request is made so the actual parameters can be specified after
   the endpoint.
   """
-  @spec put_endpoint(t, String.t() | (map -> String.t())) :: t
+  @spec put_endpoint(t, String.t()) :: t
   def put_endpoint(%Request{} = request, endpoint) do
     %{request | endpoint: endpoint}
   end

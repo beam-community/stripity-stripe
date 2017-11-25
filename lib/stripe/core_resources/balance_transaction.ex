@@ -80,7 +80,7 @@ defmodule Stripe.BalanceTransaction do
                source: Stripe.id() | Stripe.Source.t() | nil,
                starting_after: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
                type: String.t() | nil
-             }
+             } | %{}
   def all(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@endpoint)

@@ -101,7 +101,7 @@ defmodule Stripe.Invoice do
                statement_descriptor: String.t(),
                subscription: Stripe.id() | Stripe.Subscription.t(),
                tax_percent: integer | nil
-             }
+             } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -138,7 +138,7 @@ defmodule Stripe.Invoice do
                },
                statement_descriptor: String.t(),
                tax_percent: integer | nil
-             }
+             } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -170,7 +170,7 @@ defmodule Stripe.Invoice do
                limit: 1..100,
                starting_after: t | Stripe.id(),
                subscription: Stripe.Subscription.t() | Stripe.id()
-             }
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -186,7 +186,7 @@ defmodule Stripe.Invoice do
   @spec pay(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                source: Stripe.id() | Stripe.Source.t() | nil
-             }
+             } | %{}
   def pay(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/pay")

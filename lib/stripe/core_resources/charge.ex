@@ -26,9 +26,15 @@ defmodule Stripe.Charge do
           network_status: String.t() | nil,
           reason: String.t() | nil,
           risk_level: String.t(),
-          rule: Stripe.id() | Stripe.Rule.t(),
+          rule: Stripe.id() | charge_outcome_rule,
           seller_message: String.t() | nil,
           type: String.t()
+        }
+
+  @type charge_outcome_rule :: %{
+          action: String.t(),
+          id: String.t(),
+          predicate: String.t()
         }
 
   @type card_info :: %{
@@ -51,7 +57,7 @@ defmodule Stripe.Charge do
           object: String.t(),
           amount: non_neg_integer,
           amount_refunded: non_neg_integer,
-          application: Stripe.id() | Stripe.Application.t() | nil,
+          application: Stripe.id() | nil,
           application_fee: Stripe.id() | Stripe.ApplicationFee.t() | nil,
           balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
           captured: boolean,
@@ -147,7 +153,7 @@ defmodule Stripe.Charge do
                },
                receipt_email: String.t(),
                statement_descriptor: String.t()
-             }
+             } | %{}
   def capture(id, params, opts) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/capture")
@@ -167,10 +173,12 @@ defmodule Stripe.Charge do
     capture(id, %{}, opts)
   end
 
+  @spec capture(Stripe.id() | t, map) :: {:ok, t} | {:error, Stripe.Error.t()}
   def capture(id, params) when is_map(params) do
     capture(id, params, [])
   end
 
+  @spec capture(Stripe.id() | t) :: {:ok, t} | {:error, Stripe.Error.t()}
   def capture(id) do
     Stripe.Util.log_deprecation("Please use `capture/3` instead.")
     capture(id, %{}, [])
@@ -200,11 +208,11 @@ defmodule Stripe.Charge do
                on_behalf_of: Stripe.id() | Stripe.Account.t(),
                metadata: map,
                receipt_email: String.t(),
-               shipping: Stripe.Customer.shipping(),
+               shipping: Stripe.Types.shipping(),
                customer: Stripe.id() | Stripe.Customer.t(),
                source: Stripe.id() | Stripe.Card.t() | card_info,
                statement_descriptor: String.t()
-             }
+             } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -252,9 +260,9 @@ defmodule Stripe.Charge do
                fraud_details: user_fraud_report,
                metadata: Stripe.Types.metadata(),
                receipt_email: String.t(),
-               shipping: Stripe.Customer.shipping(),
+               shipping: Stripe.Types.shipping(),
                transfer_group: String.t()
-             }
+             } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -282,7 +290,7 @@ defmodule Stripe.Charge do
                },
                starting_after: t | Stripe.id(),
                transfer_group: String.t()
-             }
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

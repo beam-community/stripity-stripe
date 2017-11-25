@@ -59,7 +59,7 @@ defmodule Stripe.Order do
             paid: Stripe.timestamp(),
             returned: Stripe.timestamp()
           },
-          updated: Stripe.timstamp(),
+          updated: Stripe.timestamp(),
           upstream_id: String.t()
         }
 

@@ -24,7 +24,7 @@ defmodule Stripe.Event do
           | Stripe.Charge.t()
           | Stripe.Coupon.t()
           | Stripe.Customer.t()
-          | Stripe.File.t()
+          | Stripe.FileUpload.t()
           | Stripe.Invoice.t()
           | Stripe.Invoiceitem.t()
           | Stripe.Order.t()

@@ -19,14 +19,14 @@ defmodule Stripe.Token do
           id: Stripe.id(),
           object: String.t(),
           account_holder_name: String.t() | nil,
-          account_holder_type: Stripe.BankAccount.account_holder_type() | nil,
+          account_holder_type: String.t() | nil,
           bank_name: String.t() | nil,
           country: String.t(),
           currency: String.t(),
           fingerprint: String.t() | nil,
           last4: String.t(),
           routing_number: String.t() | nil,
-          status: Stripe.BankAccount.status()
+          status: String.t()
         }
 
   @type token_card :: %{
@@ -35,24 +35,24 @@ defmodule Stripe.Token do
           address_city: String.t() | nil,
           address_country: String.t() | nil,
           address_line1: String.t() | nil,
-          address_line1_check: Stripe.Card.check_result() | nil,
+          address_line1_check: String.t() | nil,
           address_line2: String.t() | nil,
           address_state: String.t() | nil,
           address_zip: String.t() | nil,
-          address_zip_check: Stripe.Card.check_result() | nil,
+          address_zip_check: String.t() | nil,
           brand: String.t(),
           country: String.t() | nil,
           currency: String.t(),
-          cvc_check: Stripe.Card.check_result() | nil,
+          cvc_check: String.t() | nil,
           dynamic_last4: String.t() | nil,
           exp_month: integer,
           exp_year: integer,
           fingerprint: String.t() | nil,
-          funding: Stripe.Card.funding(),
+          funding: String.t(),
           last4: String.t(),
           metadata: Stripe.Types.metadata(),
           name: String.t() | nil,
-          tokenization_method: Stripe.Card.tokenization_method() | nil
+          tokenization_method: String.t() | nil
         }
 
   @type t :: %__MODULE__{

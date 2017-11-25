@@ -236,7 +236,7 @@ defmodule Stripe.API do
     error =
       case Poison.decode(body) do
         {:ok, %{"error_description" => _} = api_error} ->
-          Error.from_oauth_error(status, api_error, request_id)
+          Error.from_stripe_error(status, api_error, request_id)
 
         {:ok, %{"error" => api_error}} ->
           Error.from_stripe_error(status, api_error, request_id)

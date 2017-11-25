@@ -48,6 +48,13 @@ defmodule Stripe do
   use Application
 
   @type id :: String.t()
+  @type date_query :: %{
+                   gt: timestamp,
+                   gte: timestamp,
+                   lt: timestamp,
+                   lte: timestamp
+                 }
+  @type options :: Keyword.t()
   @type timestamp :: pos_integer
 
   @doc """

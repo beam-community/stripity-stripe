@@ -124,7 +124,7 @@ defmodule Stripe.Account do
           external_accounts: Stripe.List.of(Stripe.BankAccount.t() | Stripe.Card.t()),
           keys: keys | nil,
           legal_entity: legal_entity,
-          metadata: Stripe.Types.metdata(),
+          metadata: Stripe.Types.metadata(),
           payout_schedule: Stripe.Types.transfer_schedule(),
           payout_statement_descriptor: String.t() | nil,
           payouts_enabled: boolean,
@@ -191,7 +191,7 @@ defmodule Stripe.Account do
             | String.t()
             | nil,
           legal_entity: legal_entity,
-          metadata: Stripe.Types.metdata() | nil,
+          metadata: Stripe.Types.metadata() | nil,
           payout_schedule: Stripe.Types.transfer_schedule() | nil,
           payout_statement_descriptor: String.t() | nil,
           product_description: String.t() | nil,
@@ -200,7 +200,7 @@ defmodule Stripe.Account do
           support_phone: String.t() | nil,
           support_url: String.t() | nil,
           tos_acceptance: tos_acceptance | nil
-        }
+        } | %{}
 
   @doc """
   Create an account.
@@ -259,7 +259,7 @@ defmodule Stripe.Account do
             | String.t()
             | nil,
           legal_entity: legal_entity,
-          metadata: Stripe.Types.metdata() | nil,
+          metadata: Stripe.Types.metadata() | nil,
           payout_schedule: Stripe.Types.transfer_schedule() | nil,
           payout_statement_descriptor: String.t() | nil,
           product_description: String.t() | nil,
@@ -268,7 +268,7 @@ defmodule Stripe.Account do
           support_phone: String.t() | nil,
           support_url: String.t() | nil,
           tos_acceptance: tos_acceptance | nil
-        }
+        } | %{}
 
   @doc """
   Update an account.
@@ -326,7 +326,7 @@ defmodule Stripe.Account do
                ending_before: t | Stripe.id(),
                limit: 1..100,
                starting_after: t | Stripe.id()
-             }
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
