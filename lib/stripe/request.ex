@@ -157,6 +157,20 @@ defmodule Stripe.Request do
     end
   end
 
+  @doc """
+  Executes the request and returns the response for file uploads
+  """
+  @spec make_file_upload_request(t) :: {:ok, struct} | {:error, Stripe.Error.t}
+  def make_file_upload_request(%Request{params: params, endpoint: endpoint, method: method, opts: opts} = request) do
+    with\
+      {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
+      {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
+      {:ok, result} <- API.request_file_upload(params, method, endpoint, %{}, opts)
+    do
+      {:ok, Converter.convert_result(result)}
+    end
+  end
+
   defp do_cast_to_id(params, cast_to_id) do
     to_cast = MapSet.to_list(cast_to_id)
 

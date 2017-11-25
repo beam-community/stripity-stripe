@@ -88,18 +88,7 @@ defmodule Stripe.API do
     Map.put(existing_headers, "Authorization", "Bearer #{api_key}")
   end
 
-  @spec add_basic_auth_header(headers, String.t() | nil) :: headers
-  defp add_basic_auth_header(existing_headers, api_key) do
-    api_key = fetch_api_key(api_key)
-
-    auth_string =
-      (api_key <> ":")
-      |> :base64.encode_to_string()
-
-    Map.put(existing_headers, "Authorization", "Basic #{auth_string}")
-  end
-
-  @spec fetch_api_key(String.t() | nil) :: String.t()
+  @spec fetch_api_key(String.t | nil) :: String.t
   defp fetch_api_key(api_key) do
     case api_key do
       key when is_binary(key) -> key
@@ -180,11 +169,14 @@ defmodule Stripe.API do
 
     base_url = get_upload_url()
     req_url = base_url <> endpoint
-
+    req_body =
+      body
+      |> Stripe.Util.map_keys_to_atoms()
+      |> Stripe.URI.encode_query()
     req_headers =
       headers
       |> add_multipart_form_headers()
-      |> add_basic_auth_header(api_key)
+      |> add_auth_header(api_key)
       |> add_connect_header(connect_account_id)
       |> Map.to_list()
 
@@ -193,7 +185,7 @@ defmodule Stripe.API do
       |> add_default_options()
       |> add_pool_option()
 
-    @http_module.request(method, req_url, req_headers, body, req_opts)
+    @http_module.request(method, req_url, req_headers, req_body, req_opts)
     |> handle_response()
   end
 
