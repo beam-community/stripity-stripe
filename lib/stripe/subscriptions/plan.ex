@@ -74,15 +74,16 @@ defmodule Stripe.Plan do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
+               id: String.t(),
                amount: non_neg_integer,
                currency: String.t(),
                interval: String.t(),
+               name: String.t(),
                interval_count: pos_integer | nil,
                metadata: Stripe.Types.metadata() | nil,
-               name: String.t(),
                statement_descriptor: String.t() | nil
              } | %{}
-  def create(params, opts \\ []) do
+  def create(%{id: _, amount: _, currency: _, interval: _, name: _} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
