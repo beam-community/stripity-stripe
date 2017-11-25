@@ -185,11 +185,7 @@ defmodule Stripe.Account do
           decline_charge_on: decline_charge_on | nil,
           default_currency: String.t() | nil,
           email: String.t() | nil,
-          external_account:
-            Stripe.ExternalAccount.create_params_for_bank_account()
-            | Stripe.ExternalAccount.create_params_for_card()
-            | String.t()
-            | nil,
+          external_account: String.t() | nil,
           legal_entity: legal_entity,
           metadata: Stripe.Types.metadata() | nil,
           payout_schedule: Stripe.Types.transfer_schedule() | nil,
@@ -253,11 +249,7 @@ defmodule Stripe.Account do
           decline_charge_on: decline_charge_on | nil,
           default_currency: String.t() | nil,
           email: String.t() | nil,
-          external_account:
-            Stripe.ExternalAccount.create_params_for_bank_account()
-            | Stripe.ExternalAccount.create_params_for_card()
-            | String.t()
-            | nil,
+          external_account: String.t() | nil,
           legal_entity: legal_entity,
           metadata: Stripe.Types.metadata() | nil,
           payout_schedule: Stripe.Types.transfer_schedule() | nil,
