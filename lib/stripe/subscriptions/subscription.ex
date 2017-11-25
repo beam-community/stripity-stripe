@@ -70,18 +70,19 @@ defmodule Stripe.Subscription do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               application_fee_percent: float,
-               coupon: Stripe.id() | Stripe.Coupon.t(),
+               application_fee_percent: float | nil,
+               coupon: Stripe.id() | Stripe.Coupon.t() | nil,
                items: [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
                    optional(:quantity) => non_neg_integer
                  }
-               ],
-               metadata: Stripe.Types.metadata(),
-               tax_percent: float,
-               trial_end: Stripe.timestamp(),
-               trial_period_days: non_neg_integer
+               ] | nil,
+               metadata: Stripe.Types.metadata() | nil,
+               source: Stripe.id() | Stripe.Source.t() | nil,
+               tax_percent: float | nil,
+               trial_end: Stripe.timestamp() | nil,
+               trial_period_days: non_neg_integer | nil
              }
   def create(params, opts \\ []) do
     new_request(opts)
@@ -110,20 +111,20 @@ defmodule Stripe.Subscription do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               application_fee_percent: float,
-               coupon: Stripe.id() | Stripe.Coupon.t(),
+               application_fee_percent: float | nil,
+               coupon: Stripe.id() | Stripe.Coupon.t() | nil,
                items: [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
                    optional(:quantity) => non_neg_integer
                  }
-               ],
-               metadata: Stripe.Types.metadata(),
-               prorate: boolean,
-               proration_date: Stripe.timestamp(),
-               source: Stripe.id() | Stripe.Source.t(),
-               tax_percent: float,
-               trial_end: Stripe.timestamp()
+               ] | nil,
+               metadata: Stripe.Types.metadata() | nil,
+               prorate: boolean | nil,
+               proration_date: Stripe.timestamp() | nil,
+               source: Stripe.id() | Stripe.Source.t() | nil,
+               tax_percent: float | nil,
+               trial_end: Stripe.timestamp() | nil
              } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
