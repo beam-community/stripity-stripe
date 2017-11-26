@@ -129,7 +129,7 @@ defmodule Stripe.Refund do
 
   See the [Stripe docs](https://stripe.com/docs/api#list_refunds).
   """
-  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                charge: Stripe.id() | Stripe.Charge.t(),
                ending_before: Stripe.id() | t,

@@ -135,7 +135,7 @@ defmodule Stripe.Plan do
   @doc """
   List all plans.
   """
-  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                created: Stripe.date_query() | nil,
                ending_before: t | Stripe.id() | nil,

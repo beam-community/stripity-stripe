@@ -14,7 +14,15 @@ defmodule Stripe.List do
   """
   use Stripe.Entity
 
-  @type t :: %__MODULE__{}
+  @type value :: term
+
+  @type t(value) :: %__MODULE__{
+            object: String.t(),
+            data: [value],
+            has_more: boolean,
+            total_count: integer | nil,
+            url: String.t()
+          }
 
   defstruct [:object, :data, :has_more, :total_count, :url]
 end

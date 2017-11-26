@@ -14,7 +14,7 @@ defmodule Stripe.OrderReturn do
           amount: pos_integer,
           created: Stripe.timestamp(),
           currency: String.t(),
-          items: Stripe.List.of(Stripe.OrderItem.t()),
+          items: Stripe.List.t(Stripe.OrderItem.t()),
           livemode: boolean,
           order: Stripe.id() | Stripe.Order.t() | nil,
           refund: Stripe.id() | Stripe.Refund.t() | nil
@@ -48,7 +48,7 @@ defmodule Stripe.OrderReturn do
   @doc """
   List all returns.
   """
-  @spec list(Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
   def list(opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

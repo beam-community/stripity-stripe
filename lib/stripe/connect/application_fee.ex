@@ -21,7 +21,7 @@ defmodule Stripe.ApplicationFee do
           livemode: boolean,
           originating_transaction: Stripe.id() | Stripe.Charge.t(),
           refunded: boolean,
-          refunds: Stripe.List.of(Stripe.FeeRefund.t())
+          refunds: Stripe.List.t(Stripe.FeeRefund.t())
         }
 
   defstruct [

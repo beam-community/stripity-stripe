@@ -152,7 +152,7 @@ defmodule Stripe.Card do
   @doc """
   List all cards.
   """
-  @spec list(map, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(map, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
   def list(%{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
     params = params |> Map.put(:object, "card")
