@@ -71,16 +71,16 @@ defmodule Stripe.BalanceTransaction do
   """
   @spec all(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               available_on: Stripe.date_query() | nil,
-               created: Stripe.date_query() | nil,
-               currency: String.t() | nil,
-               ending_before: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
-               limit: 1..100 | nil,
-               payout: Stripe.id() | Stripe.Payout.t() | nil,
-               source: Stripe.id() | Stripe.Source.t() | nil,
-               starting_after: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
-               type: String.t() | nil
-             } | %{}
+               optional(:available_on) => String.t() | Stripe.date_query(),
+               optional(:created) => String.t() | Stripe.date_query(),
+               optional(:currency) => String.t(),
+               optional(:ending_before) => Stripe.id() | Stripe.BalanceTransaction.t(),
+               optional(:limit) => 1..100,
+               optional(:payout) => Stripe.id() | Stripe.Payout.t(),
+               optional(:source) => Stripe.id() | Stripe.Source.t(),
+               optional(:starting_after) => Stripe.id() | Stripe.BalanceTransaction.t(),
+               optional(:type) => String.t()
+             }
   def all(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@endpoint)

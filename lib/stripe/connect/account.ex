@@ -174,29 +174,29 @@ defmodule Stripe.Account do
   @plural_endpoint "accounts"
 
   @type create_params :: %{
-          type: String.t(),
-          account_token: String.t() | nil,
-          business_logo: String.t() | nil,
-          business_name: String.t() | nil,
-          business_primary_color: String.t() | nil,
-          business_url: String.t() | nil,
-          country: String.t() | nil,
-          debit_negative_balances: boolean | nil,
-          decline_charge_on: decline_charge_on | nil,
-          default_currency: String.t() | nil,
-          email: String.t() | nil,
-          external_account: String.t() | nil,
-          legal_entity: legal_entity,
-          metadata: Stripe.Types.metadata() | nil,
-          payout_schedule: Stripe.Types.transfer_schedule() | nil,
-          payout_statement_descriptor: String.t() | nil,
-          product_description: String.t() | nil,
-          statement_descriptor: String.t() | nil,
-          support_email: String.t() | nil,
-          support_phone: String.t() | nil,
-          support_url: String.t() | nil,
-          tos_acceptance: tos_acceptance | nil
-        } | %{}
+          :type => String.t(),
+          optional(:account_token) => String.t(),
+          optional(:business_logo) => String.t(),
+          optional(:business_name) => String.t(),
+          optional(:business_primary_color) => String.t(),
+          optional(:business_url) => String.t(),
+          optional(:country) => String.t(),
+          optional(:debit_negative_balances) => boolean,
+          optional(:decline_charge_on) => decline_charge_on,
+          optional(:default_currency) => String.t(),
+          optional(:email) => String.t(),
+          optional(:external_account) => String.t(),
+          optional(:legal_entity) => legal_entity,
+          optional(:metadata) => Stripe.Types.metadata(),
+          optional(:payout_schedule) => Stripe.Types.transfer_schedule(),
+          optional(:payout_statement_descriptor) => String.t(),
+          optional(:product_description) => String.t(),
+          optional(:statement_descriptor) => String.t(),
+          optional(:support_email) => String.t(),
+          optional(:support_phone) => String.t(),
+          optional(:support_url) => String.t(),
+          optional(:tos_acceptance) => tos_acceptance
+        }
 
   @doc """
   Create an account.
@@ -239,28 +239,28 @@ defmodule Stripe.Account do
   end
 
   @type update_params :: %{
-          account_token: String.t() | nil,
-          business_logo: String.t() | nil,
-          business_name: String.t() | nil,
-          business_primary_color: String.t() | nil,
-          business_url: String.t() | nil,
-          country: String.t() | nil,
-          debit_negative_balances: boolean | nil,
-          decline_charge_on: decline_charge_on | nil,
-          default_currency: String.t() | nil,
-          email: String.t() | nil,
-          external_account: String.t() | nil,
-          legal_entity: legal_entity,
-          metadata: Stripe.Types.metadata() | nil,
-          payout_schedule: Stripe.Types.transfer_schedule() | nil,
-          payout_statement_descriptor: String.t() | nil,
-          product_description: String.t() | nil,
-          statement_descriptor: String.t() | nil,
-          support_email: String.t() | nil,
-          support_phone: String.t() | nil,
-          support_url: String.t() | nil,
-          tos_acceptance: tos_acceptance | nil
-        } | %{}
+          optional(:account_token) => String.t(),
+          optional(:business_logo) => String.t(),
+          optional(:business_name) => String.t(),
+          optional(:business_primary_color) => String.t(),
+          optional(:business_url) => String.t(),
+          optional(:country) => String.t(),
+          optional(:debit_negative_balances) => boolean,
+          optional(:decline_charge_on) => decline_charge_on,
+          optional(:default_currency) => String.t(),
+          optional(:email) => String.t(),
+          optional(:external_account) => String.t(),
+          optional(:legal_entity) => legal_entity,
+          optional(:metadata) => Stripe.Types.metadata(),
+          optional(:payout_schedule) => Stripe.Types.transfer_schedule(),
+          optional(:payout_statement_descriptor) => String.t(),
+          optional(:product_description) => String.t(),
+          optional(:statement_descriptor) => String.t(),
+          optional(:support_email) => String.t(),
+          optional(:support_phone) => String.t(),
+          optional(:support_url) => String.t(),
+          optional(:tos_acceptance) => tos_acceptance
+        }
 
   @doc """
   Update an account.
@@ -314,11 +314,10 @@ defmodule Stripe.Account do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query(),
-               ending_before: t | Stripe.id(),
-               limit: 1..100,
-               starting_after: t | Stripe.id()
-             } | %{}
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:starting_after) => t | Stripe.id()
+             }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

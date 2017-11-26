@@ -133,58 +133,6 @@ defmodule Stripe.Charge do
   @plural_endpoint "charges"
 
   @doc """
-  Capture a charge.
-
-  Capture the payment of an existing, uncaptured, charge. This is the second half of the two-step
-  payment flow, where first you created a charge with the capture option set to false.
-
-  Uncaptured payments expire exactly seven days after they are created. If they are not captured by
-  that point in time, they will be marked as refunded and will no longer be capturable.
-
-  See the [Stripe docs](https://stripe.com/docs/api#capture_charge).
-  """
-  @spec capture(Stripe.id() | t, params, Stripe.options()) ::
-          {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               amount: non_neg_integer,
-               application_fee: non_neg_integer,
-               destination: %{
-                 amount: non_neg_integer
-               },
-               receipt_email: String.t(),
-               statement_descriptor: String.t()
-             } | %{}
-  def capture(id, params, opts) do
-    new_request(opts)
-    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/capture")
-    |> put_params(params)
-    |> put_method(:post)
-    |> make_request()
-  end
-
-  @doc """
-  [DEPRECATED] Capture a charge.
-
-  This version of the function is deprecated. Please use `capture/3` instead.
-  """
-  @spec capture(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def capture(id, opts) when is_list(opts) do
-    Stripe.Util.log_deprecation("Please use `capture/3` instead.")
-    capture(id, %{}, opts)
-  end
-
-  @spec capture(Stripe.id() | t, map) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def capture(id, params) when is_map(params) do
-    capture(id, params, [])
-  end
-
-  @spec capture(Stripe.id() | t) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def capture(id) do
-    Stripe.Util.log_deprecation("Please use `capture/3` instead.")
-    capture(id, %{}, [])
-  end
-
-  @doc """
   Create a charge.
 
   If your API key is in test mode, the supplied payment source (e.g., card) won't actually be
@@ -195,23 +143,23 @@ defmodule Stripe.Charge do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               amount: pos_integer,
-               currency: String.t(),
-               application_fee: non_neg_integer,
-               capture: boolean,
-               description: String.t(),
-               destination: %{
+               :amount => pos_integer,
+               :currency => String.t(),
+               optional(:application_fee) => non_neg_integer,
+               optional(:capture) => boolean,
+               optional(:description) => String.t(),
+               optional(:destination) => %{
                  :account => Stripe.id() | Stripe.Account.t(),
                  optional(:amount) => non_neg_integer
                },
-               transfer_group: String.t(),
-               on_behalf_of: Stripe.id() | Stripe.Account.t(),
-               metadata: map,
-               receipt_email: String.t(),
-               shipping: Stripe.Types.shipping(),
-               customer: Stripe.id() | Stripe.Customer.t(),
-               source: Stripe.id() | Stripe.Card.t() | card_info,
-               statement_descriptor: String.t()
+               optional(:transfer_group) => String.t(),
+               optional(:on_behalf_of) => Stripe.id() | Stripe.Account.t(),
+               optional(:metadata) => map,
+               optional(:receipt_email) => String.t(),
+               optional(:shipping) => Stripe.Types.shipping(),
+               optional(:customer) => Stripe.id() | Stripe.Customer.t(),
+               optional(:source) => Stripe.id() | Stripe.Card.t() | card_info,
+               optional(:statement_descriptor) => String.t()
              } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
@@ -256,12 +204,12 @@ defmodule Stripe.Charge do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               description: String.t(),
-               fraud_details: user_fraud_report,
-               metadata: Stripe.Types.metadata(),
-               receipt_email: String.t(),
-               shipping: Stripe.Types.shipping(),
-               transfer_group: String.t()
+               optional(:description) => String.t(),
+               optional(:fraud_details) => user_fraud_report,
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:receipt_email) => String.t(),
+               optional(:shipping) => Stripe.Types.shipping(),
+               optional(:transfer_group) => String.t()
              } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -269,6 +217,60 @@ defmodule Stripe.Charge do
     |> put_method(:post)
     |> put_params(params)
     |> make_request()
+  end
+
+  @doc """
+  Capture a charge.
+
+  Capture the payment of an existing, uncaptured, charge. This is the second
+  half of the two-step payment flow, where first you created a charge with the
+  capture option set to false.
+
+  Uncaptured payments expire exactly seven days after they are created. If they
+  are not captured by that point in time, they will be marked as refunded and
+  will no longer be capturable.
+
+  See the [Stripe docs](https://stripe.com/docs/api#capture_charge).
+  """
+  @spec capture(Stripe.id() | t, params, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:amount) => non_neg_integer,
+               optional(:application_fee) => non_neg_integer,
+               optional(:destination) => %{
+                 optional(:amount) => non_neg_integer
+               },
+               optional(:receipt_email) => String.t(),
+               optional(:statement_descriptor) => String.t()
+             }
+  def capture(id, params, opts) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/capture")
+    |> put_params(params)
+    |> put_method(:post)
+    |> make_request()
+  end
+
+  @doc """
+  [DEPRECATED] Capture a charge.
+
+  This version of the function is deprecated. Please use `capture/3` instead.
+  """
+  @spec capture(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def capture(id, opts) when is_list(opts) do
+    Stripe.Util.log_deprecation("Please use `capture/3` instead.")
+    capture(id, %{}, opts)
+  end
+
+  @spec capture(Stripe.id() | t, map) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def capture(id, params) when is_map(params) do
+    capture(id, params, [])
+  end
+
+  @spec capture(Stripe.id() | t) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def capture(id) do
+    Stripe.Util.log_deprecation("Please use `capture/3` instead.")
+    capture(id, %{}, [])
   end
 
   @doc """
@@ -281,16 +283,16 @@ defmodule Stripe.Charge do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query(),
-               customer: Stripe.Customer.t() | Stripe.id(),
-               ending_before: t | Stripe.id(),
-               limit: 1..100,
-               source: %{
-                 object: String.t()
+               optional(:created) => Stripe.date_query(),
+               optional(:customer) => Stripe.Customer.t() | Stripe.id(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:source) => %{
+                 optional(:object) => String.t()
                },
-               starting_after: t | Stripe.id(),
-               transfer_group: String.t()
-             } | %{}
+               optional(:starting_after) => t | Stripe.id(),
+               optional(:transfer_group) => String.t()
+             }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

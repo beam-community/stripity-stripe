@@ -10,8 +10,18 @@ defmodule Stripe.SubscriptionTest do
 
   describe "create/2" do
     test "creates a subscription" do
-      params = %{customer: "cus_123"}
-      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.create(params)
+      params = %{
+        application_fee_percent: 5,
+        customer: "cus_123",
+        items: [
+          %{
+            plan: "ruby-express-932",
+            quantity: 1
+          }
+        ],
+        source: "card_123"
+      }
+      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.create(params, [connect_account: "acct_123"])
       assert_stripe_requested(:post, "/v1/subscriptions")
     end
   end
