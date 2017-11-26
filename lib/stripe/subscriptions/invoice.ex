@@ -32,7 +32,7 @@ defmodule Stripe.Invoice do
           discount: Stripe.Discount.t() | nil,
           ending_balance: integer | nil,
           forgiven: boolean,
-          lines: Stripe.List.of(Stripe.LineItem.t()),
+          lines: Stripe.List.t(Stripe.LineItem.t()),
           livemode: boolean,
           metadata: Stripe.Types.metadata() | nil,
           next_payment_attempt: Stripe.timestamp() | nil,
@@ -162,7 +162,7 @@ defmodule Stripe.Invoice do
   @doc """
   List all invoices.
   """
-  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                customer: Stripe.Customer.t() | Stripe.id(),
                date: Stripe.date_query(),

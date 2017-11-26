@@ -31,7 +31,7 @@ defmodule Stripe.Product do
                 width: float
               },
           shippable: boolean,
-          skus: Stripe.List.of(Stripe.SKU.t()),
+          skus: Stripe.List.t(Stripe.SKU.t()),
           updated: Stripe.timestamp(),
           url: String.t()
         }

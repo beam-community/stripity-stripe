@@ -27,7 +27,7 @@ defmodule Stripe.Subscription do
           customer: Stripe.id() | Stripe.Customer.t(),
           discount: Stripe.Discount.t() | nil,
           ended_at: Stripe.timestamp() | nil,
-          items: Stripe.List.of(Stripe.SubscriptionItem.t()),
+          items: Stripe.List.t(Stripe.SubscriptionItem.t()),
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           plan: Stripe.Plan.t() | nil,
@@ -154,7 +154,7 @@ defmodule Stripe.Subscription do
   @doc """
   List all subscriptions.
   """
-  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:created) => Stripe.date_query(),
                optional(:customer) => Stripe.Customer.t() | Stripe.id(),

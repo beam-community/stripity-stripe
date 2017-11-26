@@ -15,9 +15,7 @@ defmodule Stripe.LineItem do
           description: String.t(),
           discountable: boolean,
           livemode: boolean,
-          metadata: %{
-            optional(String.t()) => String.t()
-          },
+          metadata: Stripe.Types.metadata(),
           period: %{
             start: Stripe.timestamp(),
             end: Stripe.timestamp()

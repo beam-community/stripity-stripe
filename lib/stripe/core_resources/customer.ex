@@ -31,8 +31,8 @@ defmodule Stripe.Customer do
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           shipping: Stripe.Types.shipping() | nil,
-          sources: Stripe.List.of(Stripe.Source.t()),
-          subscriptions: Stripe.List.of(Stripe.Subscription.t())
+          sources: Stripe.List.t(Stripe.Source.t()),
+          subscriptions: Stripe.List.t(Stripe.Subscription.t())
         }
 
   defstruct [
@@ -128,7 +128,7 @@ defmodule Stripe.Customer do
   @doc """
   List all customers.
   """
-  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                ending_before: t | Stripe.id() | nil,
                limit: 1..100 | nil,

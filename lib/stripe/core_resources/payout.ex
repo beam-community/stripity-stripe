@@ -132,7 +132,7 @@ defmodule Stripe.Payout do
 
   See the [Stripe docs](https://stripe.com/docs/api#list_payouts).
   """
-  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                arrival_date: Stripe.date_query(),
                created: Stripe.date_query(),

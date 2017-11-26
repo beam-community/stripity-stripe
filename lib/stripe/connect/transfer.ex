@@ -20,7 +20,7 @@ defmodule Stripe.Transfer do
           destination_payment: String.t(),
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
-          reversals: Stripe.List.of(Stripe.Reversal.t()),
+          reversals: Stripe.List.t(Stripe.TransferReversal.t()),
           reversed: boolean,
           source_transaction: Stripe.id() | Stripe.Charge.t(),
           source_type: String.t(),

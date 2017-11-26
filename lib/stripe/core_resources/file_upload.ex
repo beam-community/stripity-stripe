@@ -64,7 +64,7 @@ defmodule Stripe.FileUpload do
   @doc """
   List all file uploads, going back up to 30 days.
   """
-  @spec list(map, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(map, Stripe.options) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

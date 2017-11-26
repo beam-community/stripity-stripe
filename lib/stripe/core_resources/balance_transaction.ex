@@ -69,7 +69,7 @@ defmodule Stripe.BalanceTransaction do
   See `t:Stripe.BalanceTransaction.All.t/0` or the
   [Stripe docs](https://stripe.com/docs/api#balance_history) for parameter structure.
   """
-  @spec all(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec all(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:available_on) => String.t() | Stripe.date_query(),
                optional(:created) => String.t() | Stripe.date_query(),

@@ -121,7 +121,7 @@ defmodule Stripe.Account do
           details_submitted: boolean,
           display_name: String.t() | nil,
           email: String.t() | nil,
-          external_accounts: Stripe.List.of(Stripe.BankAccount.t() | Stripe.Card.t()),
+          external_accounts: Stripe.List.t(Stripe.BankAccount.t() | Stripe.Card.t()),
           keys: keys | nil,
           legal_entity: legal_entity,
           metadata: Stripe.Types.metadata(),
@@ -312,7 +312,7 @@ defmodule Stripe.Account do
   @doc """
   List all connected accounts.
   """
-  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:ending_before) => t | Stripe.id(),
                optional(:limit) => 1..100,

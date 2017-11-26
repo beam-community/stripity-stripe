@@ -80,7 +80,7 @@ defmodule Stripe.Charge do
           receipt_email: String.t() | nil,
           receipt_number: String.t() | nil,
           refunded: boolean,
-          refunds: Stripe.List.of(Stripe.Refund.t()),
+          refunds: Stripe.List.t(Stripe.Refund.t()),
           review: Stripe.id() | Stripe.Review.t() | nil,
           shipping: Stripe.Types.shipping() | nil,
           source: Stripe.Card.t() | map,
@@ -281,7 +281,7 @@ defmodule Stripe.Charge do
 
   See the [Stripe docs](https://stripe.com/docs/api#list_charges).
   """
-  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:created) => Stripe.date_query(),
                optional(:customer) => Stripe.Customer.t() | Stripe.id(),

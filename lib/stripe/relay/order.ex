@@ -19,10 +19,10 @@ defmodule Stripe.Order do
           customer: Stripe.id() | Stripe.Customer.t(),
           email: String.t(),
           external_coupon_code: String.t(),
-          items: Stripe.List.of(Stripe.OrderItem.t()),
+          items: Stripe.List.t(Stripe.OrderItem.t()),
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
-          returns: Stripe.List.of(Stripe.Return.t()),
+          returns: Stripe.List.t(Stripe.OrderReturn.t()),
           selected_shipping_method: String.t(),
           shipping: %{
             address: %{

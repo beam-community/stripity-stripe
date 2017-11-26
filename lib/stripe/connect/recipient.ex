@@ -29,7 +29,7 @@ defmodule Stripe.Recipient do
               status: String.t()
             }
             | nil,
-          cards: Stripe.List.of(Stripe.Card.t()),
+          cards: Stripe.List.t(Stripe.Card.t()),
           created: Stripe.timestamp(),
           default_card: Stripe.id() | Stripe.Card.t(),
           description: String.t(),
