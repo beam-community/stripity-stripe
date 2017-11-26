@@ -70,22 +70,22 @@ defmodule Stripe.Subscription do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               customer: Stripe.id() | Stripe.Customer.t(),
-               application_fee_percent: float | nil,
-               billing: String.t() | nil,
-               coupon: Stripe.id() | Stripe.Coupon.t() | nil,
-               days_until_due: non_neg_integer | nil,
-               items: [
+               :customer => Stripe.id() | Stripe.Customer.t(),
+               optional(:application_fee_percent) => integer,
+               optional(:billing) => String.t(),
+               optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
+               optional(:days_until_due) => non_neg_integer,
+               optional(:items) => [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
                    optional(:quantity) => non_neg_integer
                  }
-               ] | nil,
-               metadata: Stripe.Types.metadata() | nil,
-               source: Stripe.id() | Stripe.Source.t() | nil,
-               tax_percent: float | nil,
-               trial_end: Stripe.timestamp() | nil,
-               trial_period_days: non_neg_integer | nil
+               ],
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:source) => Stripe.id() | Stripe.Source.t(),
+               optional(:tax_percent) => float,
+               optional(:trial_end) => Stripe.timestamp(),
+               optional(:trial_period_days) => non_neg_integer
              }
   def create(%{customer: _} = params, opts \\ []) do
     new_request(opts)
@@ -114,21 +114,21 @@ defmodule Stripe.Subscription do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               application_fee_percent: float | nil,
-               coupon: Stripe.id() | Stripe.Coupon.t() | nil,
-               items: [
+               optional(:application_fee_percent) => float,
+               optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
+               optional(:items) => [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
                    optional(:quantity) => non_neg_integer
                  }
-               ] | nil,
-               metadata: Stripe.Types.metadata() | nil,
-               prorate: boolean | nil,
-               proration_date: Stripe.timestamp() | nil,
-               source: Stripe.id() | Stripe.Source.t() | nil,
-               tax_percent: float | nil,
-               trial_end: Stripe.timestamp() | nil
-             } | %{}
+               ],
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:prorate) => boolean,
+               optional(:proration_date) => Stripe.timestamp(),
+               optional(:source) => Stripe.id() | Stripe.Source.t(),
+               optional(:tax_percent) => float,
+               optional(:trial_end) => Stripe.timestamp()
+             }
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -156,14 +156,14 @@ defmodule Stripe.Subscription do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query(),
-               customer: Stripe.Customer.t() | Stripe.id(),
-               ending_before: t | Stripe.id(),
-               limit: 1..100,
-               plan: Stripe.Plan.t() | Stripe.id(),
-               starting_after: t | Stripe.id(),
-               status: String.t()
-             } | %{}
+               optional(:created) => Stripe.date_query(),
+               optional(:customer) => Stripe.Customer.t() | Stripe.id(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:plan) => Stripe.Plan.t() | Stripe.id(),
+               optional(:starting_after) => t | Stripe.id(),
+               optional(:status) => String.t()
+             }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
