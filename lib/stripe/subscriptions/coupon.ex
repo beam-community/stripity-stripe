@@ -19,18 +19,18 @@ defmodule Stripe.Coupon do
   @type t :: %__MODULE__{
                id: Stripe.id,
                object: String.t,
-               amount_off: pos_integer,
-               created: Stripe.timestamp,
-               currency: String.t,
-               duration: :forever | :once | :repeating,
+               amount_off: pos_integer | nil,
+               created: pos_integer,
+               currency: String.t | nil,
+               duration: String.t,
                duration_in_months: pos_integer | nil,
                livemode: boolean,
-               max_redemptions: pos_integer,
+               max_redemptions: pos_integer | nil,
                metadata: %{
                  optional(String.t) => String.t
                },
-               percent_off: pos_integer,
-               redeem_by: Stripe.timestamp,
+               percent_off: pos_integer | nil,
+               redeem_by: pos_integer | nil,
                times_redeemed: non_neg_integer,
                valid: boolean
              }
