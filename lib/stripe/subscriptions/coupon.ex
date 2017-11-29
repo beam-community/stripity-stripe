@@ -17,23 +17,21 @@ defmodule Stripe.Coupon do
   alias Stripe.Util
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount_off: pos_integer | nil,
-               created: pos_integer,
-               currency: String.t | nil,
-               duration: String.t,
-               duration_in_months: pos_integer | nil,
-               livemode: boolean,
-               max_redemptions: pos_integer | nil,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               percent_off: pos_integer | nil,
-               redeem_by: pos_integer | nil,
-               times_redeemed: non_neg_integer,
-               valid: boolean
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          amount_off: pos_integer | nil,
+          created: Stripe.timestamp(),
+          currency: String.t() | nil,
+          duration: String.t(),
+          duration_in_months: pos_integer | nil,
+          livemode: boolean,
+          max_redemptions: pos_integer | nil,
+          metadata: Stripe.Types.metadata(),
+          percent_off: pos_integer | nil,
+          redeem_by: pos_integer | nil,
+          times_redeemed: non_neg_integer,
+          valid: boolean
+        }
 
   defstruct [
     :id,
@@ -57,19 +55,19 @@ defmodule Stripe.Coupon do
   @doc """
   Create a coupon.
   """
-  @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               id: String.t,
+               id: String.t(),
                duration: :forever | :once | :repeating,
                amount_off: pos_integer,
-               currency: String.t,
+               currency: String.t(),
                duration_in_months: pos_integer,
                max_redemptions: pos_integer,
                metadata: %{
-                 optional(String.t) => String.t
+                 optional(String.t()) => String.t()
                },
                percent_off: pos_integer,
-               redeem_by: Stripe.timestamp
+               redeem_by: Stripe.timestamp()
              }
   def create(params, opts \\ []) do
     new_request(opts)
@@ -82,7 +80,7 @@ defmodule Stripe.Coupon do
   @doc """
   Retrieve a coupon.
   """
-  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -96,10 +94,10 @@ defmodule Stripe.Coupon do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                metadata: %{
-                 optional(String.t) => String.t
+                 optional(String.t()) => String.t()
                }
              }
   def update(id, params, opts \\ []) do
@@ -113,7 +111,7 @@ defmodule Stripe.Coupon do
   @doc """
   Delete a coupon.
   """
-  @spec delete(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -124,12 +122,12 @@ defmodule Stripe.Coupon do
   @doc """
   List all coupons.
   """
-  @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query,
-               ending_before: t | Stripe.id,
+               created: Stripe.date_query(),
+               ending_before: t | Stripe.id(),
                limit: 1..100,
-               starting_after: t | Stripe.id
+               starting_after: t | Stripe.id()
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
