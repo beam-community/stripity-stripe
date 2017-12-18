@@ -57,15 +57,15 @@ defmodule Stripe.Coupon do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               id: String.t() | nil,
-               duration: String.t(),
-               amount_off: pos_integer | nil,
-               currency: String.t() | nil,
-               duration_in_months: pos_integer | nil,
-               max_redemptions: pos_integer | nil,
-               metadata: Stripe.Types.metadata() | nil,
-               percent_off: pos_integer | nil,
-               redeem_by: Stripe.timestamp() | nil
+               optional(:id) => String.t(),
+               :duration  => String.t(),
+               optional(:amount_off) => pos_integer,
+               optional(:currency) =>  String.t(),
+               optional(:duration_in_months) =>  pos_integer,
+               optional(:max_redemptions) => pos_integer,
+               optional(:metadata) =>  Stripe.Types.metadata(),
+               optional(:percent_off) =>  pos_integer,
+               optional(:redeem_by) =>  Stripe.timestamp()
              }
   def create(params, opts \\ []) do
     new_request(opts)
@@ -120,10 +120,10 @@ defmodule Stripe.Coupon do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query() | nil,
-               ending_before: t | Stripe.id() | nil,
-               limit: 1..100 | nil,
-               starting_after: t | Stripe.id() | nil
+               optional(:created) => Stripe.date_query(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:starting_after) => t | Stripe.id()
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
