@@ -31,3 +31,6 @@ before_install:
 script: mix coveralls.travis
 after_script:
   - mix inch.report
+notifications:
+  email:
+    on_success: never

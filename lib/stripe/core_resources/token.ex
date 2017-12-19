@@ -8,64 +8,64 @@ defmodule Stripe.Token do
   - Create a token with all options - Only for Unit Tests with Stripe
   - Retrieve a token
 
-  Does not yet render lists or take options.
-
   Stripe API reference: https://stripe.com/docs/api#token
 
   """
+
   use Stripe.Entity
+  import Stripe.Request
 
   @type token_bank_account :: %{
-    id: Stripe.id,
-    object: String.t,
-    account_holder_name: String.t | nil,
-    account_holder_type: Stripe.BankAccount.account_holder_type | nil,
-    bank_name: String.t | nil,
-    country: String.t,
-    currency: String.t,
-    fingerprint: String.t | nil,
-    last4: String.t,
-    routing_number: String.t | nil,
-    status: Stripe.BankAccount.status
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          account_holder_name: String.t() | nil,
+          account_holder_type: String.t() | nil,
+          bank_name: String.t() | nil,
+          country: String.t(),
+          currency: String.t(),
+          fingerprint: String.t() | nil,
+          last4: String.t(),
+          routing_number: String.t() | nil,
+          status: String.t()
+        }
 
   @type token_card :: %{
-    id: Stripe.id,
-    object: String.t,
-    address_city: String.t | nil,
-    address_country: String.t | nil,
-    address_line1: String.t | nil,
-    address_line1_check: Stripe.Card.check_result | nil,
-    address_line2: String.t | nil,
-    address_state: String.t | nil,
-    address_zip: String.t | nil,
-    address_zip_check: Stripe.Card.check_result | nil,
-    brand: String.t,
-    country: String.t | nil,
-    currency: String.t,
-    cvc_check: Stripe.Card.check_result | nil,
-    dynamic_last4: String.t | nil,
-    exp_month: integer,
-    exp_year: integer,
-    fingerprint: String.t | nil,
-    funding: Stripe.Card.funding,
-    last4: String.t,
-    metadata: Stripe.Types.metadata,
-    name: String.t | nil,
-    tokenization_method: Stripe.Card.tokenization_method | nil
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          address_city: String.t() | nil,
+          address_country: String.t() | nil,
+          address_line1: String.t() | nil,
+          address_line1_check: String.t() | nil,
+          address_line2: String.t() | nil,
+          address_state: String.t() | nil,
+          address_zip: String.t() | nil,
+          address_zip_check: String.t() | nil,
+          brand: String.t(),
+          country: String.t() | nil,
+          currency: String.t(),
+          cvc_check: String.t() | nil,
+          dynamic_last4: String.t() | nil,
+          exp_month: integer,
+          exp_year: integer,
+          fingerprint: String.t() | nil,
+          funding: String.t(),
+          last4: String.t(),
+          metadata: Stripe.Types.metadata(),
+          name: String.t() | nil,
+          tokenization_method: String.t() | nil
+        }
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    bank_account: token_bank_account,
-    card: token_card,
-    client_ip: String.t | nil,
-    created: Stripe.timestamp,
-    livemode: boolean,
-    type: :card | :bank_account,
-    used: boolean
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          bank_account: token_bank_account | nil,
+          card: token_card | nil,
+          client_ip: String.t() | nil,
+          created: Stripe.timestamp(),
+          livemode: boolean,
+          type: String.t(),
+          used: boolean
+        }
 
   defstruct [
     :id,
@@ -82,59 +82,31 @@ defmodule Stripe.Token do
   @plural_endpoint "tokens"
 
   @doc """
-  Create a token for a Connect customer with a card belonging to the platform
-  customer.
+  Creates a single use token that wraps the details of a credit card. This
+  token can be used in place of a credit card dictionary with any API method.
+  These tokens can only be used once: by creating a new charge object, or
+  attaching them to a customer.
 
-  You must pass in the account number for the Stripe Connect account in `opts`.
+  In most cases, you should create tokens client-side using Checkout, Elements,
+  or Stripe's mobile libraries, instead of using the API.
   """
-  @spec create_on_connect_account(String.t, String.t, Keyword.t) :: {:ok, t} | {
-    :error,
-    Stripe.api_error_struct
-  }
-  def create_on_connect_account(customer_id, customer_card_id, opts = [connect_account: _]) do
-    body = %{
-      card: customer_card_id,
-      customer: customer_id
-    }
-    Stripe.Request.create(@plural_endpoint, body, opts)
-  end
-
-  @doc """
-  Create a token for a Connect customer using the default card.
-
-  You must pass in the account number for the Stripe Connect account in `opts`.
-  """
-  @spec create_with_default_card(String.t, Keyword.t) :: {:ok, t} | {
-    :error,
-    Stripe.api_error_struct
-  }
-  def create_with_default_card(customer_id, opts \\ []) do
-    body = %{
-      customer: customer_id
-    }
-    Stripe.Request.create(@plural_endpoint, body, opts)
-  end
-
-  @doc """
-  Create a token.
-
-  WARNING: This function is mainly for testing purposes only, you should not
-  use it on a production server, unless you are able to transfer and store
-  credit card data on your server in a PCI compliant way.
-
-  Use the Stripe.js library on the client device instead.
-  """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(changes, opts \\ []) do
-    Stripe.Request.create(@plural_endpoint, changes, opts)
+  @spec create(map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def create(params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint)
+    |> put_params(params)
+    |> put_method(:post)
+    |> make_request()
   end
 
   @doc """
   Retrieve a token.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
-    endpoint = @plural_endpoint <> "/" <> id
-    Stripe.Request.retrieve(endpoint, opts)
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
   end
 end

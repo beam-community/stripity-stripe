@@ -1,5 +1,4 @@
 defmodule Stripe.Converter do
-
   @doc """
   Takes a result map or list of maps from a Stripe response and returns a
   struct (e.g. `%Stripe.Card{}`) or list of structs.
@@ -7,15 +6,34 @@ defmodule Stripe.Converter do
   If the result is not a supported Stripe object, it just returns a plain map
   with atomized keys.
   """
-  @spec convert_result(%{String.t => any}) :: struct
+
+  @spec convert_result(%{String.t() => any}) :: struct
   def convert_result(result), do: convert_value(result)
 
   @supported_objects ~w(
+    account
+    balance
+    balance_transaction
+    bank_account
+    card
+    charge
+    country_spec
+    coupon
+    customer
+    event
+    external_account
+    file_upload
+    invoice
+    line_item
     list
-    account external_account oauth
-    balance balance_transaction charge customer event file_upload refund token
-    card source
-    coupon invoice line_item plan subscription
+    oauth
+    order_return
+    payout
+    plan
+    refund
+    source
+    subscription
+    token
   )
 
   @no_convert_maps ~w(metadata supported_bank_account_currencies)
@@ -27,18 +45,19 @@ defmodule Stripe.Converter do
       false -> convert_map(value)
     end
   end
+
   defp convert_value(value) when is_map(value), do: convert_map(value)
   defp convert_value(value) when is_list(value), do: convert_list(value)
   defp convert_value(value), do: value
 
   @spec convert_map(map) :: map
   defp convert_map(value) do
-    Enum.reduce(value, %{}, fn({key, value}, acc) ->
+    Enum.reduce(value, %{}, fn {key, value}, acc ->
       Map.put(acc, String.to_atom(key), convert_value(value))
     end)
   end
 
-  @spec convert_stripe_object(%{String.t => any}) :: struct
+  @spec convert_stripe_object(%{String.t() => any}) :: struct
   defp convert_stripe_object(%{"object" => object_name} = value) do
     module = Stripe.Util.object_name_to_module(object_name)
     struct_keys = Map.keys(module.__struct__) |> List.delete(:__struct__)
@@ -47,14 +66,16 @@ defmodule Stripe.Converter do
     processed_map =
       struct_keys
       |> Enum.reduce(%{}, fn key, acc ->
-          string_key = to_string(key)
-          converted_value =
-            case string_key do
-              string_key when string_key in @no_convert_maps -> Map.get(value, string_key)
-              _ -> Map.get(value, string_key) |> convert_value()
-            end
-          Map.put(acc, key, converted_value)
-        end)
+           string_key = to_string(key)
+
+           converted_value =
+             case string_key do
+               string_key when string_key in @no_convert_maps -> Map.get(value, string_key)
+               _ -> Map.get(value, string_key) |> convert_value()
+             end
+
+           Map.put(acc, key, converted_value)
+         end)
       |> module.__from_json__()
 
     struct(module, processed_map)
@@ -71,22 +92,32 @@ defmodule Stripe.Converter do
 
       map_keys =
         map
-        |> Map.keys
+        |> Map.keys()
         |> Enum.map(&String.to_atom/1)
-        |> MapSet.new
+        |> MapSet.new()
 
       struct_keys =
         struct_keys
-        |> MapSet.new
+        |> MapSet.new()
 
       extra_keys =
         map_keys
         |> MapSet.difference(struct_keys)
-        |> Enum.to_list
+        |> Enum.to_list()
 
       unless Enum.empty?(extra_keys) do
-        Logger.error("Extra keys were received but ignored when converting Stripe object #{map["object"]}: #{inspect extra_keys}")
+        object = Map.get(map, "object")
+
+        module_name =
+          object
+          |> Stripe.Util.object_name_to_module()
+          |> Stripe.Util.module_to_string()
+
+        details = "#{module_name}: #{inspect(extra_keys)}"
+        message = "Extra keys were received but ignored when converting #{details}"
+        Logger.debug(message)
       end
+
       :ok
     end
   end

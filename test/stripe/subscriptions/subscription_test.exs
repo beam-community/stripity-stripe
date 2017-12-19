@@ -1,40 +1,60 @@
 defmodule Stripe.SubscriptionTest do
   use Stripe.StripeCase, async: true
 
-    test "is listable" do
+  describe "retrieve/2" do
+    test "retrieves a subscription" do
+      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.retrieve("sub_123")
+      assert_stripe_requested(:get, "/v1/subscriptions/sub_123")
+    end
+  end
+
+  describe "create/2" do
+    test "creates a subscription" do
+      params = %{
+        application_fee_percent: 5,
+        customer: "cus_123",
+        items: [
+          %{
+            plan: "ruby-express-932",
+            quantity: 1
+          }
+        ],
+        source: "card_123"
+      }
+      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.create(params, [connect_account: "acct_123"])
+      assert_stripe_requested(:post, "/v1/subscriptions")
+    end
+  end
+
+  describe "update/2" do
+    test "updates a subscription" do
+      params = %{metadata: %{foo: "bar"}}
+      assert {:ok, subscription} = Stripe.Subscription.update("sub_123", params)
+      assert_stripe_requested(:post, "/v1/subscriptions/#{subscription.id}")
+    end
+  end
+
+  describe "delete/2" do
+    test "deletes a subscription" do
+      assert {:ok, %Stripe.Subscription{} = subscription} = Stripe.Subscription.delete("sub_123")
+      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
+    end
+  end
+
+  describe "list/2" do
+    test "lists all subscriptions" do
       assert {:ok, %Stripe.List{data: subscriptions}} = Stripe.Subscription.list()
-      assert_stripe_requested :get, "/v1/subscriptions"
+      assert_stripe_requested(:get, "/v1/subscriptions")
       assert is_list(subscriptions)
       assert %Stripe.Subscription{} = hd(subscriptions)
     end
+  end
 
-    test "is retrievable" do
-      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.retrieve("sub_123")
-      assert_stripe_requested :get, "/v1/subscriptions/sub_123"
-    end
-
-    test "is creatable" do
-      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.create(%{
-        customer: "cus_123"
-      })
-      assert_stripe_requested :post, "/v1/subscriptions"
-    end
-
-    test "is updateable" do
-      assert {:ok, subscription} = Stripe.Subscription.update("sub_123", %{metadata: %{foo: "bar"}})
-      assert_stripe_requested :post, "/v1/subscriptions/#{subscription.id}"
-    end
-
-    test "is deletable" do
+  describe "delete_discount/2" do
+    test "deletes a subscription's discount" do
       {:ok, subscription} = Stripe.Subscription.retrieve("sub_123")
-      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.delete(subscription)
-      assert_stripe_requested :delete, "/v1/subscriptions/#{subscription.id}"
+      assert {:ok, _} = Stripe.Subscription.delete_discount("sub_123")
+      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}/discount")
     end
-
-    test "delete_discount/2 deletes a subscription's discount" do
-      {:ok, subscription} = Stripe.Subscription.retrieve("sub_123")
-      # For some reason, stripe-mock returns a coupon here for the discount
-      assert {:ok, %{deleted: true}} = Stripe.Subscription.delete_discount(subscription)
-      assert_stripe_requested :delete, "/v1/subscriptions/#{subscription.id}/discount"
-    end
+  end
 end

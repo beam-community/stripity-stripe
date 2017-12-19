@@ -56,38 +56,61 @@ defmodule Stripe.Error do
 
   @type error_source :: :internal | :network | :stripe
 
-  @type error_status :: :bad_request | :unauthorized | :request_failed | :not_found
-    | :conflict | :too_many_requests | :server_error | :unknown_error
+  @type error_status ::
+          :bad_request
+          | :unauthorized
+          | :request_failed
+          | :not_found
+          | :conflict
+          | :too_many_requests
+          | :server_error
+          | :unknown_error
 
-  @type stripe_error_type :: :api_connection_error | :api_error | :authentication_error
-    | :card_error | :invalid_request_error | :rate_limit_error | :validation_error
+  @type stripe_error_type ::
+          :api_connection_error
+          | :api_error
+          | :authentication_error
+          | :card_error
+          | :invalid_request_error
+          | :rate_limit_error
+          | :validation_error
 
-  @type card_error_code :: :invalid_number | :invalid_expiry_month | :invalid_expiry_year
-    | :invalid_cvc | :invalid_swipe_data | :incorrect_number | :expired_card | :incorrect_cvc
-    | :incorrect_zip | :card_declined | :missing | :processing_error
+  @type card_error_code ::
+          :invalid_number
+          | :invalid_expiry_month
+          | :invalid_expiry_year
+          | :invalid_cvc
+          | :invalid_swipe_data
+          | :incorrect_number
+          | :expired_card
+          | :incorrect_cvc
+          | :incorrect_zip
+          | :card_declined
+          | :missing
+          | :processing_error
 
   @type t :: %__MODULE__{
-    source: error_source,
-    code: error_status | stripe_error_type | Stripe.Request.error_code | :network_error,
-    request_id: String.t | nil,
-    message: String.t,
-    user_message: String.t | nil,
-    extra: %{
-      optional(:card_code) => card_error_code,
-      optional(:decline_code) => String.t,
-      optional(:param) => atom,
-      optional(:charge_id) => Stripe.id,
-      optional(:http_status) => 400..599,
-      optional(:raw_error) => map,
-      optional(:hackney_reason) => any
-    }
-  }
+          source: error_source,
+          code: error_status | stripe_error_type | Stripe.Request.error_code() | :network_error,
+          request_id: String.t() | nil,
+          message: String.t(),
+          user_message: String.t() | nil,
+          extra: %{
+            optional(:card_code) => card_error_code,
+            optional(:decline_code) => String.t(),
+            optional(:param) => atom,
+            optional(:charge_id) => Stripe.id(),
+            optional(:http_status) => 400..599,
+            optional(:raw_error) => map,
+            optional(:hackney_reason) => any
+          }
+        }
 
   @enforce_keys [:source, :code, :message]
   defstruct [:source, :code, :request_id, :extra, :message, :user_message]
 
   @doc false
-  @spec new(Keyword.t) :: t
+  @spec new(Keyword.t()) :: t
   def new(fields) do
     struct!(__MODULE__, fields)
   end
@@ -98,7 +121,10 @@ defmodule Stripe.Error do
     %__MODULE__{
       source: :network,
       code: :network_error,
-      message: "An error occurred while making the network request. The HTTP client returned the following reason: #{inspect reason}",
+      message:
+        "An error occurred while making the network request. The HTTP client returned the following reason: #{
+          inspect(reason)
+        }",
       extra: %{
         hackney_reason: reason
       }
@@ -106,54 +132,40 @@ defmodule Stripe.Error do
   end
 
   @doc false
-  @spec from_stripe_error(400..599, nil, String.t | nil) :: t
+  @spec from_stripe_error(400..599, nil, String.t() | nil) :: t
   def from_stripe_error(status, nil, request_id) do
     %__MODULE__{
       source: :stripe,
       code: code_from_status(status),
       request_id: request_id,
-      extra: %{
-        http_status: status
-      },
-      message: generate_message(status, nil)
+      extra: %{http_status: status},
+      message: status |> message_from_status()
     }
   end
 
-  @spec from_stripe_error(400..599, map, String.t) :: t
+  @spec from_stripe_error(400..599, map, String.t()) :: t
   def from_stripe_error(status, error_data, request_id) do
-    %{
-      "type" => type,
-      "charge" => charge_id,
-      "message" => stripe_message,
-      "code" => card_code,
-      "decline_code" => decline_code,
-      "param" => param
-    } = maybe_pluck(error_data, ~w(type charge message code decline_code param))
+    case error_data |> Map.get("type") |> maybe_to_atom() do
+      nil ->
+        from_stripe_error(status, nil, request_id)
 
-    case type do
-      nil -> from_stripe_error(status, nil, request_id)
       type ->
-        [type, card_code, param] = Enum.map([type, card_code, param], &maybe_to_atom/1)
+        stripe_message = error_data |> Map.get("message")
 
         user_message =
-          if type == :card_error do
-            stripe_message
-          else
-            nil
+          case type do
+            :card_error -> stripe_message
+            _ -> nil
           end
 
-        message =
-          case stripe_message do
-            nil -> generate_message(status, type)
-            message -> message
-          end
+        message = stripe_message || message_from_type(type)
 
         extra =
           %{raw_error: error_data, http_status: status}
-          |> maybe_put(:card_code, card_code)
-          |> maybe_put(:decline_code, decline_code)
-          |> maybe_put(:param, param)
-          |> maybe_put(:charge_id, charge_id)
+          |> maybe_put(:card_code, error_data |> Map.get("code") |> maybe_to_atom())
+          |> maybe_put(:decline_code, error_data |> Map.get("decline_code"))
+          |> maybe_put(:param, error_data |> Map.get("param") |> maybe_to_atom())
+          |> maybe_put(:charge_id, error_data |> Map.get("charge"))
 
         %__MODULE__{
           source: :stripe,
@@ -166,67 +178,56 @@ defmodule Stripe.Error do
     end
   end
 
-  defp code_from_status(status) do
-    case status do
-      400 -> :bad_request
-      401 -> :unauthorized
-      402 -> :request_failed
-      404 -> :not_found
-      409 -> :conflict
-      429 -> :too_many_requests
-      s when s in [500, 502, 503, 504] -> :server_error
-      _ -> :unknown_error
-    end
-  end
+  defp code_from_status(400), do: :bad_request
+  defp code_from_status(401), do: :unauthorized
+  defp code_from_status(402), do: :request_failed
+  defp code_from_status(404), do: :not_found
+  defp code_from_status(409), do: :conflict
+  defp code_from_status(429), do: :too_many_requests
+  defp code_from_status(s) when s in [500, 502, 503, 504], do: :server_error
+  defp code_from_status(_), do: :unknown_error
 
-  defp generate_message(status, nil) do
-    case status do
-      400 -> "The request was unacceptable, often due to missing a required parameter."
-      401 -> "No valid API key provided."
-      402 -> "The parameters were valid but the request failed."
-      404 -> "The requested resource doesn't exist."
-      409 -> "The request conflicts with another request (perhaps due to using the same idempotent key)."
-      429 -> "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
-      s when s in [500, 502, 503, 504] -> "Something went wrong on Stripe's end."
-      s -> "An unknown HTTP code of #{s} was received."
-    end
-  end
+  defp message_from_status(400),
+    do: "The request was unacceptable, often due to missing a required parameter."
 
-  defp generate_message(_, type) do
-    case type do
-      :api_connection_error -> "The connection to Stripe's API failed."
-      :api_error -> "An internal Stripe error occurred. This is usually temporary."
-      :authentication_error -> "You failed to properly authenticate yourself in the request."
-      :card_error -> "The card could not be charged for some reason."
-      :invalid_request -> "Your request had invalid parameters."
-      :rate_limit_error -> "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
-      :validation_error -> "A client-side library failed to validate a field."
-    end
-  end
+  defp message_from_status(401), do: "No valid API key provided."
+  defp message_from_status(402), do: "The parameters were valid but the request failed."
+  defp message_from_status(404), do: "The requested resource doesn't exist."
 
-  # receives a map and a list of keys
-  # returns a map with all the provided keys, with either the original value in the input map
-  # or `nil` if the value was missing
-  defp maybe_pluck(map, keys) do
-    Enum.reduce(keys, %{}, fn key, acc ->
-      case map[key] do
-        nil -> acc
-        value -> Map.put(acc, key, value)
-      end
-    end)
-  end
+  defp message_from_status(409),
+    do:
+      "The request conflicts with another request (perhaps due to using the same idempotent key)."
 
-  defp maybe_put(map, key, val) do
-    case val do
-      nil -> map
-      val -> Map.put(map, key, val)
-    end
-  end
+  defp message_from_status(429),
+    do:
+      "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
 
-  defp maybe_to_atom(string) do
-    case string do
-      nil -> nil
-      string -> String.to_atom(string)
-    end
-  end
+  defp message_from_status(s) when s in [500, 502, 503, 504],
+    do: "Something went wrong on Stripe's end."
+
+  defp message_from_status(s), do: "An unknown HTTP code of #{s} was received."
+
+  defp message_from_type(:api_connection_error), do: "The connection to Stripe's API failed."
+
+  defp message_from_type(:api_error),
+    do: "An internal Stripe error occurred. This is usually temporary."
+
+  defp message_from_type(:authentication_error),
+    do: "You failed to properly authenticate yourself in the request."
+
+  defp message_from_type(:card_error), do: "The card could not be charged for some reason."
+  defp message_from_type(:invalid_request_error), do: "Your request had invalid parameters."
+
+  defp message_from_type(:rate_limit_error),
+    do:
+      "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
+
+  defp message_from_type(:validation_error),
+    do: "A client-side library failed to validate a field."
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, key, value), do: map |> Map.put(key, value)
+
+  defp maybe_to_atom(nil), do: nil
+  defp maybe_to_atom(string) when is_binary(string), do: string |> String.to_atom()
 end

@@ -7,32 +7,31 @@ defmodule Stripe.Invoiceitem do
   Note: this module is named `Invoiceitem` and not `InvoiceItem` on purpose, to
   match the Stripe terminology of `invoiceitem`.
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: integer,
-               currency: String.t,
-               customer: Stripe.id | Stripe.Customer.t,
-               date: Stripe.timestamp,
-               description: String.t,
-               discountable: boolean,
-               invoice: Stripe.id | Stripe.Invoice.t,
-               livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               period: %{
-                 start: Stripe.timestamp,
-                 end: Stripe.timestamp
-               },
-               plan: Stripe.Plan.t | nil,
-               proration: boolean,
-               quantity: integer,
-               subscription: Stripe.id | Stripe.Subscription.t | nil,
-               subscription_item: Stripe.id | Stripe.SubscriptionItem.t | nil
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          amount: integer,
+          currency: String.t(),
+          customer: Stripe.id() | Stripe.Customer.t(),
+          date: Stripe.timestamp(),
+          description: String.t(),
+          discountable: boolean,
+          invoice: Stripe.id() | Stripe.Invoice.t(),
+          livemode: boolean,
+          metadata: Stripe.Types.metadata(),
+          period: %{
+            start: Stripe.timestamp(),
+            end: Stripe.timestamp()
+          },
+          plan: Stripe.Plan.t() | nil,
+          proration: boolean,
+          quantity: integer,
+          subscription: Stripe.id() | Stripe.Subscription.t() | nil,
+          subscription_item: Stripe.id() | Stripe.SubscriptionItem.t() | nil
+        }
 
   defstruct [
     :id,

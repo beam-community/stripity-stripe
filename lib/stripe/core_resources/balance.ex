@@ -5,24 +5,25 @@ defmodule Stripe.Balance do
   You can:
   - [Retrieve the current balance](https://stripe.com/docs/api#retrieve_balance)
   """
+
   use Stripe.Entity
   import Stripe.Request
 
   @type funds :: %{
-    currency: String.t,
-    amount: integer,
-    source_types: %{
-      Stripe.Source.source_type => integer
-    }
-  }
+          currency: String.t(),
+          amount: integer,
+          source_types: %{
+            Stripe.Source.source_type() => integer
+          }
+        }
 
   @type t :: %__MODULE__{
-    object: String.t,
-    available: list(funds),
-    connect_reserved: list(funds) | nil,
-    livemode: boolean,
-    pending: list(funds)
-  }
+          object: String.t(),
+          available: list(funds),
+          connect_reserved: list(funds) | nil,
+          livemode: boolean,
+          pending: list(funds)
+        }
 
   defstruct [
     :object,
@@ -41,7 +42,7 @@ defmodule Stripe.Balance do
 
   See the [Stripe docs](https://stripe.com/docs/api#retrieve_balance).
   """
-  @spec retrieve(Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(opts \\ []) do
     new_request(opts)
     |> put_endpoint(@endpoint)

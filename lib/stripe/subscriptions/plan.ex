@@ -33,24 +33,24 @@ defmodule Stripe.Plan do
   }
   ```
   """
+
   use Stripe.Entity
   import Stripe.Request
-  alias Stripe.Util
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    amount: non_neg_integer,
-    created: Stripe.timestamp,
-    currency: String.t,
-    interval: :day | :week | :month | :year,
-    interval_count: pos_integer,
-    livemode: boolean,
-    metadata: Stripe.Types.metadata,
-    name: String.t,
-    statement_descriptor: String.t | nil,
-    trial_period_days: integer | nil
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          amount: non_neg_integer,
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          interval: String.t(),
+          interval_count: pos_integer,
+          livemode: boolean,
+          metadata: Stripe.Types.metadata(),
+          name: String.t(),
+          statement_descriptor: String.t() | nil,
+          trial_period_days: integer | nil
+        }
 
   defstruct [
     :id,
@@ -72,19 +72,18 @@ defmodule Stripe.Plan do
   @doc """
   Create a plan.
   """
-  @spec create(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
+               id: String.t(),
                amount: non_neg_integer,
-               currency: String.t,
-               interval: :day | :week | :month | :year,
-               interval_count: pos_integer,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               name: String.t,
-               statement_descriptor: String.t
-             }
-  def create(params, opts \\ []) do
+               currency: String.t(),
+               interval: String.t(),
+               name: String.t(),
+               interval_count: pos_integer | nil,
+               metadata: Stripe.Types.metadata() | nil,
+               statement_descriptor: String.t() | nil
+             } | %{}
+  def create(%{id: _, amount: _, currency: _, interval: _, name: _} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
@@ -95,7 +94,7 @@ defmodule Stripe.Plan do
   @doc """
   Retrieve a plan.
   """
-  @spec retrieve(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -108,14 +107,12 @@ defmodule Stripe.Plan do
 
   Takes the `id` and a map of changes.
   """
-  @spec update(Stripe.id | t, params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               name: String.t,
-               statement_descriptor: String.t
-             }
+               metadata: Stripe.Types.metadata() | nil,
+               name: String.t() | nil,
+               statement_descriptor: String.t() | nil
+             } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -127,7 +124,7 @@ defmodule Stripe.Plan do
   @doc """
   Delete a plan.
   """
-  @spec delete(Stripe.id | t, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -138,13 +135,13 @@ defmodule Stripe.Plan do
   @doc """
   List all plans.
   """
-  @spec list(params, Stripe.options) :: {:ok, Stripe.List.of(t)} | {:error, Stripe.Error.t}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query,
-               ending_before: t | Stripe.id,
-               limit: 1..100,
-               starting_after: t | Stripe.id
-             }
+               created: Stripe.date_query() | nil,
+               ending_before: t | Stripe.id() | nil,
+               limit: 1..100 | nil,
+               starting_after: t | Stripe.id() | nil
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)

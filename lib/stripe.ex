@@ -47,7 +47,14 @@ defmodule Stripe do
   """
   use Application
 
-  @type id :: String.t
+  @type id :: String.t()
+  @type date_query :: %{
+                   gt: timestamp,
+                   gte: timestamp,
+                   lt: timestamp,
+                   lte: timestamp
+                 }
+  @type options :: Keyword.t()
   @type timestamp :: pos_integer
 
   @doc """
@@ -63,7 +70,7 @@ defmodule Stripe do
   to comply with the expectations of the BEAM application standard.
   It is not given any children to supervise.
   """
-  @spec start(Application.start_type, any) :: {:error, any} | {:ok, pid} | {:ok, pid, any}
+  @spec start(Application.start_type(), any) :: {:error, any} | {:ok, pid} | {:ok, pid, any}
   def start(_start_type, _args) do
     import Supervisor.Spec, warn: false
 

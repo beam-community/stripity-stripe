@@ -16,7 +16,7 @@ defmodule Stripe.StripeMock do
     GenServer.call(pid, :reset)
   end
 
-  def stop (pid \\ __MODULE__) do
+  def stop(pid \\ __MODULE__) do
     GenServer.stop(pid)
   end
 
@@ -41,26 +41,35 @@ defmodule Stripe.StripeMock do
 
   @impl true
   def handle_info({:stdout, os_pid, msg}, %{os_pid: os_pid} = state) do
-    Logger.debug("[stripe-mock:out] #{String.trim msg}")
+    Logger.debug("[stripe-mock:out] #{String.trim(msg)}")
     {:noreply, state}
   end
 
   @impl true
   def handle_info({:stderr, os_pid, msg}, %{os_pid: os_pid} = state) do
-    Logger.debug("[stripe-mock] #{String.trim msg}")
+    Logger.debug("[stripe-mock] #{String.trim(msg)}")
     {:noreply, state}
   end
 
   @impl true
-  def handle_info({:DOWN, os_pid, :process, _ex_pid, _reason}, %{os_pid: os_pid, opts: opts, restarting: {true, from}} = state) do
+  def handle_info(
+        %{os_pid: os_pid, opts: opts, restarting: {true, from}} = state,
+        {:DOWN, os_pid, :process, _ex_pid, _reason}
+      ) do
     {:ok, manager_pid, os_pid} = start_stripe_mock(opts)
     GenServer.reply(from, :ok)
     {:noreply, %{state | manager_pid: manager_pid, os_pid: os_pid, restarting: false}}
   end
 
   defp start_stripe_mock(opts) do
-    executable = opts[:stripe_mock_path] || System.find_executable "stripe-mock"
-    unless executable, do: raise "Could not find stripe-mock. Make sure it's in your PATH or pass the :stripe_mock_path option."
+    executable = opts[:stripe_mock_path] || System.find_executable("stripe-mock")
+
+    unless executable do
+      raise(
+        "Could not find stripe-mock. Make sure it's in your PATH or pass the :stripe_mock_path option."
+      )
+    end
+
     port = opts[:port] || 12111
 
     port_args =
@@ -76,10 +85,13 @@ defmodule Stripe.StripeMock do
 
   defp kill_stripe_mock(manager_pid) do
     Logger.debug("Killing stripe_mock")
-    case Exexec.stop manager_pid do
-      :ok -> :ok
+
+    case Exexec.stop(manager_pid) do
+      :ok ->
+        :ok
+
       {:error, err} ->
-        Logger.error("Error killing stripe_mock: #{inspect err}")
+        Logger.error("Error killing stripe_mock: #{inspect(err)}")
         :ok
     end
   end

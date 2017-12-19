@@ -3,6 +3,6 @@ defmodule Stripe.BalanceTest do
 
   test "is retrievable" do
     assert {:ok, %Stripe.Balance{}} = Stripe.Balance.retrieve()
-    assert_stripe_requested :get, "/v1/balance"
+    assert_stripe_requested(:get, "/v1/balance")
   end
 end

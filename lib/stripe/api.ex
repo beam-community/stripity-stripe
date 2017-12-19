@@ -8,9 +8,9 @@ defmodule Stripe.API do
   alias Stripe.Error
 
   @type method :: :get | :post | :put | :delete | :patch
-  @type headers :: %{String.t => String.t} | %{}
+  @type headers :: %{String.t() => String.t()} | %{}
   @type body :: {:multipart, list} | map
-  @typep http_success :: {:ok, integer, [{String.t, String.t}], String.t}
+  @typep http_success :: {:ok, integer, [{String.t(), String.t()}], String.t()}
   @typep http_failure :: {:error, term}
 
   @pool_name __MODULE__
@@ -25,28 +25,30 @@ defmodule Stripe.API do
     end
   end
 
-  @spec get_pool_options() :: Keyword.t
+  @spec get_pool_options() :: Keyword.t()
   defp get_pool_options() do
     Application.get_env(:stripity_stripe, :pool_options)
   end
 
-  @spec get_base_url() :: String.t
+  @spec get_base_url() :: String.t()
   defp get_base_url() do
     Application.get_env(:stripity_stripe, :api_base_url)
   end
 
-  @spec get_upload_url() :: String.t
+  @spec get_upload_url() :: String.t()
   defp get_upload_url() do
     Application.get_env(:stripity_stripe, :api_upload_url)
   end
 
-  @spec get_default_api_key() :: String.t
+  @spec get_default_api_key() :: String.t()
   defp get_default_api_key() do
     case Application.get_env(:stripity_stripe, :api_key) do
       nil ->
         # use an empty string and let Stripe produce an error
         ""
-      key -> key
+
+      key ->
+        key
     end
   end
 
@@ -80,19 +82,10 @@ defmodule Stripe.API do
     |> Map.put("Content-Type", "multipart/form-data")
   end
 
-  @spec add_auth_header(headers, String.t | nil) :: headers
+  @spec add_auth_header(headers, String.t() | nil) :: headers
   defp add_auth_header(existing_headers, api_key) do
     api_key = fetch_api_key(api_key)
     Map.put(existing_headers, "Authorization", "Bearer #{api_key}")
-  end
-
-  @spec add_basic_auth_header(headers, String.t | nil) :: headers
-  defp add_basic_auth_header(existing_headers, api_key) do
-    api_key = fetch_api_key(api_key)
-    auth_string =
-      api_key <> ":"
-      |> :base64.encode_to_string()
-    Map.put(existing_headers, "Authorization", "Basic #{auth_string}")
   end
 
   @spec fetch_api_key(String.t | nil) :: String.t
@@ -103,21 +96,22 @@ defmodule Stripe.API do
     end
   end
 
-  @spec add_connect_header(headers, String.t | nil) :: headers
+  @spec add_connect_header(headers, String.t() | nil) :: headers
   defp add_connect_header(existing_headers, nil), do: existing_headers
+
   defp add_connect_header(existing_headers, account_id) do
     Map.put(existing_headers, "Stripe-Account", account_id)
   end
 
   @spec add_default_options(list) :: list
   defp add_default_options(opts) do
-    [ :with_body | opts ]
+    [:with_body | opts]
   end
 
   @spec add_pool_option(list) :: list
   defp add_pool_option(opts) do
     if use_pool?() do
-      [ {:pool, @pool_name} | opts ]
+      [{:pool, @pool_name} | opts]
     else
       opts
     end
@@ -135,17 +129,20 @@ defmodule Stripe.API do
       request(%{}, :get, "/customers", %{}, connect_account: "acc_134151")
 
   """
-  @spec request(body, method, String.t, headers, list) :: {:ok, map} | {:error, Stripe.Error.t}
+  @spec request(body, method, String.t(), headers, list) ::
+          {:ok, map} | {:error, Stripe.Error.t()}
   def request(body, method, endpoint, headers, opts) do
     {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
     {api_key, opts} = Keyword.pop(opts, :api_key)
 
     base_url = get_base_url()
     req_url = base_url <> endpoint
+
     req_body =
       body
       |> Stripe.Util.map_keys_to_atoms()
       |> Stripe.URI.encode_query()
+
     req_headers =
       headers
       |> add_default_headers()
@@ -164,17 +161,22 @@ defmodule Stripe.API do
 
   @doc """
   """
-  @spec request_file_upload(body, method, String.t, headers, list) :: {:ok, map} | {:error, Stripe.Error.t}
+  @spec request_file_upload(body, method, String.t(), headers, list) ::
+          {:ok, map} | {:error, Stripe.Error.t()}
   def request_file_upload(body, method, endpoint, headers, opts) do
     {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
     {api_key, opts} = Keyword.pop(opts, :api_key)
 
     base_url = get_upload_url()
     req_url = base_url <> endpoint
+    req_body =
+      body
+      |> Stripe.Util.map_keys_to_atoms()
+      |> Stripe.URI.encode_query()
     req_headers =
       headers
       |> add_multipart_form_headers()
-      |> add_basic_auth_header(api_key)
+      |> add_auth_header(api_key)
       |> add_connect_header(connect_account_id)
       |> Map.to_list()
 
@@ -183,18 +185,19 @@ defmodule Stripe.API do
       |> add_default_options()
       |> add_pool_option()
 
-    @http_module.request(method, req_url, req_headers, body, req_opts)
+    @http_module.request(method, req_url, req_headers, req_body, req_opts)
     |> handle_response()
   end
 
   @doc """
   A low level utility function to make an OAuth request to the Stripe API
   """
-  @spec oauth_request(method, String.t, map) :: {:ok, map} | {:error, Stripe.Error.t}
+  @spec oauth_request(method, String.t(), map) :: {:ok, map} | {:error, Stripe.Error.t()}
   def oauth_request(method, endpoint, body) do
     base_url = "https://connect.stripe.com/oauth/"
     req_url = base_url <> endpoint
     req_body = Stripe.URI.encode_query(body)
+
     req_headers =
       %{}
       |> add_default_headers()
@@ -209,25 +212,27 @@ defmodule Stripe.API do
     |> handle_response()
   end
 
-  @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, Stripe.Error.t}
+  @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, Stripe.Error.t()}
   defp handle_response({:ok, status, headers, body}) when status >= 200 and status <= 299 do
     decoded_body =
       body
       |> decompress_body(headers)
-      |> Poison.decode!
+      |> Poison.decode!()
 
     {:ok, decoded_body}
   end
 
-  defp handle_response({:ok, status, headers, body}) when status >= 400 and status <= 599 do
-    request_id = Map.get(headers, "Request-Id")
+  defp handle_response({:ok, status, headers, body}) when status >= 300 and status <= 599 do
+    request_id = headers |> List.keyfind("Request-Id", 0)
 
     error =
       case Poison.decode(body) do
         {:ok, %{"error_description" => _} = api_error} ->
-          Error.from_oauth_error(status, api_error, request_id)
+          Error.from_stripe_error(status, api_error, request_id)
+
         {:ok, %{"error" => api_error}} ->
           Error.from_stripe_error(status, api_error, request_id)
+
         {:error, _} ->
           # e.g. if the body is empty
           Error.from_stripe_error(status, nil, request_id)
@@ -243,6 +248,7 @@ defmodule Stripe.API do
 
   defp decompress_body(body, headers) do
     headers_dict = :hackney_headers.new(headers)
+
     case :hackney_headers.get_value("Content-Encoding", headers_dict) do
       "gzip" -> :zlib.gunzip(body)
       "deflate" -> :zlib.unzip(body)

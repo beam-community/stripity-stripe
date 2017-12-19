@@ -6,11 +6,12 @@ defmodule Stripe.Mixfile do
       app: :stripity_stripe,
       deps: deps(),
       description: description(),
+      dialyzer: [plt_add_apps: [:mix]],
       elixir: "~> 1.3",
       package: package(),
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       preferred_cli_env: [
-        "coveralls": :test,
+        coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
@@ -23,7 +24,7 @@ defmodule Stripe.Mixfile do
   # Configuration for the OTP application
   def application do
     [
-      applications: apps(Mix.env),
+      applications: apps(Mix.env()),
       env: env(),
       mod: {Stripe, []}
     ]
@@ -31,12 +32,12 @@ defmodule Stripe.Mixfile do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   defp env() do
     [
       api_base_url: "https://api.stripe.com/v1/",
-      api_upload_url: "https://uploads.stripe.com/v1/",
+      api_upload_url: "https://files.stripe.com/v1/",
       pool_options: [
         timeout: 5_000,
         max_connections: 10

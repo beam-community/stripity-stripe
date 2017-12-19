@@ -12,9 +12,9 @@ defmodule Stripe.Coupon do
 
   Stripe API reference: https://stripe.com/docs/api#coupons
   """
+
   use Stripe.Entity
   import Stripe.Request
-  alias Stripe.Util
 
   @type t :: %__MODULE__{
           id: Stripe.id(),
@@ -96,6 +96,7 @@ defmodule Stripe.Coupon do
         when params: %{
                metadata: Stripe.Types.metadata()
              }
+
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -125,6 +126,7 @@ defmodule Stripe.Coupon do
                optional(:limit) => 1..100,
                optional(:starting_after) => t | Stripe.id()
              }
+
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
