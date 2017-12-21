@@ -4,29 +4,27 @@ defmodule Stripe.BankAccount do
 
   Stripe API reference: https://stripe.com/docs/api#bank_accounts
   """
+
   use Stripe.Entity
-
-  @type account_holder_type :: :individual | :company
-
-  @type status :: :new | :validated | :verified | :verification_failed | :errored
+  import Stripe.Request
 
   @type t :: %__MODULE__{
-    id: Stripe.id,
-    object: String.t,
-    account: Stripe.id | Stripe.Account.t | nil,
-    account_holder_name: String.t | nil,
-    account_holder_type: account_holder_type | nil,
-    bank_name: String.t | nil,
-    country: String.t,
-    currency: String.t,
-    customer: Stripe.id | Stripe.Customer.t | nil,
-    default_for_currency: boolean | nil,
-    fingerprint: String.t | nil,
-    last4: String.t,
-    metadata: Stripe.Types.metadata | nil,
-    routing_number: String.t | nil,
-    status: status
-  }
+          id: Stripe.id(),
+          object: String.t(),
+          account: Stripe.id() | Stripe.Account.t() | nil,
+          account_holder_name: String.t() | nil,
+          account_holder_type: String.t() | nil,
+          bank_name: String.t() | nil,
+          country: String.t(),
+          currency: String.t(),
+          customer: Stripe.id() | Stripe.Customer.t() | nil,
+          default_for_currency: boolean | nil,
+          fingerprint: String.t() | nil,
+          last4: String.t(),
+          metadata: Stripe.Types.metadata() | nil,
+          routing_number: String.t() | nil,
+          status: String.t()
+        }
 
   defstruct [
     :id,
@@ -45,4 +43,89 @@ defmodule Stripe.BankAccount do
     :routing_number,
     :status
   ]
+
+  defp plural_endpoint(%{customer: id}) do
+    "customers/" <> id <> "/sources"
+  end
+
+  @doc """
+  Create a bank account.
+  """
+  @spec create(map, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def create(%{customer: _, source: _} = params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(params |> plural_endpoint())
+    |> put_params(params |> Map.delete(:customer))
+    |> put_method(:post)
+    |> make_request()
+  end
+
+  @doc """
+  Retrieve a bank account.
+  """
+  @spec retrieve(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def retrieve(id, %{customer: _} = params, opts \\ []) do
+    endpoint = params |> plural_endpoint()
+
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
+  end
+
+  @doc """
+  Update a bank account.
+  """
+  @spec update(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def update(id, %{customer: _} = params, opts \\ []) do
+    endpoint = params |> plural_endpoint()
+
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:post)
+    |> put_params(params |> Map.delete(:customer))
+    |> make_request()
+  end
+
+  @doc """
+  Delete a bank account.
+  """
+  @spec delete(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def delete(id, %{customer: _} = params, opts \\ []) do
+    endpoint = params |> plural_endpoint()
+
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:delete)
+    |> make_request()
+  end
+
+  @doc """
+  Verify a bank account.
+  """
+  @spec verify(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def verify(id, %{customer: _} = params, opts \\ []) do
+    endpoint = params |> plural_endpoint()
+
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}/verify")
+    |> put_method(:post)
+    |> put_params(params |> Map.delete(:customer))
+    |> make_request()
+  end
+
+  @doc """
+  List all bank accounts.
+  """
+  @spec list(map, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+  def list(%{customer: _} = params, opts \\ []) do
+    endpoint = params |> plural_endpoint()
+    params = params |> Map.put(:object, "card")
+
+    new_request(opts)
+    |> put_endpoint(endpoint)
+    |> put_method(:get)
+    |> put_params(params |> Map.delete(:customer))
+    |> make_request()
+  end
 end

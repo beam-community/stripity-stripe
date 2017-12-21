@@ -30,9 +30,10 @@ defmodule Stripe.Util do
   """
   def map_keys_to_atoms(m) do
     Enum.into(m, %{}, fn
-      {k, v} when is_binary(k)  ->
+      {k, v} when is_binary(k) ->
         a = String.to_existing_atom(k)
         {a, v}
+
       entry ->
         entry
     end)
@@ -41,6 +42,7 @@ defmodule Stripe.Util do
   def atomize_keys(map = %{}) do
     Enum.into(map, %{}, fn {k, v} -> {atomize_key(k), atomize_keys(v)} end)
   end
+
   def atomize_keys([head | rest]), do: [atomize_keys(head) | atomize_keys(rest)]
   # Default
   def atomize_keys(not_a_map), do: not_a_map
@@ -48,8 +50,7 @@ defmodule Stripe.Util do
   def atomize_key(k) when is_binary(k), do: String.to_atom(k)
   def atomize_key(k), do: k
 
-  @spec object_name_to_module(String.t) :: module
-  def object_name_to_module("bank_account"), do: Stripe.ExternalAccount
+  @spec object_name_to_module(String.t()) :: module
   def object_name_to_module(object_name) do
     module_name =
       object_name
@@ -59,6 +60,11 @@ defmodule Stripe.Util do
     Module.concat("Stripe", module_name)
   end
 
+  @spec module_to_string(module) :: String.t()
+  def module_to_string(module) do
+    module |> Atom.to_string() |> String.trim_leading("Elixir.")
+  end
+
   def normalize_id(%{id: id}) when id !== nil, do: id
   def normalize_id(id) when is_binary(id), do: id
 
@@ -66,6 +72,7 @@ defmodule Stripe.Util do
     if Mix.env() in [:test, :dev] do
       {fun, arity} = __CALLER__.function
       mod = __CALLER__.module
+
       quote bind_quoted: [mod: mod, fun: fun, arity: arity, msg: msg] do
         require Logger
         Logger.warn("[DEPRECATION] The function #{mod}.#{fun}/#{arity} is deprecated. #{msg}")

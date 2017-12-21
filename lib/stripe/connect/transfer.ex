@@ -4,29 +4,28 @@ defmodule Stripe.Transfer do
 
   Stripe API reference: https://stripe.com/docs/api#transfers
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: integer,
-               amount_reversed: integer,
-               balance_transaction: Stripe.id | Stripe.BalanceTransaction.t,
-               created: Stripe.timestamp,
-               currency: String.t,
-               description: String.t,
-               destination: Stripe.id | Stripe.Account.t,
-               destination_payment: String.t,
-               livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               reversals: Stripe.List.of(Stripe.Reversal.t),
-               reversed: boolean,
-               source_transaction: Stripe.id | Stripe.Charge.t,
-               source_type: :card | :bank_account | :bitcoin_receiver | :alipay_account,
-               transfer_group: String.t,
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          amount: integer,
+          amount_reversed: integer,
+          balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t(),
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          description: String.t(),
+          destination: Stripe.id() | Stripe.Account.t(),
+          destination_payment: String.t(),
+          livemode: boolean,
+          metadata: Stripe.Types.metadata(),
+          reversals: Stripe.List.t(Stripe.TransferReversal.t()),
+          reversed: boolean,
+          source_transaction: Stripe.id() | Stripe.Charge.t(),
+          source_type: String.t(),
+          transfer_group: String.t()
+        }
 
   defstruct [
     :id,

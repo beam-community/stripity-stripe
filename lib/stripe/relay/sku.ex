@@ -4,37 +4,38 @@ defmodule Stripe.SKU do
 
   Stripe API reference: https://stripe.com/docs/api#sku_object
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               active: boolean,
-               attributes: %{
-                 optional(String.t) => String.t
-               },
-               created: Stripe.timestamp,
-               currency: String.t,
-               image: String.t,
-               inventory: %{
-                 quantity: nil | non_neg_integer,
-                 type: :finite | :bucket | :infinite,
-                 value: nil | :in_stock | :limited | :out_of_stock
-               },
-               livemode: boolean,
-               metadata: %{
-                 optional(String.t) => String.t
-               },
-               package_dimensions: nil | %{
-                 height: float,
-                 length: float,
-                 weight: float,
-                 width: float
-               },
-               price: non_neg_integer,
-               product: Stripe.id | Stripe.Product.t,
-               updated: Stripe.timestamp
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          active: boolean,
+          attributes: %{
+            optional(String.t()) => String.t()
+          },
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          image: String.t(),
+          inventory: %{
+            quantity: non_neg_integer | nil,
+            type: String.t(),
+            value: String.t() | nil
+          },
+          livemode: boolean,
+          metadata: Stripe.Types.metadata(),
+          package_dimensions:
+            %{
+              height: float,
+              length: float,
+              weight: float,
+              width: float
+            }
+            | nil,
+          price: non_neg_integer,
+          product: Stripe.id() | Stripe.Product.t(),
+          updated: Stripe.timestamp()
+        }
 
   defstruct [
     :id,

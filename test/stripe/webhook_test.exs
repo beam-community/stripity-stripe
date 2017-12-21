@@ -4,7 +4,6 @@ defmodule Stripe.WebhookTest do
   import Stripe.Webhook
 
   @valid_payload ~S({"object": "event"})
-  @invalid_payload "{}"
 
   @valid_scheme "v1"
   @invalid_scheme "v0"

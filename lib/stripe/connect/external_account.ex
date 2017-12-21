@@ -9,67 +9,109 @@ defmodule Stripe.ExternalAccount do
   - Update an external account
   - Delete an external account
 
-  Does not yet render lists or take options.
-
-  Probably does not yet work for credit cards.
-
   Stripe API reference: https://stripe.com/docs/api#external_accounts
   """
 
-  alias Stripe.Util
+  import Stripe.Request
 
-  defp endpoint(managed_account_id) do
-    "accounts/#{managed_account_id}/external_accounts"
+  defp accounts_plural_endpoint(%{account: id}) do
+    "accounts/#{id}/external_accounts"
   end
 
-  @type t :: Stripe.BankAccount.t | Stripe.Card.t
+  @type t :: Stripe.BankAccount.t() | Stripe.Card.t()
+
+  @type create_params :: %{
+          default_for_currency: boolean | nil,
+          external_account: String.t(),
+          metadata: Stripe.Types.metadata() | nil
+        }
 
   @doc """
   Create an external account.
+
+  Only accepts a `token` and not a hash of values.
   """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def create(changes, opts = [connect_account: managed_account_id]) do
-    endpoint = endpoint(managed_account_id)
-    Stripe.Request.create(endpoint, changes, opts)
+  @spec create(map, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def create(%{account: _, token: token} = params, opts \\ []) do
+    endpoint = params |> accounts_plural_endpoint()
+
+    updated_params =
+      params
+      |> Map.put(:external_account, token)
+      |> Map.delete(:token)
+      |> Map.delete(:account)
+
+    new_request(opts)
+    |> put_endpoint(endpoint)
+    |> put_params(updated_params)
+    |> put_method(:post)
+    |> make_request()
   end
 
   @doc """
   Retrieve an external account.
   """
-  @spec retrieve(String.t, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def retrieve(id, opts = [connect_account: managed_account_id]) do
-    endpoint = endpoint(managed_account_id) <> "/" <> id
-    Stripe.Request.retrieve(endpoint, opts)
+  @spec retrieve(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def retrieve(id, %{account: _} = params, opts \\ []) do
+    endpoint = params |> accounts_plural_endpoint()
+
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
   end
 
   @doc """
   Update an external account.
-
-  Takes the `id` and a map of changes.
   """
-  @spec update(String.t, map, list) :: {:ok, t} | {:error, Stripe.api_error_struct}
-  def update(id, changes, opts = [connect_account: managed_account_id]) do
-    endpoint = endpoint(managed_account_id) <> "/" <> id
-    Stripe.Request.update(endpoint, changes, opts)
+  @spec update(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def update(id, %{account: _} = params, opts \\ []) do
+    endpoint = params |> accounts_plural_endpoint()
+
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:post)
+    |> put_params(params |> Map.delete(:account))
+    |> make_request()
   end
 
   @doc """
   Delete an external account.
   """
-  @spec delete(t | String.t, list) :: :ok | {:error, Stripe.api_error_struct}
-  def delete(account, opts = [connect_account: managed_account_id]) do
-    id = Util.normalize_id(account)
-    endpoint = endpoint(managed_account_id) <> "/" <> id
-    Stripe.Request.delete(endpoint, %{}, opts)
+  @spec delete(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def delete(id, %{account: _} = params, opts \\ []) do
+    endpoint = params |> accounts_plural_endpoint()
+
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:delete)
+    |> make_request()
   end
 
   @doc """
   List all external accounts.
+
+  Takes either `:bank_account` or `:card` to determine which object to list.
   """
-  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
-  def list(params \\ %{}, opts = [connect_account: managed_account_id]) do
-    endpoint = endpoint(managed_account_id)
-    params = Map.merge(params, %{"object" => "bank_account"})
-    Stripe.Request.retrieve(params, endpoint, opts)
+  @spec list(atom, map, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+  def list(atom, params, opts \\ [])
+  def list(:bank_account, %{account: _} = params, opts) do
+    endpoint = params |> accounts_plural_endpoint()
+    params = params |> Map.put(:object, "bank_account")
+    do_list(endpoint, params, opts)
+  end
+  def list(:card, %{account: _} = params, opts) do
+    endpoint = params |> accounts_plural_endpoint()
+    params = params |> Map.put(:object, "card")
+    do_list(endpoint, params, opts)
+  end
+
+  @spec do_list(String.t, map, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+  defp do_list(endpoint, params, opts) do
+    new_request(opts)
+    |> put_endpoint(endpoint)
+    |> put_method(:get)
+    |> put_params(params |> Map.delete(:account))
+    |> make_request()
   end
 end

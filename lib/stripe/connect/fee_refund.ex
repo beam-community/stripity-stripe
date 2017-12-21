@@ -5,20 +5,19 @@ defmodule Stripe.FeeRefund do
   Stripe API reference: https://stripe.com/docs/api#fee_refunds
 
   """
+
   use Stripe.Entity
 
   @type t :: %__MODULE__{
-               id: Stripe.id,
-               object: String.t,
-               amount: integer,
-               balance_transaction: Stripe.id | Stripe.BalanceTransaction.t,
-               created: Stripe.timestamp,
-               currency: String.t,
-               fee: Stripe.id | Stripe.ApplicationFee.t,
-               metadata: %{
-                 optional(String.t) => String.t
-               }
-             }
+          id: Stripe.id(),
+          object: String.t(),
+          amount: integer,
+          balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t(),
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          fee: Stripe.id() | Stripe.ApplicationFee.t(),
+          metadata: Stripe.Types.metadata()
+        }
 
   defstruct [
     :id,
