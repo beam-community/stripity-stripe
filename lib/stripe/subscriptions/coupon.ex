@@ -28,7 +28,7 @@ defmodule Stripe.Coupon do
           max_redemptions: pos_integer | nil,
           metadata: Stripe.Types.metadata(),
           percent_off: pos_integer | nil,
-          redeem_by: pos_integer | nil,
+          redeem_by: Stripe.timestamp() | nil,
           times_redeemed: non_neg_integer,
           valid: boolean
         }
