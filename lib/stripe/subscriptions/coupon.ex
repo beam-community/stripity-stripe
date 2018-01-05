@@ -19,16 +19,18 @@ defmodule Stripe.Coupon do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
-          amount_off: pos_integer,
+          amount_off: pos_integer | nil,
           created: Stripe.timestamp(),
-          currency: String.t(),
+          currency: String.t() | nil,
           duration: String.t(),
           duration_in_months: pos_integer | nil,
           livemode: boolean,
-          max_redemptions: pos_integer,
-          metadata: Stripe.Types.metadata(),
-          percent_off: pos_integer,
-          redeem_by: Stripe.timestamp(),
+          max_redemptions: pos_integer | nil,
+          metadata: %{
+            optional(String.t()) => String.t()
+          },
+          percent_off: pos_integer | nil,
+          redeem_by: Stripe.timestamp() | nil,
           times_redeemed: non_neg_integer,
           valid: boolean
         }
@@ -57,16 +59,16 @@ defmodule Stripe.Coupon do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               id: String.t(),
-               duration: String.t(),
-               amount_off: pos_integer,
-               currency: String.t(),
-               duration_in_months: pos_integer,
-               max_redemptions: pos_integer,
-               metadata: Stripe.Types.metadata(),
-               percent_off: pos_integer,
-               redeem_by: Stripe.timestamp()
-             } | %{}
+               optional(:id) => String.t(),
+               :duration => String.t(),
+               optional(:amount_off) => pos_integer,
+               optional(:duration_in_months) => pos_integer,
+               optional(:currency) => String.t(),
+               optional(:max_redemptions) => pos_integer,
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:percent_off) => pos_integer,
+               optional(:redeem_by) => Stripe.timestamp()
+             }
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -93,9 +95,11 @@ defmodule Stripe.Coupon do
   Takes the `id` and a map of changes.
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               metadata: Stripe.Types.metadata()
-             } | %{}
+        when params:
+               %{
+                 metadata: Stripe.Types.metadata()
+               }
+               | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -120,11 +124,11 @@ defmodule Stripe.Coupon do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query(),
-               ending_before: t | Stripe.id(),
-               limit: 1..100,
-               starting_after: t | Stripe.id()
-             } | %{}
+               optional(:created) => Stripe.date_query(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:starting_after) => t | Stripe.id()
+             }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
