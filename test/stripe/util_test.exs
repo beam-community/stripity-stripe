@@ -22,4 +22,12 @@ defmodule Stripe.UtilTest do
       assert object_name_to_module("token") == Stripe.Token
     end
   end
+
+  describe "multipart_key/1" do
+    test "handle all multipart keys" do
+      assert multipart_key(:file) == :file
+      assert multipart_key(:foo) == "foo"
+      assert multipart_key("foo") == "foo"
+    end
+  end
 end

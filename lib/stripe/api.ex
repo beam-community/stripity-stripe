@@ -132,9 +132,6 @@ defmodule Stripe.API do
   @spec request(body, method, String.t(), headers, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
   def request(body, method, endpoint, headers, opts) do
-    {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
-    {api_key, opts} = Keyword.pop(opts, :api_key)
-
     base_url = get_base_url()
     req_url = base_url <> endpoint
 
@@ -143,50 +140,42 @@ defmodule Stripe.API do
       |> Stripe.Util.map_keys_to_atoms()
       |> Stripe.URI.encode_query()
 
-    req_headers =
-      headers
-      |> add_default_headers()
-      |> add_auth_header(api_key)
-      |> add_connect_header(connect_account_id)
-      |> Map.to_list()
-
-    req_opts =
-      opts
-      |> add_default_options()
-      |> add_pool_option()
-
-    @http_module.request(method, req_url, req_headers, req_body, req_opts)
-    |> handle_response()
+    perform_request(req_url, method, req_body, headers, opts )
   end
+
+  @doc """
+  A low level utility function to make a direct request to the files Stripe API
+  """
+  @spec request_file_upload(body, method, String.t(), headers, list) ::
+          {:ok, map} | {:error, Stripe.Error.t()}
+  def request_file_upload(body, :post, endpoint, headers, opts) do
+    base_url = get_upload_url()
+    req_url = base_url <> endpoint
+
+    parts =
+      body
+      |> Enum.map(fn({key, value})->
+        { Stripe.Util.multipart_key(key), value}
+      end)
+
+    perform_request(req_url, :post, {:multipart, parts}, headers, opts )
+  end
+
 
   @doc """
   """
   @spec request_file_upload(body, method, String.t(), headers, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
   def request_file_upload(body, method, endpoint, headers, opts) do
-    {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
-    {api_key, opts} = Keyword.pop(opts, :api_key)
-
     base_url = get_upload_url()
     req_url = base_url <> endpoint
+
     req_body =
       body
       |> Stripe.Util.map_keys_to_atoms()
       |> Stripe.URI.encode_query()
-    req_headers =
-      headers
-      |> add_multipart_form_headers()
-      |> add_auth_header(api_key)
-      |> add_connect_header(connect_account_id)
-      |> Map.to_list()
 
-    req_opts =
-      opts
-      |> add_default_options()
-      |> add_pool_option()
-
-    @http_module.request(method, req_url, req_headers, req_body, req_opts)
-    |> handle_response()
+    perform_request(req_url, method, req_body, headers, opts )
   end
 
   @doc """
@@ -209,6 +198,27 @@ defmodule Stripe.API do
       |> add_pool_option()
 
     @http_module.request(method, req_url, req_headers, req_body, req_opts)
+    |> handle_response()
+  end
+
+  @spec perform_request(String.t(), method, body, headers, list)::{:ok, map} | {:error, Stripe.Error.t()}
+  defp perform_request(req_url, method, body, headers, opts) do
+    {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
+    {api_key, opts} = Keyword.pop(opts, :api_key)
+
+    req_headers =
+      headers
+      |> add_default_headers()
+      |> add_auth_header(api_key)
+      |> add_connect_header(connect_account_id)
+      |> Map.to_list()
+
+    req_opts =
+      opts
+      |> add_default_options()
+      |> add_pool_option()
+
+    @http_module.request(method, req_url, req_headers, body, req_opts)
     |> handle_response()
   end
 
