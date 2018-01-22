@@ -88,7 +88,7 @@ defmodule Stripe.API do
     Map.put(existing_headers, "Authorization", "Bearer #{api_key}")
   end
 
-  @spec fetch_api_key(String.t | nil) :: String.t
+  @spec fetch_api_key(String.t() | nil) :: String.t()
   defp fetch_api_key(api_key) do
     case api_key do
       key when is_binary(key) -> key
@@ -140,7 +140,7 @@ defmodule Stripe.API do
       |> Stripe.Util.map_keys_to_atoms()
       |> Stripe.URI.encode_query()
 
-    perform_request(req_url, method, req_body, headers, opts )
+    perform_request(req_url, method, req_body, headers, opts)
   end
 
   @doc """
@@ -154,13 +154,12 @@ defmodule Stripe.API do
 
     parts =
       body
-      |> Enum.map(fn({key, value})->
-        { Stripe.Util.multipart_key(key), value}
+      |> Enum.map(fn {key, value} ->
+        {Stripe.Util.multipart_key(key), value}
       end)
 
-    perform_request(req_url, :post, {:multipart, parts}, headers, opts )
+    perform_request(req_url, :post, {:multipart, parts}, headers, opts)
   end
-
 
   @doc """
   """
@@ -175,7 +174,7 @@ defmodule Stripe.API do
       |> Stripe.Util.map_keys_to_atoms()
       |> Stripe.URI.encode_query()
 
-    perform_request(req_url, method, req_body, headers, opts )
+    perform_request(req_url, method, req_body, headers, opts)
   end
 
   @doc """
@@ -201,7 +200,8 @@ defmodule Stripe.API do
     |> handle_response()
   end
 
-  @spec perform_request(String.t(), method, body, headers, list)::{:ok, map} | {:error, Stripe.Error.t()}
+  @spec perform_request(String.t(), method, body, headers, list) ::
+          {:ok, map} | {:error, Stripe.Error.t()}
   defp perform_request(req_url, method, body, headers, opts) do
     {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
     {api_key, opts} = Keyword.pop(opts, :api_key)
