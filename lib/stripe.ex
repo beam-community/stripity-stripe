@@ -134,7 +134,7 @@ defmodule Stripe do
       |> Map.to_list
 
     options = httpoison_request_options()
-    HTTPoison.request(:post, "#{Stripe.Connect.base_url}oauth/token", rb, rh, options)
+    request(:post, "#{Stripe.Connect.base_url}oauth/token", rb, rh, options)
   end
 
   @doc """
@@ -147,7 +147,7 @@ defmodule Stripe do
       |> Map.to_list
 
     options = httpoison_request_options()
-    HTTPoison.request(:post, "#{Stripe.Connect.base_url}oauth/deauthorize", rb, rh, options)
+    request(:post, "#{Stripe.Connect.base_url}oauth/deauthorize", rb, rh, options)
   end
 
   defp require_stripe_key do
