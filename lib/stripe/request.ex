@@ -2,11 +2,11 @@ defmodule Stripe.Request do
   alias Stripe.Changeset
   alias Stripe.Converter
 
-  @spec create(String.t, map, map, Keyword.t) :: {:ok, map} | {:error, Stripe.api_error_struct}
-  def create(endpoint, changes, schema, opts) do
+  @spec create(String.t, map, map, Keyword.t, map) :: {:ok, map} | {:error, Stripe.api_error_struct}
+  def create(endpoint, changes, schema, opts, headers \\ %{}) do
     changes
     |> Changeset.cast(schema, :create)
-    |> Stripe.request(:post, endpoint, %{}, opts)
+    |> Stripe.request(:post, endpoint, headers, opts)
     |> handle_result
   end
 
