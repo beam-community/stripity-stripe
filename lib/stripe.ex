@@ -235,7 +235,8 @@ defmodule Stripe do
       "Accept-Encoding" => "gzip",
       "Content-Type" => "application/x-www-form-urlencoded",
       "Connection" => "keep-alive",
-      "User-Agent" => "Stripe/v1 stripity-stripe/#{@api_version}"
+      "User-Agent" => "Stripe/v1 stripity-stripe/#{@api_version}",
+      "Stripe-Version" => @api_version
     })
   end
 
