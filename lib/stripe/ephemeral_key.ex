@@ -7,6 +7,13 @@ defmodule Stripe.EphemeralKey do
   - Create a ephemeral key
 
   Does not yet render lists or take options.
+  
+  Does not have an afficiol API docs endpoint, 
+  but is required for iOS and Android SDK functionality.
+  
+  Explained in
+  https://stripe.com/docs/mobile/ios/standard#prepare-your-api
+  https://stripe.com/docs/mobile/android/customer-information#prepare-your-api
 
   Stripe API reference: https://stripe.com/docs/api#customer
   """
