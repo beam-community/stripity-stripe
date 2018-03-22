@@ -12,6 +12,12 @@ as well as a connect button url generator. See below for
 [Stripe Connect API reference](https://stripe.com/docs/connect/reference)
 * TBD
 
+# Which branch should I use?
+
+- `master` (versions 1.x.x) is out of date and smaller in features, but we do ocassionally still push fixes to it
+- `2.0-alpha` is the active branch, versions 2.0.0-alpha.x - Were trying to actively maintain it
+- `2.0-beta` is the big rewrite branch and will (hopefully soon) take over the alpha branch. We're currently in dire need of help to make this happen.
+
 ## Stripe API
 
 This library is built on Stripe API version 2016-07-06.
