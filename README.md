@@ -2,6 +2,12 @@
 
 An Elixir library for working with [Stripe](https://stripe.com/).
 
+# Which branch should I use?
+
+- `master` (versions 1.x.x) is out of date and smaller in features, but we do ocassionally still push fixes to it
+- `2.0-alpha` is the active branch, versions 2.0.0-alpha.x - Were trying to actively maintain it
+- `2.0-beta` is the big rewrite branch and will (hopefully soon) take over the alpha branch. We're currently in dire need of help to make this happen.
+
 NOTE: While the 1.x.x releases are the stable releases and this branch is being maintained and updated, **we are currently focusing on the 2.0.0.alpha-X releases**.
 
 This alternative branch is a complete rewrite of the library and is in many ways ahead of the stable branch. Feel free to give it a try before requesting changes in the stable branch.
