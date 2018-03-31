@@ -177,7 +177,7 @@ defmodule Stripe.Subscriptions do
     case all(customer_id, [], "", key) do
       {:ok, subs} ->
         Enum.each subs, fn sub -> cancel(customer_id, sub["id"], opts, key) end
-      {:error, err} -> raise err
+      {:error, err} -> {:error, err}
     end
   end
 

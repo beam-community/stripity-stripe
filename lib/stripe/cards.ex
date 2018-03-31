@@ -261,7 +261,7 @@ defmodule Stripe.Cards do
     case all(owner_type, owner_id) do
       {:ok, cards} ->
         Enum.each cards, fn c -> delete(owner_type, owner_id, c["id"]) end
-      {:error, err} -> raise err
+      {:error, err} -> {:error, err}
     end
   end
 
@@ -281,7 +281,7 @@ defmodule Stripe.Cards do
     case all(owner_type, owner_id) do
       {:ok, customers} ->
         Enum.each customers, fn c -> delete(owner_type, owner_id, c["id"], key) end
-      {:error, err} -> raise err
+      {:error, err} -> {:error, err}
     end
   end
 
@@ -336,7 +336,7 @@ defmodule Stripe.Cards do
             result = resp[:data] ++ accum
             {:ok, result}
         end
-      {:error, err} -> raise err
+      {:error, err} -> {:error, err}
     end
   end
 
