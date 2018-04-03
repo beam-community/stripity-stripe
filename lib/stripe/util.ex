@@ -24,12 +24,20 @@ defmodule Stripe.Util do
     for {key, val} <- string_key_map, into: %{}, do: {String.to_atom(key), val}
   end
 
+  def handle_stripe_response({:error, error}) do
+    {:error, error}
+  end
+
   def handle_stripe_response(res) do
     cond do
       res["error"] -> {:error, res}
       res["data"] -> {:ok, Enum.map(res["data"], &Stripe.Util.string_map_to_atoms &1)}
       true -> {:ok, Stripe.Util.string_map_to_atoms res}
     end
+  end
+
+  def handle_stripe_full_response({:error, error}) do
+    {:error, error}
   end
 
   # returns the full response in {:ok, response}
@@ -77,7 +85,7 @@ defmodule Stripe.Util do
     |> Stripe.Util.handle_stripe_full_response do
       {:ok, res} ->
         {:ok, res[:total_count]}
-      {:error, err} -> raise err
+      {:error, err} -> {:error, err}
     end
   end
 end

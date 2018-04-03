@@ -178,7 +178,7 @@ end
       case all() do
         {:ok, plans} ->
           Enum.each plans, fn p -> delete(p["id"], key) end
-        {:error, err} -> raise err
+        {:error, err} -> {:error, err}
       end
       {:ok}
     end

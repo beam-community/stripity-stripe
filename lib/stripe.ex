@@ -107,8 +107,10 @@ defmodule Stripe do
         |> Map.to_list
 
     options = Keyword.merge(httpoison_request_options(), options)
-    {:ok, response} = request(method, endpoint, rb, rh, options)
-    response.body
+    case request(method, endpoint, rb, rh, options) do
+      {:ok, response} -> response.body
+      {:error, error} -> {:error, error}
+    end
   end
 
   @doc """

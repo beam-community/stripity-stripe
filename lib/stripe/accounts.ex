@@ -155,7 +155,7 @@ defmodule Stripe.Accounts do
 
   """
   def all( accum \\ [], starting_after \\ "") do
-    all Stripe.config_or_env_key, accum, starting_after 
+    all Stripe.config_or_env_key, accum, starting_after
   end
 
   @doc """
@@ -187,7 +187,7 @@ defmodule Stripe.Accounts do
             result = resp[:data] ++ accum
             {:ok, result}
         end
-      {:error, err} -> raise err
+      {:error, err} -> {:error, err}
     end
   end
 
@@ -256,7 +256,7 @@ defmodule Stripe.Accounts do
     case all() do
       {:ok, accounts} ->
         Enum.each accounts, fn c -> delete(c["id"], key) end
-      {:error, err} -> raise err
+      {:error, err} -> {:error, err}
     end
   end
 
