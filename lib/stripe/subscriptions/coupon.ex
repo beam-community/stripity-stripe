@@ -26,9 +26,7 @@ defmodule Stripe.Coupon do
           duration_in_months: pos_integer | nil,
           livemode: boolean,
           max_redemptions: pos_integer | nil,
-          metadata: %{
-            optional(String.t()) => String.t()
-          },
+          metadata: Stripe.Types.metadata(),
           percent_off: pos_integer | nil,
           redeem_by: Stripe.timestamp() | nil,
           times_redeemed: non_neg_integer,
