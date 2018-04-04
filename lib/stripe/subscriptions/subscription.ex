@@ -82,6 +82,7 @@ defmodule Stripe.Subscription do
                  }
                ],
                optional(:metadata) => Stripe.Types.metadata(),
+               optional(:prorate) => boolean,
                optional(:source) => Stripe.id() | Stripe.Source.t(),
                optional(:tax_percent) => float,
                optional(:trial_end) => Stripe.timestamp(),
@@ -156,6 +157,7 @@ defmodule Stripe.Subscription do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
+               optional(:billing) => String.t(),
                optional(:created) => Stripe.date_query(),
                optional(:customer) => Stripe.Customer.t() | Stripe.id(),
                optional(:ending_before) => t | Stripe.id(),

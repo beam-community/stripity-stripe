@@ -98,7 +98,11 @@ defmodule Stripe.Card do
   If you want to create a card with your server without a token, you
   can use the low-level API.
   """
-  @spec create(map, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec create(params, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+              optional(:metadata) => Stripe.Types.metadata(),
+              optional(:source) => Stripe.id() | Stripe.Source.t(),
+            }
   def create(%{customer: _, source: _} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(params |> plural_endpoint())
@@ -110,7 +114,10 @@ defmodule Stripe.Card do
   @doc """
   Retrieve a card.
   """
-  @spec retrieve(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec retrieve(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+              :id => String.t(),
+            }
   def retrieve(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
 
@@ -125,7 +132,20 @@ defmodule Stripe.Card do
 
   Takes the `id` and a map of changes
   """
-  @spec update(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+              :id => String.t(),
+              optional(:address_city) => String.t(),
+              optional(:address_country) => String.t(),
+              optional(:address_line1) => String.t(),
+              optional(:address_line2) => String.t(),
+              optional(:address_state) => String.t(),
+              optional(:address_zip) => String.t(),
+              optional(:exp_month) => String.t(),
+              optional(:exp_year) => String.t(),
+              optional(:metadata) => Stripe.Types.metadata(),
+              optional(:name) => String.t(),
+            }
   def update(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
 
@@ -139,7 +159,10 @@ defmodule Stripe.Card do
   @doc """
   Delete a card.
   """
-  @spec delete(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec delete(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               :id => String.t(),
+             }
   def delete(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
 
@@ -152,7 +175,13 @@ defmodule Stripe.Card do
   @doc """
   List all cards.
   """
-  @spec list(map, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+              :customer => Stripe.id() | Stripe.Customer.t(),
+              optional(:ending_before) => t | Stripe.id(),
+              optional(:limit) => 1..100,
+              optional(:starting_after) => t | Stripe.id(),
+            }
   def list(%{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
     params = params |> Map.put(:object, "card")
