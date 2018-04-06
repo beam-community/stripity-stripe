@@ -114,10 +114,7 @@ defmodule Stripe.Card do
   @doc """
   Retrieve a card.
   """
-  @spec retrieve(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-              :id => String.t(),
-            }
+  @spec retrieve(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
 
