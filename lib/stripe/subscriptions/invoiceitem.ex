@@ -59,7 +59,7 @@ defmodule Stripe.Invoiceitem do
   @plural_endpoint "invoiceitems"
 
   @doc """
-  Create an invoice item.
+  Create an invoiceitem.
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{

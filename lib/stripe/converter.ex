@@ -24,6 +24,7 @@ defmodule Stripe.Converter do
     external_account
     file_upload
     invoice
+    invoiceitem
     line_item
     list
     oauth
