@@ -10,16 +10,16 @@ defmodule Stripe.InvoiceitemTest do
 
   describe "retrieve/2" do
     test "retrieves an invoice" do
-      assert {:ok, %Stripe.Invoiceitem{}} = Stripe.Invoiceitem.retrieve("in_123")
-      assert_stripe_requested(:get, "/v1/invoiceitems/in_123")
+      assert {:ok, %Stripe.Invoiceitem{}} = Stripe.Invoiceitem.retrieve("in_1234")
+      assert_stripe_requested(:get, "/v1/invoiceitems/in_1234")
     end
   end
 
   describe "update/2" do
     test "updates an invoice" do
       params = %{metadata: %{key: "value"}}
-      assert {:ok, %Stripe.Invoiceitem{}} = Stripe.Invoiceitem.update("in_123", params)
-      assert_stripe_requested(:post, "/v1/invoiceitems/in_123")
+      assert {:ok, %Stripe.Invoiceitem{}} = Stripe.Invoiceitem.update("in_1234", params)
+      assert_stripe_requested(:post, "/v1/invoiceitems/in_1234")
     end
   end
 
