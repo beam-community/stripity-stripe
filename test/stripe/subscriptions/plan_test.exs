@@ -34,8 +34,9 @@ defmodule Stripe.PlanTest do
   describe "delete/2" do
     test "deletes a Plan" do
       {:ok, plan} = Stripe.Plan.retrieve("sapphire-elite")
-      assert {:ok, %Stripe.Plan{}} = Stripe.Plan.delete(plan)
+      assert {:ok, %{deleted: deleted, id: _id}} = Stripe.Plan.delete(plan)
       assert_stripe_requested(:delete, "/v1/plans/#{plan.id}")
+      assert deleted === true
     end
   end
 

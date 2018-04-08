@@ -25,7 +25,8 @@ defmodule Stripe.CouponTest do
   end
 
   test "is deleteable" do
-    assert {:ok, %Stripe.Coupon{}} = Stripe.Coupon.delete("25OFF")
+    assert {:ok, %{deleted: deleted, id: _id}} = Stripe.Coupon.delete("25OFF")
     assert_stripe_requested(:delete, "/v1/coupons/25OFF")
+    assert deleted == true
   end
 end

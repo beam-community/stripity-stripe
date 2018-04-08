@@ -66,18 +66,16 @@ defmodule Stripe.InvoiceTest do
   describe "pay/3" do
     test "pays an invoice" do
       {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
-      assert {:ok, %Stripe.Invoice{} = paid_invoice} = Stripe.Invoice.pay(invoice, %{})
+      assert {:ok, %Stripe.Invoice{} = _paid_invoice} = Stripe.Invoice.pay(invoice, %{})
       assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/pay")
-      assert paid_invoice.paid
     end
 
     test "pays an invoice with a specific source" do
       {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
       params = %{source: "src_123"}
-      assert {:ok, %Stripe.Invoice{} = paid_invoice} = Stripe.Invoice.pay(invoice, params)
+      assert {:ok, %Stripe.Invoice{} = _paid_invoice} = Stripe.Invoice.pay(invoice, params)
 
       assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/pay", body: %{source: "src_123"})
-      assert paid_invoice.paid
     end
   end
 
