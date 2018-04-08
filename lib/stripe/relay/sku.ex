@@ -33,7 +33,7 @@ defmodule Stripe.SKU do
             }
             | nil,
           price: non_neg_integer,
-          product: Stripe.id() | Stripe.Product.t(),
+          product: Stripe.id() | Stripe.Relay.Product.t(),
           updated: Stripe.timestamp()
         }
 

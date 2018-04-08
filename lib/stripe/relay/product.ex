@@ -1,4 +1,4 @@
-defmodule Stripe.Product do
+defmodule Stripe.Relay.Product do
   @moduledoc """
   Work with Stripe products.
 
