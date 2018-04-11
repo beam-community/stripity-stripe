@@ -30,6 +30,7 @@ defmodule Stripe.Converter do
     order_return
     payout
     plan
+    product
     refund
     source
     subscription

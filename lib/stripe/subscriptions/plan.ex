@@ -48,8 +48,8 @@ defmodule Stripe.Plan do
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           name: String.t(),
-          statement_descriptor: String.t() | nil,
-          trial_period_days: integer | nil
+          nickname: String.t() | nil,
+          product: Stripe.id() | Stripe.Product.t()
         }
 
   defstruct [
@@ -63,8 +63,8 @@ defmodule Stripe.Plan do
     :livemode,
     :metadata,
     :name,
-    :statement_descriptor,
-    :trial_period_days
+    :nickname,
+    :product
   ]
 
   @plural_endpoint "plans"
