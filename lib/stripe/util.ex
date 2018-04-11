@@ -65,6 +65,10 @@ defmodule Stripe.Util do
     module |> Atom.to_string() |> String.trim_leading("Elixir.")
   end
 
+  def multipart_key(:file), do: :file
+  def multipart_key(key) when is_atom(key), do: Atom.to_string(key)
+  def multipart_key(key), do: key
+
   def normalize_id(%{id: id}) when id !== nil, do: id
   def normalize_id(id) when is_binary(id), do: id
 

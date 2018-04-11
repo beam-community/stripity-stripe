@@ -6,6 +6,10 @@ config/config.secret.exs
 /doc
 .DS_Store
 
+# elixir LS files
+
+/.elixir_ls
 # IntelliJ IDEA files
+
 /.idea
 *.iml
