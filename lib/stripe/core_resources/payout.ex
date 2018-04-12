@@ -13,6 +13,7 @@ defmodule Stripe.Payout do
           object: String.t(),
           amount: integer,
           arrival_date: Stripe.timestamp(),
+          automatic: boolean,
           balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
           created: Stripe.timestamp(),
           currency: String.t(),
@@ -35,6 +36,7 @@ defmodule Stripe.Payout do
     :object,
     :amount,
     :arrival_date,
+    :automatic,
     :balance_transaction,
     :created,
     :currency,
@@ -65,16 +67,17 @@ defmodule Stripe.Payout do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               amount: pos_integer,
-               currency: String.t(),
-               description: String.t(),
-               destination: %{
+               :amount => pos_integer,
+               :currency => String.t(),
+               optional(:description) => String.t(),
+               optional(:destination) => %{
                  :account => Stripe.id() | Stripe.Account.t(),
                  optional(:amount) => non_neg_integer
                },
-               metadata: map,
-               source_type: String.t(),
-               statement_descriptor: String.t()
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:method) => String.t(),
+               optional(:source_type) => String.t(),
+               optional(:statement_descriptor) => String.t()
              } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
@@ -111,10 +114,7 @@ defmodule Stripe.Payout do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               metadata: %{
-                 optional(String.t()) => String.t(),
-                 optional(atom) => String.t()
-               }
+               optional(:metadata) => Stripe.Types.metadata()
              } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
