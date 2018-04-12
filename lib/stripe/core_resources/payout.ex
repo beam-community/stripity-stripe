@@ -134,13 +134,13 @@ defmodule Stripe.Payout do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               arrival_date: Stripe.date_query(),
-               created: Stripe.date_query(),
-               destination: String.t(),
-               ending_before: t | Stripe.id(),
-               limit: 1..100,
-               starting_after: t | Stripe.id(),
-               status: String.t()
+               optional(:arrival_date) => Stripe.date_query(),
+               optional(:created) => Stripe.date_query(),
+               optional(:destination) => String.t(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:starting_after) => t | Stripe.id(),
+               optional(:status) => String.t()
              } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)

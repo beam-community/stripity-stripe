@@ -23,6 +23,7 @@ defmodule Stripe.Refund do
           failure_balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
           failure_reason: String.t() | nil,
           metadata: Stripe.Types.metadata(),
+          payment: Stripe.id() | Stripe.Charge.t() | nil,
           reason: String.t() | nil,
           receipt_number: String.t() | nil,
           status: String.t() | nil
@@ -39,6 +40,7 @@ defmodule Stripe.Refund do
     :failure_balance_transaction,
     :failure_reason,
     :metadata,
+    :payment,
     :reason,
     :receipt_number,
     :status
@@ -66,12 +68,12 @@ defmodule Stripe.Refund do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               charge: Stripe.Charge.t() | Stripe.id(),
-               amount: pos_integer,
-               metadata: Stripe.Types.metadata(),
-               reason: String.t(),
-               refund_application_fee: boolean,
-               reverse_transfer: boolean
+               :charge => Stripe.Charge.t() | Stripe.id(),
+               optional(:amount) => pos_integer,
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:reason) => String.t(),
+               optional(:refund_application_fee) => boolean,
+               optional(:reverse_transfer) => boolean
              } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
@@ -109,7 +111,7 @@ defmodule Stripe.Refund do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               metadata: Stripe.Types.metadata()
+               optional(:metadata) => Stripe.Types.metadata()
              } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -131,10 +133,10 @@ defmodule Stripe.Refund do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               charge: Stripe.id() | Stripe.Charge.t(),
-               ending_before: Stripe.id() | t,
-               limit: 1..100,
-               starting_after: Stripe.id() | t
+               optional(:charget) => Stripe.id() | Stripe.Charge.t(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:starting_after) => t | Stripe.id()
              } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
