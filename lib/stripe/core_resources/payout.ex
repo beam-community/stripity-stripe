@@ -18,7 +18,7 @@ defmodule Stripe.Payout do
           created: Stripe.timestamp(),
           currency: String.t(),
           description: String.t() | nil,
-          destination: Stripe.id() | Stripe.Card.t() | Stripe.BankAccount.t() | nil,
+          destination: Stripe.id() | Stripe.Card.t() | Stripe.BankAccount.t() | String.t() | nil,
           failure_balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
           failure_code: String.t() | nil,
           failure_message: String.t() | nil,
@@ -70,10 +70,7 @@ defmodule Stripe.Payout do
                :amount => pos_integer,
                :currency => String.t(),
                optional(:description) => String.t(),
-               optional(:destination) => %{
-                 :account => Stripe.id() | Stripe.Account.t(),
-                 optional(:amount) => non_neg_integer
-               },
+               optional(:destination) => Stripe.id() | Stripe.Card.t() | Stripe.BankAccount.t() | String.t(),
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:method) => String.t(),
                optional(:source_type) => String.t(),
