@@ -19,17 +19,22 @@ defmodule Stripe.Plan do
   {
     "id": "quartz-enterprise",
     "object": "plan",
-    "amount": 5000,
-    "created": 1486598337,
+    "amount": 1000,
+    "billing_scheme": "per_unit",
+    "created": 4524325723,
     "currency": "usd",
     "interval": "month",
     "interval_count": 1,
     "livemode": false,
     "metadata": {
     },
-    "name": "Quartz enterprise",
-    "statement_descriptor": null,
-    "trial_period_days": null
+    "nickname": "quartz",
+    "product": "my-quartz",
+    "tiers": null,
+    "tiers_mode": null,
+    "transform_usage": null,
+    "trial_period_days": null,
+    "usage_type": "licensed"
   }
   ```
   """
@@ -74,16 +79,22 @@ defmodule Stripe.Plan do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               id: String.t(),
-               amount: non_neg_integer,
-               currency: String.t(),
-               interval: String.t(),
-               name: String.t(),
-               interval_count: pos_integer | nil,
-               metadata: Stripe.Types.metadata() | nil,
-               statement_descriptor: String.t() | nil
+               :currency => String.t(),
+               :interval => String.t(),
+               :product => Stripe.id() | Stripe.Product.t(),
+               optional(:id) => String.t(),
+               optional(:amount) => non_neg_integer,
+               optional(:billing_scheme) => String.t(),
+               optional(:interval_count) => pos_integer,
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:nickname) => String.t(),
+               optional(:tiers) => Stripe.List.t(),
+               optional(:tiers_mode) => String.t(),
+               optional(:transform_usage) => map,
+               optional(:trial_period_days) => non_neg_integer,
+               optional(:usage_type) => String.t()
              } | %{}
-  def create(%{id: _, amount: _, currency: _, interval: _, name: _} = params, opts \\ []) do
+  def create(%{currency: _, interval: _, product: _} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
@@ -109,9 +120,10 @@ defmodule Stripe.Plan do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               metadata: Stripe.Types.metadata() | nil,
-               name: String.t() | nil,
-               statement_descriptor: String.t() | nil
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:nickname) => String.t(),
+               optional(:product) => Stripe.id() | Stripe.Product.t(),
+               optional(:trial_period_days) => non_neg_integer,
              } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -137,10 +149,11 @@ defmodule Stripe.Plan do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               created: Stripe.date_query() | nil,
-               ending_before: t | Stripe.id() | nil,
-               limit: 1..100 | nil,
-               starting_after: t | Stripe.id() | nil
+               optional(:created) => Stripe.date_query(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:product) => Stripe.Product.t() | Stripe.id(),
+               optional(:starting_after) => t | Stripe.id()
              } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
