@@ -30,4 +30,12 @@ defmodule Stripe.CustomerTest do
     assert is_list(customers)
     assert %Stripe.Customer{} = hd(customers)
   end
+
+  describe "delete_discount/2" do
+    test "deletes a customer's discount" do
+      {:ok, customer} = Stripe.Customer.retrieve("sub_123")
+      assert {:ok, _} = Stripe.Customer.delete_discount("sub_123")
+      assert_stripe_requested(:delete, "/v1/customers/#{customer.id}/discount")
+    end
+  end
 end

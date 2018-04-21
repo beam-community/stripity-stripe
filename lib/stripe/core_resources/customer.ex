@@ -147,4 +147,16 @@ defmodule Stripe.Customer do
     |> cast_to_id([:ending_before, :starting_after])
     |> make_request()
   end
+
+  @doc """
+  Deletes the discount on a customer
+  """
+  @spec delete_discount(Stripe.id() | t, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
+  def delete_discount(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/discount")
+    |> put_method(:delete)
+    |> make_request()
+  end
 end
