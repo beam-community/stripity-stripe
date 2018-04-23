@@ -18,6 +18,15 @@ defmodule Stripe.Source do
           swift_code: String.t() | nil
         }
 
+  @type ach_debit :: %{
+          bank_name: String.t() | nil,
+          country: String.t() | nil,
+          fingerprint: String.t() | nil,
+          last_4: String.t() | nil,
+          routing_number: String.t() | nil,
+          type: String.t() | nil
+        }
+
   @type alipay :: %{
           data_string: String.t() | nil,
           native_url: String.t() | nil,
@@ -64,6 +73,11 @@ defmodule Stripe.Source do
           status: String.t()
         }
 
+  @type eps :: %{
+          reference: String.t() | nil,
+          string_descriptor: String.t() | nil
+        }
+
   @type giropay :: %{
           bank_code: String.t() | nil,
           bank_name: String.t() | nil,
@@ -76,6 +90,19 @@ defmodule Stripe.Source do
           bic: String.t() | nil,
           iban_last4: String.t() | nil,
           statement_descriptor: String.t() | nil
+        }
+
+  @type multibanco :: %{
+          entity: String.t() | nil,
+          reference: String.t() | nil,
+          refund_account_holder_address_city: String.t() | nil,
+          refund_account_holder_address_country: String.t() | nil,
+          refund_account_holder_address_line1: String.t() | nil,
+          refund_account_holder_address_line2: String.t() | nil,
+          refund_account_holder_address_postal_code: String.t() | nil,
+          refund_account_holder_address_state: String.t() | nil,
+          refund_account_holder_name: String.t() | nil,
+          refund_iban: String.t() | nil
         }
 
   @type owner :: %{
@@ -107,6 +134,17 @@ defmodule Stripe.Source do
           url: String.t()
         }
 
+  @type sepa_debit :: %{
+          bank_code: String.t() | nil,
+          branch_code: String.t() | nil,
+          country: String.t() | nil,
+          fingerprint: String.t() | nil,
+          last4: String.t() | nil,
+          mandate_reference: String.t() | nil,
+          mandate_url: String.t() | nil,
+          skip_validations: boolean
+        }
+
   @type sofort :: %{
           bank_code: String.t() | nil,
           bank_name: String.t() | nil,
@@ -127,6 +165,7 @@ defmodule Stripe.Source do
           id: Stripe.id(),
           object: String.t(),
           ach_credit_transfer: ach_credit_transfer | nil,
+          ach_debit: ach_debit | nil,
           alipay: alipay | nil,
           amount: integer | nil,
           bancontact: bancontact | nil,
@@ -136,15 +175,18 @@ defmodule Stripe.Source do
           code_verification: code_verification_flow | nil,
           created: Stripe.timestamp(),
           currency: String.t() | nil,
+          eps: eps | nil,
           flow: String.t(),
           giropay: giropay | nil,
           ideal: ideal | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
+          multibanco: multibanco | nil,
           owner: owner | nil,
           p24: p24 | nil,
           receiver: receiver_flow | nil,
           redirect: redirect_flow | nil,
+          sepa_debit: sepa_debit | nil,
           sofort: sofort | nil,
           statement_descriptor: String.t() | nil,
           status: String.t(),
@@ -157,6 +199,7 @@ defmodule Stripe.Source do
     :id,
     :object,
     :ach_credit_transfer,
+    :ach_debit,
     :alipay,
     :amount,
     :bancontact,
@@ -166,15 +209,18 @@ defmodule Stripe.Source do
     :code_verification,
     :created,
     :currency,
+    :eps,
     :flow,
     :giropay,
     :ideal,
     :livemode,
     :metadata,
+    :multibanco,
     :owner,
     :p24,
     :receiver,
     :redirect,
+    :sepa_debit,
     :sofort,
     :statement_descriptor,
     :status,
@@ -188,7 +234,21 @@ defmodule Stripe.Source do
   @doc """
   Create a source.
   """
-  @spec create(map, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec create(params, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
+            when params: %{
+              :type => String.t(),
+              optional(:amount) => String.t(),
+              optional(:currency) => String.t(),
+              optional(:flow) => String.t(),
+              optional(:mandate) => map,
+              optional(:metadata) => Stripe.Types.metadata(),
+              optional(:owner) => owner,
+              optional(:receiver) => receiver_flow,
+              optional(:redirect) => redirect_flow,
+              optional(:statement_descriptor) => String.t(),
+              optional(:token) => String.t(),
+              optional(:usage) => String.t()
+            }
   def create(%{} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -200,7 +260,10 @@ defmodule Stripe.Source do
   @doc """
   Retrieve a source.
   """
-  @spec retrieve(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec retrieve(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+          optional(:client_secret) => String.t(),
+        }
   def retrieve(id, %{} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -214,7 +277,12 @@ defmodule Stripe.Source do
 
   Takes the `id` and a map of changes
   """
-  @spec update(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+          optional(:mandate) => map,
+          optional(:metadata) => Stripe.Types.metadata(),
+          optional(:owner) => owner
+        }
   def update(id, %{} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
