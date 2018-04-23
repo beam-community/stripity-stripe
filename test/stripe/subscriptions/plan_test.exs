@@ -5,10 +5,11 @@ defmodule Stripe.PlanTest do
     test "creates a Plan for a customer" do
       params = %{
         amount: 5000,
+        currency: "usd",
+        id: "sapphire-elite",
         interval: "month",
         name: "Sapphire elite",
-        currency: "usd",
-        id: "sapphire-elite"
+        product: "abc_123"
       }
 
       assert {:ok, %Stripe.Plan{}} = Stripe.Plan.create(params)
