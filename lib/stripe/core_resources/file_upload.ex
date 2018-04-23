@@ -18,6 +18,7 @@ defmodule Stripe.FileUpload do
     id: Stripe.id,
     object: String.t,
     created: Stripe.timestamp,
+    filename: String.t | nil,
     purpose: String.t,
     size: integer,
     type: String.t | nil,
@@ -28,6 +29,7 @@ defmodule Stripe.FileUpload do
     :id,
     :object,
     :created,
+    :filename,
     :purpose,
     :size,
     :type,
@@ -64,7 +66,13 @@ defmodule Stripe.FileUpload do
   @doc """
   List all file uploads, going back up to 30 days.
   """
-  @spec list(map, Stripe.options) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t}
+  @spec list(params, Stripe.options) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t}
+        when params: %{
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:purpose) => String.t(),
+               optional(:starting_after) => t | Stripe.id()
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
