@@ -8,7 +8,7 @@ defmodule Stripe.PlanTest do
         currency: "usd",
         id: "sapphire-elite",
         interval: "month",
-        name: "Sapphire elite",
+        nickname: "Sapphire elite",
         product: "abc_123"
       }
 
