@@ -86,7 +86,15 @@ defmodule Stripe.Event do
   @doc """
   List all events, going back up to 30 days.
   """
-  @spec list(map, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:created) => Stripe.date_query(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:starting_after) => t | Stripe.id(),
+               optional(:type) => String.t(),
+               optional(:types) => list
+             } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
