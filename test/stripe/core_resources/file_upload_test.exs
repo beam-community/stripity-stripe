@@ -2,6 +2,7 @@ defmodule Stripe.FileUploadTest do
   use Stripe.StripeCase, async: true
 
   describe "create/2" do
+    @tag :skip
     test "creates a file" do
       assert {:ok, %Stripe.FileUpload{}} = Stripe.FileUpload.create(%{
         file: "@/path/to/a/file.jpg",
