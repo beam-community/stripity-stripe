@@ -49,4 +49,45 @@ defmodule Stripe.Balance do
     |> put_method(:get)
     |> make_request()
   end
+
+  @doc """
+  Retrieves a balance transaction
+
+  See the [Stripe docs](https://stripe.com/docs/api#balance_transaction_retrieve).
+  """
+  @spec retrieve_transaction(String.t(), Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def retrieve_transaction(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@endpoint <> "/history/" <> id)
+    |> put_method(:get)
+    |> make_request()
+  end
+
+  @doc """
+  List balance history
+
+  See the [Stripe docs](https://stripe.com/docs/api#balance_history).
+  """
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:available_on) => Stripe.date_query(),
+               optional(:created) => Stripe.date_query(),
+               optional(:currency) => String.t(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:payout) => String.t(),
+               optional(:source) => %{
+                 optional(:object) => String.t()
+               },
+               optional(:starting_after) => t | Stripe.id(),
+               optional(:type) => String.t()
+             }
+  def list(params \\ %{}, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@endpoint <> "/history")
+    |> put_method(:get)
+    |> put_params(params)
+    |> cast_to_id([:available_on, :created, :ending_before, :starting_after])
+    |> make_request()
+  end
 end
