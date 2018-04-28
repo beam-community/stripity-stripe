@@ -20,6 +20,7 @@ defmodule Stripe.Converter do
     country_spec
     coupon
     customer
+    dispute
     event
     external_account
     file_upload
