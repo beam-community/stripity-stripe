@@ -32,6 +32,8 @@ defmodule Stripe.TransferReversal do
     :transfer
   ]
 
+  @endpoint "transfers"
+
   @doc """
   Create a transfer reversal
   """
@@ -44,7 +46,7 @@ defmodule Stripe.TransferReversal do
              }
   def create(id, params, opts \\ []) do
     new_request(opts)
-    |> put_endpoint("transfers/#{id}/reversals")
+    |> put_endpoint(@endpoint <> "/#{id}/reversals")
     |> put_params(params)
     |> put_method(:post)
     |> make_request()
@@ -56,7 +58,7 @@ defmodule Stripe.TransferReversal do
   @spec retrieve(Stripe.id() | t, Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, reversal_id, opts \\ []) do
     new_request(opts)
-    |> put_endpoint("transfers/#{id}/reversals/#{reversal_id}")
+    |> put_endpoint(@endpoint <> "/#{id}/reversals/#{reversal_id}")
     |> put_method(:get)
     |> make_request()
   end
@@ -72,7 +74,7 @@ defmodule Stripe.TransferReversal do
              }
   def update(id, reversal_id, params, opts \\ []) do
     new_request(opts)
-    |> put_endpoint("transfers/#{id}/reversals/#{reversal_id}")
+    |> put_endpoint(@endpoint <> "/#{id}/reversals/#{reversal_id}")
     |> put_method(:post)
     |> put_params(params)
     |> make_request()
@@ -89,7 +91,7 @@ defmodule Stripe.TransferReversal do
              }
   def list(id, params \\ %{}, opts \\ []) do
     new_request(opts)
-    |> put_endpoint("transfers/#{id}/reversals")
+    |> put_endpoint(@endpoint <> "/#{id}/reversals")
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:ending_before, :starting_after])
