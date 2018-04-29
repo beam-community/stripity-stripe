@@ -93,7 +93,12 @@ defmodule Stripe.ExternalAccount do
 
   Takes either `:bank_account` or `:card` to determine which object to list.
   """
-  @spec list(atom, map, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+  @spec list(atom, params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:starting_after) => t | Stripe.id()
+             }
   def list(atom, params, opts \\ [])
   def list(:bank_account, %{account: _} = params, opts) do
     endpoint = params |> accounts_plural_endpoint()
