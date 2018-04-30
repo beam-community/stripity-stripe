@@ -18,10 +18,10 @@ defmodule Stripe.BalanceTransaction do
           created: Stripe.timestamp(),
           currency: String.t(),
           description: String.t() | nil,
+          exchange_rate: integer | nil,
           fee: integer,
           fee_details: list(Stripe.Types.fee()) | [],
           net: integer,
-          # TODO: clarify these
           source: Stripe.id() | Stripe.Source.t() | nil,
           status: String.t(),
           type: String.t()
@@ -35,6 +35,7 @@ defmodule Stripe.BalanceTransaction do
     :created,
     :currency,
     :description,
+    :exchange_rate,
     :fee,
     :fee_details,
     :net,
