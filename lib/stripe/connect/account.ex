@@ -20,11 +20,6 @@ defmodule Stripe.Account do
           cvc_failure: boolean
         }
 
-  @type keys :: %{
-          publishable: String.t(),
-          secret: String.t()
-        }
-
   @type legal_entity :: %{
           additional_owners: [legal_entity_additional_owner] | nil,
           address: legal_entity_address,
@@ -111,9 +106,11 @@ defmodule Stripe.Account do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
+          business_logo: String.t() | nil,
           business_name: String.t() | nil,
           business_url: String.t() | nil,
           charges_enabled: boolean,
+          created: Stripe.timestamp() | nil,
           country: String.t(),
           debit_negative_balances: boolean,
           decline_charge_on: decline_charge_on,
@@ -122,7 +119,6 @@ defmodule Stripe.Account do
           display_name: String.t() | nil,
           email: String.t() | nil,
           external_accounts: Stripe.List.t(Stripe.BankAccount.t() | Stripe.Card.t()),
-          keys: keys | nil,
           legal_entity: legal_entity,
           metadata: Stripe.Types.metadata(),
           payout_schedule: Stripe.Types.transfer_schedule(),
@@ -134,7 +130,6 @@ defmodule Stripe.Account do
           support_phone: String.t() | nil,
           timezone: String.t() | nil,
           tos_acceptance: tos_acceptance,
-          transfers_enabled: boolean | nil,
           type: String.t(),
           verification: verification
         }
@@ -142,10 +137,12 @@ defmodule Stripe.Account do
   defstruct [
     :id,
     :object,
+    :business_logo,
     :business_name,
     :business_url,
     :charges_enabled,
     :country,
+    :created,
     :debit_negative_balances,
     :decline_charge_on,
     :default_currency,
@@ -153,7 +150,6 @@ defmodule Stripe.Account do
     :display_name,
     :email,
     :external_accounts,
-    :keys,
     :legal_entity,
     :metadata,
     :payout_schedule,
@@ -202,7 +198,11 @@ defmodule Stripe.Account do
   Create an account.
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: create_params
+        when params: %{
+               optional(:country) => String.t(),
+               optional(:email) => String.t(),
+               optional(:type) => String.t()
+             }
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -268,7 +268,27 @@ defmodule Stripe.Account do
   Takes the `id` and a map of changes.
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: update_params
+        when params: %{
+               optional(:business_logo) => String.t(),
+               optional(:business_name) => String.t(),
+               optional(:business_primary_color) => String.t(),
+               optional(:business_url) => String.t(),
+               optional(:double_negative_balances) => boolean,
+               optional(:decline_charge_on) => decline_charge_on,
+               optional(:default_currency) => String.t(),
+               optional(:email) => String.t(),
+               optional(:external_accounts) => String.t(),
+               optional(:legal_entity) => legal_entity,
+               optional(:metadata) => String.Types.metadata(),
+               optional(:payout_schedule) => String.Types.transfer_schedule(),
+               optional(:payout_statement_descriptor) => String.t(),
+               optional(:product_description) => String.t(),
+               optional(:statement_descriptor) => String.t(),
+               optional(:support_phone) => String.t(),
+               optional(:support_email) => String.t(),
+               optional(:support_url) => String.t(),
+               optional(:tos_acceptance) => tos_acceptance
+             }
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -330,8 +350,11 @@ defmodule Stripe.Account do
   @doc """
   Create a login link.
   """
-  @spec create_login_link(Stripe.id() | t, map, Stripe.options()) ::
+  @spec create_login_link(Stripe.id() | t, params, Stripe.options()) ::
           {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:redirect_url) => String.t(),
+             }
   def create_login_link(id, params, opts \\ []) do
     Stripe.LoginLink.create(id, params, opts)
   end

@@ -22,7 +22,7 @@ defmodule Stripe.LoginLink do
           {:ok, t} | {:error, Stripe.Error.t()}
   def create(id, params, opts \\ []) do
     new_request(opts)
-    |> put_endpoint("accounts/#{get_id!(id)}")
+    |> put_endpoint("accounts/#{get_id!(id)}/login_links")
     |> put_params(params)
     |> put_method(:post)
     |> make_request()
