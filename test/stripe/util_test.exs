@@ -24,6 +24,7 @@ defmodule Stripe.UtilTest do
       assert object_name_to_module("product") == Stripe.Product
       assert object_name_to_module("refund") == Stripe.Refund
       assert object_name_to_module("subscription") == Stripe.Subscription
+      assert object_name_to_module("subscription_item") == Stripe.SubscriptionItem
       assert object_name_to_module("transfer") == Stripe.Transfer
       assert object_name_to_module("transfer_reversal") == Stripe.TransferReversal
       assert object_name_to_module("token") == Stripe.Token
