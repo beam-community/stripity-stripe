@@ -115,7 +115,7 @@ defmodule Stripe.Order do
               optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
               optional(:customer) => Stripe.id() | Stripe.Customer.t(),
               optional(:email) => String.t(),
-              optional(:items) => map,
+              optional(:items): Stripe.List.t(Stripe.OrderItem.t()),
               optional(:metadata) => Stripe.Types.metadata(),
               optional(:shipping) => map
             }
@@ -183,7 +183,7 @@ defmodule Stripe.Order do
   """
   @spec return(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-              optional(:items) => map
+              optional(:items): Stripe.List.t(Stripe.OrderItem.t()),
             }
   def return(id, params \\ %{}, opts \\ []) do
     new_request(opts)
