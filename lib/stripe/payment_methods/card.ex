@@ -156,10 +156,7 @@ defmodule Stripe.Card do
   @doc """
   Delete a card.
   """
-  @spec delete(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               :id => String.t(),
-             }
+  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
 
