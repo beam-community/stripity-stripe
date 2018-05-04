@@ -48,11 +48,20 @@ defmodule Stripe.OrderReturn do
   @doc """
   List all returns.
   """
-  @spec list(Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
-  def list(opts \\ []) do
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+              optional(:created) => Stripe.date_query(),
+              optional(:ending_before) => t | Stripe.id(),
+              optional(:ids) => Stripe.List.t(Stripe.id()),
+              optional(:limit) => 1..100,
+              optional(:order) => Stripe.Order.t(),
+              optional(:starting_after) => t | Stripe.id()
+            }
+  def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_method(:get)
+    |> put_params(params)
     |> make_request()
   end
 end
