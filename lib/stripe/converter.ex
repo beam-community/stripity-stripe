@@ -37,6 +37,7 @@ defmodule Stripe.Converter do
     plan
     product
     refund
+    sku
     source
     subscription
     subscription_item
