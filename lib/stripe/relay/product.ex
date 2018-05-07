@@ -61,7 +61,7 @@ defmodule Stripe.Relay.Product do
     :url
   ]
 
-  @plural_endpoint "products"
+  @endpoint "products"
 
   @doc """
   Create a product.
@@ -84,7 +84,7 @@ defmodule Stripe.Relay.Product do
         } | %{}
   def create(params, opts \\ []) do
     new_request(opts)
-    |> put_endpoint(@plural_endpoint)
+    |> put_endpoint(@endpoint)
     |> put_params(params)
     |> put_method(:post)
     |> make_request()
@@ -96,7 +96,7 @@ defmodule Stripe.Relay.Product do
   @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
     new_request(opts)
-    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_endpoint(@endpoint <> "/#{get_id!(id)}")
     |> put_method(:get)
     |> make_request()
   end
@@ -122,7 +122,7 @@ defmodule Stripe.Relay.Product do
         } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
-    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_endpoint(@endpoint <> "/#{get_id!(id)}")
     |> put_method(:post)
     |> put_params(params)
     |> make_request()
@@ -134,7 +134,7 @@ defmodule Stripe.Relay.Product do
   @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, opts \\ []) do
     new_request(opts)
-    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_endpoint(@endpoint <> "/#{get_id!(id)}")
     |> put_method(:delete)
     |> make_request()
   end
@@ -156,7 +156,7 @@ defmodule Stripe.Relay.Product do
         } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
-    |> put_endpoint(@plural_endpoint)
+    |> put_endpoint(@endpoint)
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:ending_before, :starting_after])
