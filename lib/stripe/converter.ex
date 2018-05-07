@@ -31,11 +31,13 @@ defmodule Stripe.Converter do
     line_item
     list
     oauth
+    order
     order_return
     payout
     plan
     product
     refund
+    sku
     source
     subscription
     subscription_item
