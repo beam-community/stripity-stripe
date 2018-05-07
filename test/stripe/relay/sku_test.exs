@@ -18,6 +18,12 @@ defmodule Stripe.SkuTest do
     assert_stripe_requested(:post, "/v1/skus/sku_123")
   end
 
+  test "is updateable via active attribute" do
+    params = %{active: false}
+    assert {:ok, %Stripe.Sku{}} = Stripe.Sku.update("sku_123", params)
+    assert_stripe_requested(:post, "/v1/skus/sku_123")
+  end
+
   test "is deleteable" do
     assert {:ok, %{deleted: deleted, id: _id}} = Stripe.Sku.delete("sku_123")
     assert_stripe_requested(:delete, "/v1/skus/sku_123/delete")
@@ -25,7 +31,15 @@ defmodule Stripe.SkuTest do
   end
 
   test "is listable" do
-    assert {:ok, %Stripe.List{data: _skus}} = Stripe.Sku.list()
+    assert {:ok, %Stripe.List{data: skus}} = Stripe.Sku.list()
+    assert_stripe_requested(:get, "/v1/skus")
+    assert is_list(skus)
+    assert %Stripe.Sku{} = hd(skus)
+  end
+
+  test "is listable with params" do
+    params = %{active: false, in_stock: false}
+    assert {:ok, %Stripe.List{data: _skus}} = Stripe.Sku.list(params)
     assert_stripe_requested(:get, "/v1/skus")
   end
 end

@@ -33,5 +33,13 @@ defmodule Stripe.OrderTest do
     assert is_list(orders)
     assert %Stripe.Order{} = hd(orders)
   end
+
+  test "is listable with params" do
+    params = %{status: "paid"}
+    assert {:ok, %Stripe.List{data: orders}} = Stripe.Order.list(params)
+    assert_stripe_requested(:get, "/v1/orders")
+    assert is_list(orders)
+    assert %Stripe.Order{} = hd(orders)
+  end
 end
 
