@@ -51,7 +51,12 @@ defmodule Stripe.BankAccount do
   @doc """
   Create a bank account.
   """
-  @spec create(map, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec create(params, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+              :customer => Stripe.id() | Stripe.Customer.t(),
+              :source => Stripe.id() | Stripe.Source.t(),
+              optional(:metadata) => Stripe.Types.metadata()
+            }
   def create(%{customer: _, source: _} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(params |> plural_endpoint())
@@ -76,7 +81,13 @@ defmodule Stripe.BankAccount do
   @doc """
   Update a bank account.
   """
-  @spec update(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+              :customer => Stripe.id() | Stripe.Customer.t(),
+              optional(:metadata) => Stripe.Types.metadata(),
+              optional(:account_holder_name) => Stripe.t(),
+              optional(:account_holder_type) => Stripe.t()
+            }
   def update(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
 
@@ -103,7 +114,12 @@ defmodule Stripe.BankAccount do
   @doc """
   Verify a bank account.
   """
-  @spec verify(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec verify(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+              :customer => Stripe.id() | Stripe.Customer.t(),
+              optional(:amounts) => list(integer),
+              optional(:verification_method) => String.t()
+            }
   def verify(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
 
@@ -117,7 +133,13 @@ defmodule Stripe.BankAccount do
   @doc """
   List all bank accounts.
   """
-  @spec list(map, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+              :customer => Stripe.id() | Stripe.Customer.t(),
+              optional(:ending_before) => t | Stripe.id(),
+              optional(:limit) => 1..100,
+              optional(:starting_after) => t | Stripe.id(),
+            }
   def list(%{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
     params = params |> Map.put(:object, "card")

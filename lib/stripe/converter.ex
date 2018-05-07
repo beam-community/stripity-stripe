@@ -38,6 +38,7 @@ defmodule Stripe.Converter do
     refund
     source
     subscription
+    subscription_item
     transfer
     transfer_reversal
     token
