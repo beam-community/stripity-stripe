@@ -1,6 +1,6 @@
 defmodule Stripe.Sku do
   @moduledoc """
-  Work with Stripe SKU objects.
+  Work with Stripe Sku objects.
 
   Stripe API reference: https://stripe.com/docs/api#sku_object
   """

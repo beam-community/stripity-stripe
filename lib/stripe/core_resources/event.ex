@@ -35,7 +35,7 @@ defmodule Stripe.Event do
           | Stripe.Product.t()
           | Stripe.Recipient.t()
           | Stripe.Review.t()
-          | Stripe.SKU.t()
+          | Stripe.Sku.t()
           | Stripe.Source.t()
           | Stripe.Transfer.t()
           | map

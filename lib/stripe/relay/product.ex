@@ -32,7 +32,7 @@ defmodule Stripe.Relay.Product do
                 width: float
               },
           shippable: boolean,
-          skus: Stripe.List.t(Stripe.SKU.t()),
+          skus: Stripe.List.t(Stripe.Sku.t()),
           statement_descriptor: String.t(),
           unit_label: String.t(),
           updated: Stripe.timestamp(),

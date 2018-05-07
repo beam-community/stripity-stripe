@@ -12,7 +12,7 @@ defmodule Stripe.OrderItem do
           amount: pos_integer,
           currency: String.t(),
           description: String.t(),
-          parent: nil | Stripe.id() | Stripe.SKU.t(),
+          parent: nil | Stripe.id() | Stripe.Sku.t(),
           quantity: nil | pos_integer,
           type: String.t()
         }
