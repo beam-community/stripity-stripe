@@ -20,7 +20,7 @@ defmodule Stripe.Charge do
     :fraud_details, :invoice, :livemode, :metadata, :order, :outcome,
     :paid, :receipt_email, :receipt_number, :refunded, :refunds, :review,
     :shipping, :source, :source_transfer, :statement_descriptor, :status,
-    :transfer
+    :transfer, :transfer_group
   ]
 
   @plural_endpoint "charges"
@@ -75,7 +75,8 @@ defmodule Stripe.Charge do
     source_transfer: [:retrieve],
     statement_descriptor: [:create, :retrieve],
     status: [:retrieve],
-    transfer: [:retrieve]
+    transfer: [:retrieve],
+    transfer_group: [:retrieve, :create, :update]
   }
 
   @doc """
