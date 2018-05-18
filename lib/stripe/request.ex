@@ -19,6 +19,7 @@ defmodule Stripe.Request do
   @type t :: %__MODULE__{
           cast_to_id: MapSet.t(),
           endpoint: String.t() | nil,
+          headers: map | nil,
           method: Stripe.API.method() | nil,
           opts: Keyword.t() | nil,
           params: map
@@ -28,7 +29,7 @@ defmodule Stripe.Request do
           :endpoint_fun_invalid_result
           | :invalid_endpoint
 
-  defstruct opts: [], endpoint: nil, method: nil, params: %{}, cast_to_id: MapSet.new()
+  defstruct opts: [], endpoint: nil, headers: nil, method: nil, params: %{}, cast_to_id: MapSet.new()
 
   @doc """
   Creates a new request.
@@ -36,9 +37,9 @@ defmodule Stripe.Request do
   Optionally accepts options for the request, such as using a specific API key.
   See `t:Stripe.options` for details.
   """
-  @spec new_request(Stripe.options()) :: t
-  def new_request(opts \\ []) do
-    %Request{opts: opts}
+  @spec new_request(Stripe.options(), map) :: t
+  def new_request(opts \\ [], headers \\ %{}) do
+    %Request{opts: opts, headers: headers}
   end
 
   @doc """
@@ -148,11 +149,11 @@ defmodule Stripe.Request do
   """
   @spec make_request(t) :: {:ok, struct} | {:error, Stripe.Error.t()}
   def make_request(
-        %Request{params: params, endpoint: endpoint, method: method, opts: opts} = request
+        %Request{params: params, endpoint: endpoint, method: method, headers: headers, opts: opts} = request
       ) do
     with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
          {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
-         {:ok, result} <- API.request(params, method, endpoint, %{}, opts) do
+         {:ok, result} <- API.request(params, method, endpoint, headers, opts) do
       {:ok, Converter.convert_result(result)}
     end
   end
