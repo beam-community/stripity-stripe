@@ -82,7 +82,7 @@ defmodule Stripe.Connect.OAuth do
       grant_type: "authorization_code"
     }
 
-    case Stripe.oauth_request(:post, endpoint, body) do
+    case Stripe.API.oauth_request(:post, endpoint, body) do
       {:ok, result} -> {:ok, Converter.convert_result(result)}
       {:error, error} -> {:error, error}
     end
