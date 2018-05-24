@@ -108,7 +108,7 @@ defmodule Stripe.Connect.OAuth do
       stripe_user_id: stripe_user_id
     }
 
-    case Stripe.oauth_request(:post, endpoint, body) do
+    case Stripe.API.oauth_request(:post, endpoint, body) do
       {:ok, result} -> {:ok, Converter.convert_result(result)}
       {:error, error} -> {:error, error}
     end
