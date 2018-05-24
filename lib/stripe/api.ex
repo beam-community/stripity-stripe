@@ -152,13 +152,18 @@ defmodule Stripe.API do
     base_url = get_upload_url()
     req_url = base_url <> endpoint
 
+    req_headers =
+      headers
+      |> add_multipart_form_headers()
+      |> Map.to_list()
+
     parts =
       body
       |> Enum.map(fn {key, value} ->
         {Stripe.Util.multipart_key(key), value}
       end)
 
-    perform_request(req_url, :post, {:multipart, parts}, headers, opts)
+    perform_request(req_url, :post, {:multipart, parts}, req_headers, opts)
   end
 
   @doc """
