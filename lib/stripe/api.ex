@@ -70,8 +70,7 @@ defmodule Stripe.API do
 
   @spec add_default_headers(headers) :: headers
   defp add_default_headers(existing_headers) do
-    existing_headers
-    |> add_common_headers
+    existing_headers = add_common_headers(existing_headers)
 
     case Map.has_key?(existing_headers, "Content-Type") do
       false -> existing_headers |> Map.put("Content-Type", "application/x-www-form-urlencoded")
