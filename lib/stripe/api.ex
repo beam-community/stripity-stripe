@@ -70,15 +70,17 @@ defmodule Stripe.API do
 
   @spec add_default_headers(headers) :: headers
   defp add_default_headers(existing_headers) do
-    existing_headers
-    |> add_common_headers
-    |> Map.put("Content-Type", "application/x-www-form-urlencoded")
+    existing_headers = add_common_headers(existing_headers)
+
+    case Map.has_key?(existing_headers, "Content-Type") do
+      false -> existing_headers |> Map.put("Content-Type", "application/x-www-form-urlencoded")
+      true -> existing_headers
+    end
   end
 
   @spec add_multipart_form_headers(headers) :: headers
   defp add_multipart_form_headers(existing_headers) do
     existing_headers
-    |> add_common_headers
     |> Map.put("Content-Type", "multipart/form-data")
   end
 
@@ -152,13 +154,17 @@ defmodule Stripe.API do
     base_url = get_upload_url()
     req_url = base_url <> endpoint
 
+    req_headers =
+      headers
+      |> add_multipart_form_headers()
+
     parts =
       body
       |> Enum.map(fn {key, value} ->
         {Stripe.Util.multipart_key(key), value}
       end)
 
-    perform_request(req_url, :post, {:multipart, parts}, headers, opts)
+    perform_request(req_url, :post, {:multipart, parts}, req_headers, opts)
   end
 
   @doc """
