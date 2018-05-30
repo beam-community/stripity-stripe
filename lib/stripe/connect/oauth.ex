@@ -13,6 +13,9 @@ defmodule Stripe.Connect.OAuth do
 
   alias Stripe.Converter
 
+  @callback token(code :: String.t()) :: {:ok, map}
+  @callback deauthorize_url(url :: String.t()) :: {:ok, map}
+
   @authorize_url_valid_keys [
     :always_prompt,
     :client_id,
