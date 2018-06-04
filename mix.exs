@@ -59,7 +59,7 @@ defmodule Stripe.Mixfile do
       {:excoveralls, "~> 0.8.1", only: :test},
       {:hackney, "~> 1.12.1"},
       {:inch_ex, "~> 0.5", only: [:dev, :test]},
-      {:mox, "~> 0.3", git: "https://github.com/snewcomer/mox.git", branch: "elixir-1.4-compat", only: :test},
+      {:mox, "~> 0.3", only: :test},
       {:poison, "~> 2.0 or ~> 3.0"},
       {:uri_query, "~> 0.1.2"},
       {:exexec, "~> 0.1.0", only: :test}
