@@ -7,6 +7,8 @@ defmodule Stripe.API do
   """
   alias Stripe.Error
 
+  @callback oauth_request(method, String.t(), map) :: {:ok, map}
+
   @type method :: :get | :post | :put | :delete | :patch
   @type headers :: %{String.t() => String.t()} | %{}
   @type body :: {:multipart, list} | map
