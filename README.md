@@ -24,6 +24,24 @@ The actively developed line of releases is `2.x.x` and is contained within the `
 
 - [1.x.x](https://hexdocs.pm/stripity_stripe/1.6.1/)
 
+## Installation
+
+Install the dependency:
+
+```ex
+{:stripity_stripe, "~> 2.0"}
+```
+
+Next, add to your applications:
+
+_Not necessary if using elixir >= 1.4_
+
+```ex
+defp application do
+  [applications: [:stripity_stripe]]
+end
+```
+
 # Documentation for 1.x.x
 
 <details><summary>Click to expand</summary>
@@ -38,7 +56,7 @@ Works with API version 2015-10-16
 Install the dependency:
 
 ```ex
-{:stripity_stripe, "~> 1.6.1"}
+{:stripity_stripe, "~> 1.6"}
 ```
 
 Next, add to your applications:
