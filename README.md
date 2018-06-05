@@ -10,8 +10,8 @@ The actively developed line of releases is `2.x.x` and is contained within the `
 
 # Documentation
 
-[1.x.x](https://hexdocs.pm/stripity_stripe/1.6.1/)
-[2.x.x](https://hexdocs.pm/stripity_stripe/)
+- [1.x.x](https://hexdocs.pm/stripity_stripe/1.6.1/)
+- [Latest](https://hexdocs.pm/stripity_stripe/)
 
 ## Stripe API
 
