@@ -50,7 +50,7 @@ defmodule Stripe.Mixfile do
   defp package do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
-      maintainers: ["Rob Conery","Nic Rioux"],
+      maintainers: ["Rob Conery","Nic Rioux", "Josh Smith", "Nikola Begedin", "Scott Newcomer"],
       licenses: ["New BSD"],
       links: %{
         "GitHub" => "https://github.com/code-corps/stripity-stripe",
