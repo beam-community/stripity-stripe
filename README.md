@@ -1,8 +1,16 @@
 # Stripe for Elixir 
 
-[![Build Status](https://travis-ci.org/code-corps/stripity-stripe.svg?branch=master)](https://travis-ci.org/code-corps/stripity-stripe) [![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Inline docs](http://inch-ci.org/github/code-corps/stripity-stripe.svg)](http://inch-ci.org/github/code-corps/stripity-stripe) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity-stripe/badge.svg?branch=master)](https://coveralls.io/github/code-corps/stripity-stripe?branch=master)
-
 An Elixir library for working with [Stripe](https://stripe.com/).
+
+[![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe)
+
+## 2.x.x status
+
+[![Build Status](https://travis-ci.org/code-corps/stripity_stripe.svg?branch=master)](https://travis-ci.org/code-corps/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe)  [![Inline docs](http://inch-ci.org/github/code-corps/stripity_stripe.svg?branch=master)](http://inch-ci.org/github/code-corps/stripity_stripe?branch=master) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity_stripe/badge.svg?branch=master)](https://coveralls.io/github/code-corps/stripity_stripe?branch=master)
+
+## 1.x.x status
+
+[![Build Status](https://travis-ci.org/code-corps/stripity_stripe.svg?branch=1.x.x)](https://travis-ci.org/code-corps/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe/1.6.2) [![Inline docs](http://inch-ci.org/github/code-corps/stripity_stripe.svg?branch=1.x.x)](http://inch-ci.org/github/code-corps/stripity_stripe?branch=1.x.x) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity_stripe/badge.svg?branch=1.x.x)](https://coveralls.io/github/code-corps/stripity_stripe?branch=1.x.x)
 
 # Which version should I use?
 
@@ -12,8 +20,32 @@ The actively developed line of releases is `2.x.x` and is contained within the `
 
 # Documentation
 
+- [Latest HexDocs](https://hexdocs.pm/stripity_stripe/)
+
 - [1.x.x](https://hexdocs.pm/stripity_stripe/1.6.1/)
-- [Latest](https://hexdocs.pm/stripity_stripe/)
+
+## Installation
+
+Install the dependency:
+
+```ex
+{:stripity_stripe, "~> 2.0"}
+```
+
+Next, add to your applications:
+
+_Not necessary if using elixir >= 1.4_
+
+```ex
+defp application do
+  [applications: [:stripity_stripe]]
+end
+```
+
+# Documentation for 1.x.x
+
+<details><summary>Click to expand</summary>
+<p>
 
 ## Stripe API
 
@@ -24,7 +56,7 @@ Works with API version 2015-10-16
 Install the dependency:
 
 ```ex
-{:stripity_stripe, "~> 1.6.1"}
+{:stripity_stripe, "~> 1.6"}
 ```
 
 Next, add to your applications:
@@ -163,6 +195,9 @@ The tests are currently manual as they require a unique OAuth authorization code
 First, log in your account. Then go to the following url: https://dashboard.stripe.com/account/applications/settings
 
 Create a connect standalone account. Grab your development `client_id`. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to `Stripe.Connect.oauth_token_callback` or `Stripe.Connect.get_token`.
+
+</p>
+</details>
 
 # Contributing
 
