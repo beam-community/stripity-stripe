@@ -1,8 +1,16 @@
 # Stripe for Elixir 
 
-[![Build Status](https://travis-ci.org/code-corps/stripity-stripe.svg?branch=master)](https://travis-ci.org/code-corps/stripity-stripe) [![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Inline docs](http://inch-ci.org/github/code-corps/stripity-stripe.svg)](http://inch-ci.org/github/code-corps/stripity-stripe) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity-stripe/badge.svg?branch=master)](https://coveralls.io/github/code-corps/stripity-stripe?branch=master)
-
 An Elixir library for working with [Stripe](https://stripe.com/).
+
+[![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe)
+
+## 2.x.x status
+
+[![Build Status](https://travis-ci.org/code-corps/stripity_stripe.svg?branch=master)](https://travis-ci.org/code-corps/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe)  [![Inline docs](http://inch-ci.org/github/code-corps/stripity_stripe.svg?branch=master)](http://inch-ci.org/github/code-corps/stripity_stripe?branch=master) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity_stripe/badge.svg?branch=master)](https://coveralls.io/github/code-corps/stripity_stripe?branch=master)
+
+## 1.x.x status
+
+[![Build Status](https://travis-ci.org/code-corps/stripity_stripe.svg?branch=1.x.x)](https://travis-ci.org/code-corps/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe/1.6.2) [![Inline docs](http://inch-ci.org/github/code-corps/stripity_stripe.svg?branch=1.x.x)](http://inch-ci.org/github/code-corps/stripity_stripe?branch=1.x.x) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity_stripe/badge.svg?branch=1.x.x)](https://coveralls.io/github/code-corps/stripity_stripe?branch=1.x.x)
 
 # Which version should I use?
 
@@ -10,10 +18,12 @@ The old `1.x.x` line of releases has been kept and is being published separately
 
 The actively developed line of releases is `2.x.x` and is contained within the `master` branch. New features are being added to this line of releases, so to develop this library further, create pull requests against the master branch.
 
-# Documentation
+# Documentation for 2.0.0
+
+- [Latest HexDocs](https://hexdocs.pm/stripity_stripe/)
 
 - [1.x.x](https://hexdocs.pm/stripity_stripe/1.6.1/)
-- [Latest](https://hexdocs.pm/stripity_stripe/)
+
 
 ## Stripe API
 
