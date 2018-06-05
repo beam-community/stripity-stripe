@@ -1,8 +1,16 @@
-# Stripe for Elixir 
-
-[![Build Status](https://travis-ci.org/code-corps/stripity-stripe.svg?branch=master)](https://travis-ci.org/code-corps/stripity-stripe) [![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Inline docs](http://inch-ci.org/github/code-corps/stripity-stripe.svg)](http://inch-ci.org/github/code-corps/stripity-stripe) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity-stripe/badge.svg?branch=master)](https://coveralls.io/github/code-corps/stripity-stripe?branch=master)
+# Stripe for Elixir
 
 An Elixir library for working with [Stripe](https://stripe.com/).
+
+[![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe)
+
+## 2.x.x status
+
+[![Build Status](https://travis-ci.org/code-corps/stripity_stripe.svg?branch=master)](https://travis-ci.org/code-corps/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe)  [![Inline docs](http://inch-ci.org/github/code-corps/stripity_stripe.svg?branch=master)](http://inch-ci.org/github/code-corps/stripity_stripe?branch=master) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity_stripe/badge.svg?branch=master)](https://coveralls.io/github/code-corps/stripity_stripe?branch=master)
+
+## 1.x.x status
+
+[![Build Status](https://travis-ci.org/code-corps/stripity_stripe.svg?branch=1.x.x)](https://travis-ci.org/code-corps/stripity_stripe) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe/1.6.2) [![Inline docs](http://inch-ci.org/github/code-corps/stripity_stripe.svg?branch=1.x.x)](http://inch-ci.org/github/code-corps/stripity_stripe?branch=1.x.x) [![Coverage Status](https://coveralls.io/repos/github/code-corps/stripity_stripe/badge.svg?branch=1.x.x)](https://coveralls.io/github/code-corps/stripity_stripe?branch=1.x.x)
 
 # Which version should I use?
 
@@ -12,8 +20,32 @@ The actively developed line of releases is `2.x.x` and is contained within the `
 
 # Documentation
 
+- [Latest HexDocs](https://hexdocs.pm/stripity_stripe/)
+
 - [1.x.x](https://hexdocs.pm/stripity_stripe/1.6.1/)
-- [Latest](https://hexdocs.pm/stripity_stripe/)
+
+## Installation
+
+Install the dependency:
+
+```ex
+{:stripity_stripe, "~> 2.0"}
+```
+
+Next, add to your applications:
+
+_Not necessary if using elixir >= 1.4_
+
+```ex
+defp application do
+  [applications: [:stripity_stripe]]
+end
+```
+
+# Documentation for 1.x.x
+
+<details><summary>Click to expand</summary>
+<p>
 
 ## Stripe API
 
@@ -24,7 +56,7 @@ Works with API version 2015-10-16
 Install the dependency:
 
 ```ex
-{:stripity_stripe, "~> 2.0.0"}
+{:stripity_stripe, "~> 1.6"}
 ```
 
 Next, add to your applications:
@@ -60,6 +92,112 @@ If you start contributing and you want to run mix test, first you need to export
 export STRIPE_SECRET_KEY="yourkey"
 mix test
 ```
+
+## The API
+
+I've tried to make the API somewhat comprehensive and intuitive. If you'd like to see things in detail be sure to have a look at the tests - they show (generally) the way the API goes together.
+
+In general, if Stripe requires some information for a given API call, you'll find that as part of the arity of the given function. For instance if you want to delete a Customer, you'll find that you *must* pass the id along:
+
+```ex
+{:ok, result} = Stripe.Customers.delete "some_id"
+```
+
+For optional arguments, you can send in a Keyword list that will get translated to parameters. So if you want to update a Subscription, for instance, you must send in the `customer_id` and `subscription_id` with the list of changes:
+
+```ex
+# Change customer to the Premium subscription
+{:ok, result} = Stripe.Customers.change_subscription "customer_id", "sub_id", [plan: "premium"]
+```
+
+Metadata (metadata:) key is supported on most object type and allow the storage of extra information on the stripe platform. See [test](https://github.com/code-corps/stripity-stripe/blob/master/test/stripe/customer_test.exs) for an example.
+
+That's the rule of thumb with this library. If there are any errors with your call, they will bubble up to you in the `{:error, message}` match.
+
+```ex
+# Example of paging through events
+{:ok, events} = Stripe.Events.list(key, "", 100) # second arg is a marker for paging
+
+case events[:has_more] do
+  true ->
+    # retrieve marker
+    last = List.last( events[:data] )
+    case Stripe.Events.list key, last["id"], 100 do
+      {:ok, events} -> events[:data]
+      # ...
+    end
+  false -> events[:data]
+end
+```
+
+# Connect
+
+Stripe Connect allows you to provide your customers with an easy onboarding to their own Stripe account. This is useful when you run an e-commerce as a service platform. Each merchant can transact using their own account using your platform. Then your platform uses Stripe's API with their own API key obtained in the onboarding process.
+
+First, you need to register your platform on Stripe Connect to obtain a `client_id`. In your account settings, there's a "Connect" tab, select it. Then fill the information to activate your connect platform settings. The select he `client_id` (notice there's one for dev and one for prod), stash this `client_id` in the config file under
+
+```ex
+config :stripity_stripe, platform_client_id: "ac_???"
+```
+or in an env var named `STRIPE_PLATFORM_CLIENT_ID`.
+
+Then you send your users to sign up for the stripe account using a link.
+
+Here's an example of a button to start the workflow:
+<a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_32D88BD1qLklliziD7gYQvctJIhWBSQ7&scope=read_write">Connect with Stripe</a>
+
+You can generate this URL using:
+
+```ex
+url = Stripe.Connect.generate_button_url csrf_token
+```
+
+When the user gets back to your platform, the following url (`redirect_uri` form item on your "Connect" settings) will be used:
+
+```
+//yoursvr/your_endpoint?scope=read_write&code=AUTHORIZATION_CODE
+```
+
+or
+
+```
+//yoursvr/your_endpoint?error=access_denied&error_description=The%20user%20denied%20your%20request
+```
+
+Using the code request parameter, you make the following call:
+
+```ex
+{:ok, resp} -> Stripe.Connect.oauth_token_callback code
+resp[:access_token]
+```
+
+`resp` will look like this:
+```ex
+%{
+  token_type: "bearer",
+  stripe_publishable_key: PUBLISHABLE_KEY,
+  scope: "read_write",
+  livemode: false,
+  stripe_user_id: USER_ID,
+  refresh_token: REFRESH_TOKEN,
+  access_token: ACCESS_TOKEN
+}
+```
+
+You can then pass the `access_token` to the other API modules to act on their behalf.
+
+See a [demo](https://github.com/nicrioux/stripity-connect-phoenix) using the Phoenix framework with the bare minimum to get this working.
+
+## Testing Connect
+
+The tests are currently manual as they require a unique OAuth authorization code per test. You need to obtain this code manually using the stripe connect workflow (that your user would go through using the above url).
+
+First, log in your account. Then go to the following url: https://dashboard.stripe.com/account/applications/settings
+
+Create a connect standalone account. Grab your development `client_id`. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to `Stripe.Connect.oauth_token_callback` or `Stripe.Connect.get_token`.
+
+</p>
+</details>
 
 # Contributing
 
