@@ -2,60 +2,27 @@
 
 An Elixir library for working with [Stripe](https://stripe.com/).
 
-# Which branch should I use?
+# Which version should I use?
 
-- `master` (versions 1.x.x) is out of date and smaller in features, but we do ocassionally still push fixes to it
-- `2.0-alpha` is the active branch, versions 2.0.0-alpha.x - Were trying to actively maintain it
-- `2.0-beta` is the big rewrite branch and will (hopefully soon) take over the alpha branch. We're currently in dire need of help to make this happen.
+The old `1.x.x` line of releases has been kept and is being published separately for backwards compatibility, since `2.0` was a complete rewrite. To contribute to that line (bugfixes, mainly), create pull requests against the `1.x.x` branch.
 
-NOTE: While the 1.x.x releases are the stable releases and this branch is being maintained and updated, **we are currently focusing on the 2.0.0.alpha-X releases**.
+The actively developed line of releases is `2.x.x` and is contained within the `master` branch. New features are being added to this line of releases, so to develop this library further, create pull requests against the master branch.
 
-This alternative branch is a complete rewrite of the library and is in many ways ahead of the stable branch. Feel free to give it a try before requesting changes in the stable branch.
+# Documentation
 
-Features:
-
-* manage accounts (your own, standalone/managed via connect) [Stripe.Accounts](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/accounts.ex)
-* manage customers [Stripe.Customers](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/customers.ex)
-* manage Subscriptions [Stripe.Subscriptions](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/subscriptions.ex)
-* manage plans [Stripe.Plans](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/plans.ex)
-* manage Invoices [Stripe.Invoices](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/invoices.ex)
-* manage Invoice Items [Stripe.InvoiceItems](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/invoice_items.ex)
-* manage tokens for credit card and bank account [Stripe.Tokens](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/tokens.ex)
-* list and retrieve stripe events (paged, max 100 per page, up to 30 days kept on stripe for retrieve) [Stripe.Events](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/events.ex)
-* manage/capture charges with or without an existing Customer [Stripe.Charges](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/charges.ex)
-* manage and validate coupons [Stripe.Coupons](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe/coupons.ex)
-* facilitate using the Connect API (for standalone/managed accounts) [Stripe Connect](https://stripe.com/docs/connect) by allowing you to supply your own key. The oauth callback processor (not endpoint) is supplied by this library as well as a connect button url generator. See below for [Instructions](#connect). [Stripe Connect API reference](https://stripe.com/docs/connect/reference)
-* all functions are available with a parameter that allow a stripe api key to be passed in and be used for the underlying request. This api key would be the one obtained by the oauth connect authorize workflow.
-
-Why another Stripe Library? Currently there are a number of them in the Elixir world that are, well just not "done" yet. I started to fork/help but soon it became clear to me that what I wanted was:
-
-* an existing/better test story
-* an API that didn't just mimic a REST interaction
-* a library that was up to date with Elixir > 1.0 and would, you know, actually *compile*.
-* function calls that returned a standard `{:ok, result}` or `{:error, message}` response
-
-As I began digging things up with these other libraries it became rather apparent that I was not only tweaking the API, but also ripping out a lot of the existing code... and that usually means I should probably do my own thing. So I did.
-
-### Update:
-
-As of October 18th, Rob has graciously handed over the reins to the teams at [Code Corps](https://www.codecorps.org/) and [Strumber](https://strumber.com/). Over the next several weeks, we will be working to produce and release a 2.0 version of Stripity Stripe which fully addresses the concerns Rob mentioned above and updates the high level api to work with all of the Stripe API Endpoints.
-
-**If you are starting a new implementation, particularly one using Stripe Connect, we recommend relying on [the low level API defined here](https://github.com/code-corps/stripity-stripe/blob/master/lib/stripe.ex#L88).**
-
-Stay tuned...
+[1.x.x](https://hexdocs.pm/stripity_stripe/1.6.1/)
+[2.x.x](https://hexdocs.pm/stripity_stripe/)
 
 ## Stripe API
 
-I've tested this library against Stripe API v1 and above. [The docs are up at Hex](http://hexdocs.pm/stripity_stripe/)
-
 Works with API version 2015-10-16
 
-## Usage
+## Installation
 
 Install the dependency:
 
 ```ex
-{:stripity_stripe, "~> 1.4.0"}
+{:stripity_stripe, "~> 1.6.1"}
 ```
 
 Next, add to your applications:
@@ -84,6 +51,7 @@ config :stripity_stripe, httpoison_options: [timeout: 10000, recv_timeout: 10000
 ```
 
 ## Testing
+
 If you start contributing and you want to run mix test, first you need to export STRIPE_SECRET_KEY environment variable in the same shell as the one you will be running mix test in. All tests have the @tag disabled: false and the test runner is configured to ignore disabled: true. This helps to turn tests on/off when working in them. Most of the tests depends on the order of execution (test random seed = 0) to minimize runtime. I've tried having each tests isolated but this made it take ~10 times longer.
 
 ```
@@ -194,10 +162,27 @@ First, log in your account. Then go to the following url: https://dashboard.stri
 
 Create a connect standalone account. Grab your development `client_id`. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to `Stripe.Connect.oauth_token_callback` or `Stripe.Connect.get_token`.
 
-## Contributing
+# Contributing
 
 Feedback, feature requests, and fixes are welcomed and encouraged.  Please make appropriate use of [Issues](https://github.com/code-corps/stripity-stripe/issues) and [Pull Requests](https://github.com/code-corps/stripity-stripe/pulls).  All code should have accompanying tests.
 
-## License
+# License
 
 Please see [LICENSE](LICENSE) for licensing details.
+
+# History
+
+## Statement from original author
+
+Why another Stripe Library? Currently there are a number of them in the Elixir world that are, well just not "done" yet. I started to fork/help but soon it became clear to me that what I wanted was
+
+* an existing/better test story
+* an API that didn't just mimic a REST interaction
+* a library that was up to date with Elixir > 1.0 and would, you know, actually *compile*.
+* function calls that returned a standard `{:ok, result}` or `{:error, message}` response
+
+As I began digging things up with these other libraries it became rather apparent that I was not only tweaking the API, but also ripping out a lot of the existing code... and that usually means I should probably do my own thing. So I did.
+
+## Update
+
+As of October 18th, Rob has graciously handed over the reins to the teams at [Code Corps](https://www.codecorps.org/) and [Strumber](https://strumber.com/). To addresses the concerns Rob mentioned above and update the high level api to work with all of the Stripe API Endpoints, they have since worked to release and stripity_stripe 2.0, which is now the actively developed line of releases.
