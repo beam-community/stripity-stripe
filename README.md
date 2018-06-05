@@ -18,12 +18,16 @@ The old `1.x.x` line of releases has been kept and is being published separately
 
 The actively developed line of releases is `2.x.x` and is contained within the `master` branch. New features are being added to this line of releases, so to develop this library further, create pull requests against the master branch.
 
-# Documentation for 2.0.0
+# Documentation
 
 - [Latest HexDocs](https://hexdocs.pm/stripity_stripe/)
 
 - [1.x.x](https://hexdocs.pm/stripity_stripe/1.6.1/)
 
+# Documentation for 1.x.x
+
+<details><summary>Click to expand</summary>
+<p>
 
 ## Stripe API
 
@@ -173,6 +177,9 @@ The tests are currently manual as they require a unique OAuth authorization code
 First, log in your account. Then go to the following url: https://dashboard.stripe.com/account/applications/settings
 
 Create a connect standalone account. Grab your development `client_id`. Put it in your config file. Enter a redirect url to your endpoint. Capture the "code" request parameter. Pass it to `Stripe.Connect.oauth_token_callback` or `Stripe.Connect.get_token`.
+
+</p>
+</details>
 
 # Contributing
 
