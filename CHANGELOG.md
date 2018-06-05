@@ -3,7 +3,7 @@
 ## 2.0.0
 
 - official full release after -alpha and -beta releases
-- Readme updates related to releasing 2.0 - [#376]
+- Readme updates related to releasing 2.0 - [#377](https://github.com/code-corps/stripity_stripe/pull/377)
 - See the [latest documentation](https://hexdocs.pm/stripity_stripe/api-reference.html) to track what's supported
 
 This is a huge release and we are likely to have missed bugs. Feel free to provide feedback, create issues and contribute with pull requests.
