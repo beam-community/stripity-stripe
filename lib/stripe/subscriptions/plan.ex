@@ -45,7 +45,9 @@ defmodule Stripe.Plan do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
-          amount: non_neg_integer,
+          aggregate_usage: String.t() | nil,
+          amount: non_neg_integer | nil,
+          billing_scheme: String.t() | nil,
           created: Stripe.timestamp(),
           currency: String.t(),
           interval: String.t(),
@@ -54,13 +56,20 @@ defmodule Stripe.Plan do
           metadata: Stripe.Types.metadata(),
           name: String.t(),
           nickname: String.t() | nil,
-          product: Stripe.id() | Stripe.Product.t()
+          product: Stripe.id() | Stripe.Product.t(),
+          tiers: Stripe.List.t(map) | nil,
+          tiers_mode: boolean | nil,
+          transform_usage: map | nil,
+          trial_period_days: non_neg_integer | nil,
+          usage_type: String.t() | nil
         }
 
   defstruct [
     :id,
     :object,
+    :aggregate_usage,
     :amount,
+    :billing_scheme,
     :created,
     :currency,
     :interval,
@@ -69,7 +78,12 @@ defmodule Stripe.Plan do
     :metadata,
     :name,
     :nickname,
-    :product
+    :product,
+    :tiers,
+    :tiers_mode,
+    :transform_usage,
+    :trial_period_days,
+    :usage_type
   ]
 
   @plural_endpoint "plans"

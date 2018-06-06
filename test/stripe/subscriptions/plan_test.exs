@@ -9,7 +9,24 @@ defmodule Stripe.PlanTest do
         id: "sapphire-elite",
         interval: "month",
         nickname: "Sapphire elite",
-        product: "abc_123"
+        product: "abc_123",
+        trial_period_days: 10
+      }
+
+      assert {:ok, %Stripe.Plan{}} = Stripe.Plan.create(params)
+      assert_stripe_requested(:post, "/v1/plans")
+    end
+
+    test "creates a Plan for a customer with tiers" do
+      params = %{
+        amount: 5000,
+        billing_scheme: "tiered",
+        currency: "usd",
+        id: "sapphire-elite",
+        interval: "month",
+        nickname: "Sapphire elite",
+        product: "abc_123",
+        tiers: [%{amount: 10, up_to: 12}]
       }
 
       assert {:ok, %Stripe.Plan{}} = Stripe.Plan.create(params)
