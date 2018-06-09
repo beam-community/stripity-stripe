@@ -74,7 +74,7 @@ To make API calls, it is necessary to configure your Stripe secret key (and opti
 ```ex
 use Mix.Config
 
-config :stripity_stripe, secret_key: "YOUR SECRET KEY"
+config :stripity_stripe, api_key: "YOUR SECRET KEY"
 config :stripity_stripe, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
 ```
 
