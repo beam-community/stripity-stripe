@@ -40,6 +40,15 @@ _Not necessary if using elixir >= 1.4_
 defp application do
   [applications: [:stripity_stripe]]
 end
+
+## Configuration
+
+To make API calls, it is necessary to configure your Stripe secret key (and optional platform client id if you are using Stripe Connect):
+
+```ex
+use Mix.Config
+
+config :stripity_stripe, api_key: "YOUR SECRET KEY"
 ```
 
 # Documentation for 1.x.x
@@ -74,7 +83,7 @@ To make API calls, it is necessary to configure your Stripe secret key (and opti
 ```ex
 use Mix.Config
 
-config :stripity_stripe, api_key: "YOUR SECRET KEY"
+config :stripity_stripe, secret_key: "YOUR SECRET KEY"
 config :stripity_stripe, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
 ```
 
