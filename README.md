@@ -45,7 +45,7 @@ end
 
 ## Configuration
 
-To make API calls, it is necessary to configure your Stripe secret key (and optional platform client id if you are using Stripe Connect):
+To make API calls, it is necessary to configure your Stripe secret key.
 
 ```ex
 use Mix.Config
@@ -80,7 +80,7 @@ end
 
 ## Configuration
 
-To make API calls, it is necessary to configure your Stripe api key.
+To make API calls, it is necessary to configure your Stripe secret key (and optional platform client id if you are using Stripe Connect):
 
 ```ex
 use Mix.Config
