@@ -18,6 +18,8 @@ The old `1.x.x` line of releases has been kept and is being published separately
 
 The actively developed line of releases is `2.x.x` and is contained within the `master` branch. New features are being added to this line of releases, so to develop this library further, create pull requests against the master branch.
 
+2.x.x Works with Stripe API version 2018-05-21
+
 # Documentation
 
 - [Latest HexDocs](https://hexdocs.pm/stripity_stripe/)
@@ -78,7 +80,7 @@ end
 
 ## Configuration
 
-To make API calls, it is necessary to configure your Stripe secret key (and optional platform client id if you are using Stripe Connect):
+To make API calls, it is necessary to configure your Stripe api key.
 
 ```ex
 use Mix.Config
