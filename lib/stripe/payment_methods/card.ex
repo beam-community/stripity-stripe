@@ -100,6 +100,7 @@ defmodule Stripe.Card do
   """
   @spec create(params, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
+              :customer => Stripe.id() | Stripe.Customer.t(),
               optional(:metadata) => Stripe.Types.metadata(),
               optional(:source) => Stripe.id() | Stripe.Source.t(),
             }
