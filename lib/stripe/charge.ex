@@ -13,13 +13,39 @@ defmodule Stripe.Charge do
   @type t :: %__MODULE__{}
 
   defstruct [
-    :id, :object,
-    :amount, :amount_refunded, :application, :application_fee,
-    :balance_transaction, :captured, :created, :currency, :customer,
-    :description, :destination, :dispute, :failure_code, :failure_message,
-    :fraud_details, :invoice, :livemode, :metadata, :order, :outcome,
-    :paid, :receipt_email, :receipt_number, :refunded, :refunds, :review,
-    :shipping, :source, :source_transfer, :statement_descriptor, :status,
+    :id,
+    :object,
+    :amount,
+    :amount_refunded,
+    :application,
+    :application_fee,
+    :balance_transaction,
+    :captured,
+    :created,
+    :currency,
+    :customer,
+    :description,
+    :destination,
+    :dispute,
+    :failure_code,
+    :failure_message,
+    :fraud_details,
+    :invoice,
+    :livemode,
+    :metadata,
+    :order,
+    :outcome,
+    :paid,
+    :receipt_email,
+    :receipt_number,
+    :refunded,
+    :refunds,
+    :review,
+    :shipping,
+    :source,
+    :source_transfer,
+    :statement_descriptor,
+    :status,
     :transfer
   ]
 
@@ -48,6 +74,7 @@ defmodule Stripe.Charge do
     description: [:create, :retrieve, :update],
     destination: [:create, :retrieve],
     dispute: [:retrieve],
+    "expand[]": [:create],
     failure_code: [:retrieve],
     failure_message: [:retrieve],
     fraud_details: [:retrieve, :update],
@@ -81,7 +108,7 @@ defmodule Stripe.Charge do
   @doc """
   Capture a charge.
   """
-  @spec capture(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec capture(binary, Keyword.t()) :: {:ok, t} | {:error, Stripe.api_error_struct()}
   def capture(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id <> "/capture"
     Stripe.Request.create(endpoint, %{}, @schema, opts)
@@ -90,7 +117,7 @@ defmodule Stripe.Charge do
   @doc """
   Create a charge.
   """
-  @spec create(map, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec create(map, Keyword.t()) :: {:ok, t} | {:error, Stripe.api_error_struct()}
   def create(changes, opts \\ []) do
     Stripe.Request.create(@plural_endpoint, changes, @schema, opts)
   end
@@ -98,7 +125,7 @@ defmodule Stripe.Charge do
   @doc """
   Retrieve a charge.
   """
-  @spec retrieve(binary, Keyword.t) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec retrieve(binary, Keyword.t()) :: {:ok, t} | {:error, Stripe.api_error_struct()}
   def retrieve(id, opts \\ []) do
     endpoint = @plural_endpoint <> "/" <> id
     Stripe.Request.retrieve(endpoint, opts)
@@ -107,7 +134,7 @@ defmodule Stripe.Charge do
   @doc """
   List all charges.
   """
-  @spec list(map, Keyword.t) :: {:ok, Stripe.List.t} | {:error, Stripe.api_error_struct}
+  @spec list(map, Keyword.t()) :: {:ok, Stripe.List.t()} | {:error, Stripe.api_error_struct()}
   def list(params \\ %{}, opts \\ []) do
     endpoint = @plural_endpoint
     Stripe.Request.retrieve(params, endpoint, opts)
