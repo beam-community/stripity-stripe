@@ -34,9 +34,11 @@ defmodule Stripe.SubscriptionTest do
     end
   end
 
-  describe "delete/2" do
+  describe "delete/3" do
     test "deletes a subscription" do
-      assert {:ok, %Stripe.Subscription{} = subscription} = Stripe.Subscription.delete("sub_123")
+      params = %{at_period_end: true}
+      opts = []
+      assert {:ok, %Stripe.Subscription{} = subscription} = Stripe.Subscription.delete("sub_123", params, opts)
       assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
     end
   end
