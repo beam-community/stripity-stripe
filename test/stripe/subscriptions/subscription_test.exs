@@ -43,10 +43,8 @@ defmodule Stripe.SubscriptionTest do
     end
 
     test "deletes a subscription when second argument is a map" do
-      params = %{at_period_end: true}
-
       assert {:ok, %Stripe.Subscription{} = subscription} =
-               Stripe.Subscription.delete("sub_123", params)
+               Stripe.Subscription.delete("sub_123", %{at_period_end: true})
 
       assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
     end

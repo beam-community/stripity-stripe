@@ -139,6 +139,11 @@ defmodule Stripe.Subscription do
     |> make_request()
   end
 
+  @doc """
+  Delete a subscription.
+
+  Takes the `id` and an optional map of `params`.
+  """
   @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, opts) when is_list(opts), do: delete(id, %{}, opts)
 
@@ -148,11 +153,6 @@ defmodule Stripe.Subscription do
              }
   def delete(id, params) when is_map(params), do: delete(id, params, [])
 
-  @doc """
-  Delete a subscription.
-
-  Takes the `id` and an optional map of `params`.
-  """
   @spec delete(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:at_period_end) => boolean
