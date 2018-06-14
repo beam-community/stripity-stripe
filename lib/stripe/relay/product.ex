@@ -32,7 +32,6 @@ defmodule Stripe.Relay.Product do
                 width: float
               },
           shippable: boolean,
-          skus: Stripe.List.t(Stripe.Sku.t()),
           statement_descriptor: String.t(),
           unit_label: String.t(),
           updated: Stripe.timestamp(),
@@ -54,7 +53,6 @@ defmodule Stripe.Relay.Product do
     :name,
     :package_dimensions,
     :shippable,
-    :skus,
     :statement_descriptor,
     :unit_label,
     :updated,
