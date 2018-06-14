@@ -1,5 +1,14 @@
 # Latest
 
+## 2.0.1
+
+- add some missing fields to `%Stripe.Plan{}` - [#380](https://github.com/code-corps/stripity_stripe/pull/380)
+- added supported API version to readme - [#384](https://github.com/code-corps/stripity_stripe/pull/384)
+- corrected usage info in readme - [#384](https://github.com/code-corps/stripity_stripe/pull/384)
+- added `:customer` field to `%Stripe.Card{}` - [#382](https://github.com/code-corps/stripity_stripe/pull/382)
+- made `:source` field required in `Stripe.Card.create` - [#382](https://github.com/code-corps/stripity_stripe/pull/382)
+- added support for optional `params: %{optional(:at_period_end) => boolean}` to `Stripe.Subscription.delete/2` - [#386](https://github.com/code-corps/stripity_stripe/pull/386)
+
 ## 2.0.0
 
 - official full release after -alpha and -beta releases
