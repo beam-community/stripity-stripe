@@ -86,6 +86,7 @@ defmodule Stripe.Subscription do
                optional(:source) => Stripe.id() | Stripe.Source.t(),
                optional(:tax_percent) => float,
                optional(:trial_end) => Stripe.timestamp(),
+               optional(:trial_from_plan) => boolean,
                optional(:trial_period_days) => non_neg_integer
              }
   def create(%{customer: _} = params, opts \\ []) do
@@ -128,7 +129,8 @@ defmodule Stripe.Subscription do
                optional(:proration_date) => Stripe.timestamp(),
                optional(:source) => Stripe.id() | Stripe.Source.t(),
                optional(:tax_percent) => float,
-               optional(:trial_end) => Stripe.timestamp()
+               optional(:trial_end) => Stripe.timestamp(),
+               optional(:trial_from_plan) => boolean
              }
   def update(id, params, opts \\ []) do
     new_request(opts)
