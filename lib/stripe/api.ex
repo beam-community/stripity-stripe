@@ -136,8 +136,10 @@ defmodule Stripe.API do
   @spec request(body, method, String.t(), headers, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
   def request(body, method, endpoint, headers, opts) do
+    {expansion, opts} = Keyword.pop(opts, :expand)
     base_url = get_base_url()
-    req_url = base_url <> endpoint
+
+    req_url = add_object_expansion("#{base_url}#{endpoint}", expansion)
 
     req_body =
       body
@@ -273,4 +275,15 @@ defmodule Stripe.API do
       _ -> body
     end
   end
+
+  defp add_object_expansion(url, expansion) when is_list(expansion) do
+    expand_str =
+      expansion
+      |> Enum.map(&"expand[]=#{&1}")
+      |> Enum.join("&")
+
+    "#{url}?#{expand_str}"
+  end
+
+  defp add_object_expansion(url, _), do: url
 end

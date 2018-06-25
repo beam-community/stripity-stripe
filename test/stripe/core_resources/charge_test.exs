@@ -29,4 +29,11 @@ defmodule Stripe.ChargeTest do
     assert {:ok, %Stripe.Charge{}} = Stripe.Charge.capture(charge, %{amount: 1000})
     assert_stripe_requested(:post, "/v1/charges/ch_123/capture")
   end
+
+  test "is retrievable with expansions opts" do
+    opts = [expand: ["balance_transaction"]]
+    assert {:ok, %Stripe.Charge{}} = Stripe.Charge.retrieve("ch_123", opts)
+
+    assert_stripe_requested(:get, "/v1/charges/ch_123")
+  end
 end

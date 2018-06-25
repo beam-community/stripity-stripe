@@ -29,7 +29,12 @@ defmodule Stripe.Request do
           :endpoint_fun_invalid_result
           | :invalid_endpoint
 
-  defstruct opts: [], endpoint: nil, headers: nil, method: nil, params: %{}, cast_to_id: MapSet.new()
+  defstruct opts: [],
+            endpoint: nil,
+            headers: nil,
+            method: nil,
+            params: %{},
+            cast_to_id: MapSet.new()
 
   @doc """
   Creates a new request.
@@ -65,7 +70,8 @@ defmodule Stripe.Request do
   `:put`, `:patch` or `:delete`.
   """
   @spec put_method(t, Stripe.API.method()) :: t
-  def put_method(%Request{} = request, method) when method in [:get, :post, :put, :patch, :delete] do
+  def put_method(%Request{} = request, method)
+      when method in [:get, :post, :put, :patch, :delete] do
     %{request | method: method}
   end
 
@@ -144,12 +150,43 @@ defmodule Stripe.Request do
 
   def get_id!(_), do: raise("You must provide an ID or a struct with an ID to this operation.")
 
+  @doc ~S"""
+  Prefixes all `:expand` values provided in `opts` with the given prefix.
+
+  When using object expansion on a `list` function for a resource, the values must
+  be prefixed with `data.`. This is required because the stripe api nests the 
+  returned objects within `data: {}`.
+
+  For all `create`, `update`, `cancel` and `retrieve` functions this is not required.
+
+  ```
+  opts = [expand: ["balance_transaction"]]
+  request = prefix_expansions(%Request{opts: opts}, "data")
+
+  request.opts == ["data.balance_transaction"]
+  ```
+  """
+  @spec prefix_expansions(t, binary) :: t
+  def prefix_expansions(%Request{opts: opts} = request, prefix) do
+    case Keyword.get(opts, :expand) do
+      nil ->
+        request
+
+      expansions ->
+        mapped_expansions = Enum.map(expansions, &"#{prefix}.#{&1}")
+        opts = Keyword.replace!(opts, :expand, mapped_expansions)
+
+        %{request | opts: opts}
+    end
+  end
+
   @doc """
   Executes the request and returns the response.
   """
   @spec make_request(t) :: {:ok, struct} | {:error, Stripe.Error.t()}
   def make_request(
-        %Request{params: params, endpoint: endpoint, method: method, headers: headers, opts: opts} = request
+        %Request{params: params, endpoint: endpoint, method: method, headers: headers, opts: opts} =
+          request
       ) do
     with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
          {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
@@ -161,13 +198,13 @@ defmodule Stripe.Request do
   @doc """
   Executes the request and returns the response for file uploads
   """
-  @spec make_file_upload_request(t) :: {:ok, struct} | {:error, Stripe.Error.t}
-  def make_file_upload_request(%Request{params: params, endpoint: endpoint, method: method, opts: opts} = request) do
-    with\
-      {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
-      {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
-      {:ok, result} <- API.request_file_upload(params, method, endpoint, %{}, opts)
-    do
+  @spec make_file_upload_request(t) :: {:ok, struct} | {:error, Stripe.Error.t()}
+  def make_file_upload_request(
+        %Request{params: params, endpoint: endpoint, method: method, opts: opts} = request
+      ) do
+    with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
+         {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
+         {:ok, result} <- API.request_file_upload(params, method, endpoint, %{}, opts) do
       {:ok, Converter.convert_result(result)}
     end
   end

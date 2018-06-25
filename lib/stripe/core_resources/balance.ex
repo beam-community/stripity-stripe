@@ -84,6 +84,7 @@ defmodule Stripe.Balance do
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
+    |> prefix_expansions("data")
     |> put_endpoint(@endpoint <> "/history")
     |> put_method(:get)
     |> put_params(params)
