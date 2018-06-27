@@ -67,7 +67,7 @@ defmodule Stripe.Event do
     :pending_webhooks,
     :request,
     :type,
-    :user_id
+    :account
   ]
 
   @plural_endpoint "events"

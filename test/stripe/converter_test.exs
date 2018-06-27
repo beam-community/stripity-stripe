@@ -5,6 +5,7 @@ defmodule Stripe.ConverterTest do
 
   test "converts a 'customer.updated' event response properly" do
     expected_result = %Stripe.Event{
+      account: "acct_0000000000000000",
       api_version: "2016-07-06",
       created: 1_483_537_031,
       data: %{
@@ -47,8 +48,7 @@ defmodule Stripe.ConverterTest do
       object: "event",
       pending_webhooks: 0,
       request: "req_9ryusbEBenV0BX",
-      type: "customer.updated",
-      user_id: nil
+      type: "customer.updated"
     }
 
     fixture = Helper.load_fixture("event_with_customer.json")
