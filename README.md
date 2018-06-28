@@ -210,6 +210,43 @@ Create a connect standalone account. Grab your development `client_id`. Put it i
 </p>
 </details>
 
+# Object Expansion
+
+Some Stripe API endpoints support returning related objects via the object expansion query parameter. To take advantage of this feature, stripity_stripe accepts
+a list of strings to be passed into `opts` under the `:expand` key indicating which objects should be expanded.
+
+For example, calling `Charge.retrieve("ch_123")` would return a charge without expanding any objects.
+
+```elixir
+%Charge{
+  id: "ch_123",
+  balance_transaction: "txn_123",
+  ...
+}
+```
+
+However if we now include an expansion on the `balance_transaction` field using
+
+```elixir
+Charge.retrieve("ch_123", expand: ["balance_transaction"])
+```
+
+We will get the full object back as well.
+
+```elixir
+%Charge{
+  id: "ch_123",
+  balance_transaction: %BalanceTransaction{
+    id: "txn_123",
+    fee: 125,
+    ...
+  },
+  ...
+}
+```
+
+For details on which objects can be expanded check out the [stripe object expansion](https://stripe.com/docs/api#expanding_objects) docs.
+
 # Contributing
 
 Feedback, feature requests, and fixes are welcomed and encouraged.  Please make appropriate use of [Issues](https://github.com/code-corps/stripity-stripe/issues) and [Pull Requests](https://github.com/code-corps/stripity-stripe/pulls).  All code should have accompanying tests.
