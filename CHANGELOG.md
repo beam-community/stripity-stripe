@@ -1,5 +1,15 @@
 # Latest
 
+## 2.1.0
+
+- *New Feature:* [Add support for object expansion - #393](https://github.com/code-corps/stripity_stripe/pull/393) 
+  - credits to [@swelham](https://github.com/swelham
+  - see instructions in README.md
+- Replace `user_id` in event with `account` field, as per updated stripe documentation - [#391](https://github.com/code-corps/stripity_stripe/pull/391)
+  - credits to [@erikreedstrom](https://github.com/erikreedstrom)
+- Update officiall supported API version to 2018-05-21 - [#390]((https://github.com/code-corps/stripity_stripe/pull/390)
+  - credits to [@snewcomer](https://github.com/snewcomer)
+
 ## 2.0.1
 
 - add some missing fields to `%Stripe.Plan{}` - [#380](https://github.com/code-corps/stripity_stripe/pull/380)
