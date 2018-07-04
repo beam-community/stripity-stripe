@@ -15,7 +15,7 @@ defmodule Stripe.Plans do
   ```
   """
   def create(params) do
-    create params, Stripe.config_or_env_key
+    create(params, Stripe.config_or_env_key())
   end
 
   @doc """
@@ -28,20 +28,19 @@ defmodule Stripe.Plans do
   ```
   """
   def create(params, key) do
-    #default the currency and interval
-    params = Keyword.put_new params, :currency, "USD"
-    params = Keyword.put_new params, :interval, "month"
+    # default the currency and interval
+    params = Keyword.put_new(params, :currency, "USD")
+    params = Keyword.put_new(params, :interval, "month")
 
     Stripe.make_request_with_key(:post, @endpoint, key, params)
-    |> Stripe.Util.handle_stripe_response
-
+    |> Stripe.Util.handle_stripe_response()
   end
 
   @doc """
   Returns a list of Plans.
   """
   def list(limit \\ 10) do
-    list Stripe.config_or_env_key, limit
+    list(Stripe.config_or_env_key(), limit)
   end
 
   @doc """
@@ -49,14 +48,14 @@ defmodule Stripe.Plans do
   """
   def list(key, limit) do
     Stripe.make_request_with_key(:get, "#{@endpoint}?limit=#{limit}", key)
-    |> Stripe.Util.handle_stripe_response
+    |> Stripe.Util.handle_stripe_response()
   end
 
   @doc """
 
   """
   def retrieve(id) do
-    retrieve id, Stripe.config_or_env_key
+    retrieve(id, Stripe.config_or_env_key())
   end
 
   @doc """
@@ -64,7 +63,7 @@ defmodule Stripe.Plans do
   """
   def retrieve(id, key) do
     Stripe.make_request_with_key(:get, "#{@endpoint}/#{id}", key)
-    |> Stripe.Util.handle_stripe_response
+    |> Stripe.Util.handle_stripe_response()
   end
 
   @doc """
@@ -78,7 +77,7 @@ defmodule Stripe.Plans do
 
   """
   def delete(id) do
-    delete id, Stripe.config_or_env_key
+    delete(id, Stripe.config_or_env_key())
   end
 
   @doc """
@@ -93,7 +92,7 @@ defmodule Stripe.Plans do
   """
   def delete(id, key) do
     Stripe.make_request_with_key(:delete, "#{@endpoint}/#{id}", key)
-    |> Stripe.Util.handle_stripe_response
+    |> Stripe.Util.handle_stripe_response()
   end
 
   @doc """
@@ -106,80 +105,84 @@ defmodule Stripe.Plans do
   ```
   """
   def change(id, params) do
-    change(id, params, Stripe.config_or_env_key)
+    change(id, params, Stripe.config_or_env_key())
   end
 
   def change(id, params, key) do
     Stripe.make_request_with_key(:post, "#{@endpoint}/#{id}", key, params)
-    |> Stripe.Util.handle_stripe_response
+    |> Stripe.Util.handle_stripe_response()
   end
 
   def count do
-    count Stripe.config_or_env_key
+    count(Stripe.config_or_env_key())
   end
+
   def count(key) do
-    Stripe.Util.count  "#{@endpoint}", key
+    Stripe.Util.count("#{@endpoint}", key)
   end
 
-    @max_fetch_size 100
-    @doc """
-    List all plans.
-    ##Example
-    ```
-    {:ok, plans} = Stripe.Plans.all
-        ```
-        """
-    def all( accum \\ [], startingAfter \\ "") do
-      all Stripe.config_or_env_key, accum, startingAfter
-    end
+  @max_fetch_size 100
+  @doc """
+  List all plans.
+  ##Example
+  ```
+  {:ok, plans} = Stripe.Plans.all
+  ```
+  """
+  def all(accum \\ [], startingAfter \\ "") do
+    all Stripe.config_or_env_key(), accum, startingAfter
+  end
 
-    @max_fetch_size 100
-    @doc """
-    List all plans w/ given key.
-    ##Example
-    ```
-    {:ok, plans} = Stripe.Plans.all key
-    ```
-    """
-    def all( key, accum, startingAfter) do
-        case Stripe.Util.list_raw("#{@endpoint}",key, @max_fetch_size, startingAfter) do
-        {:ok, resp}  ->
-            case resp[:has_more] do
-            true ->
-                last_sub = List.last( resp[:data] )
-                all( key, resp[:data] ++ accum, last_sub["id"] )
-            false ->
-                result = resp[:data] ++ accum
-                {:ok, result}
-            end
+  @max_fetch_size 100
+  @doc """
+  List all plans w/ given key.
+  ##Example
+  ```
+  {:ok, plans} = Stripe.Plans.all key
+  ```
+  """
+  def all(key, accum, startingAfter) do
+    case Stripe.Util.list_raw("#{@endpoint}", key, @max_fetch_size, startingAfter) do
+      {:ok, resp} ->
+        case resp[:has_more] do
+          true ->
+            last_sub = List.last(resp[:data])
+            all(key, resp[:data] ++ accum, last_sub["id"])
+
+          false ->
+            result = resp[:data] ++ accum
+            {:ok, result}
         end
-end
+    end
+  end
 
-    @doc """
-    Deletes all Plans
-    ## Example
-    ```
-    Stripe.Plans.delete_all
-    ```
-    """
-    def delete_all do
-      delete_all Stripe.config_or_env_key
+  @doc """
+  Deletes all Plans
+  ## Example
+  ```
+  Stripe.Plans.delete_all
+  ```
+  """
+  def delete_all do
+    delete_all(Stripe.config_or_env_key())
+  end
+
+  @doc """
+  Deletes all Plans w/given key
+  ## Example
+  ```
+  Stripe.Plans.delete_all key
+  ```
+  """
+  def delete_all(key) do
+    case all() do
+      {:ok, plans} ->
+        Enum.each(plans, fn p -> delete(p["id"], key) end)
+
+      {:error, err} ->
+        {:error, err}
     end
 
-
-    @doc """
-    Deletes all Plans w/given key
-    ## Example
-    ```
-    Stripe.Plans.delete_all key
-    ```
-    """
-    def delete_all key do
-      case all() do
-        {:ok, plans} ->
-          Enum.each plans, fn p -> delete(p["id"], key) end
-        {:error, err} -> {:error, err}
-      end
-      {:ok}
-    end
+    {:ok}
+  end
 end

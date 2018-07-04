@@ -13,7 +13,6 @@ defmodule Stripe.Connect do
     "https://connect.stripe.com/"
   end
 
-
   @doc """
   Generate the URL to start a stripe workflow. You can pass in a
   csrf token to be sent to stripe, which they send you back at the
@@ -39,16 +38,17 @@ defmodule Stripe.Connect do
   ```
 
   """
-  def generate_button_url( csrf_token , redirect_uri \\ "" ) do
+  def generate_button_url(csrf_token, redirect_uri \\ "") do
     url = base_url() <> "oauth/authorize?response_type=code"
     url = url <> "&scope=read_write"
-    url = url <> "&client_id=#{Stripe.config_or_env_platform_client_id}"
+    url = url <> "&client_id=#{Stripe.config_or_env_platform_client_id()}"
 
-    url = if String.length(csrf_token) > 0 do
-      url <> "&state=#{csrf_token}"
-    else
-      url
-    end
+    url =
+      if String.length(csrf_token) > 0 do
+        url <> "&state=#{csrf_token}"
+      else
+        url
+      end
 
     if String.length(redirect_uri) > 0 do
       url <> "&redirect_uri=#{redirect_uri}"
@@ -78,19 +78,21 @@ defmodule Stripe.Connect do
   """
   def oauth_token_callback(code) do
     req = [
-      client_secret: Stripe.config_or_env_key,
+      client_secret: Stripe.config_or_env_key(),
       code: code,
       grant_type: "authorization_code"
     ]
 
-     case Stripe.make_oauth_token_callback_request req do
-       {:ok, resp} ->
-         case resp.status_code do
-           200 ->
-             {:ok, Stripe.Util.string_map_to_atoms Poison.decode!(resp.body)}
-           _ -> {:error, Stripe.Util.string_map_to_atoms Poison.decode!(resp.body)}
-         end
-     end
+    case Stripe.make_oauth_token_callback_request(req) do
+      {:ok, resp} ->
+        case resp.status_code do
+          200 ->
+            {:ok, Stripe.Util.string_map_to_atoms(Poison.decode!(resp.body))}
+
+          _ ->
+            {:error, Stripe.Util.string_map_to_atoms(Poison.decode!(resp.body))}
+        end
+    end
   end
 
   @doc """
@@ -101,8 +103,8 @@ defmodule Stripe.Connect do
 
   """
   def get_token(code) do
-    case oauth_token_callback code do
-      {:ok, resp} -> {:ok,resp["access_token"]}
+    case oauth_token_callback(code) do
+      {:ok, resp} -> {:ok, resp["access_token"]}
       {:error, err} -> {:error, err}
     end
   end
@@ -112,19 +114,18 @@ defmodule Stripe.Connect do
   # Example
   ```
   case Stripe.Connect.oauth_deauthorize stripe_user_id do
-   {:ok, success} -> assert success == true
-   {:error, msg} -> flunk msg
- end
+    {:ok, success} -> assert success == true
+    {:error, msg} -> flunk msg
+  end
   ```
   """
-  def oauth_deauthorize( stripe_user_id ) do
-    {:ok, resp} = Stripe.make_oauth_deauthorize_request stripe_user_id
-    body = Stripe.Util.string_map_to_atoms Poison.decode!( resp.body )
+  def oauth_deauthorize(stripe_user_id) do
+    {:ok, resp} = Stripe.make_oauth_deauthorize_request(stripe_user_id)
+    body = Stripe.Util.string_map_to_atoms(Poison.decode!(resp.body))
 
     case body[:stripe_user_id] == stripe_user_id do
-        true -> {:ok, true}
-        false -> {:error, body[:error_description]}
+      true -> {:ok, true}
+      false -> {:error, body[:error_description]}
     end
   end
 end
-
