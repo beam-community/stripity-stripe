@@ -17,19 +17,21 @@ defmodule Stripe.Plan do
 
   ```
   {
-    "id": "quartz-enterprise",
+    "id": "ivory-extended-580",
     "object": "plan",
-    "amount": 1000,
+    "active": true,
+    "aggregate_usage": null,
+    "amount": 999,
     "billing_scheme": "per_unit",
-    "created": 4524325723,
+    "created": 1531234812,
     "currency": "usd",
     "interval": "month",
     "interval_count": 1,
     "livemode": false,
     "metadata": {
     },
-    "nickname": "quartz",
-    "product": "my-quartz",
+    "nickname": null,
+    "product": "prod_DCmtkptv7qHXGE",
     "tiers": null,
     "tiers_mode": null,
     "transform_usage": null,
@@ -61,7 +63,8 @@ defmodule Stripe.Plan do
           tiers_mode: boolean | nil,
           transform_usage: map | nil,
           trial_period_days: non_neg_integer | nil,
-          usage_type: String.t() | nil
+          usage_type: String.t() | nil,
+          active: boolean
         }
 
   defstruct [
@@ -83,7 +86,8 @@ defmodule Stripe.Plan do
     :tiers_mode,
     :transform_usage,
     :trial_period_days,
-    :usage_type
+    :usage_type,
+    :active
   ]
 
   @plural_endpoint "plans"
@@ -106,7 +110,8 @@ defmodule Stripe.Plan do
                optional(:tiers_mode) => String.t(),
                optional(:transform_usage) => map,
                optional(:trial_period_days) => non_neg_integer,
-               optional(:usage_type) => String.t()
+               optional(:usage_type) => String.t(),
+               optional(:active) => boolean
              } | %{}
   def create(%{currency: _, interval: _, product: _} = params, opts \\ []) do
     new_request(opts)
@@ -138,6 +143,7 @@ defmodule Stripe.Plan do
                optional(:nickname) => String.t(),
                optional(:product) => Stripe.id() | Stripe.Product.t(),
                optional(:trial_period_days) => non_neg_integer,
+               optional(:active) => boolean,
              } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -167,7 +173,8 @@ defmodule Stripe.Plan do
                optional(:ending_before) => t | Stripe.id(),
                optional(:limit) => 1..100,
                optional(:product) => Stripe.Product.t() | Stripe.id(),
-               optional(:starting_after) => t | Stripe.id()
+               optional(:starting_after) => t | Stripe.id(),
+               optional(:active) => boolean
              } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
