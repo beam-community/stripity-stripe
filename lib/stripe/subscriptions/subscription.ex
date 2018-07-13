@@ -19,8 +19,8 @@ defmodule Stripe.Subscription do
           id: Stripe.id(),
           object: String.t(),
           application_fee_percent: float | nil,
-          billing: String.t(),
-          billing_cycle_anchor: Stripe.timestamp(),
+          billing: String.t() | nil,
+          billing_cycle_anchor: Stripe.timestamp() | nil,
           cancel_at_period_end: boolean,
           canceled_at: Stripe.timestamp() | nil,
           created: Stripe.timestamp(),
@@ -124,7 +124,10 @@ defmodule Stripe.Subscription do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:application_fee_percent) => float,
+               optional(:billing) => String.t(),
+               optional(:billing_cycle_anchor) => Stripe.timestamp(),
                optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
+               optional(:days_until_due) => non_neg_integer,
                optional(:items) => [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
