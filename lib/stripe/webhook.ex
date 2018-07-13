@@ -1,21 +1,44 @@
 defmodule Stripe.Webhook do
   @moduledoc """
   Creates a Stripe Event from webhook's payload if signature is valid.
-
-  Use `construct_event/3` to verify the authenticity of a webhook request and
-  convert its payload into a `Stripe.Event` struct.
-
-    case Stripe.Webhook.construct_event(payload, signature, secret) do
-      {:ok, %Stripe.Event{} = event} ->
-        # Return 200 to Stripe and handle event
-      {:error, reason} ->
-        # Reject webhook by responding with non-2XX
-    end
   """
 
   @default_tolerance 300
   @expected_scheme "v1"
 
+  @doc """
+  Verify webhook payload and return a Stripe event.
+
+  `payload` is the raw, unparsed content body sent by Stripe, which can be
+  retrieved with `Plug.Conn.read_body/2`. Note that `Plug.Parsers` will read
+  and discard the body, so you must implement a [custom body reader][1] if the
+  plug is located earlier in the pipeline.
+
+  `signature` is the value of `Stripe-Signature` header, which can be fetched
+  with `Plug.Conn.get_req_header/2`.
+
+  `secret` is your webhook endpoint's secret from the Stripe Dashboard.
+
+  `tolerance` is the allowed deviation in seconds from the current system time
+  to the timestamp found in `signature`. Defaults to 300 seconds (5 minutes).
+
+  Stripe API reference:
+  https://stripe.com/docs/webhooks/signatures#verify-manually
+
+  [1]: https://hexdocs.pm/plug/Plug.Parsers.html#module-custom-body-reader
+
+  ## Example
+
+      case Stripe.Webhook.construct_event(payload, signature, secret) do
+        {:ok, %Stripe.Event{} = event} ->
+          # Return 200 to Stripe and handle event
+
+        {:error, reason} ->
+          # Reject webhook by responding with non-2XX
+      end
+  """
+  @spec construct_event(String.t(), String.t(), String.t(), integer) ::
+          {:ok, Stripe.Event.t()} | {:error, any}
   def construct_event(payload, signature_header, secret, tolerance \\ @default_tolerance) do
     case verify_header(payload, signature_header, secret, tolerance) do
       :ok ->
@@ -49,15 +72,15 @@ defmodule Stripe.Webhook do
     |> String.split(",")
     |> Enum.map(&String.split(&1, "="))
     |> Enum.reduce({nil, []}, fn
-         ["t", timestamp], {nil, signatures} ->
-           {to_integer(timestamp), signatures}
+      ["t", timestamp], {nil, signatures} ->
+        {to_integer(timestamp), signatures}
 
-         [^scheme, signature], {timestamp, signatures} ->
-           {timestamp, [signature | signatures]}
+      [^scheme, signature], {timestamp, signatures} ->
+        {timestamp, [signature | signatures]}
 
-         _, acc ->
-           acc
-       end)
+      _, acc ->
+        acc
+    end)
   end
 
   defp to_integer(timestamp) do
@@ -116,7 +139,7 @@ defmodule Stripe.Webhook do
     |> secure_compare(input, expected)
   end
 
-  def convert_to_event!(payload) do
+  defp convert_to_event!(payload) do
     payload
     |> Poison.decode!()
     |> Stripe.Converter.convert_result()
