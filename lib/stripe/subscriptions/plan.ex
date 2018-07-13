@@ -47,6 +47,7 @@ defmodule Stripe.Plan do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
+          active: boolean,
           aggregate_usage: String.t() | nil,
           amount: non_neg_integer | nil,
           billing_scheme: String.t() | nil,
@@ -64,12 +65,12 @@ defmodule Stripe.Plan do
           transform_usage: map | nil,
           trial_period_days: non_neg_integer | nil,
           usage_type: String.t() | nil,
-          active: boolean
         }
 
   defstruct [
     :id,
     :object,
+    :active,
     :aggregate_usage,
     :amount,
     :billing_scheme,
@@ -87,7 +88,6 @@ defmodule Stripe.Plan do
     :transform_usage,
     :trial_period_days,
     :usage_type,
-    :active
   ]
 
   @plural_endpoint "plans"
@@ -102,6 +102,7 @@ defmodule Stripe.Plan do
                :product => Stripe.id() | Stripe.Product.t(),
                optional(:id) => String.t(),
                optional(:amount) => non_neg_integer,
+               optional(:active) => boolean,
                optional(:billing_scheme) => String.t(),
                optional(:interval_count) => pos_integer,
                optional(:metadata) => Stripe.Types.metadata(),
@@ -111,7 +112,6 @@ defmodule Stripe.Plan do
                optional(:transform_usage) => map,
                optional(:trial_period_days) => non_neg_integer,
                optional(:usage_type) => String.t(),
-               optional(:active) => boolean
              } | %{}
   def create(%{currency: _, interval: _, product: _} = params, opts \\ []) do
     new_request(opts)
@@ -139,11 +139,11 @@ defmodule Stripe.Plan do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
+               optional(:active) => boolean,
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:nickname) => String.t(),
                optional(:product) => Stripe.id() | Stripe.Product.t(),
                optional(:trial_period_days) => non_neg_integer,
-               optional(:active) => boolean,
              } | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
@@ -169,12 +169,12 @@ defmodule Stripe.Plan do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
+               optional(:active) => boolean,
                optional(:created) => Stripe.date_query(),
                optional(:ending_before) => t | Stripe.id(),
                optional(:limit) => 1..100,
                optional(:product) => Stripe.Product.t() | Stripe.id(),
                optional(:starting_after) => t | Stripe.id(),
-               optional(:active) => boolean
              } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
