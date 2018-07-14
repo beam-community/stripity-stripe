@@ -17,19 +17,21 @@ defmodule Stripe.Plan do
 
   ```
   {
-    "id": "quartz-enterprise",
+    "id": "ivory-extended-580",
     "object": "plan",
-    "amount": 1000,
+    "active": true,
+    "aggregate_usage": null,
+    "amount": 999,
     "billing_scheme": "per_unit",
-    "created": 4524325723,
+    "created": 1531234812,
     "currency": "usd",
     "interval": "month",
     "interval_count": 1,
     "livemode": false,
     "metadata": {
     },
-    "nickname": "quartz",
-    "product": "my-quartz",
+    "nickname": null,
+    "product": "prod_DCmtkptv7qHXGE",
     "tiers": null,
     "tiers_mode": null,
     "transform_usage": null,
@@ -45,6 +47,7 @@ defmodule Stripe.Plan do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
+          active: boolean,
           aggregate_usage: String.t() | nil,
           amount: non_neg_integer | nil,
           billing_scheme: String.t() | nil,
@@ -61,12 +64,13 @@ defmodule Stripe.Plan do
           tiers_mode: boolean | nil,
           transform_usage: map | nil,
           trial_period_days: non_neg_integer | nil,
-          usage_type: String.t() | nil
+          usage_type: String.t() | nil,
         }
 
   defstruct [
     :id,
     :object,
+    :active,
     :aggregate_usage,
     :amount,
     :billing_scheme,
@@ -83,7 +87,7 @@ defmodule Stripe.Plan do
     :tiers_mode,
     :transform_usage,
     :trial_period_days,
-    :usage_type
+    :usage_type,
   ]
 
   @plural_endpoint "plans"
@@ -98,6 +102,7 @@ defmodule Stripe.Plan do
                :product => Stripe.id() | Stripe.Product.t(),
                optional(:id) => String.t(),
                optional(:amount) => non_neg_integer,
+               optional(:active) => boolean,
                optional(:billing_scheme) => String.t(),
                optional(:interval_count) => pos_integer,
                optional(:metadata) => Stripe.Types.metadata(),
@@ -106,7 +111,7 @@ defmodule Stripe.Plan do
                optional(:tiers_mode) => String.t(),
                optional(:transform_usage) => map,
                optional(:trial_period_days) => non_neg_integer,
-               optional(:usage_type) => String.t()
+               optional(:usage_type) => String.t(),
              } | %{}
   def create(%{currency: _, interval: _, product: _} = params, opts \\ []) do
     new_request(opts)
@@ -134,6 +139,7 @@ defmodule Stripe.Plan do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
+               optional(:active) => boolean,
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:nickname) => String.t(),
                optional(:product) => Stripe.id() | Stripe.Product.t(),
@@ -163,11 +169,12 @@ defmodule Stripe.Plan do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
+               optional(:active) => boolean,
                optional(:created) => Stripe.date_query(),
                optional(:ending_before) => t | Stripe.id(),
                optional(:limit) => 1..100,
                optional(:product) => Stripe.Product.t() | Stripe.id(),
-               optional(:starting_after) => t | Stripe.id()
+               optional(:starting_after) => t | Stripe.id(),
              } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
