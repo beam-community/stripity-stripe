@@ -2,21 +2,21 @@ defmodule Stripe.ProductTest do
   use Stripe.StripeCase, async: true
 
   describe "create/2" do
-    test "creates an invoice" do
+    test "creates an product" do
       assert {:ok, %Stripe.Product{}} = Stripe.Product.create(%{name: "Plus", type: "service"})
       assert_stripe_requested(:post, "/v1/products")
     end
   end
 
   describe "retrieve/2" do
-    test "retrieves an invoice" do
+    test "retrieves an product" do
       assert {:ok, %Stripe.Product{}} = Stripe.Product.retrieve("Plus")
       assert_stripe_requested(:get, "/v1/products/Plus")
     end
   end
 
   describe "update/2" do
-    test "updates an invoice" do
+    test "updates an product" do
       params = %{metadata: %{key: "value"}}
       assert {:ok, %Stripe.Product{}} = Stripe.Product.update("Plus", params)
       assert_stripe_requested(:post, "/v1/products/Plus")
