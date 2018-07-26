@@ -27,6 +27,7 @@ defmodule Stripe.Coupon do
           livemode: boolean,
           max_redemptions: pos_integer | nil,
           metadata: Stripe.Types.metadata(),
+          name: String.t() | nil,
           percent_off: pos_integer | nil,
           redeem_by: Stripe.timestamp() | nil,
           times_redeemed: non_neg_integer,
@@ -44,6 +45,7 @@ defmodule Stripe.Coupon do
     :livemode,
     :max_redemptions,
     :metadata,
+    :name,
     :percent_off,
     :redeem_by,
     :times_redeemed,
@@ -64,6 +66,7 @@ defmodule Stripe.Coupon do
                optional(:currency) => String.t(),
                optional(:max_redemptions) => pos_integer,
                optional(:metadata) => Stripe.Types.metadata(),
+               optional(:name) => String.t(),
                optional(:percent_off) => pos_integer,
                optional(:redeem_by) => Stripe.timestamp()
              }
@@ -95,7 +98,8 @@ defmodule Stripe.Coupon do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
-                 metadata: Stripe.Types.metadata()
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:name) => String.t()
                }
                | %{}
   def update(id, params, opts \\ []) do
