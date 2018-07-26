@@ -33,6 +33,7 @@ defmodule Stripe.Product do
     shippable: boolean | nil,
     statement_descriptor: String.t() | nil,
     type: String.t() | nil,
+    unit_label: String.t() | nil,
     updated: Stripe.timestamp(),
     url: String.t() | nil
   }
@@ -54,6 +55,7 @@ defmodule Stripe.Product do
     :shippable,
     :statement_descriptor,
     :type,
+    :unit_label,
     :updated,
     :url
   ]
