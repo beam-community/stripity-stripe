@@ -7,7 +7,7 @@ defmodule Stripe.Mixfile do
       deps: deps(),
       description: description(),
       dialyzer: [plt_add_apps: [:mix]],
-      elixir: "~> 1.3",
+      elixir: "~> 1.5",
       package: package(),
       elixirc_paths: elixirc_paths(Mix.env()),
       preferred_cli_env: [
