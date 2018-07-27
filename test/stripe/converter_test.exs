@@ -158,6 +158,37 @@ defmodule Stripe.ConverterTest do
     assert result == expected_result
   end
 
+  test "converts a discount response properly" do
+    expected_result = %Stripe.Discount{
+      coupon: %Stripe.Coupon{
+        amount_off: nil,
+        created: 1_532_358_691,
+        currency: nil,
+        duration: "repeating",
+        duration_in_months: 24,
+        id: "student-discount",
+        livemode: false,
+        max_redemptions: nil,
+        metadata: %{},
+        object: "coupon",
+        percent_off: 50,
+        redeem_by: nil,
+        times_redeemed: 3,
+        valid: true
+      },
+      customer: "cus_DCUJlLSyrGaqab",
+      end: 1_595_517_288,
+      object: "discount",
+      start: 1_532_358_888,
+      subscription: "sub_DG9Uq9WOevR9Uo"
+    }
+
+    fixture = Helper.load_fixture("discount.json")
+    result = Converter.convert_result(fixture)
+
+    assert result == expected_result
+  end
+
   test "converts a deleted response properly" do
     expected_result = %{
       deleted: true,

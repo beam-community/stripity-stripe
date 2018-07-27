@@ -22,6 +22,7 @@ defmodule Stripe.Converter do
     country_spec
     coupon
     customer
+    discount
     dispute
     event
     external_account
