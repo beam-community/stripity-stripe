@@ -33,13 +33,13 @@ defmodule Stripe.Recipient do
           cards: Stripe.List.t(Stripe.Card.t()),
           created: Stripe.timestamp(),
           default_card: Stripe.id() | Stripe.Card.t(),
-          description: String.t(),
-          email: String.t(),
+          description: String.t() | nil,
+          email: String.t() | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           migrated_to: Stripe.id() | Stripe.Account.t(),
-          name: String.t(),
-          rolled_back_from: String.t(),
+          name: String.t() | nil,
+          rolled_back_from: Stripe.id() | Stripe.Account.t(),
           type: String.t()
         }
 
