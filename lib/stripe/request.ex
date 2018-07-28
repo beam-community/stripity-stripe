@@ -154,26 +154,26 @@ defmodule Stripe.Request do
   Prefixes all `:expand` values provided in `opts` with the given prefix.
 
   When using object expansion on a `list` function for a resource, the values must
-  be prefixed with `data.`. This is required because the stripe api nests the 
+  be prefixed with `data.`. This is required because the stripe api nests the
   returned objects within `data: {}`.
 
   For all `create`, `update`, `cancel` and `retrieve` functions this is not required.
 
   ```
   opts = [expand: ["balance_transaction"]]
-  request = prefix_expansions(%Request{opts: opts}, "data")
+  request = prefix_expansions(%Request{opts: opts})
 
   request.opts == ["data.balance_transaction"]
   ```
   """
-  @spec prefix_expansions(t, binary) :: t
-  def prefix_expansions(%Request{opts: opts} = request, prefix) do
+  @spec prefix_expansions(t) :: t
+  def prefix_expansions(%Request{opts: opts} = request) do
     case Keyword.get(opts, :expand) do
       nil ->
         request
 
       expansions ->
-        mapped_expansions = Enum.map(expansions, &"#{prefix}.#{&1}")
+        mapped_expansions = Enum.map(expansions, &"data.#{&1}")
         opts = Keyword.replace!(opts, :expand, mapped_expansions)
 
         %{request | opts: opts}

@@ -157,7 +157,7 @@ defmodule Stripe.Card do
   @doc """
   Delete a card.
   """
-  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec delete(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()
 
@@ -182,6 +182,7 @@ defmodule Stripe.Card do
     params = params |> Map.put(:object, "card")
 
     new_request(opts)
+    |> prefix_expansions()
     |> put_endpoint(endpoint)
     |> put_method(:get)
     |> put_params(params |> Map.delete(:customer))

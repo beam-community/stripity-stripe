@@ -214,6 +214,7 @@ defmodule Stripe.Invoice do
              } | %{}
   def pay(id, params, opts \\ []) do
     new_request(opts)
+    |> prefix_expansions()
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/pay")
     |> put_method(:post)
     |> put_params(params)
