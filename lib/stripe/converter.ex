@@ -37,6 +37,7 @@ defmodule Stripe.Converter do
     payout
     plan
     product
+    recipient
     refund
     sku
     source

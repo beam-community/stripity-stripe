@@ -68,6 +68,7 @@ defmodule Stripe.ApplicationFee do
              } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
+    |> prefix_expansions()
     |> put_endpoint(@endpoint)
     |> put_method(:get)
     |> put_params(params)

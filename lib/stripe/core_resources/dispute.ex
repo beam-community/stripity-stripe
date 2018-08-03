@@ -145,7 +145,7 @@ defmodule Stripe.Dispute do
              } | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
-    |> prefix_expansions("data")
+    |> prefix_expansions()
     |> put_endpoint(@plural_endpoint)
     |> put_method(:get)
     |> put_params(params)

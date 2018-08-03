@@ -1,0 +1,40 @@
+{
+  "id": "rp_19p5Zf2eZvKYlo2CipXKLoSU",
+  "object": "recipient",
+  "active_account": {
+    "id": "ba_19p5Ze2eZvKYlo2C1fs6Ar4u",
+    "object": "bank_account",
+    "account_holder_name": null,
+    "account_holder_type": null,
+    "bank_name": "STRIPE TEST BANK",
+    "country": "US",
+    "currency": "usd",
+    "customer": null,
+    "fingerprint": "1JWtPxqbdX5Gamtc",
+    "last4": "6789",
+    "metadata": {
+    },
+    "routing_number": "110000000",
+    "status": "new"
+  },
+  "cards": {
+    "object": "list",
+    "data": [
+
+    ],
+    "has_more": false,
+    "total_count": 0,
+    "url": "/v1/recipients/rp_19p5Zf2eZvKYlo2CipXKLoSU/cards"
+  },
+  "created": 1487552563,
+  "default_card": null,
+  "description": null,
+  "email": null,
+  "livemode": false,
+  "metadata": {
+  },
+  "migrated_to": "acct_1AIQkLDw6ebINMj3",
+  "name": "John Doe",
+  "type": "individual",
+  "verified": false
+}

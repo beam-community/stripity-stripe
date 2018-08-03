@@ -189,6 +189,50 @@ defmodule Stripe.ConverterTest do
     assert result == expected_result
   end
 
+  test "converts a recipient response properly" do
+    expected_result = %Stripe.Recipient{
+      id: "rp_19p5Zf2eZvKYlo2CipXKLoSU",
+      object: "recipient",
+      active_account: %Stripe.BankAccount{
+        id: "ba_19p5Ze2eZvKYlo2C1fs6Ar4u",
+        object: "bank_account",
+        account_holder_name: nil,
+        account_holder_type: nil,
+        bank_name: "STRIPE TEST BANK",
+        country: "US",
+        currency: "usd",
+        customer: nil,
+        fingerprint: "1JWtPxqbdX5Gamtc",
+        last4: "6789",
+        metadata: %{},
+        routing_number: "110000000",
+        status: "new"
+      },
+      cards: %Stripe.List{
+        object: "list",
+        data: [
+        ],
+        has_more: false,
+        total_count: 0,
+        url: "/v1/recipients/rp_19p5Zf2eZvKYlo2CipXKLoSU/cards"
+      },
+      created: 1487552563,
+      default_card: nil,
+      description: nil,
+      email: nil,
+      livemode: false,
+      metadata: %{},
+      migrated_to: "acct_1AIQkLDw6ebINMj3",
+      name: "John Doe",
+      type: "individual"
+    }
+
+    fixture = Helper.load_fixture("recipient.json")
+    result = Converter.convert_result(fixture)
+
+    assert result == expected_result
+  end
+
   test "converts a deleted response properly" do
     expected_result = %{
       deleted: true,
