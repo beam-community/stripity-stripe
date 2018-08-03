@@ -205,6 +205,7 @@ defmodule Stripe.ConverterTest do
         fingerprint: "1JWtPxqbdX5Gamtc",
         last4: "6789",
         metadata: %{},
+        name: "Student Discount",
         routing_number: "110000000",
         status: "new"
       },
