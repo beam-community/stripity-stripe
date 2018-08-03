@@ -3,14 +3,10 @@ dist: trusty
 elixir:
   - 1.5
   - 1.6
+  - 1.7
 otp_release:
   - 19.3
   - 20.1
-matrix:
-  exclude:
-    elixir: 1.3
-    otp_release: 20.1
-
 sudo: false
 env:
   global:
