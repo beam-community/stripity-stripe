@@ -1,5 +1,20 @@
 # Latest
 
+## 2.2.0
+
+- [Add missing `tax_info` attributes to `customer`](https://github.com/code-corps/stripity_stripe/pull/410)
+- [Ease up on hackney dependency](https://github.com/code-corps/stripity_stripe/pull/407)
+- *New Feature:* [Add Recipient endpoint](https://github.com/code-corps/stripity_stripe/pull/405)
+- [Expand test matrix with Elixir 1.7](https://github.com/code-corps/stripity_stripe/pull/404)
+- [Convert discount responses to a struct](https://github.com/code-corps/stripity_stripe/pull/403)
+- [Add `name` to `Stripe.Coupon`](https://github.com/code-corps/stripity_stripe/pull/402)
+- [Add `unit_label` attribute to `Stripe.Product`](https://github.com/code-corps/stripity_stripe/pull/401)
+- [Add params to `Stripe.Subscription` and `Stripe.Invoice` endpoints](https://github.com/code-corps/stripity_stripe/pull/400)
+- [Add `active` attribute to `Stripe.Plan`](https://github.com/code-corps/stripity_stripe/pull/399)
+- [Add `source_url` to `mix.exs`](https://github.com/code-corps/stripity_stripe/pull/398)
+- [Improved formatting (using `mix format` in some files](https://github.com/code-corps/stripity_stripe/pull/397)
+- [Improved webhook documentation](https://github.com/code-corps/stripity_stripe/pull/395)
+
 ## 2.1.0
 
 - *New Feature:* [Add support for object expansion - #393](https://github.com/code-corps/stripity_stripe/pull/393) 
