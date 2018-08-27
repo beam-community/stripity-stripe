@@ -42,6 +42,7 @@ _Not necessary if using elixir >= 1.4_
 defp application do
   [applications: [:stripity_stripe]]
 end
+```
 
 ## Configuration
 
