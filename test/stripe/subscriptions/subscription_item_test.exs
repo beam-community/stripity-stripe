@@ -30,9 +30,8 @@ defmodule Stripe.SubscriptionItemTest do
   describe "delete/2" do
     test "deletes a subscription" do
       {:ok, subscription_item} = Stripe.SubscriptionItem.retrieve("sub_123")
-      assert {:ok, %{deleted: deleted, id: _id}} = Stripe.SubscriptionItem.delete("sub_123")
+      assert {:ok, %Stripe.SubscriptionItem{}} = Stripe.SubscriptionItem.delete("sub_123")
       assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription_item.id}")
-      assert deleted === true
     end
   end
 

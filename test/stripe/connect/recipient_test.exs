@@ -19,9 +19,8 @@ defmodule Stripe.RecipientTest do
   end
 
   test "is deletable" do
-    assert {:ok, %{deleted: deleted, id: _id}} = Stripe.Recipient.delete("recip_123")
+    assert {:ok, %Stripe.Recipient{}} = Stripe.Recipient.delete("recip_123")
     assert_stripe_requested(:delete, "/v1/recipients/recip_123")
-    assert deleted == true
   end
 
   test "is listable" do
