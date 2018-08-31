@@ -11,9 +11,9 @@ defmodule Stripe.FeeRefundTest do
   describe "create/2" do
     test "creates a transfer" do
       params = %{
-        amount: 123,
-        destination: "dest_123"
+        amount: 123
       }
+
       assert {:ok, %Stripe.FeeRefund{}} = Stripe.FeeRefund.create("transf_123", params)
       assert_stripe_requested(:post, "/v1/appliction_fees/transf_123/reversals")
     end

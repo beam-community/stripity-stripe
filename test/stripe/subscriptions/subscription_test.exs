@@ -18,10 +18,12 @@ defmodule Stripe.SubscriptionTest do
             plan: "ruby-express-932",
             quantity: 1
           }
-        ],
-        source: "card_123"
+        ]
       }
-      assert {:ok, %Stripe.Subscription{}} = Stripe.Subscription.create(params, [connect_account: "acct_123"])
+
+      assert {:ok, %Stripe.Subscription{}} =
+               Stripe.Subscription.create(params, connect_account: "acct_123")
+
       assert_stripe_requested(:post, "/v1/subscriptions")
     end
   end
@@ -42,6 +44,7 @@ defmodule Stripe.SubscriptionTest do
       assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
     end
 
+    @tag :skip
     test "deletes a subscription when second argument is a map" do
       assert {:ok, %Stripe.Subscription{} = subscription} =
                Stripe.Subscription.delete("sub_123", %{at_period_end: true})
