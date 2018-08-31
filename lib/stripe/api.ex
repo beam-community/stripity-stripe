@@ -135,6 +135,20 @@ defmodule Stripe.API do
   """
   @spec request(body, method, String.t(), headers, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
+  def request(body, :get, endpoint, headers, opts) do
+    {expansion, opts} = Keyword.pop(opts, :expand)
+    base_url = get_base_url()
+
+    req_url =
+      body
+      |> Stripe.Util.map_keys_to_atoms()
+      |> add_object_expansion(expansion)
+      |> Stripe.URI.encode_query()
+      |> prepend_url("#{base_url}#{endpoint}")
+
+    perform_request(req_url, :get, "", headers, opts)
+  end
+
   def request(body, method, endpoint, headers, opts) do
     {expansion, opts} = Keyword.pop(opts, :expand)
     base_url = get_base_url()
@@ -171,10 +185,6 @@ defmodule Stripe.API do
     perform_request(req_url, :post, {:multipart, parts}, req_headers, opts)
   end
 
-  @doc """
-  """
-  @spec request_file_upload(body, method, String.t(), headers, list) ::
-          {:ok, map} | {:error, Stripe.Error.t()}
   def request_file_upload(body, method, endpoint, headers, opts) do
     base_url = get_upload_url()
     req_url = base_url <> endpoint
@@ -276,13 +286,18 @@ defmodule Stripe.API do
     end
   end
 
-  defp add_object_expansion(url, expansion) when is_list(expansion) do
-    expand_str =
-      expansion
-      |> Enum.map(&"expand[]=#{&1}")
-      |> Enum.join("&")
+  defp prepend_url("", url), do: url
+  defp prepend_url(query, url), do: "#{url}?#{query}"
 
-    "#{url}?#{expand_str}"
+  defp add_object_expansion(query, expansion) when is_map(query) and is_list(expansion) do
+    query |> Map.put(:expand, expansion)
+  end
+
+  defp add_object_expansion(url, expansion) when is_list(expansion) do
+    expansion
+    |> Enum.map(&"expand[]=#{&1}")
+    |> Enum.join("&")
+    |> prepend_url(url)
   end
 
   defp add_object_expansion(url, _), do: url
