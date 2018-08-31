@@ -317,7 +317,6 @@ defmodule Stripe.Account do
           {:ok, t} | {:error, Stripe.Error.t()}
   def reject(id, reason, opts \\ []) do
     params = %{
-      account: id,
       reason: reason
     }
 
@@ -354,7 +353,7 @@ defmodule Stripe.Account do
   @spec create_login_link(Stripe.id() | t, params, Stripe.options()) ::
           {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               optional(:redirect_url) => String.t(),
+               optional(:redirect_url) => String.t()
              }
   def create_login_link(id, params, opts \\ []) do
     Stripe.LoginLink.create(id, params, opts)
