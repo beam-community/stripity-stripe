@@ -24,10 +24,9 @@ defmodule Stripe.SkuTest do
     assert_stripe_requested(:post, "/v1/skus/sku_123")
   end
 
-  test "is deleteable" do
-    assert {:ok, %{deleted: deleted, id: _id}} = Stripe.Sku.delete("sku_123")
+  test "is deletable" do
+    assert {:ok, %Stripe.Sku{}} = Stripe.Sku.delete("sku_123")
     assert_stripe_requested(:delete, "/v1/skus/sku_123/delete")
-    assert deleted
   end
 
   test "is listable" do

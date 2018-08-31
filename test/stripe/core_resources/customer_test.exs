@@ -17,11 +17,10 @@ defmodule Stripe.CustomerTest do
     assert_stripe_requested(:post, "/v1/customers/cus_123")
   end
 
-  test "is deleteable" do
+  test "is deleteble" do
     {:ok, customer} = Stripe.Customer.retrieve("cus_123")
-    assert {:ok, %{deleted: deleted, id: _id}} = Stripe.Customer.delete(customer)
+    assert {:ok, %Stripe.Customer{}} = Stripe.Customer.delete(customer)
     assert_stripe_requested(:delete, "/v1/customers/#{customer.id}")
-    assert deleted === true
   end
 
   test "is listable" do

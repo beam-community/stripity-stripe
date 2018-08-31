@@ -24,9 +24,8 @@ defmodule Stripe.AccountTest do
   end
 
   test "is deletable" do
-    assert {:ok, %{deleted: deleted, id: _id}} = Stripe.Account.delete("acct_123")
+    assert {:ok, %Stripe.Account{}} = Stripe.Account.delete("acct_123")
     assert_stripe_requested(:delete, "/v1/accounts/acct_123")
-    assert deleted == true
   end
 
   test "is listable" do
