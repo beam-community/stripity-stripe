@@ -29,8 +29,12 @@ defmodule Stripe.OrderTest do
       assert_stripe_requested(:pay, "/v1/orders/order_123/pay")
     end
 
+    @tag :skip
     test "is payable with card_info" do
-      params = %{card_info: %{exp_month: 12, exp_year: 2022, number: "2222", object: "card", cvc: 150}}
+      params = %{
+        card_info: %{exp_month: 12, exp_year: 2022, number: "2222", object: "card", cvc: 150}
+      }
+
       assert {:ok, %Stripe.Order{}} = Stripe.Order.pay("order_123", params)
       assert_stripe_requested(:pay, "/v1/orders/order_123/pay")
     end
@@ -60,4 +64,3 @@ defmodule Stripe.OrderTest do
     end
   end
 end
-
