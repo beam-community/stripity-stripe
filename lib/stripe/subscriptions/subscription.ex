@@ -90,7 +90,6 @@ defmodule Stripe.Subscription do
                ],
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:prorate) => boolean,
-               optional(:source) => Stripe.id() | Stripe.Source.t(),
                optional(:tax_percent) => float,
                optional(:trial_end) => Stripe.timestamp(),
                optional(:trial_from_plan) => boolean,
@@ -101,7 +100,7 @@ defmodule Stripe.Subscription do
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
-    |> cast_to_id([:coupon, :customer, :source])
+    |> cast_to_id([:coupon, :customer])
     |> make_request()
   end
 
@@ -137,7 +136,6 @@ defmodule Stripe.Subscription do
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:prorate) => boolean,
                optional(:proration_date) => Stripe.timestamp(),
-               optional(:source) => Stripe.id() | Stripe.Source.t(),
                optional(:tax_percent) => float,
                optional(:trial_end) => Stripe.timestamp(),
                optional(:trial_from_plan) => boolean
@@ -147,7 +145,7 @@ defmodule Stripe.Subscription do
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
     |> put_method(:post)
     |> put_params(params)
-    |> cast_to_id([:coupon, :source])
+    |> cast_to_id([:coupon])
     |> make_request()
   end
 
