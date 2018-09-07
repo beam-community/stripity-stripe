@@ -55,7 +55,7 @@ defmodule Stripe.Invoice do
           subscription_proration_date: Stripe.timestamp(),
           subtotal: integer,
           tax: integer | nil,
-          tax_percent: integer | nil,
+          tax_percent: number | nil,
           total: integer,
           webhooks_delivered_at: Stripe.timestamp() | nil
         }
@@ -121,7 +121,7 @@ defmodule Stripe.Invoice do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:statement_descriptor) => String.t(),
                  optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
-                 optional(:tax_percent) => integer
+                 optional(:tax_percent) => number
                }
                | %{}
   def create(params, opts \\ []) do
@@ -161,7 +161,7 @@ defmodule Stripe.Invoice do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:paid) => boolean,
                  optional(:statement_descriptor) => String.t(),
-                 optional(:tax_percent) => integer
+                 optional(:tax_percent) => number
                }
                | %{}
   def update(id, params, opts \\ []) do
