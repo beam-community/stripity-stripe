@@ -13,7 +13,6 @@ defmodule Stripe.ConverterTest do
           id: "cus_9ryX7lUQ4Dcpf7",
           object: "customer",
           account_balance: 0,
-          business_vat_id: nil,
           created: 1_483_535_628,
           currency: nil,
           default_source: nil,
@@ -35,7 +34,8 @@ defmodule Stripe.ConverterTest do
             has_more: false,
             total_count: 0,
             url: "/v1/customers/cus_9ryX7lUQ4Dcpf7/subscriptions"
-          }
+          },
+          tax_info: nil
         },
         previous_attributes: %{
           description: "testcustomer",

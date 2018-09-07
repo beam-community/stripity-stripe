@@ -19,7 +19,6 @@ defmodule Stripe.Customer do
           id: Stripe.id(),
           object: String.t(),
           account_balance: integer,
-          business_vat_id: String.t(),
           created: Stripe.timestamp(),
           currency: String.t() | nil,
           default_source: Stripe.id() | Stripe.Source.t() | nil,
@@ -41,7 +40,6 @@ defmodule Stripe.Customer do
     :id,
     :object,
     :account_balance,
-    :business_vat_id,
     :created,
     :currency,
     :default_source,
@@ -68,7 +66,6 @@ defmodule Stripe.Customer do
         when params:
                %{
                  optional(:account_balance) => integer,
-                 optional(:business_vat_id) => String.t(),
                  optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
                  optional(:default_source) => Stripe.id() | Stripe.Source.t(),
                  optional(:description) => String.t(),
@@ -107,7 +104,6 @@ defmodule Stripe.Customer do
         when params:
                %{
                  optional(:account_balance) => integer,
-                 optional(:business_vat_id) => String.t(),
                  optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
                  optional(:default_source) => Stripe.id() | Stripe.Source.t(),
                  optional(:description) => String.t(),
