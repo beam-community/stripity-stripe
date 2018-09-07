@@ -171,7 +171,7 @@ defmodule Stripe.ConverterTest do
         max_redemptions: nil,
         metadata: %{},
         object: "coupon",
-        percent_off: 50,
+        percent_off: 50.5,
         redeem_by: nil,
         times_redeemed: 3,
         valid: true
@@ -210,13 +210,12 @@ defmodule Stripe.ConverterTest do
       },
       cards: %Stripe.List{
         object: "list",
-        data: [
-        ],
+        data: [],
         has_more: false,
         total_count: 0,
         url: "/v1/recipients/rp_19p5Zf2eZvKYlo2CipXKLoSU/cards"
       },
-      created: 1487552563,
+      created: 1_487_552_563,
       default_card: nil,
       description: nil,
       email: nil,

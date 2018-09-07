@@ -19,6 +19,12 @@ defmodule Stripe.CouponTest do
     assert_stripe_requested(:post, "/v1/coupons")
   end
 
+  test "supports `percent_off` as float" do
+    params = %{percent_off: 25.5, duration: "repeating", duration_in_months: 3, id: "25_5OFF"}
+    assert {:ok, %Stripe.Coupon{percent_off: 25.5}} = Stripe.Coupon.create(params)
+    assert_stripe_requested(:post, "/v1/coupons")
+  end
+
   test "is updateable" do
     assert {:ok, %Stripe.Coupon{}} = Stripe.Coupon.update("25OFF", %{metadata: %{key: "value"}})
     assert_stripe_requested(:post, "/v1/coupons/25OFF")
