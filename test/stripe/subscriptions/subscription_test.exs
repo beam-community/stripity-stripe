@@ -59,6 +59,13 @@ defmodule Stripe.SubscriptionTest do
     end
   end
 
+  describe "delete/1" do
+    test "deletes a subscription" do
+      assert {:ok, %Stripe.Subscription{} = subscription} = Stripe.Subscription.delete("sub_123")
+      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
+    end
+  end
+
   describe "delete/2" do
     test "deletes a subscription when second argument is a list" do
       assert {:ok, %Stripe.Subscription{} = subscription} =
@@ -67,19 +74,24 @@ defmodule Stripe.SubscriptionTest do
       assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
     end
 
-    @tag :skip
-    test "deletes a subscription when second argument is a map" do
+    test "with `at_period_end` is deprecated [since 2018-08-23]" do
       assert {:ok, %Stripe.Subscription{} = subscription} =
                Stripe.Subscription.delete("sub_123", %{at_period_end: true})
 
-      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
+      assert subscription.cancel_at_period_end
+
+      # The deprecated function acts as a facade for `cancel_at_period_end: true`.
+      assert_stripe_requested(:update, "/v1/subscriptions/#{subscription.id}")
     end
   end
 
   describe "delete/3" do
-    test "deletes a subscription" do
-      assert {:ok, %Stripe.Subscription{} = subscription} = Stripe.Subscription.delete("sub_123")
-      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
+    test "with `at_period_end` is deprecated [since 2018-08-23]" do
+      assert {:ok, %Stripe.Subscription{cancel_at_period_end: true}} =
+               Stripe.Subscription.delete("sub_123", %{at_period_end: true}, [])
+
+      # The deprecated function acts as a facade for `cancel_at_period_end: true`.
+      assert_stripe_requested(:update, "/v1/subscriptions/sub_123")
     end
   end
 
