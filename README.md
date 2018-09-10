@@ -18,7 +18,7 @@ The old `1.x.x` line of releases has been kept and is being published separately
 
 The actively developed line of releases is `2.x.x` and is contained within the `master` branch. New features are being added to this line of releases, so to develop this library further, create pull requests against the master branch.
 
-2.x.x Works with Stripe API version 2018-05-21
+2.x.x Works with Stripe API version 2018-08-23
 
 # Documentation
 
