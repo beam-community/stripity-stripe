@@ -28,7 +28,7 @@ defmodule Stripe.Coupon do
           max_redemptions: pos_integer | nil,
           metadata: Stripe.Types.metadata(),
           name: String.t() | nil,
-          percent_off: pos_integer | nil,
+          percent_off: number | nil,
           redeem_by: Stripe.timestamp() | nil,
           times_redeemed: non_neg_integer,
           valid: boolean
@@ -67,7 +67,7 @@ defmodule Stripe.Coupon do
                optional(:max_redemptions) => pos_integer,
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:name) => String.t(),
-               optional(:percent_off) => pos_integer,
+               optional(:percent_off) => number,
                optional(:redeem_by) => Stripe.timestamp()
              }
   def create(params, opts \\ []) do

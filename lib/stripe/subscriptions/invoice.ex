@@ -55,7 +55,7 @@ defmodule Stripe.Invoice do
           subscription_proration_date: Stripe.timestamp(),
           subtotal: integer,
           tax: integer | nil,
-          tax_percent: integer | nil,
+          tax_percent: number | nil,
           total: integer,
           webhooks_delivered_at: Stripe.timestamp() | nil
         }
@@ -110,18 +110,20 @@ defmodule Stripe.Invoice do
   Create an invoice.
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               optional(:application_fee) => integer,
-               optional(:billing) => String.t(),
-               :customer => Stripe.id() | Stripe.Customer.t(),
-               optional(:days_until_due) => integer,
-               optional(:description) => String.t(),
-               optional(:due_date) => String.timestamp(),
-               optional(:metadata) => Stripe.Types.metadata(),
-               optional(:statement_descriptor) => String.t(),
-               optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
-               optional(:tax_percent) => integer
-             } | %{}
+        when params:
+               %{
+                 optional(:application_fee) => integer,
+                 optional(:billing) => String.t(),
+                 :customer => Stripe.id() | Stripe.Customer.t(),
+                 optional(:days_until_due) => integer,
+                 optional(:description) => String.t(),
+                 optional(:due_date) => String.timestamp(),
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:statement_descriptor) => String.t(),
+                 optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
+                 optional(:tax_percent) => number
+               }
+               | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -148,18 +150,20 @@ defmodule Stripe.Invoice do
   Takes the `id` and a map of changes.
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               optional(:application_fee) => integer,
-               optional(:closed) => boolean,
-               optional(:days_until_due) => integer,
-               optional(:description) => String.t(),
-               optional(:due_date) => String.timestamp(),
-               optional(:forgiven) => boolean,
-               optional(:metadata) => Stripe.Types.metadata(),
-               optional(:paid) => boolean,
-               optional(:statement_descriptor) => String.t(),
-               optional(:tax_percent) => integer
-             } | %{}
+        when params:
+               %{
+                 optional(:application_fee) => integer,
+                 optional(:closed) => boolean,
+                 optional(:days_until_due) => integer,
+                 optional(:description) => String.t(),
+                 optional(:due_date) => String.timestamp(),
+                 optional(:forgiven) => boolean,
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:paid) => boolean,
+                 optional(:statement_descriptor) => String.t(),
+                 optional(:tax_percent) => number
+               }
+               | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -184,16 +188,18 @@ defmodule Stripe.Invoice do
   List all invoices.
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
-        when params: %{
-               optional(:billing) => String.t(),
-               optional(:customer) => Stripe.id() | Stripe.Customer.t(),
-               optional(:date) => Stripe.date_query(),
-               optional(:due_date) => String.timestamp(),
-               optional(:ending_before) => t | Stripe.id(),
-               optional(:limit) => 1..100,
-               optional(:starting_after) => t | Stripe.id(),
-               optional(:subscription) => Stripe.id() | Stripe.Subscription.t()
-             } | %{}
+        when params:
+               %{
+                 optional(:billing) => String.t(),
+                 optional(:customer) => Stripe.id() | Stripe.Customer.t(),
+                 optional(:date) => Stripe.date_query(),
+                 optional(:due_date) => String.timestamp(),
+                 optional(:ending_before) => t | Stripe.id(),
+                 optional(:limit) => 1..100,
+                 optional(:starting_after) => t | Stripe.id(),
+                 optional(:subscription) => Stripe.id() | Stripe.Subscription.t()
+               }
+               | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -207,11 +213,13 @@ defmodule Stripe.Invoice do
   Pay an invoice.
   """
   @spec pay(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               :id => String.t(),
-               optional(:forgive) => boolean,
-               optional(:source) => Stripe.id() | Stripe.Source.t() | nil
-             } | %{}
+        when params:
+               %{
+                 :id => String.t(),
+                 optional(:forgive) => boolean,
+                 optional(:source) => Stripe.id() | Stripe.Source.t() | nil
+               }
+               | %{}
   def pay(id, params, opts \\ []) do
     new_request(opts)
     |> prefix_expansions()

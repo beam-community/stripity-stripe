@@ -19,7 +19,6 @@ defmodule Stripe.Customer do
           id: Stripe.id(),
           object: String.t(),
           account_balance: integer,
-          business_vat_id: String.t(),
           created: Stripe.timestamp(),
           currency: String.t() | nil,
           default_source: Stripe.id() | Stripe.Source.t() | nil,
@@ -41,7 +40,6 @@ defmodule Stripe.Customer do
     :id,
     :object,
     :account_balance,
-    :business_vat_id,
     :created,
     :currency,
     :default_source,
@@ -65,19 +63,20 @@ defmodule Stripe.Customer do
   Create a customer.
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               optional(:account_balance) => integer,
-               optional(:business_vat_id) => String.t(),
-               optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
-               optional(:default_source) => Stripe.id() | Stripe.Source.t(),
-               optional(:description) => String.t(),
-               optional(:email) => String.t(),
-               optional(:invoice_prefix) => String.t(),
-               optional(:metadata) => Stripe.Types.metadata(),
-               optional(:shipping) => Stripe.Types.shipping(),
-               optional(:source) => Stripe.Source.t(),
-               optional(:tax_info) => Stripe.Types.tax_info()
-             } | %{}
+        when params:
+               %{
+                 optional(:account_balance) => integer,
+                 optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
+                 optional(:default_source) => Stripe.id() | Stripe.Source.t(),
+                 optional(:description) => String.t(),
+                 optional(:email) => String.t(),
+                 optional(:invoice_prefix) => String.t(),
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:shipping) => Stripe.Types.shipping(),
+                 optional(:source) => Stripe.Source.t(),
+                 optional(:tax_info) => Stripe.Types.tax_info()
+               }
+               | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -102,19 +101,20 @@ defmodule Stripe.Customer do
   Update a customer.
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               optional(:account_balance) => integer,
-               optional(:business_vat_id) => String.t(),
-               optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
-               optional(:default_source) => Stripe.id() | Stripe.Source.t(),
-               optional(:description) => String.t(),
-               optional(:email) => String.t(),
-               optional(:invoice_prefix) => String.t(),
-               optional(:metadata) => Stripe.Types.metadata(),
-               optional(:shipping) => Stripe.Types.shipping(),
-               optional(:source) => Stripe.Source.t(),
-               optional(:tax_info) => Stripe.Types.tax_info()
-             } | %{}
+        when params:
+               %{
+                 optional(:account_balance) => integer,
+                 optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
+                 optional(:default_source) => Stripe.id() | Stripe.Source.t(),
+                 optional(:description) => String.t(),
+                 optional(:email) => String.t(),
+                 optional(:invoice_prefix) => String.t(),
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:shipping) => Stripe.Types.shipping(),
+                 optional(:source) => Stripe.Source.t(),
+                 optional(:tax_info) => Stripe.Types.tax_info()
+               }
+               | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
@@ -138,13 +138,15 @@ defmodule Stripe.Customer do
   List all customers.
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
-        when params: %{
-               optional(:created) => String.t() | Stripe.date_query(),
-               optional(:email) => String.t(),
-               optional(:ending_before) => t | Stripe.id(),
-               optional(:limit) => 1..100,
-               optional(:starting_after) => t | Stripe.id()
-             } | %{}
+        when params:
+               %{
+                 optional(:created) => String.t() | Stripe.date_query(),
+                 optional(:email) => String.t(),
+                 optional(:ending_before) => t | Stripe.id(),
+                 optional(:limit) => 1..100,
+                 optional(:starting_after) => t | Stripe.id()
+               }
+               | %{}
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> prefix_expansions()
