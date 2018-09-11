@@ -18,7 +18,11 @@ The old `1.x.x` line of releases has been kept and is being published separately
 
 The actively developed line of releases is `2.x.x` and is contained within the `master` branch. New features are being added to this line of releases, so to develop this library further, create pull requests against the master branch.
 
-2.x.x Works with Stripe API version 2018-08-23
+`:stripity_stripe` | Stripe API Version
+------------ | -------------
+`2.0.x` | `2018-02-28`
+`2.1.x - 2.2.x` | `2018-05-21`
+`master` | `2018-08-23`
 
 # Documentation
 
@@ -31,7 +35,7 @@ The actively developed line of releases is `2.x.x` and is contained within the `
 Install the dependency:
 
 ```ex
-{:stripity_stripe, "~> 2.0"}
+{:stripity_stripe, "~> 2.0.0"}
 ```
 
 Next, add to your applications:
