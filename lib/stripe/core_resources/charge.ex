@@ -204,6 +204,7 @@ defmodule Stripe.Charge do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
+               optional(:customer) => Stripe.id() | Stripe.Customer.t(),
                optional(:description) => String.t(),
                optional(:fraud_details) => user_fraud_report,
                optional(:metadata) => Stripe.Types.metadata(),

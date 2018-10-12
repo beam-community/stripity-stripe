@@ -104,6 +104,7 @@ defmodule Stripe.Sku do
               optional(:image) => String.t(),
               optional(:inventory) => map,
               optional(:metadata) => Stripe.Types.metadata(),
+              optional(:package_dimensions) => map,
               optional(:price) => map,
               optional(:product) => Stripe.id() | Stripe.Relay.Product.t()
             }
