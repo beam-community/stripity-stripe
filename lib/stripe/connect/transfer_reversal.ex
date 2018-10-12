@@ -70,7 +70,7 @@ defmodule Stripe.TransferReversal do
   """
   @spec update(Stripe.id() | t, Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:metadata) => Stripe.Types.metadata()
              }
   def update(id, reversal_id, params, opts \\ []) do
     new_request(opts)

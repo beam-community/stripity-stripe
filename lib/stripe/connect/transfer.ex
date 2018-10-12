@@ -89,7 +89,8 @@ defmodule Stripe.Transfer do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:description) => String.t(),
+               optional(:metadata) => Stripe.Types.metadata()
              }
   def update(id, params, opts \\ []) do
     new_request(opts)
