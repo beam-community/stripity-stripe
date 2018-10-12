@@ -105,7 +105,7 @@ defmodule Stripe.Sku do
               optional(:inventory) => map,
               optional(:metadata) => Stripe.Types.metadata(),
               optional(:package_dimensions) => map,
-              optional(:price) => map,
+              optional(:price) => non_neg_integer,
               optional(:product) => Stripe.id() | Stripe.Relay.Product.t()
             }
   def update(id, params, opts \\ []) do
