@@ -17,25 +17,26 @@ defmodule Stripe.Product do
   import Stripe.Request
 
   @type t :: %__MODULE__{
-    id: Stripe.id(),
-    object: String.t(),
-    active: boolean | nil,
-    attributes: list | nil,
-    caption: String.t() | nil,
-    created: Stripe.timestamp(),
-    deactivate_on: list,
-    description: String.t() | nil,
-    images: list,
-    livemode: boolean,
-    metadata: Stripe.Types.metadata(),
-    name: String.t(),
-    package_dimensions: map | nil,
-    shippable: boolean | nil,
-    statement_descriptor: String.t() | nil,
-    type: String.t() | nil,
-    unit_label: String.t() | nil,
-    updated: Stripe.timestamp(),
-    url: String.t() | nil
+          id: Stripe.id(),
+          object: String.t(),
+          active: boolean | nil,
+          attributes: list | nil,
+          caption: String.t() | nil,
+          created: Stripe.timestamp(),
+          deactivate_on: list,
+          deleted: boolean | nil,
+          description: String.t() | nil,
+          images: list,
+          livemode: boolean,
+          metadata: Stripe.Types.metadata(),
+          name: String.t(),
+          package_dimensions: map | nil,
+          shippable: boolean | nil,
+          statement_descriptor: String.t() | nil,
+          type: String.t() | nil,
+          unit_label: String.t() | nil,
+          updated: Stripe.timestamp(),
+          url: String.t() | nil
   }
 
   defstruct [
@@ -46,6 +47,7 @@ defmodule Stripe.Product do
     :caption,
     :created,
     :deactivate_on,
+    :deleted,
     :description,
     :images,
     :livemode,

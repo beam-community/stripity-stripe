@@ -11,6 +11,7 @@ defmodule Stripe.Discount do
           object: String.t(),
           coupon: Stripe.Coupon.t(),
           customer: Stripe.id() | Stripe.Customer.t() | nil,
+          deleted: boolean | nil,
           end: Stripe.timestamp() | nil,
           start: Stripe.timestamp(),
           subscription: Stripe.id() | nil
@@ -20,6 +21,7 @@ defmodule Stripe.Discount do
     :object,
     :coupon,
     :customer,
+    :deleted,
     :end,
     :start,
     :subscription
