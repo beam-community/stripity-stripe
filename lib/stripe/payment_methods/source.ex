@@ -10,6 +10,8 @@ defmodule Stripe.Source do
 
   @type source_type :: String.t()
 
+  @type customer :: Stripe.id()
+
   @type ach_credit_transfer :: %{
           account_number: String.t() | nil,
           bank_name: String.t() | nil,
@@ -209,6 +211,7 @@ defmodule Stripe.Source do
     :code_verification,
     :created,
     :currency,
+    :customer,
     :eps,
     :flow,
     :giropay,
