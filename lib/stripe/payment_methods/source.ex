@@ -10,7 +10,7 @@ defmodule Stripe.Source do
 
   @type source_type :: String.t()
 
-  @type customer :: String.t()
+  @type customer :: Stripe.id()
 
   @type ach_credit_transfer :: %{
           account_number: String.t() | nil,
