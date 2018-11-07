@@ -49,10 +49,10 @@ defmodule Stripe do
 
   @type id :: String.t()
   @type date_query :: %{
-                   gt: timestamp,
-                   gte: timestamp,
-                   lt: timestamp,
-                   lte: timestamp
+                   optional(:gt) => timestamp,
+                   optional(:gte) => timestamp,
+                   optional(:lt) => timestamp,
+                   optional(:lte) => timestamp
                  }
   @type options :: Keyword.t()
   @type timestamp :: pos_integer
