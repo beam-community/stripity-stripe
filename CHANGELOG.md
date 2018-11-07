@@ -1,5 +1,16 @@
 # Latest
 
+## 2.2.1
+
+- [Fix: date_query type had fields incorrectly marked as mandatory](https://github.com/code-corps/stripity_stripe/pull/421)
+- [Added customer field to Source entity](https://github.com/code-corps/stripity_stripe/pull/420)
+- [Added deleted property to resources that can be deleted](https://github.com/code-corps/stripity_stripe/pull/419)
+- [Added some missing attributes to update endpoints for SKU, Charge, TransferReversal, Transfer](https://github.com/code-corps/stripity_stripe/pull/418)
+- [Added API version compatibility table to README.md](https://github.com/code-corps/stripity_stripe/pull/416)
+- [Bumped supported API version to 2018-08-23](https://github.com/code-corps/stripity_stripe/pull/415)
+- [Updated stripe-mock dependency to 0.30.0](https://github.com/code-corps/stripity_stripe/pull/414)
+- [Fixed formatting in README.md](https://github.com/code-corps/stripity_stripe/pull/412)
+
 ## 2.2.0
 
 - [Add missing `tax_info` attributes to `customer`](https://github.com/code-corps/stripity_stripe/pull/410)
@@ -17,7 +28,7 @@
 
 ## 2.1.0
 
-- *New Feature:* [Add support for object expansion - #393](https://github.com/code-corps/stripity_stripe/pull/393) 
+- *New Feature:* [Add support for object expansion - #393](https://github.com/code-corps/stripity_stripe/pull/393)
   - credits to [@swelham](https://github.com/swelham
   - see instructions in README.md
 - Replace `user_id` in event with `account` field, as per updated stripe documentation - [#391](https://github.com/code-corps/stripity_stripe/pull/391)
