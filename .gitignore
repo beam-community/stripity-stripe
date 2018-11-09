@@ -13,3 +13,4 @@ config/config.secret.exs
 
 /.idea
 *.iml
+priv/plts/*

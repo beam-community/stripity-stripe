@@ -6,7 +6,10 @@ defmodule Stripe.Mixfile do
       app: :stripity_stripe,
       deps: deps(),
       description: description(),
-      dialyzer: [plt_add_apps: [:mix]],
+      dialyzer: [
+        plt_add_apps: [:mix],
+        plt_file: {:no_warn, "priv/plts/stripity_stripe.plt"}
+      ],
       elixir: "~> 1.5",
       package: package(),
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -54,7 +57,7 @@ defmodule Stripe.Mixfile do
   defp deps do
     [
       {:bypass, "~> 0.8.1", only: :test},
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:dialyxir, "1.0.0-rc.4", only: [:dev], runtime: false},
       {:earmark, "~> 1.2.5", only: :dev},
       {:ex_doc, "~> 0.18.3", only: :dev},
       {:excoveralls, "~> 0.8.1", only: :test},
