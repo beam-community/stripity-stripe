@@ -121,7 +121,7 @@ defmodule Stripe.Invoiceitem do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
-               optional(:created) => String.timestamp(),
+               optional(:created) => Stripe.timestamp(),
                optional(:customer) => Stripe.id() | Stripe.Customer.t(),
                optional(:ending_before) => t | Stripe.id(),
                optional(:invoice) => Stripe.id() | Stripe.Invoice.t(),

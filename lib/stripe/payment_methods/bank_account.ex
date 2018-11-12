@@ -87,8 +87,8 @@ defmodule Stripe.BankAccount do
         when params: %{
               :customer => Stripe.id() | Stripe.Customer.t(),
               optional(:metadata) => Stripe.Types.metadata(),
-              optional(:account_holder_name) => Stripe.t(),
-              optional(:account_holder_type) => Stripe.t()
+              optional(:account_holder_name) => String.t(),
+              optional(:account_holder_type) => String.t()
             }
   def update(id, %{customer: _} = params, opts \\ []) do
     endpoint = params |> plural_endpoint()

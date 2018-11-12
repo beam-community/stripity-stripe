@@ -109,7 +109,7 @@ defmodule Stripe.Plan do
                optional(:interval_count) => pos_integer,
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:nickname) => String.t(),
-               optional(:tiers) => Stripe.List.t(),
+               optional(:tiers) => Stripe.List.t(map),
                optional(:tiers_mode) => String.t(),
                optional(:transform_usage) => map,
                optional(:trial_period_days) => non_neg_integer,
