@@ -26,7 +26,7 @@ before_install:
   - export PATH=$PATH:$PWD/stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}/
 script:
   - mix coveralls.travis
-  - mix dialyzer --halt-exit-status
+  - MIX_ENV=dev mix dialyzer --halt-exit-status
 after_script:
   - mix inch.report
 notifications:
