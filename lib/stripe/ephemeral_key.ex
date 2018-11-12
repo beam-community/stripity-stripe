@@ -36,7 +36,7 @@ defmodule Stripe.EphemeralKey do
   @doc """
   Create an ephemeral key.
   """
-  @spec create(params, String.t(), Keyword.t()) :: {:ok, t} | {:error, Stripe.api_error_struct}
+  @spec create(params, String.t(), Keyword.t()) :: {:ok, t} | {:error, %Stripe.Error{}}
         when params: %{
                :customer => Stripe.id(),
             }
