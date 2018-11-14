@@ -95,6 +95,7 @@ defmodule Stripe.ExternalAccount do
   """
   @spec list(atom, params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
+               :account => Stripe.id(),
                optional(:ending_before) => t | Stripe.id(),
                optional(:limit) => 1..100,
                optional(:starting_after) => t | Stripe.id()

@@ -48,7 +48,7 @@ defmodule Stripe.ApplicationFee do
   Retrieves the details of the application fees
   """
   @spec retrieve(Stripe.id()) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def retrieve(id \\ []) do
+  def retrieve(id) do
     new_request()
     |> put_endpoint(@endpoint <> "/#{get_id!(id)}")
     |> put_method(:get)

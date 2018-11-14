@@ -14,6 +14,7 @@ env:
     - MIX_ENV=test STRIPE_SECRET_KEY=non_empty_secret_key_string
 cache:
   directories:
+    - priv/plts
     - stripe-mock
 before_install:
   - |
@@ -23,7 +24,9 @@ before_install:
         tar -zxf "stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}_linux_amd64.tar.gz" -C "stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}/"
       fi
   - export PATH=$PATH:$PWD/stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}/
-script: mix coveralls.travis
+script:
+  - mix coveralls.travis
+  - MIX_ENV=dev mix dialyzer --halt-exit-status
 after_script:
   - mix inch.report
 notifications:

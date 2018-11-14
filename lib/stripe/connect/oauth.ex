@@ -76,7 +76,7 @@ defmodule Stripe.Connect.OAuth do
   }
   ```
   """
-  @spec token(String.t()) :: {:ok, map} | {:error, Stripe.api_error_struct()}
+  @spec token(String.t()) :: {:ok, map} | {:error, %Stripe.Error{}}
   def token(code) do
     endpoint = "token"
 
@@ -103,7 +103,7 @@ defmodule Stripe.Connect.OAuth do
   ```
 
   """
-  @spec deauthorize(String.t()) :: {:ok, map} | {:error, Stripe.api_error_struct()}
+  @spec deauthorize(String.t()) :: {:ok, map} | {:error, %Stripe.Error{}}
   def deauthorize(stripe_user_id) do
     endpoint = "deauthorize"
 

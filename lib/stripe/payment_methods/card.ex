@@ -135,6 +135,7 @@ defmodule Stripe.Card do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
               :id => String.t(),
+              :customer => String.t(),
               optional(:address_city) => String.t(),
               optional(:address_country) => String.t(),
               optional(:address_line1) => String.t(),

@@ -125,6 +125,7 @@ defmodule Stripe.Subscription do
                optional(:application_fee_percent) => float,
                optional(:billing) => String.t(),
                optional(:billing_cycle_anchor) => Stripe.timestamp(),
+               optional(:cancel_at_period_end) => boolean(),
                optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
                optional(:days_until_due) => non_neg_integer,
                optional(:items) => [

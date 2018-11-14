@@ -11,7 +11,7 @@ defmodule Stripe.API do
 
   @type method :: :get | :post | :put | :delete | :patch
   @type headers :: %{String.t() => String.t()} | %{}
-  @type body :: {:multipart, list} | map
+  @type body :: iodata() | {:multipart, list()}
   @typep http_success :: {:ok, integer, [{String.t(), String.t()}], String.t()}
   @typep http_failure :: {:error, term}
 
