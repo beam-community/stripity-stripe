@@ -74,7 +74,7 @@ defmodule Stripe.SubscriptionItem.Usage do
     |> make_request()
   end
 
-  defp build_url(%Stripe.SubscriptionItem{id: id} = item) do
+  defp build_url(%Stripe.SubscriptionItem{id: id}) do
     "#{@plural_endpoint}/#{id}/usage_records"
   end
 
