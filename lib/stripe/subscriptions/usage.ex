@@ -38,7 +38,6 @@ defmodule Stripe.SubscriptionItem.Usage do
                 :timestamp => Stripe.timestamp() | non_neg_integer,
                 optional(:action) => String.t()
              } 
-             | %{}
   def create(params, opts \\ []) do
     url = 
     params 
@@ -55,14 +54,13 @@ defmodule Stripe.SubscriptionItem.Usage do
   @doc """
   List all subscription item period summaries
   """
-  @spec list(params, Stripe.options) :: {:ok, t} | {:error, Stripe.Error.t}
+  @spec list(params, Stripe.options) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
           :subscription_item => Stripe.id() | Stripe.SubscriptionItem.t(),
           optional(:ending_before) => t | Stripe.id(),
           optional(:limit) => 1..100,
           optional(:starting_after) => t | Stripe.id()
         } 
-        | %{}
   def list(params, opts \\ []) do
     url = 
     params 
@@ -80,7 +78,7 @@ defmodule Stripe.SubscriptionItem.Usage do
     "#{@plural_endpoint}/#{item.id}/usage_records"
   end
 
-  defp build_url(item) when is_binary(item) do
+  defp build_url(item) do
     "#{@plural_endpoint}/#{item}/usage_records"
   end
 end
