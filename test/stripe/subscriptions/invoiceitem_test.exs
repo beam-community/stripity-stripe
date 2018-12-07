@@ -15,7 +15,7 @@ defmodule Stripe.InvoiceitemTest do
     end
   end
 
-  describe "update/2" do
+  describe "update/3" do
     test "updates an invoice" do
       params = %{metadata: %{key: "value"}}
       assert {:ok, %Stripe.Invoiceitem{}} = Stripe.Invoiceitem.update("in_1234", params)
