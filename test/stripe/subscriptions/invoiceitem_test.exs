@@ -23,6 +23,13 @@ defmodule Stripe.InvoiceitemTest do
     end
   end
 
+  describe "delete/2" do
+    test "creates an invoice" do
+      assert {:ok, %Stripe.Invoiceitem{}} = Stripe.Invoiceitem.create(%{customer: "cus_123", currency: "usd"})
+      assert_stripe_requested(:post, "/v1/invoiceitems")
+    end
+  end
+
   describe "list/2" do
     test "lists all invoiceitems" do
       assert {:ok, %Stripe.List{data: invoiceitems}} = Stripe.Invoiceitem.list()
