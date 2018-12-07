@@ -24,7 +24,7 @@ defmodule Stripe.InvoiceitemTest do
   end
 
   describe "delete/2" do
-    test "creates an invoice" do
+    test "deletes an invoice" do
       assert {:ok, %Stripe.Invoiceitem{}} = Stripe.Invoiceitem.delete("ii_1234")
       assert_stripe_requested(:delete, "/v1/invoiceitems")
     end
