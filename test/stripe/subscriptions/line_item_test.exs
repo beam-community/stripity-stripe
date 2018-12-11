@@ -3,7 +3,7 @@ defmodule Stripe.LineItemTest do
 
   describe "retrieve/2" do
     test "retrieves an invoice" do
-      assert {:ok, %Stripe.Invoice{}} = Stripe.LineItem.retrieve("in_1234")
+      assert {:ok, %Stripe.List{}} = Stripe.LineItem.retrieve("in_1234")
       assert_stripe_requested(:get, "/v1/invoices/in_1234/lines")
     end
   end
