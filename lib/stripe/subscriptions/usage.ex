@@ -31,20 +31,7 @@ defmodule Stripe.SubscriptionItem.Usage do
   @doc """
   Creates a usage record for a specified subscription item id and date, and fills it with a quantity.
   """
-  @spec create(Stripe.id(), params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-              :quantity => float,
-              :subscription_item => Stripe.id() | Stripe.SubscriptionItem.t(),
-              :timestamp => Stripe.timestamp() | non_neg_integer,
-              optional(:action) => String.t()
-             } 
-  def create(id, params, opts \\ []) do
-    new_request(opts)
-    |> put_endpoint(build_url(id))
-    |> put_method(:post)
-    |> put_params(params)
-    |> make_request()
-  end
+  def create(id, params, opts \\ [])
 
   @doc """
   Creates a usage record for a specified subscription item id and date, and fills it with a quantity.
@@ -55,7 +42,7 @@ defmodule Stripe.SubscriptionItem.Usage do
               :timestamp => Stripe.timestamp() | non_neg_integer,
               optional(:action) => String.t()
              } 
-  def create(item, params, opts \\ []) do
+  def create(item, params, opts) when is_map(item) do
     new_request(opts)
     |> put_endpoint(build_url(item))
     |> put_method(:post)
@@ -63,6 +50,23 @@ defmodule Stripe.SubscriptionItem.Usage do
     |> make_request()
   end
 
+  @doc """
+  Creates a usage record for a specified subscription item id and date, and fills it with a quantity.
+  """
+  @spec create(Stripe.id(), params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+              :quantity => float,
+              :subscription_item => Stripe.id() | Stripe.SubscriptionItem.t(),
+              :timestamp => Stripe.timestamp() | non_neg_integer,
+              optional(:action) => String.t()
+             } 
+  def create(id, params, opts) do
+    new_request(opts)
+    |> put_endpoint(build_url(id))
+    |> put_method(:post)
+    |> put_params(params)
+    |> make_request()
+  end
 
   @doc """
   List all subscription item period summaries
