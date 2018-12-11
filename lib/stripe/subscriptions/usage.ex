@@ -56,7 +56,6 @@ defmodule Stripe.SubscriptionItem.Usage do
   @spec create(Stripe.id(), params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
               :quantity => float,
-              :subscription_item => Stripe.id() | Stripe.SubscriptionItem.t(),
               :timestamp => Stripe.timestamp() | non_neg_integer,
               optional(:action) => String.t()
              } 
@@ -77,7 +76,7 @@ defmodule Stripe.SubscriptionItem.Usage do
           optional(:limit) => 1..100,
           optional(:starting_after) => t | Stripe.id()
         } 
-  def list(id, params, opts \\ []) do
+  def list(id, params \\ %{}, opts \\ []) do
     new_request(opts)
     |> put_endpoint(build_list_url(id))
     |> put_method(:get)
@@ -85,8 +84,12 @@ defmodule Stripe.SubscriptionItem.Usage do
     |> make_request()
   end
 
+  defp build_list_url(%Stripe.SubscriptionItem{id: id}) do
+    "#{@plural_endpoint}/#{id}/usage_record_summaries" 
+  end
+
   defp build_list_url(item) do
-    build_url(item) <> "_summaries"  
+    "#{@plural_endpoint}/#{item}/usage_record_summaries"  
   end
 
   defp build_url(%Stripe.SubscriptionItem{id: id}) do
