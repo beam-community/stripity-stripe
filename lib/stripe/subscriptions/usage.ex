@@ -11,6 +11,7 @@ defmodule Stripe.SubscriptionItem.Usage do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
+          invoice: Stripe.id() | nil,
           livemode: boolean,
           quantity: non_neg_integer,
           subscription_item: Stripe.id() | Stripe.SubscriptionItem.t(),
@@ -20,6 +21,7 @@ defmodule Stripe.SubscriptionItem.Usage do
   defstruct [
     :id,
     :object,
+    :invoice,
     :livemode,
     :quantity,
     :subscription_item,
