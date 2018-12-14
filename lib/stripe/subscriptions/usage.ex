@@ -49,6 +49,7 @@ defmodule Stripe.SubscriptionItem.Usage do
     |> put_endpoint(build_url(item))
     |> put_method(:post)
     |> put_params(params)
+    |> cast_to_id([:subscription_item])
     |> make_request()
   end
 
@@ -83,6 +84,7 @@ defmodule Stripe.SubscriptionItem.Usage do
     |> put_endpoint(build_list_url(id))
     |> put_method(:get)
     |> put_params(params)
+    |> cast_to_id([:ending_before, :starting_after])
     |> make_request()
   end
 
