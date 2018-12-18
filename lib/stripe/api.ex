@@ -221,6 +221,21 @@ defmodule Stripe.API do
     |> handle_response()
   end
 
+  @doc """
+  A low level utility function to generate a new idempotency key for
+  `#{@idempotency_key_header}` request header value.
+  """
+  @spec generate_idempotency_key() :: binary
+  def generate_idempotency_key do
+    binary = <<
+      System.system_time(:nanosecond)::64,
+      :erlang.phash2({node(), self()}, 16_777_216)::24,
+      System.unique_integer([:positive])::32
+    >>
+
+    Base.hex_encode32(binary, case: :lower, padding: false)
+  end
+
   @spec perform_request(String.t(), method, body, headers, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
   defp perform_request(req_url, method, body, headers, opts) do
