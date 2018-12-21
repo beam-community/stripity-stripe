@@ -207,18 +207,7 @@ defmodule Stripe.API do
     req_url = base_url <> endpoint
     req_body = Stripe.URI.encode_query(body)
 
-    req_headers =
-      %{}
-      |> add_default_headers()
-      |> Map.to_list()
-
-    req_opts =
-      []
-      |> add_default_options()
-      |> add_pool_option()
-
-    @http_module.request(method, req_url, req_headers, req_body, req_opts)
-    |> handle_response()
+    do_perform_request(req_url, method, req_body, %{}, [])
   end
 
   @doc """
@@ -244,9 +233,18 @@ defmodule Stripe.API do
 
     req_headers =
       headers
-      |> add_default_headers()
       |> add_auth_header(api_key)
       |> add_connect_header(connect_account_id)
+
+    do_perform_request(req_url, method, body, req_headers, opts)
+  end
+
+  @spec do_perform_request(String.t(), method, body, headers, list) ::
+          {:ok, map} | {:error, Stripe.Error.t()}
+  defp do_perform_request(req_url, method, body, headers, opts) do
+    req_headers =
+      headers
+      |> add_default_headers()
       |> Map.to_list()
 
     req_opts =
