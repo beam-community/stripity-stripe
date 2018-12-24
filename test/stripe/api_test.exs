@@ -12,7 +12,7 @@ defmodule Stripe.APITest do
     verify_on_exit!()
 
     Stripe.APIMock
-    |> expect(:oauth_request, fn(method, _endpoint, _body) -> method end)
+    |> expect(:oauth_request, fn method, _endpoint, _body -> method end)
 
     assert Stripe.APIMock.oauth_request(:post, "www", %{body: "body"}) == :post
   end
@@ -30,6 +30,56 @@ defmodule Stripe.APITest do
       key2 = Stripe.API.generate_idempotency_key()
 
       assert key1 != key2
+    end
+  end
+
+  describe "should_retry?" do
+    test "given timeout error" do
+      assert Stripe.API.should_retry?({:error, :timeout})
+    end
+
+    test "given connection timeout error" do
+      assert Stripe.API.should_retry?({:error, :connect_timeout})
+    end
+
+    test "given connection refused error" do
+      assert Stripe.API.should_retry?({:error, :econnrefused})
+    end
+
+    test "given other error" do
+      refute Stripe.API.should_retry?({:error, :unknown})
+    end
+
+    test "given HTTP 200 response" do
+      refute Stripe.API.should_retry?({:ok, 200, [], ""})
+    end
+
+    test "given attempts greater than max_attempts" do
+      refute Stripe.API.should_retry?({:error, :timeout}, 2, max_attempts: 1)
+    end
+
+    test "given attempts less than max_attempts" do
+      assert Stripe.API.should_retry?({:error, :timeout}, 0, max_attempts: 1)
+    end
+
+    test "given attempts equals to max_attempts" do
+      refute Stripe.API.should_retry?({:error, :timeout}, 1, max_attempts: 1)
+    end
+  end
+
+  describe "backoff" do
+    test "given attempts = 0" do
+      backoff = Stripe.API.backoff(0, base_backoff: 10, max_backoff: 100)
+      assert backoff == 10
+    end
+
+    test "given attempts = 1" do
+      backoff = Stripe.API.backoff(1, base_backoff: 10, max_backoff: 100)
+      assert backoff in (10..20)
+    end
+    test "given attempts = 2" do
+      backoff = Stripe.API.backoff(2, base_backoff: 10, max_backoff: 100)
+      assert backoff in (20..40)
     end
   end
 end

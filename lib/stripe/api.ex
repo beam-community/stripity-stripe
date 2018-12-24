@@ -18,7 +18,10 @@ defmodule Stripe.API do
   @pool_name __MODULE__
   @api_version "2018-08-23"
   @idempotency_key_header "Idempotency-Key"
-  @http_module Application.get_env(:stripity_stripe, :http_module) || :hackney
+
+  @default_max_attempts 3
+  @default_base_backoff 500
+  @default_max_backoff 2_000
 
   def supervisor_children do
     if use_pool?() do
@@ -58,6 +61,16 @@ defmodule Stripe.API do
   @spec use_pool?() :: boolean
   defp use_pool?() do
     Application.get_env(:stripity_stripe, :use_connection_pool)
+  end
+
+  @spec get_http_module() :: module
+  defp get_http_module() do
+    Application.get_env(:stripity_stripe, :http_module) || :hackney
+  end
+
+  @spec get_retry_config() :: Keyword.t
+  defp get_retry_config() do
+    Application.get_env(:stripity_stripe, :retries) || []
   end
 
   @spec add_common_headers(headers) :: headers
@@ -225,8 +238,58 @@ defmodule Stripe.API do
     Base.hex_encode32(binary, case: :lower, padding: false)
   end
 
+  @doc """
+  Checks if an error is a problem that we should retry on. This includes both
+  socket errors that may represent an intermittent problem and some special
+  HTTP statuses.
+  """
+  @spec should_retry?(http_success | http_failure, attempts :: pos_integer, config :: Keyword.t) :: boolean
+
+  def should_retry?(response, attempts \\ 0, config \\ []) do
+    max_attempts = Keyword.get(config, :max_attempts) || @default_max_attempts
+
+    if attempts >= max_attempts do
+      false
+    else
+      retry_response?(response)
+    end
+  end
+
+  @spec retry_response?(http_success | http_failure) :: boolean
+  # 409 conflict
+  defp retry_response?({:ok, 409, _headers, _body}), do: true
+  # Destination refused the connection, the connection was reset, or a
+  # variety of other connection failures. This could occur from a single
+  # saturated server, so retry in case it's intermittent.
+  defp retry_response?({:error, :econnrefused}), do: true
+  # Retry on timeout-related problems (either on open or read).
+  defp retry_response?({:error, :connect_timeout}), do: true
+  defp retry_response?({:error, :timeout}), do: true
+  defp retry_response?(_response), do: false
+
+  @doc """
+  Returns backoff in milliseconds.
+  """
+  @spec backoff(attempts :: pos_integer, config :: Keyword.t()) :: pos_integer
+  def backoff(attempts, config) do
+    base_backoff = Keyword.get(config, :base_backoff) || @default_base_backoff
+    max_backoff = Keyword.get(config, :max_backoff) || @default_max_backoff
+
+    (base_backoff * :math.pow(2, attempts))
+    |> min(max_backoff)
+    |> backoff_jitter()
+    |> max(base_backoff)
+    |> trunc
+  end
+
+  @spec backoff_jitter(float) :: float
+  defp backoff_jitter(n) do
+    # Apply some jitter by randomizing the value in the range of (n / 2) to n
+    n * (0.5 * (1 + :rand.uniform()))
+  end
+
   @spec perform_request(String.t(), method, body, headers, list) ::
-          {:ok, map} | {:error, Stripe.Error.t()}
+        {:ok, map} | {:error, Stripe.Error.t()}
   defp perform_request(req_url, method, body, headers, opts) do
     {connect_account_id, opts} = Keyword.pop(opts, :connect_account)
     {api_key, opts} = Keyword.pop(opts, :api_key)
@@ -240,7 +303,8 @@ defmodule Stripe.API do
   end
 
   @spec do_perform_request(String.t(), method, body, headers, list) ::
-          {:ok, map} | {:error, Stripe.Error.t()}
+          {:ok, map}
+          | {:error, Stripe.Error.t()}
   defp do_perform_request(req_url, method, body, headers, opts) do
     req_headers =
       headers
@@ -252,8 +316,55 @@ defmodule Stripe.API do
       |> add_default_options()
       |> add_pool_option()
 
-    @http_module.request(method, req_url, req_headers, body, req_opts)
-    |> handle_response()
+    do_perform_request_and_retry(req_url, method, body, req_headers, req_opts, {:attempts, 0})
+  end
+
+  @spec do_perform_request_and_retry(
+          String.t(),
+          method,
+          body,
+          headers,
+          list,
+          {:attempts, pos_integer} | {:response, http_success | http_failure}
+        ) ::
+          {:ok, map}
+          | {:error, Stripe.Error.t()}
+  defp do_perform_request_and_retry(
+         _req_url,
+         _method,
+         _body,
+         _headers,
+         _opts,
+         {:response, response}
+       ) do
+    handle_response(response)
+  end
+
+  defp do_perform_request_and_retry(req_url, method, body, headers, opts, {:attempts, attempts}) do
+    response = get_http_module().request(method, req_url, headers, body, opts)
+
+    do_perform_request_and_retry(
+      req_url,
+      method,
+      body,
+      headers,
+      opts,
+      add_attempts(response, attempts, get_retry_config())
+    )
+  end
+
+  @spec add_attempts(http_success | http_failure, pos_integer, Keyword.t()) ::
+          {:attempts, pos_integer} | {:response, http_success | http_failure}
+  defp add_attempts(response, attempts, retry_config) do
+    if should_retry?(response, attempts, retry_config) do
+      attempts
+      |> backoff(retry_config)
+      |> :timer.sleep()
+
+      {:attempts, attempts + 1}
+    else
+      {:response, response}
+    end
   end
 
   @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, Stripe.Error.t()}
