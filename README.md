@@ -52,11 +52,25 @@ end
 
 To make API calls, it is necessary to configure your Stripe secret key.
 
-```ex
+```elixir
 use Mix.Config
 
 config :stripity_stripe, api_key: "YOUR SECRET KEY"
 ```
+
+### Configuring Automatic Retries
+
+To configure the behaviour to retry requests that fail due to an intermittent network problem, you may optionally add an `:retries` key to the stripity_stripe configuration:
+
+```elixir
+config :stripity_stripe, retries: [
+  max_attempts: 3,    # The maximum number of requests
+  base_backoff: 500,  # The base backoff in milliseconds
+  max_backoff: 2_000  # The maximum backoff in milliseconds
+]
+```
+
+If a request is destructive operation, [Idempotency header](https://stripe.com/docs/api/ruby#idempotent_requests) will be added to guarantee that retries are safe.
 
 ## Note: Object Expansion
 
