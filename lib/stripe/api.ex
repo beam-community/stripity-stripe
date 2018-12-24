@@ -252,7 +252,7 @@ defmodule Stripe.API do
   socket errors that may represent an intermittent problem and some special
   HTTP statuses.
   """
-  @spec should_retry?(http_success | http_failure, attempts :: pos_integer, config :: Keyword.t) :: boolean
+  @spec should_retry?(http_success | http_failure, attempts :: non_neg_integer, config :: Keyword.t) :: boolean
 
   def should_retry?(response, attempts \\ 0, config \\ []) do
     max_attempts = Keyword.get(config, :max_attempts) || @default_max_attempts
@@ -279,7 +279,7 @@ defmodule Stripe.API do
   @doc """
   Returns backoff in milliseconds.
   """
-  @spec backoff(attempts :: pos_integer, config :: Keyword.t()) :: pos_integer
+  @spec backoff(attempts :: non_neg_integer, config :: Keyword.t()) :: non_neg_integer
   def backoff(attempts, config) do
     base_backoff = Keyword.get(config, :base_backoff) || @default_base_backoff
     max_backoff = Keyword.get(config, :max_backoff) || @default_max_backoff
@@ -335,7 +335,7 @@ defmodule Stripe.API do
           body,
           headers,
           list,
-          {:attempts, pos_integer} | {:response, http_success | http_failure}
+          {:attempts, non_neg_integer} | {:response, http_success | http_failure}
         ) ::
           {:ok, map}
           | {:error, Stripe.Error.t()}
@@ -363,8 +363,8 @@ defmodule Stripe.API do
     )
   end
 
-  @spec add_attempts(http_success | http_failure, pos_integer, Keyword.t()) ::
-          {:attempts, pos_integer} | {:response, http_success | http_failure}
+  @spec add_attempts(http_success | http_failure, non_neg_integer, Keyword.t()) ::
+          {:attempts, non_neg_integer} | {:response, http_success | http_failure}
   defp add_attempts(response, attempts, retry_config) do
     if should_retry?(response, attempts, retry_config) do
       attempts
