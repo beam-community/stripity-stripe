@@ -94,6 +94,15 @@ defmodule Stripe.API do
     end
   end
 
+  @spec add_idempotency_headers(headers, method) :: headers
+  defp add_idempotency_headers(existing_headers, method) when method in [:get, :head] do
+    existing_headers
+  end
+  defp add_idempotency_headers(existing_headers, _method) do
+    existing_headers
+    |> Map.put(@idempotency_key_header, generate_idempotency_key())
+  end
+
   @spec add_multipart_form_headers(headers) :: headers
   defp add_multipart_form_headers(existing_headers) do
     existing_headers
@@ -309,6 +318,7 @@ defmodule Stripe.API do
     req_headers =
       headers
       |> add_default_headers()
+      |> add_idempotency_headers(method)
       |> Map.to_list()
 
     req_opts =
