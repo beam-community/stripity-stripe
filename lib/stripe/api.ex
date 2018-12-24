@@ -333,7 +333,7 @@ defmodule Stripe.API do
           String.t(),
           method,
           body,
-          headers,
+          [{String.t(), String.t()}],
           list,
           {:attempts, non_neg_integer} | {:response, http_success | http_failure}
         ) ::
