@@ -16,7 +16,7 @@ defmodule Stripe.API do
   @typep http_failure :: {:error, term}
 
   @pool_name __MODULE__
-  @api_version "2018-08-23"
+  @api_version "2018-11-08"
   @http_module Application.get_env(:stripity_stripe, :http_module) || :hackney
 
   def supervisor_children do
