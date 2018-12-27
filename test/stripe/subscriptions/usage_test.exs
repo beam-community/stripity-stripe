@@ -1,6 +1,5 @@
 defmodule Stripe.SubscriptionItem.UsageTest do
   use Stripe.StripeCase, async: true
-  require Logger
   
   describe "create/2" do
     test "create usage record" do
@@ -27,7 +26,7 @@ defmodule Stripe.SubscriptionItem.UsageTest do
         timestamp: 1543335582
       }
 
-      assert {:ok, record} = Stripe.SubscriptionItem.Usage.create(item, params)
+      assert {:ok, record} = Stripe.SubscriptionItem.Usage.create(Map.get(item, :id), params)
       assert %{subscription_item: _sub_id} = record
       assert_stripe_requested(:post, "/v1/subscription_items/#{item.id}/usage_records")
     end
@@ -45,7 +44,7 @@ defmodule Stripe.SubscriptionItem.UsageTest do
   end
 
   describe "list/2" do
-    test "list usage records for subscription items" do
+    test "list usage records for subscription items with params" do
       item_id = "si_123"
 
       params = %{
