@@ -62,8 +62,6 @@ For security purposes it's possible to use a function or a tuple to resolve
 the secret:
 
 ```ex
-use Mix.Config
-
 config :stripity_stripe, api_key: {MyApp.Secrets, :stripe_secret, []}
 # OR
 config :stripity_stripe, api_key: fn -> System.get_env("STRIPE_SECRET") end
