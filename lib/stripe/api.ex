@@ -5,7 +5,7 @@ defmodule Stripe.API do
   Usually the utilities in `Stripe.Request` are a better way to write custom interactions with
   the API.
   """
-  alias Stripe.Error
+  alias Stripe.{Config, Error}
 
   @callback oauth_request(method, String.t(), map) :: {:ok, map}
 
@@ -38,34 +38,28 @@ defmodule Stripe.API do
 
   @spec get_pool_options() :: Keyword.t()
   defp get_pool_options() do
-    Application.get_env(:stripity_stripe, :pool_options)
+    Config.resolve(:pool_options)
   end
 
   @spec get_base_url() :: String.t()
   defp get_base_url() do
-    Application.get_env(:stripity_stripe, :api_base_url)
+    Config.resolve(:api_base_url)
   end
 
   @spec get_upload_url() :: String.t()
   defp get_upload_url() do
-    Application.get_env(:stripity_stripe, :api_upload_url)
+    Config.resolve(:api_upload_url)
   end
 
   @spec get_default_api_key() :: String.t()
   defp get_default_api_key() do
-    case Application.get_env(:stripity_stripe, :api_key) do
-      nil ->
-        # use an empty string and let Stripe produce an error
-        ""
-
-      key ->
-        key
-    end
+    # if no API key is set default to `""` which will raise a Stripe API error
+    Config.resolve(:api_key) || ""
   end
 
   @spec use_pool?() :: boolean
   defp use_pool?() do
-    Application.get_env(:stripity_stripe, :use_connection_pool)
+    Config.resolve(:use_connection_pool)
   end
 
   @spec add_common_headers(headers) :: headers
