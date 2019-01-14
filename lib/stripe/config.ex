@@ -10,9 +10,9 @@ defmodule Stripe.Config do
   wrapped expanded value. If the value was a function it get's evaluated, if
   the value is a touple of three elements it gets applied.
   """
-  @spec resolve(atom) :: any
-  def resolve(key) do
-    Application.get_env(@base_key, key)
+  @spec resolve(atom, any) :: any
+  def resolve(key, default // nil) do
+    Application.get_env(@base_key, key, default)
     |> expand_value()
   end
 
