@@ -25,7 +25,7 @@ defmodule Stripe.API do
       json_library: Jason # defaults to Poison but can be configured to Jason
   """
   def json_library() do
-    Application.get_env(:stripity_stripe, :json_library, Poison)
+    Config.resolve(:json_library, Poison)
   end
 
   def supervisor_children do
@@ -54,7 +54,7 @@ defmodule Stripe.API do
   @spec get_default_api_key() :: String.t()
   defp get_default_api_key() do
     # if no API key is set default to `""` which will raise a Stripe API error
-    Config.resolve(:api_key) || ""
+    Config.resolve(:api_key, "")
   end
 
   @spec use_pool?() :: boolean
