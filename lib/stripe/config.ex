@@ -11,12 +11,16 @@ defmodule Stripe.Config do
   the value is a touple of three elements it gets applied.
   """
   @spec resolve(atom, any) :: any
-  def resolve(key, default \\ nil) when is_atom(key) do
+  def resolve(key, default \\ nil)
+  def resolve(key, default) when is_atom(key) do
     Application.get_env(@base_key, key, default)
     |> expand_value()
   end
   def resolve(key, _) do
-    raise("#{__MODULE__} expected key '#{key}' to be an atom")
+    raise(
+      ArgumentError,
+      message: "#{__MODULE__} expected key '#{key}' to be an atom"
+    )
   end
 
   defp expand_value({module, function, args})

@@ -25,4 +25,25 @@ defmodule Stripe.ConfigTest do
     )
     assert(Stripe.Config.resolve(:__test) == "test-test")
   end
+
+  test "if no value exists for the given key it uses the default value" do
+    Application.put_env(
+      :stripity_stripe,
+      :__test,
+      {ValueExpansionTestModule, :value, []}
+    )
+    assert(Stripe.Config.resolve(:__fake_test, "test-test") == "test-test")
+  end
+
+  test "raises if the key isn't an atom" do
+    Application.put_env(
+      :stripity_stripe,
+      :__test,
+      {ValueExpansionTestModule, :value, []}
+    )
+
+    assert_raise ArgumentError, ~r/to be an atom/, fn ->
+      Stripe.Config.resolve("__test", "test-test")
+    end
+  end
 end
