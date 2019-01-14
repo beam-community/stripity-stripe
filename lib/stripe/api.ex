@@ -17,13 +17,13 @@ defmodule Stripe.API do
 
   @pool_name __MODULE__
   @api_version "2018-08-23"
-  @http_module Application.get_env(:stripity_stripe, :http_module) || :hackney
 
   @doc """
   In config.exs your implicit or expicit configuration is:
     config :stripity_stripe,
       json_library: Jason # defaults to Poison but can be configured to Jason
   """
+  @spec json_library() :: module
   def json_library() do
     Config.resolve(:json_library, Poison)
   end
@@ -60,6 +60,11 @@ defmodule Stripe.API do
   @spec use_pool?() :: boolean
   defp use_pool?() do
     Config.resolve(:use_connection_pool)
+  end
+
+  @spec http_module() :: module
+  defp http_module() do
+    Config.resolve(:http_module, :hackney)
   end
 
   @spec add_common_headers(headers) :: headers
@@ -219,7 +224,7 @@ defmodule Stripe.API do
       |> add_default_options()
       |> add_pool_option()
 
-    @http_module.request(method, req_url, req_headers, req_body, req_opts)
+    http_module().request(method, req_url, req_headers, req_body, req_opts)
     |> handle_response()
   end
 
@@ -241,7 +246,7 @@ defmodule Stripe.API do
       |> add_default_options()
       |> add_pool_option()
 
-    @http_module.request(method, req_url, req_headers, body, req_opts)
+    http_module().request(method, req_url, req_headers, body, req_opts)
     |> handle_response()
   end
 
