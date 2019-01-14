@@ -3,8 +3,6 @@ defmodule Stripe.Config do
   Utility that handles interaction with the application's configuration
   """
 
-  @base_key :stripity_stripe
-
   @doc """
   Resolves the given key from the application's configuration returning the
   wrapped expanded value. If the value was a function it get's evaluated, if
@@ -13,7 +11,7 @@ defmodule Stripe.Config do
   @spec resolve(atom, any) :: any
   def resolve(key, default \\ nil)
   def resolve(key, default) when is_atom(key) do
-    Application.get_env(@base_key, key, default)
+    Application.get_env(:stripity_stripe, key, default)
     |> expand_value()
   end
   def resolve(key, _) do
