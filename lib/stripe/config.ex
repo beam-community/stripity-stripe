@@ -8,9 +8,9 @@ defmodule Stripe.Config do
   @doc """
   Resolves the given key from the application's configuration returning the
   wrapped expanded value. If the value was a function it get's evaluated, if
-  the value vas a touple of three elements it gets applied.
+  the value is a touple of three elements it gets applied.
   """
-  @spec resolve(any) :: any
+  @spec resolve(atom) :: any
   def resolve(key) do
     Application.get_env(@base_key, key)
     |> expand_value()
