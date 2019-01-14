@@ -58,8 +58,7 @@ use Mix.Config
 config :stripity_stripe, api_key: "YOUR SECRET KEY"
 ```
 
-For security purposes it's possible to use a function or a tuple to resolve
-the secret:
+It's possible to use a function or a tuple to resolve the secret:
 
 ```ex
 config :stripity_stripe, api_key: {MyApp.Secrets, :stripe_secret, []}
@@ -142,7 +141,9 @@ config :stripity_stripe, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
 
 Moreover, if you are using Jason instead of Poison, you can configure the library to use Jason like so:
 
+```ex
 config :stripity_stripe, json_library: Jason
+```
 
 ## Testing
 
