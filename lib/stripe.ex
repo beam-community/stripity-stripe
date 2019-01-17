@@ -23,9 +23,9 @@ defmodule Stripe do
 
     * `:api_key` - The Stripe API key to use for the request. See
       [https://stripe.com/docs/api/authentication](https://stripe.com/docs/api/authentication)
-    * `:connect_account` - A Stripe Connect account ID which should originate
-      the specified action using the "Stripe-Account" header. The preferred
-      authentication method for Stripe Connect. See
+    * `:connect_account` - The ID of a Stripe Connect account for which the
+      request should be made, passed through as the "Stripe-Account" header. The
+      preferred authentication method for Stripe Connect. See
       [https://stripe.com/docs/connect/authentication#stripe-account-header](https://stripe.com/docs/connect/authentication#stripe-account-header)
     * `:expand` - Takes a list of fields that should be expanded in the response
       from Stripe. See [https://stripe.com/docs/api/expanding_objects](https://stripe.com/docs/api/expanding_objects)
