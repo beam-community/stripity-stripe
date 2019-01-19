@@ -7,6 +7,7 @@ defmodule Stripe.Invoice do
   - Create an invoice
   - Retrieve an invoice
   - Update an invoice
+  - Void an invoice
 
   Does not take options yet.
 
@@ -29,8 +30,8 @@ defmodule Stripe.Invoice do
           billing: String.t() | nil,
           billing_reason: String.t() | nil,
           charge: Stripe.id() | Stripe.Charge.t() | nil,
-          closed: boolean,
           currency: String.t(),
+          custom_fields: custom_fields() | nil,
           customer: Stripe.id() | Stripe.Customer.t(),
           date: Stripe.timestamp(),
           default_source: String.t() | nil,
@@ -39,6 +40,7 @@ defmodule Stripe.Invoice do
           due_date: Stripe.timestamp() | nil,
           ending_balance: integer | nil,
           finalized_at: Stripe.timestamp() | nil,
+          footer: String.t() | nil,
           forgiven: boolean,
           hosted_invoice_url: String.t() | nil,
           invoice_pdf: String.t() | nil,
@@ -63,6 +65,16 @@ defmodule Stripe.Invoice do
           webhooks_delivered_at: Stripe.timestamp() | nil
         }
 
+        @type custom_fields :: list(%{
+          name: String.t(),
+          value: String.t()
+        })
+
+        @type invoice_settings :: %{
+          custom_fields: custom_fields | nil,
+          footer: String.t() | nil
+        }
+
   defstruct [
     :id,
     :object,
@@ -76,8 +88,8 @@ defmodule Stripe.Invoice do
     :billing,
     :billing_reason,
     :charge,
-    :closed,
     :currency,
+    :custom_fields,
     :customer,
     :date,
     :default_source,
@@ -86,6 +98,7 @@ defmodule Stripe.Invoice do
     :due_date,
     :ending_balance,
     :finalized_at,
+    :footer,
     :forgiven,
     :hosted_invoice_url,
     :invoice_pdf,
@@ -125,6 +138,7 @@ defmodule Stripe.Invoice do
                  optional(:default_source) => String.t(),
                  optional(:description) => String.t(),
                  optional(:due_date) => Stripe.timestamp(),
+                 optional(:footer) => String.t(),
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:statement_descriptor) => String.t(),
                  optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
@@ -160,11 +174,12 @@ defmodule Stripe.Invoice do
         when params:
                %{
                  optional(:application_fee) => integer,
-                 optional(:closed) => boolean,
+                 optional(:auto_advance) => boolean,
                  optional(:days_until_due) => integer,
                  optional(:default_source) => String.t(),
                  optional(:description) => String.t(),
                  optional(:due_date) => Stripe.timestamp(),
+                 optional(:footer) => String.t(),
                  optional(:forgiven) => boolean,
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:paid) => boolean,
@@ -235,6 +250,17 @@ defmodule Stripe.Invoice do
     |> put_method(:post)
     |> put_params(params)
     |> cast_to_id([:source])
+    |> make_request()
+  end
+
+  @doc """
+  Void an invoice
+  """
+  @spec void(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def void(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/void")
+    |> put_method(:post)
     |> make_request()
   end
 end

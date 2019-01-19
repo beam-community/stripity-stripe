@@ -94,7 +94,7 @@ defmodule Stripe.Webhook do
   end
 
   defp check_timestamp(timestamp, tolerance) do
-    now = System.system_time(:seconds)
+    now = System.system_time(:second)
     tolerance_zone = now - tolerance
 
     if timestamp < tolerance_zone do
@@ -141,7 +141,7 @@ defmodule Stripe.Webhook do
 
   defp convert_to_event!(payload) do
     payload
-    |> Poison.decode!()
+    |> Stripe.API.json_library().decode!()
     |> Stripe.Converter.convert_result()
   end
 end
