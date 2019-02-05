@@ -63,7 +63,7 @@ It's possible to use a function or a tuple to resolve the secret:
 ```ex
 config :stripity_stripe, api_key: {MyApp.Secrets, :stripe_secret, []}
 # OR
-config :stripity_stripe, api_key: fn -> System.get_env("STRIPE_SECRET") end
+config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
 ```
 
 Moreover, if you are using Jason instead of Poison, you can configure the library to use Jason like so:
