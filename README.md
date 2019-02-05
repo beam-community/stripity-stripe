@@ -55,6 +55,8 @@ To make API calls, it is necessary to configure your Stripe secret key.
 ```ex
 use Mix.Config
 
+config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
+# OR
 config :stripity_stripe, api_key: "YOUR SECRET KEY"
 ```
 
@@ -63,7 +65,7 @@ It's possible to use a function or a tuple to resolve the secret:
 ```ex
 config :stripity_stripe, api_key: {MyApp.Secrets, :stripe_secret, []}
 # OR
-config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
+config :stripity_stripe, api_key: fn -> System.get_env("STRIPE_SECRET") end
 ```
 
 Moreover, if you are using Jason instead of Poison, you can configure the library to use Jason like so:
