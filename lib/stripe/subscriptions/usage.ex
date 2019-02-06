@@ -40,13 +40,13 @@ defmodule Stripe.SubscriptionItem.Usage do
   """
   @spec create(Stripe.id(), params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-              :quantity => float,
+              :quantity => float | pos_integer | 0,
               :timestamp => Stripe.timestamp() | non_neg_integer,
               optional(:action) => String.t()
              } 
   def create(id, params, opts) do
     new_request(opts)
-    |> put_endpoint(build_url(id))
+    |> put_endpoint("#{@plural_endpoint}/#{id}/usage_records")
     |> put_method(:post)
     |> put_params(params)
     |> make_request()
@@ -63,26 +63,10 @@ defmodule Stripe.SubscriptionItem.Usage do
         } 
   def list(id, params \\ %{}, opts \\ []) do
     new_request(opts)
-    |> put_endpoint(build_list_url(id))
+    |> put_endpoint("#{@plural_endpoint}/#{id}/usage_record_summaries")
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:ending_before, :starting_after])
     |> make_request()
-  end
-
-  # defp build_list_url(%Stripe.SubscriptionItem{id: id}) do
-  #   "#{@plural_endpoint}/#{id}/usage_record_summaries" 
-  # end
-
-  defp build_list_url(item) do
-    "#{@plural_endpoint}/#{item}/usage_record_summaries"  
-  end
-
-  # defp build_url(%Stripe.SubscriptionItem{id: id}) do
-  #   "#{@plural_endpoint}/#{id}/usage_records"
-  # end
-
-  defp build_url(item) do
-    "#{@plural_endpoint}/#{item}/usage_records"
   end
 end
