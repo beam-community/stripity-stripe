@@ -8,6 +8,7 @@ defmodule Stripe.API do
   alias Stripe.{Config, Error}
 
   @callback oauth_request(method, String.t(), map) :: {:ok, map}
+  @callback http_module() :: module
 
   @type method :: :get | :post | :put | :delete | :patch
   @type headers :: %{String.t() => String.t()} | %{}
@@ -93,6 +94,10 @@ defmodule Stripe.API do
     existing_headers
     |> Map.put("Content-Type", "multipart/form-data")
   end
+
+  @spec maybe_add_auth_header_oauth(headers, String.t(), String.t() | nil) :: headers
+  defp maybe_add_auth_header_oauth(headers, "deauthorize", api_key), do: add_auth_header(headers, api_key)
+  defp maybe_add_auth_header_oauth(headers, _endpoint, _api_key), do: headers
 
   @spec add_auth_header(headers, String.t() | nil) :: headers
   defp add_auth_header(existing_headers, api_key) do
@@ -208,8 +213,8 @@ defmodule Stripe.API do
   @doc """
   A low level utility function to make an OAuth request to the Stripe API
   """
-  @spec oauth_request(method, String.t(), map) :: {:ok, map} | {:error, Stripe.Error.t()}
-  def oauth_request(method, endpoint, body) do
+  @spec oauth_request(method, String.t(), map, String.t()) :: {:ok, map} | {:error, Stripe.Error.t()}
+  def oauth_request(method, endpoint, body, api_key \\ nil) do
     base_url = "https://connect.stripe.com/oauth/"
     req_url = base_url <> endpoint
     req_body = Stripe.URI.encode_query(body)
@@ -217,6 +222,7 @@ defmodule Stripe.API do
     req_headers =
       %{}
       |> add_default_headers()
+      |> maybe_add_auth_header_oauth(endpoint, api_key)
       |> Map.to_list()
 
     req_opts =
@@ -227,6 +233,7 @@ defmodule Stripe.API do
     http_module().request(method, req_url, req_headers, req_body, req_opts)
     |> handle_response()
   end
+
 
   @spec perform_request(String.t(), method, body, headers, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
