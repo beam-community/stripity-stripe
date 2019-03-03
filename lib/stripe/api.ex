@@ -8,7 +8,6 @@ defmodule Stripe.API do
   alias Stripe.{Config, Error}
 
   @callback oauth_request(method, String.t(), map) :: {:ok, map}
-  @callback http_module() :: module
 
   @type method :: :get | :post | :put | :delete | :patch
   @type headers :: %{String.t() => String.t()} | %{}
@@ -233,7 +232,6 @@ defmodule Stripe.API do
     http_module().request(method, req_url, req_headers, req_body, req_opts)
     |> handle_response()
   end
-
 
   @spec perform_request(String.t(), method, body, headers, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
