@@ -18,8 +18,6 @@ defmodule Stripe.APITest do
   end
 
   test "oauth_request sets authorization header for deauthorize request" do
-    verify_on_exit!()
-
     defmodule HackneyMock do
       def request(_, _, headers, _, _) do
         kv_headers =
