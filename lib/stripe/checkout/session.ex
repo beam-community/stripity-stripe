@@ -63,7 +63,7 @@ defmodule Stripe.Session do
           optional(:subscription_data) => subscription_data
         }
 
-  @type t :: %{
+  @type t :: %__MODULE__{
           :id => Stripe.id(),
           :object => String.t(),
           :livemode => boolean()
