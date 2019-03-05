@@ -23,22 +23,6 @@ defmodule Stripe.Session do
 
   @type capture_method :: :automatic | :manual
 
-  @type address :: %{
-          :line1 => String.t(),
-          optional(:city) => String.t(),
-          optional(:country) => String.t(),
-          optional(:line2) => String.t(),
-          optional(:postal_code) => String.t(),
-          optional(:state) => String.t()
-        }
-
-  @type shipping_info :: %{
-          :address => address,
-          optional(:carrier) => String.t(),
-          optional(:phone) => String.t(),
-          optional(:tracking_number) => String.t()
-        }
-
   @type transfer_data :: %{
           :destination => String.t()
         }
@@ -47,10 +31,10 @@ defmodule Stripe.Session do
           optional(:application_fee_amount) => integer(),
           optional(:capture_method) => capture_method,
           optional(:description) => String.t(),
-          optional(:metadata) => map(),
+          optional(:metadata) => Stripe.Types.metadata(),
           optional(:on_behalf_of) => String.t(),
           optional(:receipt_email) => String.t(),
-          optional(:shipping) => shipping_info,
+          optional(:shipping) => Stripe.Types.shipping(),
           optional(:statement_descriptor) => String.t(),
           optional(:transfer_data) => transfer_data
         }
@@ -62,7 +46,7 @@ defmodule Stripe.Session do
 
   @type subscription_data :: %{
           :items => list(item),
-          :metadata => map(),
+          :metadata => Stripe.Types.metadata(),
           :trial_end => integer(),
           :trial_period_days => integer()
         }
