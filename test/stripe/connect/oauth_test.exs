@@ -18,4 +18,10 @@ defmodule Stripe.Connect.OAuthTest do
     assert Stripe.Connect.OAuthMock.authorize_url(%{url: "www"}) == "www"
     assert Stripe.Connect.OAuthMock.deauthorize_url("www.google.com") == "www.google.com"
   end
+
+  test "oauth express account" do
+    url = Stripe.Connect.OAuthMock.authorize_url(%{account_type: "express")
+    assert String.contains?(url, "express/oauth/")
+  end
+
 end
