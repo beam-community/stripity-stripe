@@ -20,8 +20,10 @@ defmodule Stripe.Connect.OAuthTest do
   end
 
   test "oauth express account" do
-    url = Stripe.Connect.OAuthMock.authorize_url(%{account_type: "express"})
-    assert String.contains?(url, "express/oauth/")
+    Stripe.Connect.OAuthMock
+    |> expect(:authorize_url, fn %{account_type: type} -> type end)
+
+    assert Stripe.Connect.OAuthMock.authorize_url(%{account_type: "express"}) == "express"
   end
 
 end
