@@ -176,10 +176,16 @@ defmodule Stripe.Connect.OAuth do
   """
   @spec authorize_url(map) :: String.t()
   def authorize_url(options \\ %{}) do
-    base_url = case options.account_type do
-      "standard" -> "https://connect.stripe.com/oauth/authorize?"
-      "express" -> "https://connect.stripe.com/express/oauth/authorize?"
-    end
+    oAuthUrls = %{
+      "standard" => "https://connect.stripe.com/oauth/authorize?",
+      "express" => "https://connect.stripe.com/express/oauth/authorize?"
+    }
+    
+    base_url = if Map.has_key?(options, :account_type) do
+        oAuthUrls[options.account_type]
+      else 
+        oAuthUrls["standard"]
+      end
 
     param_string =
       get_default_authorize_map()
