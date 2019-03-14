@@ -25,7 +25,8 @@ defmodule Stripe.Connect.OAuth do
     :scope,
     :state,
     :stripe_landing,
-    :stripe_user
+    :stripe_user,
+    :account_type
   ]
 
   defmodule AuthorizeResponse do
@@ -175,7 +176,10 @@ defmodule Stripe.Connect.OAuth do
   """
   @spec authorize_url(map) :: String.t()
   def authorize_url(options \\ %{}) do
-    base_url = "https://connect.stripe.com/oauth/authorize?"
+    base_url = case options.account_type do
+      "standard" -> "https://connect.stripe.com/oauth/authorize?"
+      "express" -> "https://connect.stripe.com/express/oauth/authorize?"
+    end
 
     param_string =
       get_default_authorize_map()
