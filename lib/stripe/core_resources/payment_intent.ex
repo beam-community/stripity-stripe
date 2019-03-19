@@ -23,6 +23,7 @@ defmodule Stripe.PaymentIntent do
           doc_url: String.t(),
           message: String.t(),
           param: String.t(),
+          payment_intent: Stripe.PaymentIntent.t() | map,
           source: Stripe.Card.t() | map
         }
 
@@ -35,6 +36,10 @@ defmodule Stripe.PaymentIntent do
   @type redirect_to_url :: %{
           return_url: String.t(),
           url: String.t()
+        }
+
+  @type transfer_data :: %{
+          :destination => String.t()
         }
 
   @type t :: %__MODULE__{
@@ -67,7 +72,7 @@ defmodule Stripe.PaymentIntent do
           source: Stripe.Card.t() | map,
           statement_descriptor: String.t() | nil,
           status: String.t(),
-          transfer: Stripe.id() | Stripe.Transfer.t() | nil,
+          transfer_data: transfer_data | nil,
           transfer_group: String.t() | nil
         }
 
@@ -101,7 +106,7 @@ defmodule Stripe.PaymentIntent do
     :source,
     :statement_descriptor,
     :status,
-    :transfer,
+    :transfer_data,
     :transfer_group
   ]
 
@@ -109,7 +114,7 @@ defmodule Stripe.PaymentIntent do
 
   @doc """
   Create a payment intent.
-   See the [Stripe docs](https://stripe.com/docs/api#create_charge).
+   See the [Stripe docs](https://stripe.com/docs/api/payment_intents/create).
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
@@ -122,9 +127,6 @@ defmodule Stripe.PaymentIntent do
                  optional(:confirm) => boolean,
                  optional(:customer) => Stripe.id() | Stripe.Customer.t(),
                  optional(:description) => String.t(),
-                 optional(:destination) => %{
-                   :account => Stripe.id() | Stripe.Account.t()
-                 },
                  optional(:metadata) => map,
                  optional(:on_behalf_of) => Stripe.id() | Stripe.Account.t(),
                  optional(:receipt_email) => String.t(),
@@ -132,7 +134,9 @@ defmodule Stripe.PaymentIntent do
                  optional(:save_payment_method) => boolean,
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.id() | Stripe.Card.t(),
-                 optional(:statement_descriptor) => String.t()
+                 optional(:statement_descriptor) => String.t(),
+                 optional(:transfer_data) => transfer_data,
+                 optional(:transfer_group) => String.t()
                }
                | %{}
   def create(params, opts \\ []) do
