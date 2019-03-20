@@ -1,5 +1,9 @@
 # Latest
 
+## 2.2.3
+
+- [Add payment intents object](https://github.com/code-corps/stripity_stripe/pull/470)
+
 ## 2.2.2
 
 - [Upgrade stripe-mock 0.38](https://github.com/code-corps/stripity_stripe/pull/436)
