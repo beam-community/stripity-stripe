@@ -23,7 +23,7 @@ defmodule Stripe.Invoice do
           amount_due: integer,
           amount_paid: integer,
           amount_remaining: integer,
-          application_fee: integer | nil,
+          application_fee_amount: integer | nil,
           attempt_count: non_neg_integer,
           attempted: boolean,
           auto_advance: boolean,
@@ -33,7 +33,7 @@ defmodule Stripe.Invoice do
           currency: String.t(),
           custom_fields: custom_fields() | nil,
           customer: Stripe.id() | Stripe.Customer.t(),
-          date: Stripe.timestamp(),
+          created: Stripe.timestamp(),
           default_source: String.t() | nil,
           description: String.t() | nil,
           discount: Stripe.Discount.t() | nil,
@@ -82,17 +82,17 @@ defmodule Stripe.Invoice do
     :amount_due,
     :amount_paid,
     :amount_remaining,
-    :application_fee,
+    :application_fee_amount,
     :attempt_count,
     :attempted,
     :auto_advance,
     :billing,
     :billing_reason,
     :charge,
+    :created,
     :currency,
     :custom_fields,
     :customer,
-    :date,
     :default_source,
     :description,
     :discount,
@@ -132,7 +132,7 @@ defmodule Stripe.Invoice do
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
-                 optional(:application_fee) => integer,
+                 optional(:application_fee_amount) => integer,
                  optional(:billing) => String.t(),
                  :customer => Stripe.id() | Stripe.Customer.t(),
                  optional(:days_until_due) => integer,
@@ -174,7 +174,7 @@ defmodule Stripe.Invoice do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
-                 optional(:application_fee) => integer,
+                 optional(:application_fee_amount) => integer,
                  optional(:auto_advance) => boolean,
                  optional(:days_until_due) => integer,
                  optional(:default_source) => String.t(),
@@ -216,7 +216,7 @@ defmodule Stripe.Invoice do
                %{
                  optional(:billing) => String.t(),
                  optional(:customer) => Stripe.id() | Stripe.Customer.t(),
-                 optional(:date) => Stripe.date_query(),
+                 optional(:created) => Stripe.date_query(),
                  optional(:due_date) => Stripe.timestamp(),
                  optional(:ending_before) => t | Stripe.id(),
                  optional(:limit) => 1..100,
