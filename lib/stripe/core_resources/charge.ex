@@ -60,7 +60,7 @@ defmodule Stripe.Charge do
         }
 
   @type transfer_data :: %{
-          :amount => non_neg_integer
+          :amount => non_neg_integer,
           :destination => String.t()
         }
 
