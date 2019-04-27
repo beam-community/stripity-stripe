@@ -144,7 +144,6 @@ defmodule Stripe.PaymentIntent do
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
-    |> cast_path_to_id([:destination, :account])
     |> cast_to_id([:on_behalf_of, :customer, :source])
     |> make_request()
   end
