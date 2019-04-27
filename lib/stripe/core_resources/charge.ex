@@ -37,6 +37,13 @@ defmodule Stripe.Charge do
           predicate: String.t()
         }
 
+  @type billing_details :: %{
+          email: String.t(),
+          address: String.t() | nil,
+          name: String.t(),
+          phone: String.t() | nil
+        }
+
   @type card_info :: %{
           exp_month: number,
           exp_year: number,
@@ -53,7 +60,7 @@ defmodule Stripe.Charge do
         }
 
   @type transfer_data :: %{
-          :amount => non_neg_integer,
+          :amount => non_neg_integer
           :destination => String.t()
         }
 
@@ -63,14 +70,14 @@ defmodule Stripe.Charge do
           amount: non_neg_integer,
           amount_refunded: non_neg_integer,
           application: Stripe.id() | nil,
-          application_fee: Stripe.id() | Stripe.ApplicationFee.t() | nil,
+          application_fee_amount: Stripe.id() | Stripe.ApplicationFee.t() | nil,
           balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
+          billing_details: billing_details | nil,
           captured: boolean,
           created: Stripe.timestamp(),
           currency: String.t(),
           customer: Stripe.id() | Stripe.Customer.t() | nil,
           description: String.t() | nil,
-          destination: Stripe.id() | Stripe.Account.t() | nil,
           dispute: Stripe.id() | Stripe.Dispute.t() | nil,
           failure_code: Stripe.Error.card_error_code() | nil,
           failure_message: String.t() | nil,
@@ -105,14 +112,14 @@ defmodule Stripe.Charge do
     :amount,
     :amount_refunded,
     :application,
-    :application_fee,
+    :application_fee_amount,
     :balance_transaction,
+    :billing_details,
     :captured,
     :created,
     :currency,
     :customer,
     :description,
-    :destination,
     :dispute,
     :failure_code,
     :failure_message,
@@ -157,22 +164,18 @@ defmodule Stripe.Charge do
                %{
                  :amount => pos_integer,
                  :currency => String.t(),
-                 optional(:application_fee) => non_neg_integer,
+                 optional(:application_fee_amount) => non_neg_integer,
                  optional(:capture) => boolean,
+                 optional(:customer) => Stripe.id() | Stripe.Customer.t(),
                  optional(:description) => String.t(),
-                 optional(:destination) => %{
-                   :account => Stripe.id() | Stripe.Account.t(),
-                   optional(:amount) => non_neg_integer
-                 },
-                 optional(:transfer_data) => transfer_data,
-                 optional(:transfer_group) => String.t(),
                  optional(:on_behalf_of) => Stripe.id() | Stripe.Account.t(),
                  optional(:metadata) => map,
                  optional(:receipt_email) => String.t(),
                  optional(:shipping) => Stripe.Types.shipping(),
-                 optional(:customer) => Stripe.id() | Stripe.Customer.t(),
                  optional(:source) => Stripe.id() | Stripe.Card.t() | card_info,
-                 optional(:statement_descriptor) => String.t()
+                 optional(:statement_descriptor) => String.t(),
+                 optional(:transfer_data) => transfer_data,
+                 optional(:transfer_group) => String.t()
                }
                | %{}
   def create(params, opts \\ []) do
@@ -180,7 +183,6 @@ defmodule Stripe.Charge do
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
-    |> cast_path_to_id([:destination, :account])
     |> cast_to_id([:on_behalf_of, :customer, :source])
     |> make_request()
   end
@@ -253,12 +255,11 @@ defmodule Stripe.Charge do
           {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:amount) => non_neg_integer,
-               optional(:application_fee) => non_neg_integer,
-               optional(:destination) => %{
-                 optional(:amount) => non_neg_integer
-               },
+               optional(:application_fee_amount) => non_neg_integer,
                optional(:receipt_email) => String.t(),
-               optional(:statement_descriptor) => String.t()
+               optional(:statement_descriptor) => String.t(),
+               optional(:transfer_data) => transfer_data,
+               optional(:transfer_group) => String.t()
              }
   def capture(id, params, opts) do
     new_request(opts)
