@@ -16,7 +16,7 @@ defmodule Stripe.API do
   @typep http_failure :: {:error, term}
 
   @pool_name __MODULE__
-  @api_version "2018-11-08"
+  @api_version "2018-11-08; checkout_sessions_beta=v1"
 
   @api_version "2018-08-23"
   @idempotency_key_header "Idempotency-Key"
@@ -116,6 +116,12 @@ defmodule Stripe.API do
     |> Map.put("Content-Type", "multipart/form-data")
   end
 
+  @spec maybe_add_auth_header_oauth(headers, String.t(), String.t() | nil) :: headers
+  defp maybe_add_auth_header_oauth(headers, "deauthorize", api_key),
+    do: add_auth_header(headers, api_key)
+
+  defp maybe_add_auth_header_oauth(headers, _endpoint, _api_key), do: headers
+
   @spec add_auth_header(headers, String.t() | nil) :: headers
   defp add_auth_header(existing_headers, api_key) do
     api_key = fetch_api_key(api_key)
@@ -181,9 +187,11 @@ defmodule Stripe.API do
 
   def request(body, method, endpoint, headers, opts) do
     {expansion, opts} = Keyword.pop(opts, :expand)
-    base_url = get_base_url()
+    {idempotency_key, opts} = Keyword.pop(opts, :idempotency_key)
 
+    base_url = get_base_url()
     req_url = add_object_expansion("#{base_url}#{endpoint}", expansion)
+    headers = add_idempotency_header(idempotency_key, headers, method)
 
     req_body =
       body
@@ -230,13 +238,18 @@ defmodule Stripe.API do
   @doc """
   A low level utility function to make an OAuth request to the Stripe API
   """
-  @spec oauth_request(method, String.t(), map) :: {:ok, map} | {:error, Stripe.Error.t()}
-  def oauth_request(method, endpoint, body) do
+  @spec oauth_request(method, String.t(), map, String.t() | nil) ::
+          {:ok, map} | {:error, Stripe.Error.t()}
+  def oauth_request(method, endpoint, body, api_key \\ nil) do
     base_url = "https://connect.stripe.com/oauth/"
     req_url = base_url <> endpoint
     req_body = Stripe.URI.encode_query(body)
 
-    do_perform_request(req_url, method, req_body, %{}, [])
+    req_headers =
+      %{}
+      |> maybe_add_auth_header_oauth(endpoint, api_key)
+
+    do_perform_request(req_url, method, req_body, req_headers, [])
   end
 
   @doc """
@@ -447,4 +460,12 @@ defmodule Stripe.API do
   end
 
   defp add_object_expansion(url, _), do: url
+
+  defp add_idempotency_header(nil, headers, _), do: headers
+
+  defp add_idempotency_header(idempotency_key, headers, :post) do
+    Map.put(headers, "Idempotency-Key", idempotency_key)
+  end
+
+  defp add_idempotency_header(_, headers, _), do: headers
 end

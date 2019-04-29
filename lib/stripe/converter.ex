@@ -19,6 +19,7 @@ defmodule Stripe.Converter do
     bank_account
     card
     charge
+    checkout.session
     country_spec
     coupon
     customer
@@ -34,11 +35,13 @@ defmodule Stripe.Converter do
     oauth
     order
     order_return
+    payment_intent
     payout
     plan
     product
     recipient
     refund
+    review
     sku
     source
     subscription
