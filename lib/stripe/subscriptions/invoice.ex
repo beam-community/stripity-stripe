@@ -34,6 +34,7 @@ defmodule Stripe.Invoice do
           custom_fields: custom_fields() | nil,
           customer: Stripe.id() | Stripe.Customer.t(),
           created: Stripe.timestamp(),
+          default_payment_method: String.t() | nil,
           default_source: String.t() | nil,
           description: String.t() | nil,
           discount: Stripe.Discount.t() | nil,
@@ -56,6 +57,7 @@ defmodule Stripe.Invoice do
           starting_balance: integer,
           statement_descriptor: String.t() | nil,
           status: String.t() | nil,
+          status_transitions: status_transitions() | nil,
           subscription: Stripe.id() | Stripe.Subscription.t() | nil,
           subscription_proration_date: Stripe.timestamp(),
           subtotal: integer,
@@ -76,6 +78,14 @@ defmodule Stripe.Invoice do
           footer: String.t() | nil
         }
 
+  @type status_transitions ::
+          list(%{
+            finalized_at: Stripe.timestamp() | nil,
+            marked_uncollectible_at: Stripe.timestamp() | nil,
+            paid_at: Stripe.timestamp() | nil,
+            voided_at: Stripe.timestamp() | nil
+          })
+
   defstruct [
     :id,
     :object,
@@ -93,6 +103,7 @@ defmodule Stripe.Invoice do
     :currency,
     :custom_fields,
     :customer,
+    :default_payment_method,
     :default_source,
     :description,
     :discount,
@@ -113,6 +124,7 @@ defmodule Stripe.Invoice do
     :period_start,
     :receipt_number,
     :status,
+    :status_transitions,
     :starting_balance,
     :statement_descriptor,
     :subscription,
@@ -133,9 +145,12 @@ defmodule Stripe.Invoice do
         when params:
                %{
                  optional(:application_fee_amount) => integer,
+                 optional(:auto_advance) => boolean,
                  optional(:billing) => String.t(),
                  :customer => Stripe.id() | Stripe.Customer.t(),
+                 optional(:custom_fields) => custom_fields,
                  optional(:days_until_due) => integer,
+                 optional(:default_payment_method) => String.t(),
                  optional(:default_source) => String.t(),
                  optional(:description) => String.t(),
                  optional(:due_date) => Stripe.timestamp(),
@@ -176,7 +191,9 @@ defmodule Stripe.Invoice do
                %{
                  optional(:application_fee_amount) => integer,
                  optional(:auto_advance) => boolean,
+                 optional(:custom_fields) => custom_fields,
                  optional(:days_until_due) => integer,
+                 optional(:default_payment_method) => String.t(),
                  optional(:default_source) => String.t(),
                  optional(:description) => String.t(),
                  optional(:due_date) => Stripe.timestamp(),
@@ -234,6 +251,26 @@ defmodule Stripe.Invoice do
   end
 
   @doc """
+  finalize an invoice.
+  """
+  @spec finalize(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params:
+               %{
+                 :id => String.t(),
+                 optional(:auto_advance) => boolean
+               }
+               | %{}
+  def finalize(id, params, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/finalize")
+    |> put_method(:post)
+    |> put_params(params)
+    |> cast_to_id([:source])
+    |> make_request()
+  end
+
+  @doc """
   Pay an invoice.
   """
   @spec pay(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
@@ -241,7 +278,9 @@ defmodule Stripe.Invoice do
                %{
                  :id => String.t(),
                  optional(:forgive) => boolean,
-                 optional(:source) => Stripe.id() | Stripe.Source.t() | nil
+                 optional(:paid_out_of_band) => boolean,
+                 optional(:payment_method) => String.t(),
+                 optional(:source) => Stripe.id() | Stripe.Source.t()
                }
                | %{}
   def pay(id, params, opts \\ []) do
