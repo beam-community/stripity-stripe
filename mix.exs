@@ -50,13 +50,12 @@ defmodule Stripe.Mixfile do
     ]
   end
 
-  defp apps(:test), do: [:bypass | apps()]
+  defp apps(:test), do: apps()
   defp apps(_), do: apps()
   defp apps(), do: [:hackney, :logger, :poison, :uri_query]
 
   defp deps do
     [
-      {:bypass, "~> 0.8.1", only: :test},
       {:dialyxir, "1.0.0-rc.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.20.2", only: :dev},
       {:excoveralls, "~> 0.8.1", only: :test},
