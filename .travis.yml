@@ -30,6 +30,7 @@ before_install:
       fi
   - export PATH=$PATH:$PWD/stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}/
 script:
+  - mix format --check-formatted
   - mix coveralls.travis
   - MIX_ENV=dev mix dialyzer --halt-exit-status
 after_script:
