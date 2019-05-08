@@ -13,12 +13,12 @@ defmodule Stripe.TaxRate do
           active: boolean,
           created: Stripe.timestamp(),
           description: String.t() | nil,
-          display_name: String.t() | nil,
+          display_name: String.t(),
           inclusive: boolean,
           jurisdiction: String.t() | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
-          percentage: number | nil
+          percentage: number
         }
 
   defstruct [
