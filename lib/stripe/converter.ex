@@ -22,6 +22,7 @@ defmodule Stripe.Converter do
     checkout.session
     country_spec
     coupon
+    credit_note
     customer
     discount
     dispute
