@@ -21,7 +21,11 @@ defmodule Stripe.Mixfile do
       ],
       test_coverage: [tool: ExCoveralls],
       version: "2.2.3",
-      source_url: "https://github.com/code-corps/stripity_stripe/"
+      source_url: "https://github.com/code-corps/stripity_stripe/",
+      docs: [
+        groups_for_modules: groups_for_modules(),
+        nest_modules_by_prefix: nest_modules_by_prefix()
+      ]
     ]
   end
 
@@ -82,6 +86,84 @@ defmodule Stripe.Mixfile do
         "GitHub" => "https://github.com/code-corps/stripity_stripe"
       },
       maintainers: ["Dan Matthews", "Josh Smith", "Nikola Begedin", "Scott Newcomer"]
+    ]
+  end
+
+  defp groups_for_modules do
+    [
+      "Core Resources": [
+        Stripe.Balance,
+        Stripe.BalanceTransaction,
+        Stripe.Charge,
+        Stripe.Customer,
+        Stripe.Dispute,
+        Stripe.Event,
+        Stripe.FileUpload,
+        Stripe.PaymentIntent,
+        Stripe.Payout,
+        Stripe.Product,
+        Stripe.Refund,
+        Stripe.Token
+      ],
+      "Payment Methods": [
+        Stripe.BankAccount,
+        Stripe.Card,
+        Stripe.Source
+      ],
+      Checkout: [
+        Stripe.Session
+      ],
+      Billing: [
+        Stripe.Coupon,
+        Stripe.Discount,
+        Stripe.Invoice,
+        Stripe.Invoiceitem,
+        Stripe.LineItem,
+        Stripe.Product,
+        Stripe.Plan,
+        Stripe.Subscription,
+        Stripe.SubscriptionItem,
+        Stripe.SubscriptionItem.Usage
+      ],
+      Connect: [
+        Stripe.Account,
+        Stripe.ApplicationFee,
+        Stripe.CountrySpec,
+        Stripe.ExternalAccount,
+        Stripe.FeeRefund,
+        Stripe.LoginLink,
+        Stripe.Connect.OAuth,
+        Stripe.Connect.OAuth.AuthorizeResponse,
+        Stripe.Connect.OAuth.TokenResponse,
+        Stripe.Connect.OAuth.DeauthorizeResponse,
+        Stripe.Recipient,
+        Stripe.Transfer,
+        Stripe.TransferReversal,
+      ],
+      Fraud: [
+        Stripe.Review
+      ],
+      "Relay/Orders": [
+        Stripe.Order,
+        Stripe.OrderItem,
+        Stripe.OrderReturn,
+        Stripe.Relay.Product,
+        Stripe.Sku
+      ],
+      Utilities: [
+        Stripe.Config,
+        Stripe.Converter,
+        Stripe.Types
+      ]
+    ]
+  end
+
+  def nest_modules_by_prefix() do
+    [
+      Stripe.Connect.OAuth,
+      Stripe.Connect.OAuth.AuthorizeResponse,
+      Stripe.Connect.OAuth.TokenResponse,
+      Stripe.Connect.OAuth.DeauthorizeResponse
     ]
   end
 end
