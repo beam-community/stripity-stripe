@@ -36,6 +36,7 @@ defmodule Stripe.Converter do
     order
     order_return
     payment_intent
+    payment_method
     payout
     plan
     product
