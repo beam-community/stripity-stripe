@@ -61,13 +61,13 @@ defmodule Stripe.ConverterTest do
     expected_result = %Stripe.Event{
       account: "acct_445dwy73iNyGMfgu",
       api_version: "2019-02-19",
-      created: 1551702604,
+      created: 1_551_702_604,
       data: %{
         object: %Stripe.Review{
           billing_zip: nil,
           charge: "ch_1EAFvj73iNyGMfgutk44a8nD",
           closed_reason: nil,
-          created: 1551702603,
+          created: 1_551_702_603,
           id: "prv_1EAFvj73iNyGMfgu81yzEb0D",
           ip_address: "172.16.1.4",
           ip_address_location: %{
@@ -101,6 +101,7 @@ defmodule Stripe.ConverterTest do
       },
       type: "review.opened"
     }
+
     fixture = Helper.load_fixture("review_opened.json")
     result = Converter.convert_result(fixture)
 
