@@ -106,8 +106,10 @@ defmodule Stripe.API do
   end
 
   defp add_idempotency_headers(existing_headers, _method) do
+    # By using `Map.put_new/3` instead of `Map.put/3`, we allow users to
+    # provide their own idempotency key.
     existing_headers
-    |> Map.put(@idempotency_key_header, generate_idempotency_key())
+    |> Map.put_new(@idempotency_key_header, generate_idempotency_key())
   end
 
   @spec add_multipart_form_headers(headers) :: headers
