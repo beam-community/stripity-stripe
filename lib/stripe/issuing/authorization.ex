@@ -16,6 +16,22 @@ defmodule Stripe.Issuing.Authorization do
   use Stripe.Entity
   import Stripe.Request
 
+  @type request_history :: %{
+          approved: boolean,
+          authorized_amount: integer,
+          authorized_currency: String.t(),
+          created: Stripe.timestamp(),
+          held_amount: integer,
+          held_currency: String.t(),
+          reason: String.t()
+        }
+
+  @type verification_data :: %{
+          address_line1_check: String.t(),
+          address_zip_check: String.t(),
+          cvc_check: String.t()
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -31,14 +47,14 @@ defmodule Stripe.Issuing.Authorization do
           held_currency: String.t() | nil,
           is_held_amount_controllable: boolean,
           livemode: boolean,
-          merchant_data: Stripe.Types.merchant_data(),
+          merchant_data: Stripe.Issuing.Types.merchant_data(),
           metadata: Stripe.Types.metadata(),
           pending_authorized_amount: integer,
           pending_held_amount: integer,
-          request_history: Stripe.List.t(Stripe.Types.request_history()),
+          request_history: Stripe.List.t(request_history()),
           status: String.t(),
           transactions: Stripe.List.t(Stripe.Issuing.Transaction.t()),
-          verification_data: Stripe.Types.verification_data(),
+          verification_data: verification_data(),
           wallet_provider: String.t() | nil
         }
 

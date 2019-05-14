@@ -26,7 +26,7 @@ defmodule Stripe.Issuing.Transaction do
           currency: String.t() | nil,
           dispute: Stripe.id() | Stripe.Issuing.Dispute.t(),
           livemode: boolean,
-          merchant_data: Stripe.Types.merchant_data(),
+          merchant_data: Stripe.Issuing.Types.merchant_data(),
           metadata: Stripe.Types.metadata(),
           type: String.t()
         }

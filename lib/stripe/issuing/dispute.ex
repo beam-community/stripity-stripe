@@ -15,6 +15,16 @@ defmodule Stripe.Issuing.Dispute do
   use Stripe.Entity
   import Stripe.Request
 
+  @type evidence :: %{
+          fraudulent: evidence_detail() | nil,
+          other: evidence_detail() | nil
+        }
+
+  @type evidence_detail :: %{
+          dispute_explanation: String.t(),
+          uncategorized_file: String.t()
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -22,7 +32,7 @@ defmodule Stripe.Issuing.Dispute do
           created: Stripe.timestamp(),
           currency: String.t() | nil,
           disputed_transaction: Stripe.id() | Stripe.Issuing.Transaction.t(),
-          evidence: Stripe.Types.evidence(),
+          evidence: evidence(),
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           reason: String.t(),
@@ -52,7 +62,7 @@ defmodule Stripe.Issuing.Dispute do
         when params:
               %{
                 optional(:amount) => non_neg_integer,
-                optional(:evidence) => Stripe.Types.evidence(),
+                optional(:evidence) => evidence(),
                 optional(:metadata) => Stripe.Types.metadata(),
               }
               | %{}

@@ -12,28 +12,9 @@ defmodule Stripe.Types do
           state: String.t() | nil
         }
 
-  @type authorization_controls :: %{
-          allowed_categories: list() | nil,
-          blocked_categories: list() | nil,
-          spending_limits: list(Stripe.Types.spending_limits()) | nil,
-          currency: String.t() | nil,
-          max_amount: non_neg_integer | nil,
-          max_approvals: non_neg_integer | nil
-        }
-
   @type billing :: %{
           address: Stripe.Types.address(),
           name: String.t()
-        }
-
-  @type evidence :: %{
-          fraudulent: Stripe.Types.evidence_detail() | nil,
-          other: Stripe.Types.evidence_detail() | nil
-        }
-
-  @type evidence_detail :: %{
-          dispute_explanation: String.t(),
-          uncategorized_file: String.t()
         }
 
   @type fee :: %{
@@ -44,28 +25,8 @@ defmodule Stripe.Types do
           type: String.t()
         }
 
-  @type merchant_data :: %{
-          category: String.t(),
-          city: String.t(),
-          country: String.t(),
-          name: String.t(),
-          network_id: String.t(),
-          postal_code: String.t(),
-          state: String.t()
-        }
-
   @type metadata :: %{
           optional(String.t()) => String.t()
-        }
-
-  @type request_history :: %{
-          approved: boolean,
-          authorized_amount: integer,
-          authorized_currency: String.t(),
-          created: Stripe.timestamp(),
-          held_amount: integer,
-          held_currency: String.t(),
-          reason: String.t()
         }
 
   @type shipping :: %{
@@ -77,12 +38,6 @@ defmodule Stripe.Types do
           status: String.t() | nil,
           tracking_number: String.t() | nil,
           tracking_url: String.t() | nil
-        }
-
-  @type spending_limits :: %{
-          amount: non_neg_integer,
-          categories: list(),
-          interval: String.t()
         }
 
   @type tax_info :: %{
@@ -102,9 +57,4 @@ defmodule Stripe.Types do
           weekly_anchor: String.t() | nil
         }
 
-  @type verification_data :: %{
-          address_line1_check: String.t(),
-          address_zip_check: String.t(),
-          cvc_check: String.t()
-        }
 end

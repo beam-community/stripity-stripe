@@ -17,7 +17,7 @@ defmodule Stripe.Issuing.Cardholder do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
-          authorization_controls: Stripe.Types.authorization_controls() | nil,
+          authorization_controls: Stripe.Issuing.Types.authorization_controls() | nil,
           billing: Stripe.Types.billing(),
           created: Stripe.timestamp(),
           email: String.t() | nil,
@@ -54,7 +54,7 @@ defmodule Stripe.Issuing.Cardholder do
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
               %{
-                optional(:authorization_controls) => Stripe.Types.authorization_controls(),
+                optional(:authorization_controls) => Stripe.Issuing.Types.authorization_controls(),
                 optional(:email) => String.t(),
                 optional(:is_default) => boolean,
                 optional(:metadata) => Stripe.Types.metadata(),
@@ -87,7 +87,7 @@ defmodule Stripe.Issuing.Cardholder do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
               %{
-                optional(:authorization_controls) => Stripe.Types.authorization_controls(),
+                optional(:authorization_controls) => Stripe.Issuing.Types.authorization_controls(),
                 optional(:email) => String.t(),
                 optional(:is_default) => boolean,
                 optional(:metadata) => Stripe.Types.metadata(),
