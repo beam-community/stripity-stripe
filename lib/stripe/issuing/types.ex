@@ -12,6 +12,11 @@ defmodule Stripe.Issuing.Types do
           max_approvals: non_neg_integer | nil
         }
 
+  @type billing :: %{
+          address: Stripe.Types.address(),
+          name: String.t()
+        }
+
   @type merchant_data :: %{
           category: String.t(),
           city: String.t(),

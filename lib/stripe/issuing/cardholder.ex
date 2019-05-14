@@ -18,7 +18,7 @@ defmodule Stripe.Issuing.Cardholder do
           id: Stripe.id(),
           object: String.t(),
           authorization_controls: Stripe.Issuing.Types.authorization_controls() | nil,
-          billing: Stripe.Types.billing(),
+          billing: Stripe.Issuing.Types.billing(),
           created: Stripe.timestamp(),
           email: String.t() | nil,
           is_default: boolean | nil,

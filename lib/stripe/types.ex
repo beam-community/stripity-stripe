@@ -12,11 +12,6 @@ defmodule Stripe.Types do
           state: String.t() | nil
         }
 
-  @type billing :: %{
-          address: Stripe.Types.address(),
-          name: String.t()
-        }
-
   @type fee :: %{
           amount: integer,
           application: String.t() | nil,
