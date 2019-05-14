@@ -8,8 +8,10 @@ defmodule Stripe.Issuing.TransactionTest do
 
   test "is updateable" do
     params = %{metadata: %{key: "value"}}
+
     assert {:ok, %Stripe.Issuing.Transaction{}} =
-      Stripe.Issuing.Transaction.update("ipi_123", params)
+             Stripe.Issuing.Transaction.update("ipi_123", params)
+
     assert_stripe_requested(:post, "/v1/issuing/transactions/ipi_123")
   end
 

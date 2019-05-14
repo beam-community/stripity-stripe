@@ -51,5 +51,4 @@ defmodule Stripe.Types do
           monthly_anchor: non_neg_integer | nil,
           weekly_anchor: String.t() | nil
         }
-
 end

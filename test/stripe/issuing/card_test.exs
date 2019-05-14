@@ -7,8 +7,7 @@ defmodule Stripe.Issuing.CardTest do
       type: "virtual"
     }
 
-    assert {:ok, %Stripe.Issuing.Card{}} =
-      Stripe.Issuing.Card.create(params)
+    assert {:ok, %Stripe.Issuing.Card{}} = Stripe.Issuing.Card.create(params)
 
     assert_stripe_requested(:post, "/v1/issuing/cards")
   end
@@ -20,8 +19,7 @@ defmodule Stripe.Issuing.CardTest do
 
   test "is updateable" do
     params = %{metadata: %{key: "value"}}
-    assert {:ok, %Stripe.Issuing.Card{}} =
-      Stripe.Issuing.Card.update("ic_123", params)
+    assert {:ok, %Stripe.Issuing.Card{}} = Stripe.Issuing.Card.update("ic_123", params)
     assert_stripe_requested(:post, "/v1/issuing/cards/ic_123")
   end
 

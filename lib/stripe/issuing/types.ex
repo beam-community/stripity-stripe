@@ -32,5 +32,4 @@ defmodule Stripe.Issuing.Types do
           categories: list(),
           interval: String.t()
         }
-
 end

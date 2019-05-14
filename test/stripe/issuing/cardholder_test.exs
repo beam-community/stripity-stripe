@@ -17,8 +17,7 @@ defmodule Stripe.Issuing.CardholderTest do
       }
     }
 
-    assert {:ok, %Stripe.Issuing.Cardholder{}} =
-      Stripe.Issuing.Cardholder.create(params)
+    assert {:ok, %Stripe.Issuing.Cardholder{}} = Stripe.Issuing.Cardholder.create(params)
 
     assert_stripe_requested(:post, "/v1/issuing/cardholders")
   end
@@ -30,8 +29,10 @@ defmodule Stripe.Issuing.CardholderTest do
 
   test "is updateable" do
     params = %{metadata: %{key: "value"}}
+
     assert {:ok, %Stripe.Issuing.Cardholder{}} =
-      Stripe.Issuing.Cardholder.update("ich_123", params)
+             Stripe.Issuing.Cardholder.update("ich_123", params)
+
     assert_stripe_requested(:post, "/v1/issuing/cardholders/ich_123")
   end
 

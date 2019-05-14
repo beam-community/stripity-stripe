@@ -3,26 +3,31 @@ defmodule Stripe.Issuing.AuthorizationTest do
 
   test "is retrievable" do
     assert {:ok, %Stripe.Issuing.Authorization{}} =
-      Stripe.Issuing.Authorization.retrieve("iauth_123")
+             Stripe.Issuing.Authorization.retrieve("iauth_123")
+
     assert_stripe_requested(:get, "/v1/issuing/authorizations/iauth_123")
   end
 
   test "is updateable" do
     params = %{metadata: %{key: "value"}}
+
     assert {:ok, %Stripe.Issuing.Authorization{}} =
-      Stripe.Issuing.Authorization.update("iauth_123", params)
+             Stripe.Issuing.Authorization.update("iauth_123", params)
+
     assert_stripe_requested(:post, "/v1/issuing/authorizations/iauth_123")
   end
 
   test "is approvable" do
     assert {:ok, %Stripe.Issuing.Authorization{}} =
-      Stripe.Issuing.Authorization.approve("iauth_123")
+             Stripe.Issuing.Authorization.approve("iauth_123")
+
     assert_stripe_requested(:post, "/v1/issuing/authorizations/iauth_123/approve")
   end
 
   test "is declinable" do
     assert {:ok, %Stripe.Issuing.Authorization{}} =
-      Stripe.Issuing.Authorization.decline("iauth_123")
+             Stripe.Issuing.Authorization.decline("iauth_123")
+
     assert_stripe_requested(:post, "/v1/issuing/authorizations/iauth_123/decline")
   end
 

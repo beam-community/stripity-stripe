@@ -66,10 +66,10 @@ defmodule Stripe.Issuing.Transaction do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
-              %{
-                optional(:metadata) => Stripe.Types.metadata()
-              }
-              | %{}
+               %{
+                 optional(:metadata) => Stripe.Types.metadata()
+               }
+               | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")

@@ -7,8 +7,7 @@ defmodule Stripe.Issuing.DisputeTest do
       reason: :fraudulent
     }
 
-    assert {:ok, %Stripe.Issuing.Dispute{}} =
-      Stripe.Issuing.Dispute.create(params)
+    assert {:ok, %Stripe.Issuing.Dispute{}} = Stripe.Issuing.Dispute.create(params)
 
     assert_stripe_requested(:post, "/v1/issuing/disputes")
   end
@@ -20,8 +19,7 @@ defmodule Stripe.Issuing.DisputeTest do
 
   test "is updateable" do
     params = %{metadata: %{key: "value"}}
-    assert {:ok, %Stripe.Issuing.Dispute{}} =
-      Stripe.Issuing.Dispute.update("idp_123", params)
+    assert {:ok, %Stripe.Issuing.Dispute{}} = Stripe.Issuing.Dispute.update("idp_123", params)
     assert_stripe_requested(:post, "/v1/issuing/disputes/idp_123")
   end
 

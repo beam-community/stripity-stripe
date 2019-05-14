@@ -64,16 +64,17 @@ defmodule Stripe.Issuing.Card do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
-              %{
-                optional(:authorization_controls) => Stripe.Issuing.Types.authorization_controls(),
-                optional(:cardholder) => Stripe.Issuing.Cardholder.t(),
-                optional(:metadata) => Stripe.Types.metadata(),
-                optional(:replacement_for) => t | Stripe.id(),
-                optional(:replacement_reason) => String.t(),
-                optional(:shipping) => Stripe.Types.shipping(),
-                optional(:status) => String.t()
-              }
-              | %{}
+               %{
+                 optional(:authorization_controls) =>
+                   Stripe.Issuing.Types.authorization_controls(),
+                 optional(:cardholder) => Stripe.Issuing.Cardholder.t(),
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:replacement_for) => t | Stripe.id(),
+                 optional(:replacement_reason) => String.t(),
+                 optional(:shipping) => Stripe.Types.shipping(),
+                 optional(:status) => String.t()
+               }
+               | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -98,16 +99,17 @@ defmodule Stripe.Issuing.Card do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
-              %{
-                optional(:authorization_controls) => Stripe.Issuing.Types.authorization_controls(),
-                optional(:cardholder) => Stripe.Issuing.Cardholder.t(),
-                optional(:metadata) => Stripe.Types.metadata(),
-                optional(:replacement_for) => t | Stripe.id(),
-                optional(:replacement_reason) => String.t(),
-                optional(:shipping) => Stripe.Types.shipping(),
-                optional(:status) => String.t()
-              }
-              | %{}
+               %{
+                 optional(:authorization_controls) =>
+                   Stripe.Issuing.Types.authorization_controls(),
+                 optional(:cardholder) => Stripe.Issuing.Cardholder.t(),
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:replacement_for) => t | Stripe.id(),
+                 optional(:replacement_reason) => String.t(),
+                 optional(:shipping) => Stripe.Types.shipping(),
+                 optional(:status) => String.t()
+               }
+               | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")

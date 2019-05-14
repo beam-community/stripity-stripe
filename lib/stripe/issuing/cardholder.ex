@@ -53,15 +53,16 @@ defmodule Stripe.Issuing.Cardholder do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
-              %{
-                optional(:authorization_controls) => Stripe.Issuing.Types.authorization_controls(),
-                optional(:email) => String.t(),
-                optional(:is_default) => boolean,
-                optional(:metadata) => Stripe.Types.metadata(),
-                optional(:phone_number) => String.t(),
-                optional(:status) => String.t()
-              }
-              | %{}
+               %{
+                 optional(:authorization_controls) =>
+                   Stripe.Issuing.Types.authorization_controls(),
+                 optional(:email) => String.t(),
+                 optional(:is_default) => boolean,
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:phone_number) => String.t(),
+                 optional(:status) => String.t()
+               }
+               | %{}
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
@@ -86,15 +87,16 @@ defmodule Stripe.Issuing.Cardholder do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
-              %{
-                optional(:authorization_controls) => Stripe.Issuing.Types.authorization_controls(),
-                optional(:email) => String.t(),
-                optional(:is_default) => boolean,
-                optional(:metadata) => Stripe.Types.metadata(),
-                optional(:phone_number) => String.t(),
-                optional(:status) => String.t()
-              }
-              | %{}
+               %{
+                 optional(:authorization_controls) =>
+                   Stripe.Issuing.Types.authorization_controls(),
+                 optional(:email) => String.t(),
+                 optional(:is_default) => boolean,
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:phone_number) => String.t(),
+                 optional(:status) => String.t()
+               }
+               | %{}
   def update(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
