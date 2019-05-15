@@ -85,11 +85,11 @@ defmodule Stripe.PaymentMethod do
   end
 
   @doc """
-  Dettach payment_method from customer
+  Detach payment_method from customer
   """
-  @spec dettach(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec detach(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{:payment_method => Stripe.id() | t()}
-  def dettach(%{payment_method: _} = params, opts \\ []) do
+  def detach(%{payment_method: _} = params, opts \\ []) do
     endpoint = plural_endpoint(params) <> "/detach"
 
     new_request(opts)

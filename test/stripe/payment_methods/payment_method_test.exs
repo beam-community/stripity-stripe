@@ -3,8 +3,7 @@ defmodule Stripe.PaymentMethodTest do
 
   describe "list/2" do
     test "lists all cards" do
-      assert {:ok, %Stripe.List{data: cards}} =
-               Stripe.PaymentMethod.list(%{customer: "cus_123", type: "card"})
+      assert {:ok, %Stripe.List{data: cards}} = Stripe.PaymentMethod.list(%{customer: "cus_123", type: "card"})
 
       assert_stripe_requested(:get, "/v1/payment_methods?customer=cus_123&type=card")
       assert is_list(cards)
@@ -27,9 +26,7 @@ defmodule Stripe.PaymentMethodTest do
       assert {:ok, %Stripe.PaymentMethod{}} =
                Stripe.PaymentMethod.attach(%{customer: "cus_123", payment_method: "pm_123"})
 
-      assert_stripe_requested(:post, "/v1/payment_methods/pm_123/attach",
-        body: %{customer: "cus_123"}
-      )
+      assert_stripe_requested(:post, "/v1/payment_methods/pm_123/attach", body: %{customer: "cus_123"})
     end
 
     test "attaches payment method to customer with customer provided as struct" do
@@ -39,9 +36,7 @@ defmodule Stripe.PaymentMethodTest do
                  payment_method: "pm_123"
                })
 
-      assert_stripe_requested(:post, "/v1/payment_methods/pm_123/attach",
-        body: %{customer: "cus_123"}
-      )
+      assert_stripe_requested(:post, "/v1/payment_methods/pm_123/attach", body: %{customer: "cus_123"})
     end
 
     test "attaches payment method to customer with payment method provided as struct" do
@@ -51,23 +46,21 @@ defmodule Stripe.PaymentMethodTest do
                  payment_method: %Stripe.PaymentMethod{id: "pm_123"}
                })
 
-      assert_stripe_requested(:post, "/v1/payment_methods/pm_123/attach",
-        body: %{customer: "cus_123"}
-      )
+      assert_stripe_requested(:post, "/v1/payment_methods/pm_123/attach", body: %{customer: "cus_123"})
     end
   end
 
-  describe "dettach/2" do
+  describe "detach/2" do
     test "detaches payment method from customer" do
       assert {:ok, %Stripe.PaymentMethod{}} =
-               Stripe.PaymentMethod.dettach(%{customer: "cus_123", payment_method: "pm_123"})
+               Stripe.PaymentMethod.detach(%{customer: "cus_123", payment_method: "pm_123"})
 
       assert_stripe_requested(:post, "/v1/payment_methods/pm_123/detach")
     end
 
     test "detaches payment method from customer with payment method provided as struct" do
       assert {:ok, %Stripe.PaymentMethod{}} =
-               Stripe.PaymentMethod.dettach(%{
+               Stripe.PaymentMethod.detach(%{
                  customer: "cus_123",
                  payment_method: %Stripe.PaymentMethod{id: "pm_123"}
                })
