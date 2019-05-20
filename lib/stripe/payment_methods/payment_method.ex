@@ -45,6 +45,68 @@ defmodule Stripe.PaymentMethod do
     plural_endpoint() <> "/" <> get_id!(payment_method)
   end
 
+  @type billing_details :: %{
+          optional(:address) => Stripe.Types.address(),
+          optional(:email) => String.t(),
+          optional(:name) => String.t(),
+          optional(:phone) => String.t()
+        }
+
+  @type card :: %{
+          :exp_month => integer,
+          :exp_year => integer,
+          :number => String.t(),
+          :cvc => String.t()
+        }
+
+  @doc """
+  Create a payment method.
+  """
+  @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               :type => String.t(),
+               optional(:billing_details) => billing_details(),
+               optional(:card) => card(),
+               optional(:metadata) => Stripe.Types.metadata()
+             }
+  def create(%{} = params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(plural_endpoint())
+    |> put_params(params)
+    |> put_method(:post)
+    |> make_request()
+  end
+
+  @doc """
+  Retrieve a payment method.
+  """
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def retrieve(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(plural_endpoint() <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
+  end
+
+  @doc """
+  Update a card.
+
+  Takes the `id` and a map of changes
+  """
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:billing_details) => billing_details(),
+               optional(:card) => card(),
+               optional(:metadata) => Stripe.Types.metadata()
+             }
+  def update(id, %{} = params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(plural_endpoint() <> "/#{get_id!(id)}")
+    |> put_method(:post)
+    |> put_params(params)
+    |> make_request()
+  end
+
   @doc """
   List all payment methods.
   """
