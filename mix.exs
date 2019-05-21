@@ -138,7 +138,7 @@ defmodule Stripe.Mixfile do
         Stripe.Connect.OAuth.DeauthorizeResponse,
         Stripe.Recipient,
         Stripe.Transfer,
-        Stripe.TransferReversal,
+        Stripe.TransferReversal
       ],
       Fraud: [
         Stripe.Review
