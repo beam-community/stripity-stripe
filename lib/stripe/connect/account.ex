@@ -22,16 +22,16 @@ defmodule Stripe.Account do
 
   @type legal_entity :: %{
           additional_owners: [legal_entity_additional_owner] | nil,
-          address: legal_entity_address,
-          address_kana: legal_entity_japan_address | nil,
-          address_kanji: legal_entity_japan_address | nil,
+          address: Stripe.Types.address(),
+          address_kana: Stripe.Types.japan_address() | nil,
+          address_kanji: Stripe.Types.japan_address() | nil,
           business_name: String.t() | nil,
           business_name_kana: String.t() | nil,
           business_name_kanji: String.t() | nil,
           business_tax_id_provided: boolean,
           business_vat_id_provided: boolean,
           deleted: boolean | nil,
-          dob: legal_entity_dob,
+          dob: Stripe.Types.dob(),
           first_name: String.t() | nil,
           first_name_kana: String.t() | nil,
           first_name_kanji: String.t() | nil,
@@ -40,9 +40,9 @@ defmodule Stripe.Account do
           last_name_kana: String.t() | nil,
           last_name_kanji: String.t() | nil,
           maiden_name: String.t() | nil,
-          personal_address: legal_entity_address,
-          personal_address_kana: legal_entity_japan_address | nil,
-          personal_address_kanji: legal_entity_japan_address | nil,
+          personal_address: Stripe.Types.address(),
+          personal_address_kana: Stripe.Types.japan_address() | nil,
+          personal_address_kanji: Stripe.Types.japan_address() | nil,
           personal_id_number_provided: boolean,
           phone_number: String.t() | nil,
           ssn_last_4_provided: String.t(),
@@ -52,37 +52,12 @@ defmodule Stripe.Account do
         }
 
   @type legal_entity_additional_owner :: %{
-          address: legal_entity_address,
-          dob: legal_entity_dob,
+          address: Stripe.Types.address(),
+          dob: Stripe.Types.dob(),
           first_name: String.t() | nil,
           last_name: String.t() | nil,
           maiden_name: String.t() | nil,
           verification: legal_entity_verification
-        }
-
-  @type legal_entity_address :: %{
-          city: String.t() | nil,
-          country: String.t() | nil,
-          line1: String.t() | nil,
-          line2: String.t() | nil,
-          postal_code: String.t() | nil,
-          state: String.t() | nil
-        }
-
-  @type legal_entity_dob :: %{
-          day: 1..31 | nil,
-          month: 1..12 | nil,
-          year: pos_integer | nil
-        }
-
-  @type legal_entity_japan_address :: %{
-          city: String.t() | nil,
-          country: String.t() | nil,
-          line1: String.t() | nil,
-          line2: String.t() | nil,
-          postal_code: String.t() | nil,
-          state: String.t() | nil,
-          town: String.t() | nil
         }
 
   @type legal_entity_verification :: %{
