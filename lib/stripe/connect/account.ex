@@ -37,9 +37,9 @@ defmodule Stripe.Account do
         }
 
   @type company :: %{
-          address: individual_address,
-          address_kana: individual_japan_address | nil,
-          address_kanji: individual_japan_address | nil,
+          address: Stripe.Types.address(),
+          address_kana: Stripe.Types.japan_address() | nil,
+          address_kanji: Stripe.Types.japan_address() | nil,
           directors_provided: boolean | nil,
           name: String.t() | nil,
           name_kana: String.t() | nil,
@@ -53,16 +53,16 @@ defmodule Stripe.Account do
 
   @type individual :: %{
           additional_owners: [individual_additional_owner] | nil,
-          address: individual_address,
-          address_kana: individual_japan_address | nil,
-          address_kanji: individual_japan_address | nil,
+          address: Stripe.Types.address(),
+          address_kana: Stripe.Types.japan_address() | nil,
+          address_kanji: Stripe.Types.japan_address() | nil,
           business_name: String.t() | nil,
           business_name_kana: String.t() | nil,
           business_name_kanji: String.t() | nil,
           business_tax_id_provided: boolean,
           business_vat_id_provided: boolean,
           deleted: boolean | nil,
-          dob: individual_dob,
+          dob: Stripe.Types.dob(),
           first_name: String.t() | nil,
           first_name_kana: String.t() | nil,
           first_name_kanji: String.t() | nil,
@@ -71,9 +71,9 @@ defmodule Stripe.Account do
           last_name_kana: String.t() | nil,
           last_name_kanji: String.t() | nil,
           maiden_name: String.t() | nil,
-          personal_address: individual_address,
-          personal_address_kana: individual_japan_address | nil,
-          personal_address_kanji: individual_japan_address | nil,
+          personal_address: Stripe.Types.address(),
+          personal_address_kana: Stripe.Types.japan_address() | nil,
+          personal_address_kanji: Stripe.Types.japan_address() | nil,
           personal_id_number_provided: boolean,
           phone_number: String.t() | nil,
           ssn_last_4_provided: String.t(),
@@ -83,37 +83,12 @@ defmodule Stripe.Account do
         }
 
   @type individual_additional_owner :: %{
-          address: individual_address,
-          dob: individual_dob,
+          address: Stripe.Types.address(),
+          dob: Stripe.Types.dob(),
           first_name: String.t() | nil,
           last_name: String.t() | nil,
           maiden_name: String.t() | nil,
           verification: individual_verification
-        }
-
-  @type individual_address :: %{
-          city: String.t() | nil,
-          country: String.t() | nil,
-          line1: String.t() | nil,
-          line2: String.t() | nil,
-          postal_code: String.t() | nil,
-          state: String.t() | nil
-        }
-
-  @type individual_dob :: %{
-          day: 1..31 | nil,
-          month: 1..12 | nil,
-          year: pos_integer | nil
-        }
-
-  @type individual_japan_address :: %{
-          city: String.t() | nil,
-          country: String.t() | nil,
-          line1: String.t() | nil,
-          line2: String.t() | nil,
-          postal_code: String.t() | nil,
-          state: String.t() | nil,
-          town: String.t() | nil
         }
 
   @type individual_verification :: %{
@@ -202,7 +177,7 @@ defmodule Stripe.Account do
     :requirements,
     :settings,
     :tos_acceptance,
-    :type,
+    :type
   ]
 
   @singular_endpoint "account"
@@ -213,19 +188,19 @@ defmodule Stripe.Account do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-              :type => String.t(),
-              optional(:country) => String.t(),
-              optional(:account_token) => String.t(),
-              optional(:business_profile) => business_profile,
-              optional(:business_type) => String.t(),
-              optional(:company) => company,
-              optional(:email) => String.t(),
-              optional(:external_account) => String.t(),
-              optional(:individual) => individual,
-              optional(:metadata) => Stripe.Types.metadata(),
-              optional(:requested_capabilities) => capabilities,
-              optional(:settings) => settings,
-              optional(:tos_acceptance) => tos_acceptance
+               :type => String.t(),
+               optional(:country) => String.t(),
+               optional(:account_token) => String.t(),
+               optional(:business_profile) => business_profile,
+               optional(:business_type) => String.t(),
+               optional(:company) => company,
+               optional(:email) => String.t(),
+               optional(:external_account) => String.t(),
+               optional(:individual) => individual,
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:requested_capabilities) => capabilities,
+               optional(:settings) => settings,
+               optional(:tos_acceptance) => tos_acceptance
              }
   def create(params, opts \\ []) do
     new_request(opts)
