@@ -42,7 +42,7 @@ defmodule Stripe.CreditNote do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
-          amount: number,
+          amount: integer,
           created: Stripe.timestamp(),
           currency: String.t(),
           currency: String.t(),
