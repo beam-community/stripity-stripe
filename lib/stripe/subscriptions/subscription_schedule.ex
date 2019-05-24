@@ -25,7 +25,6 @@ defmodule Stripe.SubscriptionSchedule do
           id: Stripe.id(),
           object: String.t(),
           created: Stripe.timestamp(),
-          created: String.t(),
           canceled_at: Stripe.timestamp() | nil,
           released_at: Stripe.timestamp() | nil,
           completed_at: Stripe.timestamp() | nil,
