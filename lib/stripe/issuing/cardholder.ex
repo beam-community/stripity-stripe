@@ -27,7 +27,7 @@ defmodule Stripe.Issuing.Cardholder do
           name: String.t(),
           phone_number: String.t() | nil,
           status: String.t() | nil,
-          type: String.t()
+          type: atom() | String.t()
         }
 
   defstruct [
@@ -54,6 +54,9 @@ defmodule Stripe.Issuing.Cardholder do
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
+                 :billing => Stripe.Issuing.Types.billing(),
+                 :name => String.t(),
+                 :type => :individual | :business_entity,
                  optional(:authorization_controls) =>
                    Stripe.Issuing.Types.authorization_controls(),
                  optional(:email) => String.t(),

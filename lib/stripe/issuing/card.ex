@@ -22,7 +22,7 @@ defmodule Stripe.Issuing.Card do
           brand: String.t(),
           cardholder: Stripe.Issuing.Cardholder.t(),
           created: Stripe.timestamp(),
-          currency: String.t() | nil,
+          currency: String.t(),
           exp_month: pos_integer,
           exp_year: pos_integer,
           last4: String.t(),
@@ -33,7 +33,7 @@ defmodule Stripe.Issuing.Card do
           replacement_reason: String.t() | nil,
           shipping: Stripe.Types.shipping() | nil,
           status: String.t(),
-          type: String.t()
+          type: atom() | String.t()
         }
 
   defstruct [
@@ -65,6 +65,8 @@ defmodule Stripe.Issuing.Card do
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
+                 :currency => String.t(),
+                 :type => :physical | :virtual,
                  optional(:authorization_controls) =>
                    Stripe.Issuing.Types.authorization_controls(),
                  optional(:cardholder) => Stripe.Issuing.Cardholder.t(),

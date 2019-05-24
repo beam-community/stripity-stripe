@@ -4,7 +4,7 @@ defmodule Stripe.Issuing.CardTest do
   test "is creatable" do
     params = %{
       currency: "usd",
-      type: "virtual"
+      type: :virtual
     }
 
     assert {:ok, %Stripe.Issuing.Card{}} = Stripe.Issuing.Card.create(params)

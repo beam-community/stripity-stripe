@@ -35,7 +35,7 @@ defmodule Stripe.Issuing.Dispute do
           evidence: evidence(),
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
-          reason: String.t(),
+          reason: atom() | String.t(),
           status: String.t()
         }
 
@@ -61,6 +61,8 @@ defmodule Stripe.Issuing.Dispute do
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
+                 :disputed_transaction => Stripe.id() | Stripe.Issuing.Transaction.t(),
+                 :reason => :other | :fradulent,
                  optional(:amount) => non_neg_integer,
                  optional(:evidence) => evidence(),
                  optional(:metadata) => Stripe.Types.metadata()
@@ -71,6 +73,7 @@ defmodule Stripe.Issuing.Dispute do
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
+    |> cast_to_id([:disputed_transaction])
     |> make_request()
   end
 
