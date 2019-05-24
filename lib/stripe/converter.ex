@@ -48,6 +48,7 @@ defmodule Stripe.Converter do
     source
     subscription
     subscription_item
+    subscription_schedule
     transfer
     transfer_reversal
     token
