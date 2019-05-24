@@ -20,7 +20,7 @@ defmodule Stripe.Review do
           latitude: float,
           longitude: float,
           region: String.t()
-  }
+        }
 
   @type t :: %__MODULE__{
           id: Stripe.id(),

@@ -22,6 +22,7 @@ defmodule Stripe.Converter do
     checkout.session
     country_spec
     coupon
+    credit_note
     customer
     discount
     dispute
@@ -36,6 +37,7 @@ defmodule Stripe.Converter do
     order
     order_return
     payment_intent
+    payment_method
     payout
     plan
     product
@@ -46,6 +48,7 @@ defmodule Stripe.Converter do
     source
     subscription
     subscription_item
+    subscription_schedule
     transfer
     transfer_reversal
     token
