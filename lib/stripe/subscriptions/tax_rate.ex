@@ -79,9 +79,9 @@ defmodule Stripe.TaxRate do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
-                 :percentage => number,
-                 :display_name => String.t(),
-                 :inclusive => boolean,
+                 optional(:percentage) => number,
+                 optional(:display_name) => String.t(),
+                 optional(:inclusive) => boolean,
                  optional(:active) => boolean,
                  optional(:description) => String.t(),
                  optional(:metadata) => Stripe.Types.metadata(),
