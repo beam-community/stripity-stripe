@@ -115,6 +115,7 @@ defmodule Stripe.Mixfile do
       ],
       Billing: [
         Stripe.Coupon,
+        Stripe.CreditNote,
         Stripe.Discount,
         Stripe.Invoice,
         Stripe.Invoiceitem,
@@ -123,7 +124,9 @@ defmodule Stripe.Mixfile do
         Stripe.Plan,
         Stripe.Subscription,
         Stripe.SubscriptionItem,
-        Stripe.SubscriptionItem.Usage
+        Stripe.SubscriptionItem.Usage,
+        Stripe.SubscriptionSchedule,
+        Stripe.TaxRate
       ],
       Connect: [
         Stripe.Account,
