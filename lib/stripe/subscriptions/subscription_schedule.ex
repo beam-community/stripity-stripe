@@ -192,7 +192,7 @@ defmodule Stripe.SubscriptionSchedule do
   @doc """
   Releases a subscription schedule
 
-  Takes the subscription schedule `id.
+  Takes the subscription schedule `id`.
   """
 
   @spec release(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
