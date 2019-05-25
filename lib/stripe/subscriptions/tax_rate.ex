@@ -18,7 +18,7 @@ defmodule Stripe.TaxRate do
           jurisdiction: String.t() | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
-          percentage: number
+          percentage: integer
         }
 
   defstruct [
