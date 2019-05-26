@@ -64,7 +64,7 @@ defmodule Stripe.Mixfile do
     [
       {:dialyxir, "1.0.0-rc.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.20.2", only: :dev},
-      {:excoveralls, "~> 0.8.1", only: :test},
+      {:excoveralls, "~> 0.11.1", only: :test},
       {:hackney, "~> 1.15"},
       {:inch_ex, "~> 2.0", only: [:dev, :test]},
       {:mox, "~> 0.4", only: :test},
