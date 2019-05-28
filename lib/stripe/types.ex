@@ -27,9 +27,12 @@ defmodule Stripe.Types do
   @type shipping :: %{
           address: Stripe.Types.address(),
           carrier: String.t() | nil,
+          eta: Stripe.timestamp() | nil,
           name: String.t(),
           phone: String.t() | nil,
-          tracking_number: String.t() | nil
+          status: String.t() | nil,
+          tracking_number: String.t() | nil,
+          tracking_url: String.t() | nil
         }
 
   @type tax_info :: %{
