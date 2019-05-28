@@ -66,6 +66,8 @@ defmodule Stripe.InvoiceTest do
   describe "finalize/3" do
     test "finalizes an invoice" do
       {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+
       assert {:ok, %Stripe.Invoice{} = _paid_invoice} = Stripe.Invoice.finalize(invoice, %{})
       assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/finalize")
     end
