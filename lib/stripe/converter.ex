@@ -31,6 +31,12 @@ defmodule Stripe.Converter do
     file
     invoice
     invoiceitem
+    issuing.authorization
+    issuing.card
+    issuing.card_details
+    issuing.cardholder
+    issuing.dispute
+    issuing.transaction
     line_item
     list
     oauth
