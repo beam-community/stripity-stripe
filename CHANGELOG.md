@@ -1,5 +1,15 @@
 # Latest
 
+## 2.3.0
+
+- [Add support for Subscription Schedules](https://github.com/code-corps/stripity_stripe/pull/480)
+- [Add Stripe Issuing](https://github.com/code-corps/stripity_stripe/pull/493)
+- [Add CreditNote api calls](https://github.com/code-corps/stripity_stripe/pull/492)
+- [Add tax_rate struct and api calls](https://github.com/code-corps/stripity_stripe/pull/491)
+- [Format mix.exs to pass CI](https://github.com/code-corps/stripity_stripe/pull/498)
+- [Reorganize docs](https://github.com/code-corps/stripity_stripe/pull/496)
+- [Add PaymentMethods module, with struct, list/2, attach/2, detach/2](https://github.com/code-corps/stripity_stripe/pull/495)
+
 ## 2.2.3
 
 - [Configurable json serializer - You can now use Jason instead of Poison](https://github.com/code-corps/stripity_stripe/pull/446)
