@@ -39,4 +39,40 @@ defmodule Stripe.APITest do
     {:ok, body} = Stripe.API.oauth_request(:post, "token", %{})
     assert Map.keys(body) |> Enum.member?("Authorization") == false
   end
+
+  test "reads hackney timeout opts from config" do
+    # Return request opts as response body
+    defmodule HackneyMock do
+      def request(_, _, headers, _, opts) do
+        kv_opts =
+          opts
+          |> Enum.reduce(%{}, fn opt, acc ->
+            case opt do
+              {k, v} ->
+                Map.put(acc, k, v)
+              _ ->
+                Map.put(acc, opt, opt)
+            end
+          end)
+
+        {:ok, 200, headers, Poison.encode!(kv_opts)}
+      end
+    end
+
+    Application.put_env(:stripity_stripe, :http_module, HackneyMock)
+
+    {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
+    refute Map.has_key?(request_opts, "connect_timeout")
+    refute Map.has_key?(request_opts, "recv_timeout")
+
+    Application.put_env(:stripity_stripe, :hackney_opts, [{:connect_timeout, 1000}, {:recv_timeout, 5000}])
+
+    {:ok, request_opts} = Stripe.API.oauth_request(:post, "token", %{})
+    assert request_opts["connect_timeout"] == 1000
+    assert request_opts["recv_timeout"] == 5000
+
+    {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
+    assert request_opts["connect_timeout"] == 1000
+    assert request_opts["recv_timeout"] == 5000
+  end
 end
