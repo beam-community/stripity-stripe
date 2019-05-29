@@ -50,6 +50,7 @@ defmodule Stripe.APITest do
             case opt do
               {k, v} ->
                 Map.put(acc, k, v)
+
               _ ->
                 Map.put(acc, opt, opt)
             end
@@ -65,7 +66,10 @@ defmodule Stripe.APITest do
     refute Map.has_key?(request_opts, "connect_timeout")
     refute Map.has_key?(request_opts, "recv_timeout")
 
-    Application.put_env(:stripity_stripe, :hackney_opts, [{:connect_timeout, 1000}, {:recv_timeout, 5000}])
+    Application.put_env(:stripity_stripe, :hackney_opts, [
+      {:connect_timeout, 1000},
+      {:recv_timeout, 5000}
+    ])
 
     {:ok, request_opts} = Stripe.API.oauth_request(:post, "token", %{})
     assert request_opts["connect_timeout"] == 1000
