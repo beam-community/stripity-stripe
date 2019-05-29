@@ -253,7 +253,8 @@ defmodule Stripe.Invoice do
   @doc """
   finalize an invoice.
   """
-  @spec finalize(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec finalize(Stripe.id() | t, params, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
                  :id => String.t(),
