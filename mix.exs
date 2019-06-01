@@ -23,6 +23,8 @@ defmodule Stripe.Mixfile do
       version: "2.2.3",
       source_url: "https://github.com/code-corps/stripity_stripe/",
       docs: [
+        main: "readme",
+        extras: ["README.md"],
         groups_for_modules: groups_for_modules(),
         nest_modules_by_prefix: nest_modules_by_prefix()
       ]
@@ -108,6 +110,7 @@ defmodule Stripe.Mixfile do
       "Payment Methods": [
         Stripe.BankAccount,
         Stripe.Card,
+        Stripe.PaymentMethod,
         Stripe.Source
       ],
       Checkout: [
@@ -145,6 +148,15 @@ defmodule Stripe.Mixfile do
       ],
       Fraud: [
         Stripe.Review
+      ],
+      Issuing: [
+        Stripe.Issuing.Authorization,
+        Stripe.Issuing.Card,
+        Stripe.Issuing.CardDetails,
+        Stripe.Issuing.Cardholder,
+        Stripe.Issuing.Dispute,
+        Stripe.Issuing.Transaction,
+        Stripe.Issuing.Types
       ],
       "Relay/Orders": [
         Stripe.Order,
