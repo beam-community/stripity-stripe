@@ -1,8 +1,6 @@
 language: elixir
 dist: trusty
 elixir:
-  - 1.5
-  - 1.6
   - 1.7
   - 1.8
 otp_release:

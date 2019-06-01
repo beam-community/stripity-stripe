@@ -10,7 +10,7 @@ defmodule Stripe.Mixfile do
         plt_add_apps: [:mix],
         plt_file: {:no_warn, "priv/plts/stripity_stripe.plt"}
       ],
-      elixir: "~> 1.5",
+      elixir: "~> 1.7",
       package: package(),
       elixirc_paths: elixirc_paths(Mix.env()),
       preferred_cli_env: [
@@ -20,9 +20,11 @@ defmodule Stripe.Mixfile do
         "coveralls.html": :test
       ],
       test_coverage: [tool: ExCoveralls],
-      version: "2.2.3",
+      version: "2.3.0",
       source_url: "https://github.com/code-corps/stripity_stripe/",
       docs: [
+        main: "readme",
+        extras: ["README.md"],
         groups_for_modules: groups_for_modules(),
         nest_modules_by_prefix: nest_modules_by_prefix()
       ]
@@ -108,6 +110,7 @@ defmodule Stripe.Mixfile do
       "Payment Methods": [
         Stripe.BankAccount,
         Stripe.Card,
+        Stripe.PaymentMethod,
         Stripe.Source
       ],
       Checkout: [
@@ -115,6 +118,7 @@ defmodule Stripe.Mixfile do
       ],
       Billing: [
         Stripe.Coupon,
+        Stripe.CreditNote,
         Stripe.Discount,
         Stripe.Invoice,
         Stripe.Invoiceitem,
@@ -123,7 +127,9 @@ defmodule Stripe.Mixfile do
         Stripe.Plan,
         Stripe.Subscription,
         Stripe.SubscriptionItem,
-        Stripe.SubscriptionItem.Usage
+        Stripe.SubscriptionItem.Usage,
+        Stripe.SubscriptionSchedule,
+        Stripe.TaxRate
       ],
       Connect: [
         Stripe.Account,
@@ -142,6 +148,15 @@ defmodule Stripe.Mixfile do
       ],
       Fraud: [
         Stripe.Review
+      ],
+      Issuing: [
+        Stripe.Issuing.Authorization,
+        Stripe.Issuing.Card,
+        Stripe.Issuing.CardDetails,
+        Stripe.Issuing.Cardholder,
+        Stripe.Issuing.Dispute,
+        Stripe.Issuing.Transaction,
+        Stripe.Issuing.Types
       ],
       "Relay/Orders": [
         Stripe.Order,
