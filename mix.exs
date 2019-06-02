@@ -58,7 +58,7 @@ defmodule Stripe.Mixfile do
 
   defp apps(:test), do: apps()
   defp apps(_), do: apps()
-  defp apps(), do: [:hackney, :logger, :poison, :uri_query]
+  defp apps(), do: [:hackney, :logger, :jason, :uri_query]
 
   defp deps do
     [
@@ -68,7 +68,7 @@ defmodule Stripe.Mixfile do
       {:hackney, "~> 1.15"},
       {:inch_ex, "~> 2.0", only: [:dev, :test]},
       {:mox, "~> 0.4", only: :test},
-      {:poison, "~> 2.0 or ~> 3.0"},
+      {:jason, "~> 1.1"},
       {:uri_query, "~> 0.1.2"},
       {:exexec, "~> 0.1.0", only: :test}
     ]
