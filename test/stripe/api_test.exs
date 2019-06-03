@@ -24,7 +24,7 @@ defmodule Stripe.APITest do
           headers
           |> Enum.reduce(%{}, fn {k, v}, acc -> Map.put(acc, k, v) end)
 
-        {:ok, 200, headers, Poison.encode!(kv_headers)}
+        {:ok, 200, headers, Jason.encode!(kv_headers)}
       end
     end
 

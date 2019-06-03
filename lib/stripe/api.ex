@@ -21,11 +21,11 @@ defmodule Stripe.API do
   @doc """
   In config.exs your implicit or expicit configuration is:
     config :stripity_stripe,
-      json_library: Jason # defaults to Poison but can be configured to Jason
+      json_library: Poison # defaults to Jason but can be configured to Poison
   """
   @spec json_library() :: module
   def json_library() do
-    Config.resolve(:json_library, Poison)
+    Config.resolve(:json_library, Jason)
   end
 
   def supervisor_children do

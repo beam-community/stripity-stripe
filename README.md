@@ -74,10 +74,10 @@ config :stripity_stripe, api_key: {MyApp.Secrets, :stripe_secret, []}
 config :stripity_stripe, api_key: fn -> System.get_env("STRIPE_SECRET") end
 ```
 
-Moreover, if you are using Jason instead of Poison, you can configure the library to use Jason like so:
+Moreover, if you are using Poison instead of Jason, you can configure the library to use Poison like so:
 
 ```ex
-config :stripity_stripe, json_library: Jason
+config :stripity_stripe, json_library: Poison
 ```
 
 ## Note: Object Expansion

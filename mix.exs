@@ -58,17 +58,17 @@ defmodule Stripe.Mixfile do
 
   defp apps(:test), do: apps()
   defp apps(_), do: apps()
-  defp apps(), do: [:hackney, :logger, :poison, :uri_query]
+  defp apps(), do: [:hackney, :logger, :jason, :uri_query]
 
   defp deps do
     [
       {:dialyxir, "1.0.0-rc.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.20.2", only: :dev},
-      {:excoveralls, "~> 0.8.1", only: :test},
+      {:excoveralls, "~> 0.11.1", only: :test},
       {:hackney, "~> 1.15"},
-      {:inch_ex, "~> 0.5", only: [:dev, :test]},
+      {:inch_ex, "~> 2.0", only: [:dev, :test]},
       {:mox, "~> 0.4", only: :test},
-      {:poison, "~> 2.0 or ~> 3.0"},
+      {:jason, "~> 1.1"},
       {:uri_query, "~> 0.1.2"},
       {:exexec, "~> 0.1.0", only: :test}
     ]
