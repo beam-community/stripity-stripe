@@ -264,4 +264,15 @@ defmodule Stripe.Invoice do
     |> put_method(:post)
     |> make_request()
   end
+
+  @doc """
+  Send an invoice
+  """
+  @spec send(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def send(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/send")
+    |> put_method(:post)
+    |> make_request()
+  end
 end
