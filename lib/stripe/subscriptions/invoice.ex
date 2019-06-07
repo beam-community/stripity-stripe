@@ -37,7 +37,7 @@ defmodule Stripe.Invoice do
           customer_email: String.t() | nil,
           customer_name: String.t() | nil,
           customer_phone: String.t() | nil,
-          customer_shipping: String.Types.shipping() | nil,
+          customer_shipping: Stripe.Types.shipping() | nil,
           customer_tax_exempt: String.t() | nil,
           customer_tax_ids: Stripe.List.t(map) | nil,
           custom_fields: custom_fields() | nil,
