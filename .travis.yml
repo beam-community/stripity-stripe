@@ -30,7 +30,7 @@ before_install:
 script:
   - |
       if [ "$TRAVIS_ELIXIR_VERSION" == "1.8" ]; then
-        mix format --dry-run --check-formatted; 
+        mix format --dry-run --check-formatted;
       fi
   - mix coveralls.travis
   - MIX_ENV=dev mix dialyzer --halt-exit-status

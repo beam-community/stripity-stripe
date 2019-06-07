@@ -20,18 +20,49 @@ defmodule Stripe.Account do
           cvc_failure: boolean
         }
 
-  @type legal_entity :: %{
-          additional_owners: [legal_entity_additional_owner] | nil,
-          address: legal_entity_address,
-          address_kana: legal_entity_japan_address | nil,
-          address_kanji: legal_entity_japan_address | nil,
+  @type requirements :: %{
+          current_deadline: Stripe.timestamp() | nil,
+          currently_due: Stripe.List.t(String.t()) | nil,
+          disabled_reason: String.t() | nil,
+          eventually_due: Stripe.List.t(String.t()) | nil,
+          past_due: Stripe.List.t(String.t()) | nil
+        }
+
+  @type settings :: %{
+          branding: map | nil,
+          card_payments: map | nil,
+          dashboard: map | nil,
+          payments: map | nil,
+          payouts: map | nil
+        }
+
+  @type company :: %{
+          address: Stripe.Types.address(),
+          address_kana: Stripe.Types.japan_address() | nil,
+          address_kanji: Stripe.Types.japan_address() | nil,
+          directors_provided: boolean | nil,
+          name: String.t() | nil,
+          name_kana: String.t() | nil,
+          name_kanji: String.t() | nil,
+          owners_provided: boolean | nil,
+          phone: String.t() | nil,
+          tax_id_provided: boolean | nil,
+          tax_id_registar: String.t(),
+          vat_id_provided: boolean | nil
+        }
+
+  @type individual :: %{
+          additional_owners: [individual_additional_owner] | nil,
+          address: Stripe.Types.address(),
+          address_kana: Stripe.Types.japan_address() | nil,
+          address_kanji: Stripe.Types.japan_address() | nil,
           business_name: String.t() | nil,
           business_name_kana: String.t() | nil,
           business_name_kanji: String.t() | nil,
           business_tax_id_provided: boolean,
           business_vat_id_provided: boolean,
           deleted: boolean | nil,
-          dob: legal_entity_dob,
+          dob: Stripe.Types.dob(),
           first_name: String.t() | nil,
           first_name_kana: String.t() | nil,
           first_name_kanji: String.t() | nil,
@@ -40,52 +71,27 @@ defmodule Stripe.Account do
           last_name_kana: String.t() | nil,
           last_name_kanji: String.t() | nil,
           maiden_name: String.t() | nil,
-          personal_address: legal_entity_address,
-          personal_address_kana: legal_entity_japan_address | nil,
-          personal_address_kanji: legal_entity_japan_address | nil,
+          personal_address: Stripe.Types.address(),
+          personal_address_kana: Stripe.Types.japan_address() | nil,
+          personal_address_kanji: Stripe.Types.japan_address() | nil,
           personal_id_number_provided: boolean,
           phone_number: String.t() | nil,
           ssn_last_4_provided: String.t(),
           tax_id_registar: String.t(),
           type: String.t() | nil,
-          verification: legal_entity_verification
+          verification: individual_verification
         }
 
-  @type legal_entity_additional_owner :: %{
-          address: legal_entity_address,
-          dob: legal_entity_dob,
+  @type individual_additional_owner :: %{
+          address: Stripe.Types.address(),
+          dob: Stripe.Types.dob(),
           first_name: String.t() | nil,
           last_name: String.t() | nil,
           maiden_name: String.t() | nil,
-          verification: legal_entity_verification
+          verification: individual_verification
         }
 
-  @type legal_entity_address :: %{
-          city: String.t() | nil,
-          country: String.t() | nil,
-          line1: String.t() | nil,
-          line2: String.t() | nil,
-          postal_code: String.t() | nil,
-          state: String.t() | nil
-        }
-
-  @type legal_entity_dob :: %{
-          day: 1..31 | nil,
-          month: 1..12 | nil,
-          year: pos_integer | nil
-        }
-
-  @type legal_entity_japan_address :: %{
-          city: String.t() | nil,
-          country: String.t() | nil,
-          line1: String.t() | nil,
-          line2: String.t() | nil,
-          postal_code: String.t() | nil,
-          state: String.t() | nil,
-          town: String.t() | nil
-        }
-
-  @type legal_entity_verification :: %{
+  @type individual_verification :: %{
           details: String.t() | nil,
           details_code: String.t() | nil,
           document: Stripe.id() | Stripe.FileUpload.t() | nil,
@@ -104,106 +110,97 @@ defmodule Stripe.Account do
           fields_needed: [String.t()]
         }
 
+  @type business_profile :: %{
+          mcc: String.t() | nil,
+          name: String.t() | nil,
+          product_description: String.t() | nil,
+          support_address: %{
+            city: String.t() | nil,
+            country: String.t() | nil,
+            line1: String.t() | nil,
+            line2: String.t() | nil,
+            postal_code: String.t() | nil,
+            state: String.t() | nil
+          },
+          support_email: String.t() | nil,
+          support_phone: String.t() | nil,
+          support_url: String.t() | nil,
+          url: String.t() | nil
+        }
+
+  @type capabilities :: %{
+          card_payments: String.t() | nil,
+          legacy_payments: String.t() | nil,
+          platform_payments: String.t() | nil
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
-          business_logo: String.t() | nil,
-          business_name: String.t() | nil,
-          business_url: String.t() | nil,
+          business_profile: business_profile | nil,
+          business_type: String.t() | nil,
+          capabilities: capabilities | nil,
           charges_enabled: boolean,
-          created: Stripe.timestamp() | nil,
+          company: company | nil,
           country: String.t(),
-          debit_negative_balances: boolean,
-          decline_charge_on: decline_charge_on,
+          created: Stripe.timestamp() | nil,
           default_currency: String.t(),
           details_submitted: boolean,
-          display_name: String.t() | nil,
           email: String.t() | nil,
           external_accounts: Stripe.List.t(Stripe.BankAccount.t() | Stripe.Card.t()),
-          legal_entity: legal_entity,
+          individual: individual | nil,
           metadata: Stripe.Types.metadata(),
-          payout_schedule: Stripe.Types.transfer_schedule(),
-          payout_statement_descriptor: String.t() | nil,
-          payouts_enabled: boolean,
-          product_description: String.t() | nil,
-          statement_descriptor: String.t() | nil,
-          support_email: String.t() | nil,
-          support_phone: String.t() | nil,
-          timezone: String.t() | nil,
-          tos_acceptance: tos_acceptance,
-          type: String.t(),
-          verification: verification
+          payouts_enabled: boolean | nil,
+          requirements: requirements | nil,
+          settings: settings | nil,
+          tos_acceptance: tos_acceptance | nil,
+          type: String.t()
         }
 
   defstruct [
     :id,
     :object,
-    :business_logo,
-    :business_name,
-    :business_url,
+    :business_profile,
+    :business_type,
+    :capabilities,
     :charges_enabled,
+    :company,
     :country,
     :created,
-    :debit_negative_balances,
-    :decline_charge_on,
     :default_currency,
-    :deleted,
     :details_submitted,
-    :display_name,
     :email,
     :external_accounts,
-    :legal_entity,
+    :individual,
     :metadata,
-    :payout_schedule,
-    :payout_statement_descriptor,
     :payouts_enabled,
-    :product_description,
-    :statement_descriptor,
-    :support_email,
-    :support_phone,
-    :timezone,
+    :requirements,
+    :settings,
     :tos_acceptance,
-    :transfers_enabled,
-    :type,
-    :verification
+    :type
   ]
 
   @singular_endpoint "account"
   @plural_endpoint "accounts"
-
-  @type create_params :: %{
-          :type => String.t(),
-          optional(:account_token) => String.t(),
-          optional(:business_logo) => String.t(),
-          optional(:business_name) => String.t(),
-          optional(:business_primary_color) => String.t(),
-          optional(:business_url) => String.t(),
-          optional(:country) => String.t(),
-          optional(:debit_negative_balances) => boolean,
-          optional(:decline_charge_on) => decline_charge_on,
-          optional(:default_currency) => String.t(),
-          optional(:email) => String.t(),
-          optional(:external_account) => String.t(),
-          optional(:legal_entity) => legal_entity,
-          optional(:metadata) => Stripe.Types.metadata(),
-          optional(:payout_schedule) => Stripe.Types.transfer_schedule(),
-          optional(:payout_statement_descriptor) => String.t(),
-          optional(:product_description) => String.t(),
-          optional(:statement_descriptor) => String.t(),
-          optional(:support_email) => String.t(),
-          optional(:support_phone) => String.t(),
-          optional(:support_url) => String.t(),
-          optional(:tos_acceptance) => tos_acceptance
-        }
 
   @doc """
   Create an account.
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
+               :type => String.t(),
                optional(:country) => String.t(),
+               optional(:account_token) => String.t(),
+               optional(:business_profile) => business_profile,
+               optional(:business_type) => String.t(),
+               optional(:company) => company,
                optional(:email) => String.t(),
-               optional(:type) => String.t()
+               optional(:external_account) => String.t(),
+               optional(:individual) => individual,
+               optional(:metadata) => Stripe.Types.metadata(),
+               optional(:requested_capabilities) => capabilities,
+               optional(:settings) => settings,
+               optional(:tos_acceptance) => tos_acceptance
              }
   def create(params, opts \\ []) do
     new_request(opts)
@@ -240,30 +237,6 @@ defmodule Stripe.Account do
     |> make_request()
   end
 
-  @type update_params :: %{
-          optional(:account_token) => String.t(),
-          optional(:business_logo) => String.t(),
-          optional(:business_name) => String.t(),
-          optional(:business_primary_color) => String.t(),
-          optional(:business_url) => String.t(),
-          optional(:country) => String.t(),
-          optional(:debit_negative_balances) => boolean,
-          optional(:decline_charge_on) => decline_charge_on,
-          optional(:default_currency) => String.t(),
-          optional(:email) => String.t(),
-          optional(:external_account) => String.t(),
-          optional(:legal_entity) => legal_entity,
-          optional(:metadata) => Stripe.Types.metadata(),
-          optional(:payout_schedule) => Stripe.Types.transfer_schedule(),
-          optional(:payout_statement_descriptor) => String.t(),
-          optional(:product_description) => String.t(),
-          optional(:statement_descriptor) => String.t(),
-          optional(:support_email) => String.t(),
-          optional(:support_phone) => String.t(),
-          optional(:support_url) => String.t(),
-          optional(:tos_acceptance) => tos_acceptance
-        }
-
   @doc """
   Update an account.
 
@@ -271,24 +244,17 @@ defmodule Stripe.Account do
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               optional(:business_logo) => String.t(),
-               optional(:business_name) => String.t(),
-               optional(:business_primary_color) => String.t(),
-               optional(:business_url) => String.t(),
-               optional(:double_negative_balances) => boolean,
-               optional(:decline_charge_on) => decline_charge_on,
+               optional(:account_token) => String.t(),
+               optional(:business_profile) => business_profile,
+               optional(:business_type) => String.t(),
+               optional(:company) => company,
                optional(:default_currency) => String.t(),
                optional(:email) => String.t(),
                optional(:external_accounts) => String.t(),
-               optional(:legal_entity) => legal_entity,
+               optional(:individual) => individual,
                optional(:metadata) => Stripe.Types.metadata(),
-               optional(:payout_schedule) => Stripe.Types.transfer_schedule(),
-               optional(:payout_statement_descriptor) => String.t(),
-               optional(:product_description) => String.t(),
-               optional(:statement_descriptor) => String.t(),
-               optional(:support_phone) => String.t(),
-               optional(:support_email) => String.t(),
-               optional(:support_url) => String.t(),
+               optional(:requested_capabilities) => capabilities,
+               optional(:settings) => settings,
                optional(:tos_acceptance) => tos_acceptance
              }
   def update(id, params, opts \\ []) do
