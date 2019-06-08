@@ -9,10 +9,10 @@ defmodule Stripe.LineItem do
   import Stripe.Request
 
   @type tax_amount :: %{
-    amount: integer,
-    inclusive: boolean,
-    tax_rate: Stripe.id() | Stripe.TaxRate.t()
-  }
+          amount: integer,
+          inclusive: boolean,
+          tax_rate: Stripe.id() | Stripe.TaxRate.t()
+        }
 
   @type t :: %__MODULE__{
           id: Stripe.id(),
