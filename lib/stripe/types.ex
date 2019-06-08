@@ -51,6 +51,11 @@ defmodule Stripe.Types do
           tracking_url: String.t() | nil
         }
 
+  @type subscription_billing_thresholds :: %{
+          amount_gte: integer | nil,
+          reset_billing_cycle_anchor: boolean | nil
+        }
+
   @type tax_info :: %{
           type: String.t(),
           tax_id: String.t() | nil
