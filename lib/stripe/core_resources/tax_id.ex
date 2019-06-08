@@ -128,15 +128,13 @@ defmodule Stripe.TaxID do
   See [Stripe docs](https://stripe.com/docs/api/customer_tax_ids/list)
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
-        when params:
-               %{
-                 optional(:customer) => Stripe.id() | Stripe.Customer.t(),
-                 optional(:ending_before) => t | Stripe.id(),
-                 optional(:limit) => 1..100,
-                 optional(:starting_after) => t | Stripe.id()
-               }
-               | %{}
-  def list(params \\ %{}, opts \\ []) do
+        when params: %{
+               :customer => Stripe.id() | Stripe.Customer.t(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:starting_after) => t | Stripe.id()
+             }
+  def list(%{customer: _} = params, opts \\ []) do
     updated_params =
       params
       |> Map.delete(:customer)
