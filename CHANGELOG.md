@@ -1,5 +1,11 @@
 # Latest
 
+## 2.4.0
+
+- [Update Stripe version](https://github.com/code-corps/stripity_stripe/pull/483)
+- [Use Jason over Poison](https://github.com/code-corps/stripity_stripe/pull/509)
+- [Set minimum elixir version to 1.7](https://github.com/code-corps/stripity_stripe/pull/504)
+
 ## 2.3.0
 
 - [Add support for Subscription Schedules](https://github.com/code-corps/stripity_stripe/pull/480)
