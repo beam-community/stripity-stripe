@@ -266,7 +266,7 @@ defmodule Stripe.Invoice do
   end
 
   @doc """
-  Send an invoice
+  Send an invoice. https://stripe.com/docs/api/invoices/send
   """
   @spec send(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def send(id, opts \\ []) do
