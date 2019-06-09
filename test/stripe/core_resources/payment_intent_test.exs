@@ -14,7 +14,7 @@ defmodule Stripe.PaymentIntentTest do
   end
 
   test "is creatable" do
-    params = %{amount: 100, currency: "USD", payment_method_types: ["card"], source: "src_123"}
+    params = %{amount: 100, currency: "USD", payment_method_types: ["card"]}
     assert {:ok, %Stripe.PaymentIntent{}} = Stripe.PaymentIntent.create(params)
     assert_stripe_requested(:post, "/v1/payment_intents")
   end

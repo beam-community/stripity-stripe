@@ -111,4 +111,14 @@ defmodule Stripe.InvoiceTest do
       assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/void")
     end
   end
+
+  describe "send/2" do
+    test "sends an invoice" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+
+      assert {:ok, %Stripe.Invoice{} = _sent_invoice} = Stripe.Invoice.send(invoice)
+      assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/send")
+    end
+  end
 end
