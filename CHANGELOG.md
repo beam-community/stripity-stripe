@@ -2,6 +2,10 @@
 
 ## 2.4.0
 
+- [Support upcoming invoices with subscription only](https://github.com/code-corps/stripity_stripe/pull/515)
+- [Warn when unknown objects are processed](https://github.com/code-corps/stripity_stripe/pull/514)
+- [Add missing invoice endpoints](https://github.com/code-corps/stripity_stripe/pull/513)
+- [Add support for sending invoices](https://github.com/code-corps/stripity_stripe/pull/510)
 - [Update Stripe version](https://github.com/code-corps/stripity_stripe/pull/483)
 - [Use Jason over Poison](https://github.com/code-corps/stripity_stripe/pull/509)
 - [Set minimum elixir version to 1.7](https://github.com/code-corps/stripity_stripe/pull/504)
