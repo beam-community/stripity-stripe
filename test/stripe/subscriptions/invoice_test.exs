@@ -27,6 +27,12 @@ defmodule Stripe.InvoiceTest do
       )
     end
 
+    test "retrieves an upcoming invoice for a subscription" do
+      params = %{subscription: "sub_123"}
+      assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.upcoming(params)
+      assert_stripe_requested(:get, "/v1/invoices/upcoming", query: %{subscription: "sub_123"})
+    end
+
     test "retrieves an upcoming invoice for a customer with items" do
       items = [%{plan: "gold", quantity: 2}]
       params = %{customer: "cus_123", subscription_items: items}
