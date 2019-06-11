@@ -127,4 +127,26 @@ defmodule Stripe.InvoiceTest do
       assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/send")
     end
   end
+
+  describe "delete/2" do
+    test "deletes an invoice" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+
+      assert {:ok, %Stripe.Invoice{} = _sent_invoice} = Stripe.Invoice.delete(invoice)
+      assert_stripe_requested(:delete, "/v1/invoices/#{invoice.id}")
+    end
+  end
+
+  describe "mark_as_uncollectible/2" do
+    test "marks an invoice as uncollectible" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+
+      assert {:ok, %Stripe.Invoice{} = _sent_invoice} =
+               Stripe.Invoice.mark_as_uncollectible(invoice)
+
+      assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/mark_uncollectible")
+    end
+  end
 end

@@ -167,7 +167,13 @@ defmodule Stripe.Invoice do
   @plural_endpoint "invoices"
 
   @doc """
-  Create an invoice.
+  Create an invoice
+
+  This endpoint creates a draft invoice for a given customer. The draft invoice
+  created pulls in all pending invoice items on that customer, including
+  prorations.
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/update)
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
@@ -200,6 +206,10 @@ defmodule Stripe.Invoice do
 
   @doc """
   Retrieve an invoice.
+
+  Retrieves the invoice with the given ID.
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/retrieve)
   """
   @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
@@ -212,7 +222,11 @@ defmodule Stripe.Invoice do
   @doc """
   Update an invoice.
 
-  Takes the `id` and a map of changes.
+  Takes the `id` and a map of changes. Draft invoices are fully editable. Once
+  an invoice is finalized, monetary values, as well as billing, become
+  uneditable.
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/update)
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
@@ -242,7 +256,14 @@ defmodule Stripe.Invoice do
   end
 
   @doc """
-  Retrieve an upcoming invoice.
+  Retrieve an upcoming invoice
+
+  At any time, you can preview the upcoming invoice for a customer. This will
+  show you all the charges that are pending, including subscription renewal
+  charges, invoice item charges, etc. It will also show you any discount that is
+  applicable to the customer.
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/upcoming)
   """
   @spec upcoming(map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def upcoming(params, opts \\ [])
@@ -258,7 +279,13 @@ defmodule Stripe.Invoice do
   end
 
   @doc """
-  List all invoices.
+  List all invoices
+
+  You can list all invoices, or list the invoices for a specific customer. The
+  invoices are returned sorted by creation date, with the most recently created
+  invoices appearing first.
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/list)
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params:
@@ -283,7 +310,13 @@ defmodule Stripe.Invoice do
   end
 
   @doc """
-  finalize an invoice.
+  Finalize an invoice
+
+  Stripe automatically finalizes drafts before sending and attempting payment on
+  invoices. However, if you’d like to finalize a draft invoice manually, you can
+  do so using this method.
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/finalize)
   """
   @spec finalize(Stripe.id() | t, params, Stripe.options()) ::
           {:ok, t} | {:error, Stripe.Error.t()}
@@ -304,7 +337,14 @@ defmodule Stripe.Invoice do
   end
 
   @doc """
-  Pay an invoice.
+  Pay an invoice
+
+  Stripe automatically creates and then attempts to collect payment on invoices
+  for customers on subscriptions according to your subscriptions settings.
+  However, if you’d like to attempt payment on an invoice out of the normal
+  collection schedule or for some other reason, you can do so.
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/delete)
   """
   @spec pay(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
@@ -328,6 +368,12 @@ defmodule Stripe.Invoice do
 
   @doc """
   Void an invoice
+
+  Mark a finalized invoice as void. This cannot be undone. Voiding an invoice is
+  similar to deletion, however it only applies to finalized invoices and
+  maintains a papertrail where the invoice can still be found.
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/void)
   """
   @spec void(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def void(id, opts \\ []) do
@@ -338,12 +384,70 @@ defmodule Stripe.Invoice do
   end
 
   @doc """
-  Send an invoice. https://stripe.com/docs/api/invoices/send
+  Send an invoice
+
+  Stripe will automatically send invoices to customers according to your
+  subscriptions settings. However, if you’d like to manually send an invoice to
+  your customer out of the normal schedule, you can do so. When sending invoices
+  that have already been paid, there will be no reference to the payment in the
+  email.
+
+  Requests made in test-mode result in no emails being sent, despite sending an
+  `invoice.sent` event.
+
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/send)
   """
   @spec send(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def send(id, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/send")
+    |> put_method(:post)
+    |> make_request()
+  end
+
+  @doc """
+  Delete an invoice
+
+  Permanently deletes a draft invoice. This cannot be undone. Attempts to delete
+  invoices that are no longer in a draft state will fail; once an invoice has
+  been finalized, it must be voided.
+
+  ## Example
+
+      {:ok, _} = Stripe.Invoice.delete("in_16vEXC2eZvKYlo2CU9MyflAA")
+
+      {:ok, _} = Stripe.Invoice.delete(%Stripe.Invoice{id: "in_16vEXC2eZvKYlo2CU9MyflAA"})
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/delete)
+  """
+  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def delete(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:delete)
+    |> make_request()
+  end
+
+  @doc """
+  Mark an invoice as uncollectible
+
+  Marking an invoice as uncollectible is useful for keeping track of bad debts
+  that can be written off for accounting purposes.
+
+  ## Example
+
+      {:ok, _} = Stripe.Invoice.mark_as_uncollectible("in_16vEXC2eZvKYlo2CU9MyflAA")
+
+      {:ok, _} = Stripe.Invoice.mark_as_uncollectible(%Stripe.Invoice{id: "in_16vEXC2eZvKYlo2CU9MyflAA"})
+
+  See [Stripe docs](https://stripe.com/docs/api/invoices/mark_uncollectible)
+  """
+  @spec mark_as_uncollectible(Stripe.id() | t, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
+  def mark_as_uncollectible(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/mark_uncollectible")
     |> put_method(:post)
     |> make_request()
   end
