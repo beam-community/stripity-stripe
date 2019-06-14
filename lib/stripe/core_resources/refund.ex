@@ -26,7 +26,9 @@ defmodule Stripe.Refund do
           payment: Stripe.id() | Stripe.Charge.t() | nil,
           reason: String.t() | nil,
           receipt_number: String.t() | nil,
-          status: String.t() | nil
+          source_transfer_reversal: Stripe.id() | Stripe.TransferReversal.t() | nil,
+          status: String.t() | nil,
+          transfer_reversal: Stripe.id() | Stripe.TransferReversal.t() | nil
         }
 
   defstruct [
@@ -43,7 +45,9 @@ defmodule Stripe.Refund do
     :payment,
     :reason,
     :receipt_number,
-    :status
+    :source_transfer_reversal,
+    :status,
+    :transfer_reversal
   ]
 
   @plural_endpoint "refunds"
