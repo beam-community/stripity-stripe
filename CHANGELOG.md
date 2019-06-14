@@ -2,6 +2,7 @@
 
 ## 2.4.0
 
+- [Issues/add missing fields](https://github.com/code-corps/stripity_stripe/pull/511)
 - [Support upcoming invoices with subscription only](https://github.com/code-corps/stripity_stripe/pull/515)
 - [Warn when unknown objects are processed](https://github.com/code-corps/stripity_stripe/pull/514)
 - [Add missing invoice endpoints](https://github.com/code-corps/stripity_stripe/pull/513)
