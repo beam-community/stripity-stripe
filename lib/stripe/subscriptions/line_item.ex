@@ -8,6 +8,12 @@ defmodule Stripe.LineItem do
   use Stripe.Entity
   import Stripe.Request
 
+  @type tax_amount :: %{
+          amount: integer,
+          inclusive: boolean,
+          tax_rate: Stripe.id() | Stripe.TaxRate.t()
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -27,6 +33,8 @@ defmodule Stripe.LineItem do
           quantity: integer,
           subscription: Stripe.id() | nil,
           subscription_item: Stripe.id() | nil,
+          tax_amounts: list(tax_amount),
+          tax_rates: list(Stripe.TaxRate.t()),
           type: String.t()
         }
 
@@ -46,6 +54,8 @@ defmodule Stripe.LineItem do
     :quantity,
     :subscription,
     :subscription_item,
+    :tax_rates,
+    :tax_amounts,
     :type
   ]
 

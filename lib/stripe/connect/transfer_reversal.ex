@@ -16,7 +16,9 @@ defmodule Stripe.TransferReversal do
           created: Stripe.timestamp(),
           currency: String.t(),
           description: boolean,
+          destination_payment_refund: Stripe.id() | Stripe.Refund.t() | nil,
           metadata: Stripe.Types.metadata(),
+          source_refund: Stripe.id() | Stripe.Refund.t() | nil,
           transfer: Stripe.id() | Stripe.Transfer.t()
         }
 
@@ -28,7 +30,9 @@ defmodule Stripe.TransferReversal do
     :created,
     :currency,
     :description,
+    :destination_payment_refund,
     :metadata,
+    :source_refund,
     :transfer
   ]
 
