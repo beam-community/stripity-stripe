@@ -135,6 +135,15 @@ defmodule Stripe.API do
     end
   end
 
+  @spec add_options_from_config(list) :: list
+  defp add_options_from_config(opts) do
+    if is_list(Stripe.Config.resolve(:hackney_opts)) do
+      opts ++ Stripe.Config.resolve(:hackney_opts)
+    else
+      opts
+    end
+  end
+
   @doc """
   A low level utility function to make a direct request to the Stripe API
 
@@ -233,6 +242,7 @@ defmodule Stripe.API do
       []
       |> add_default_options()
       |> add_pool_option()
+      |> add_options_from_config()
 
     http_module().request(method, req_url, req_headers, req_body, req_opts)
     |> handle_response()
@@ -255,6 +265,7 @@ defmodule Stripe.API do
       opts
       |> add_default_options()
       |> add_pool_option()
+      |> add_options_from_config()
 
     http_module().request(method, req_url, req_headers, body, req_opts)
     |> handle_response()

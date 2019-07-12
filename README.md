@@ -85,6 +85,14 @@ Moreover, if you are using Poison instead of Jason, you can configure the librar
 config :stripity_stripe, json_library: Poison
 ```
 
+### Timeout
+
+To set timeouts, pass opts for the http client. The default one is Hackney.
+
+```ex
+config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}])
+```
+
 ## Note: Object Expansion
 
 Some Stripe API endpoints support returning related objects via the object expansion query parameter. To take advantage of this feature, stripity_stripe accepts
