@@ -26,6 +26,7 @@ defmodule Stripe.UtilTest do
       assert object_name_to_module("plan") == Stripe.Plan
       assert object_name_to_module("product") == Stripe.Product
       assert object_name_to_module("refund") == Stripe.Refund
+      assert object_name_to_module("setup_intent") == Stripe.SetupIntent
       assert object_name_to_module("subscription") == Stripe.Subscription
       assert object_name_to_module("subscription_item") == Stripe.SubscriptionItem
       assert object_name_to_module("sku") == Stripe.Sku

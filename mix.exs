@@ -105,6 +105,7 @@ defmodule Stripe.Mixfile do
         Stripe.Payout,
         Stripe.Product,
         Stripe.Refund,
+        Stripe.SetupIntent,
         Stripe.TaxID,
         Stripe.Token
       ],
