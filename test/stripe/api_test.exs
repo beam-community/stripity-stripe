@@ -56,7 +56,7 @@ defmodule Stripe.APITest do
             end
           end)
 
-        {:ok, 200, headers, Poison.encode!(kv_opts)}
+        {:ok, 200, headers, Jason.encode!(kv_opts)}
       end
     end
 
