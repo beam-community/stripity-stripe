@@ -1,8 +1,6 @@
 language: elixir
 dist: trusty
 elixir:
-  - 1.5
-  - 1.6
   - 1.7
   - 1.8
 otp_release:
@@ -30,6 +28,10 @@ before_install:
       fi
   - export PATH=$PATH:$PWD/stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}/
 script:
+  - |
+      if [ "$TRAVIS_ELIXIR_VERSION" == "1.8" ]; then
+        mix format --dry-run --check-formatted;
+      fi
   - mix coveralls.travis
   - MIX_ENV=dev mix dialyzer --halt-exit-status
 after_script:

@@ -1,5 +1,50 @@
 # Latest
 
+## 2.4.0
+
+- [Issues/add missing fields](https://github.com/code-corps/stripity_stripe/pull/511)
+- [Support upcoming invoices with subscription only](https://github.com/code-corps/stripity_stripe/pull/515)
+- [Warn when unknown objects are processed](https://github.com/code-corps/stripity_stripe/pull/514)
+- [Add missing invoice endpoints](https://github.com/code-corps/stripity_stripe/pull/513)
+- [Add support for sending invoices](https://github.com/code-corps/stripity_stripe/pull/510)
+- [Update Stripe version](https://github.com/code-corps/stripity_stripe/pull/483)
+- [Use Jason over Poison](https://github.com/code-corps/stripity_stripe/pull/509)
+- [Set minimum elixir version to 1.7](https://github.com/code-corps/stripity_stripe/pull/504)
+
+## 2.3.0
+
+- [Add support for Subscription Schedules](https://github.com/code-corps/stripity_stripe/pull/480)
+- [Add Stripe Issuing](https://github.com/code-corps/stripity_stripe/pull/493)
+- [Add CreditNote api calls](https://github.com/code-corps/stripity_stripe/pull/492)
+- [Add tax_rate struct and api calls](https://github.com/code-corps/stripity_stripe/pull/491)
+- [Format mix.exs to pass CI](https://github.com/code-corps/stripity_stripe/pull/498)
+- [Reorganize docs](https://github.com/code-corps/stripity_stripe/pull/496)
+- [Add PaymentMethods module, with struct, list/2, attach/2, detach/2](https://github.com/code-corps/stripity_stripe/pull/495)
+
+## 2.2.3
+
+- [Configurable json serializer - You can now use Jason instead of Poison](https://github.com/code-corps/stripity_stripe/pull/446)
+- [Support for voiding invoices](https://github.com/code-corps/stripity_stripe/pull/444)
+- [Use singular time units in System.system_time/1](https://github.com/code-corps/stripity_stripe/pull/450)
+- [Expanded configuration options](https://github.com/code-corps/stripity_stripe/pull/447)
+- [Add invoice settings to customer/invoice objects](https://github.com/code-corps/stripity_stripe/pull/451)
+- [Upgrade to 2018-11-08 Stripe API](https://github.com/code-corps/stripity_stripe/pull/439)
+- [Fixed bug in `Usage.retrieve`](https://github.com/code-corps/stripity_stripe/pull/433)
+- [Add elixir 1.8 to test matrix](https://github.com/code-corps/stripity_stripe/pull/449)
+- [Add authorization header api key to deauthorization endpoint]((https://github.com/code-corps/stripity_stripe/pull/465)
+- [Add support for idempotent post requests](https://github.com/code-corps/stripity_stripe/pull/461)
+- [Support new Checkout flow](https://github.com/code-corps/stripity_stripe/pull/466)
+- [Add `receipt_url` to the return Charge data](https://github.com/code-corps/stripity_stripe/pull/467)
+- [Fixed some bugs in `Review` struct fields](https://github.com/code-corps/stripity_stripe/pull/468)
+- [Add basic support for payment intents](https://github.com/code-corps/stripity_stripe/pull/470)
+- [Make `client_secret` optional](https://github.com/code-corps/stripity_stripe/pull/473)
+- [Update hackney requirement to 1.15](https://github.com/code-corps/stripity_stripe/pull/475)
+- [Upgrade to ex doc 0.20](https://github.com/code-corps/stripity_stripe/pull/486)
+- [Upgrade stripe mock to 0.55](https://github.com/code-corps/stripity_stripe/pull/485)
+- [Remove unused Bypass dependency](https://github.com/code-corps/stripity_stripe/pull/88)
+- [Implement `assert_stripe_requested/3` test helper](https://github.com/code-corps/stripity_stripe/pull/487)
+- Misc documentation improvements
+
 ## 2.2.2
 
 - [Upgrade stripe-mock 0.38](https://github.com/code-corps/stripity_stripe/pull/436)

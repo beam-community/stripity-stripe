@@ -18,11 +18,16 @@ The old `1.x.x` line of releases has been kept and is being published separately
 
 The actively developed line of releases is `2.x.x` and is contained within the `master` branch. New features are being added to this line of releases, so to develop this library further, create pull requests against the master branch.
 
+Below is a list of which Stripe API version recent releases of Stripity Stripe use. It only indicates the API version being called, not necessarily its compatibility. See the [Stripe API Upgrades page](https://stripe.com/docs/upgrades) for more details.
+
 `:stripity_stripe` | Stripe API Version
 ------------ | -------------
 `2.0.x` | `2018-02-28`
-`2.1.x - 2.2.x` | `2018-05-21`
-`master` | `2018-11-08`
+`2.1.0 - 2.2.0` | `2018-05-21`
+`2.2.2` | `2018-08-23`
+`2.2.3 - 2.3.0` | `2018-11-08`
+`2.4.0` | `2019-05-16`
+`master` | `2019-05-16`
 
 # Documentation
 
@@ -74,10 +79,18 @@ config :stripity_stripe, api_key: {MyApp.Secrets, :stripe_secret, []}
 config :stripity_stripe, api_key: fn -> System.get_env("STRIPE_SECRET") end
 ```
 
-Moreover, if you are using Jason instead of Poison, you can configure the library to use Jason like so:
+Moreover, if you are using Poison instead of Jason, you can configure the library to use Poison like so:
 
 ```ex
-config :stripity_stripe, json_library: Jason
+config :stripity_stripe, json_library: Poison
+```
+
+### Timeout
+
+To set timeouts, pass opts for the http client. The default one is Hackney.
+
+```ex
+config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}])
 ```
 
 ## Note: Object Expansion

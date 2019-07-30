@@ -16,16 +16,16 @@ defmodule Stripe.API do
   @typep http_failure :: {:error, term}
 
   @pool_name __MODULE__
-  @api_version "2018-11-08; checkout_sessions_beta=v1"
+  @api_version "2019-05-16; checkout_sessions_beta=v1"
 
   @doc """
   In config.exs your implicit or expicit configuration is:
     config :stripity_stripe,
-      json_library: Jason # defaults to Poison but can be configured to Jason
+      json_library: Poison # defaults to Jason but can be configured to Poison
   """
   @spec json_library() :: module
   def json_library() do
-    Config.resolve(:json_library, Poison)
+    Config.resolve(:json_library, Jason)
   end
 
   def supervisor_children do
@@ -135,6 +135,15 @@ defmodule Stripe.API do
     end
   end
 
+  @spec add_options_from_config(list) :: list
+  defp add_options_from_config(opts) do
+    if is_list(Stripe.Config.resolve(:hackney_opts)) do
+      opts ++ Stripe.Config.resolve(:hackney_opts)
+    else
+      opts
+    end
+  end
+
   @doc """
   A low level utility function to make a direct request to the Stripe API
 
@@ -233,6 +242,7 @@ defmodule Stripe.API do
       []
       |> add_default_options()
       |> add_pool_option()
+      |> add_options_from_config()
 
     http_module().request(method, req_url, req_headers, req_body, req_opts)
     |> handle_response()
@@ -255,6 +265,7 @@ defmodule Stripe.API do
       opts
       |> add_default_options()
       |> add_pool_option()
+      |> add_options_from_config()
 
     http_module().request(method, req_url, req_headers, body, req_opts)
     |> handle_response()

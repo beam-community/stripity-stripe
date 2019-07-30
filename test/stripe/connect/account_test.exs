@@ -45,7 +45,6 @@ defmodule Stripe.AccountTest do
 
     assert_stripe_requested(:post, "/v1/accounts/#{account.id}/reject")
     assert account.id == rejected_account.id
-    refute rejected_account.transfers_enabled
     refute rejected_account.charges_enabled
   end
 

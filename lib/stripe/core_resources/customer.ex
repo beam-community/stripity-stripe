@@ -19,6 +19,7 @@ defmodule Stripe.Customer do
           id: Stripe.id(),
           object: String.t(),
           account_balance: integer,
+          address: Stripe.Types.address() | nil,
           created: Stripe.timestamp(),
           currency: String.t() | nil,
           default_source: Stripe.id() | Stripe.Source.t() | nil,
@@ -31,9 +32,14 @@ defmodule Stripe.Customer do
           invoice_settings: Stripe.Invoice.invoice_settings() | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
+          name: String.t(),
+          phone: String.t(),
+          preferred_locales: list(String.t()),
           shipping: Stripe.Types.shipping() | nil,
           sources: Stripe.List.t(Stripe.Source.t()),
           subscriptions: Stripe.List.t(Stripe.Subscription.t()),
+          tax_exempt: String.t() | nil,
+          tax_ids: Stripe.List.t(Stripe.TaxID.t()),
           tax_info: Stripe.Types.tax_info() | nil,
           tax_info_verification: Stripe.Types.tax_info_verification() | nil
         }
@@ -42,6 +48,7 @@ defmodule Stripe.Customer do
     :id,
     :object,
     :account_balance,
+    :address,
     :created,
     :currency,
     :default_source,
@@ -54,9 +61,14 @@ defmodule Stripe.Customer do
     :invoice_settings,
     :livemode,
     :metadata,
+    :name,
+    :phone,
+    :preferred_locales,
     :shipping,
     :sources,
     :subscriptions,
+    :tax_exempt,
+    :tax_ids,
     :tax_info,
     :tax_info_verification
   ]
@@ -78,7 +90,7 @@ defmodule Stripe.Customer do
                  optional(:invoice_settings) => Stripe.Invoice.invoice_settings(),
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:shipping) => Stripe.Types.shipping(),
-                 optional(:source) => Stripe.Source.t(),
+                 optional(:source) => Stripe.id() | Stripe.Source.t(),
                  optional(:tax_info) => Stripe.Types.tax_info()
                }
                | %{}

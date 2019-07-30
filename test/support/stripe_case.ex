@@ -31,18 +31,17 @@ defmodule Stripe.StripeCase do
 
   defp assert_stripe_request_headers(expected_header, headers) do
     assert Enum.any?(headers, fn header -> expected_header == header end),
-    """
-    Expected the header `#{inspect(expected_header)}` to be in the headers of the request.
+           """
+           Expected the header `#{inspect(expected_header)}` to be in the headers of the request.
 
-    Headers:
-    #{inspect(headers)}
-    """
+           Headers:
+           #{inspect(headers)}
+           """
   end
 
   defp assert_stripe_request_body(nil, _), do: nil
 
   defp assert_stripe_request_body(expected_body, body) do
-
     assert body == Stripe.URI.encode_query(expected_body)
   end
 
