@@ -20,7 +20,7 @@ defmodule Stripe.Issuing.Card do
           object: String.t(),
           authorization_controls: Stripe.Issuing.Types.authorization_controls(),
           brand: String.t(),
-          cardholder: Stripe.Issuing.Cardholder.t(),
+          cardholder: Stripe.id() | Stripe.Issuing.Cardholder.t(),
           created: Stripe.timestamp(),
           currency: String.t(),
           exp_month: pos_integer,
@@ -69,7 +69,7 @@ defmodule Stripe.Issuing.Card do
                  :type => :physical | :virtual,
                  optional(:authorization_controls) =>
                    Stripe.Issuing.Types.authorization_controls(),
-                 optional(:cardholder) => Stripe.Issuing.Cardholder.t(),
+                 optional(:cardholder) => Stripe.id() | Stripe.Issuing.Cardholder.t(),
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:replacement_for) => t | Stripe.id(),
                  optional(:replacement_reason) => String.t(),
@@ -82,6 +82,7 @@ defmodule Stripe.Issuing.Card do
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
+    |> cast_to_id([:cardholder])
     |> make_request()
   end
 
@@ -104,7 +105,7 @@ defmodule Stripe.Issuing.Card do
                %{
                  optional(:authorization_controls) =>
                    Stripe.Issuing.Types.authorization_controls(),
-                 optional(:cardholder) => Stripe.Issuing.Cardholder.t(),
+                 optional(:cardholder) => Stripe.id() | Stripe.Issuing.Cardholder.t(),
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:replacement_for) => t | Stripe.id(),
                  optional(:replacement_reason) => String.t(),
@@ -117,6 +118,7 @@ defmodule Stripe.Issuing.Card do
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
     |> put_method(:post)
     |> put_params(params)
+    |> cast_to_id([:cardholder])
     |> make_request()
   end
 
@@ -126,7 +128,7 @@ defmodule Stripe.Issuing.Card do
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params:
                %{
-                 optional(:cardholder) => Stripe.Issuing.Cardholder.t() | Stripe.id(),
+                 optional(:cardholder) => Stripe.id() | Stripe.Issuing.Cardholder.t(),
                  optional(:created) => String.t() | Stripe.date_query(),
                  optional(:ending_before) => t | Stripe.id(),
                  optional(:exp_month) => String.t(),
