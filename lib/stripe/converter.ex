@@ -57,6 +57,7 @@ defmodule Stripe.Converter do
     subscription_schedule
     tax_rate
     tax_id
+    topup
     transfer
     transfer_reversal
     token
@@ -117,7 +118,7 @@ defmodule Stripe.Converter do
   if Mix.env() == "prod" do
     defp warn_unknown_object(_), do: :ok
   else
-    defp warn_unknown_object(%{"object" => object_name} = value) do
+    defp warn_unknown_object(%{"object" => object_name} = _value) do
       require Logger
 
       Logger.warn("Unknown object received: #{object_name}")

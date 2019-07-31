@@ -69,6 +69,12 @@ defmodule Stripe do
           optional(:lt) => timestamp,
           optional(:lte) => timestamp
         }
+  @type integer_query :: %{
+          optional(:gt) => integer,
+          optional(:gte) => integer,
+          optional(:lt) => integer,
+          optional(:lte) => integer
+        }
   @type options :: Keyword.t()
   @type timestamp :: pos_integer
 
