@@ -117,7 +117,7 @@ defmodule Stripe.Converter do
   if Mix.env() == "prod" do
     defp warn_unknown_object(_), do: :ok
   else
-    defp warn_unknown_object(%{"object" => object_name} = value) do
+    defp warn_unknown_object(%{"object" => object_name}) do
       require Logger
 
       Logger.warn("Unknown object received: #{object_name}")
