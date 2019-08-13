@@ -144,6 +144,7 @@ defmodule Stripe.Mixfile do
         Stripe.Connect.OAuth.TokenResponse,
         Stripe.Connect.OAuth.DeauthorizeResponse,
         Stripe.Recipient,
+        Stripe.Topup,
         Stripe.Transfer,
         Stripe.TransferReversal
       ],

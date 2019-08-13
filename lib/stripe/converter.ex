@@ -57,6 +57,7 @@ defmodule Stripe.Converter do
     subscription_schedule
     tax_rate
     tax_id
+    topup
     transfer
     transfer_reversal
     token
