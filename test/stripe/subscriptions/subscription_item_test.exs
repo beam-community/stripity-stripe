@@ -12,7 +12,8 @@ defmodule Stripe.SubscriptionItemTest do
     test "creates a subscription" do
       params = %{
         subscription: "sub_123",
-        plan: "plan_123"
+        plan: "plan_123",
+        tax_rates: ["txr_1F7HTrEkL2ROgIP4Nx4BSYSo"]
       }
 
       assert {:ok, %Stripe.SubscriptionItem{}} = Stripe.SubscriptionItem.create(params)
@@ -22,8 +23,13 @@ defmodule Stripe.SubscriptionItemTest do
 
   describe "update/2" do
     test "updates a subscription item" do
-      params = %{metadata: %{foo: "bar"}}
+      params = %{
+        metadata: %{foo: "bar"},
+        tax_rates: ["txr_1F7HTrEkL2ROgIP4Nx4BSYSo"]
+      }
+
       assert {:ok, subscription_item} = Stripe.SubscriptionItem.update("sub_123", params)
+
       assert_stripe_requested(:post, "/v1/subscription_items/#{subscription_item.id}")
     end
   end
