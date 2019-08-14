@@ -15,25 +15,28 @@ defmodule Stripe.Account do
   use Stripe.Entity
   import Stripe.Request
 
-  @type decline_charge_on :: %{
-          avs_failure: boolean,
-          cvc_failure: boolean
+  @type business_profile :: %{
+          mcc: String.t() | nil,
+          name: String.t() | nil,
+          product_description: String.t() | nil,
+          support_address: %{
+            city: String.t() | nil,
+            country: String.t() | nil,
+            line1: String.t() | nil,
+            line2: String.t() | nil,
+            postal_code: String.t() | nil,
+            state: String.t() | nil
+          },
+          support_email: String.t() | nil,
+          support_phone: String.t() | nil,
+          support_url: String.t() | nil,
+          url: String.t() | nil
         }
 
-  @type requirements :: %{
-          current_deadline: Stripe.timestamp() | nil,
-          currently_due: Stripe.List.t(String.t()) | nil,
-          disabled_reason: String.t() | nil,
-          eventually_due: Stripe.List.t(String.t()) | nil,
-          past_due: Stripe.List.t(String.t()) | nil
-        }
-
-  @type settings :: %{
-          branding: map | nil,
-          card_payments: map | nil,
-          dashboard: map | nil,
-          payments: map | nil,
-          payouts: map | nil
+  @type capabilities :: %{
+          card_payments: String.t() | nil,
+          legacy_payments: String.t() | nil,
+          platform_payments: String.t() | nil
         }
 
   @type company :: %{
@@ -51,8 +54,12 @@ defmodule Stripe.Account do
           vat_id_provided: boolean | nil
         }
 
+  @type decline_charge_on :: %{
+          avs_failure: boolean,
+          cvc_failure: boolean
+        }
+
   @type individual :: %{
-          additional_owners: [individual_additional_owner] | nil,
           address: Stripe.Types.address(),
           address_kana: Stripe.Types.japan_address() | nil,
           address_kanji: Stripe.Types.japan_address() | nil,
@@ -98,6 +105,32 @@ defmodule Stripe.Account do
           status: String.t()
         }
 
+  @type legal_entity :: %{
+          additional_owners: [individual_additional_owner] | nil,
+          individual: individual | nil
+        }
+
+  @type payout_schedule :: %{
+          delay_days: integer | nil,
+          interval: String.t() | nil
+        }
+
+  @type requirements :: %{
+          current_deadline: Stripe.timestamp() | nil,
+          currently_due: Stripe.List.t(String.t()) | nil,
+          disabled_reason: String.t() | nil,
+          eventually_due: Stripe.List.t(String.t()) | nil,
+          past_due: Stripe.List.t(String.t()) | nil
+        }
+
+  @type settings :: %{
+          branding: map | nil,
+          card_payments: map | nil,
+          dashboard: map | nil,
+          payments: map | nil,
+          payouts: map | nil
+        }
+
   @type tos_acceptance :: %{
           date: Stripe.timestamp() | nil,
           ip: String.t() | nil,
@@ -110,74 +143,76 @@ defmodule Stripe.Account do
           fields_needed: [String.t()]
         }
 
-  @type business_profile :: %{
-          mcc: String.t() | nil,
-          name: String.t() | nil,
-          product_description: String.t() | nil,
-          support_address: %{
-            city: String.t() | nil,
-            country: String.t() | nil,
-            line1: String.t() | nil,
-            line2: String.t() | nil,
-            postal_code: String.t() | nil,
-            state: String.t() | nil
-          },
-          support_email: String.t() | nil,
-          support_phone: String.t() | nil,
-          support_url: String.t() | nil,
-          url: String.t() | nil
-        }
-
-  @type capabilities :: %{
-          card_payments: String.t() | nil,
-          legacy_payments: String.t() | nil,
-          platform_payments: String.t() | nil
-        }
-
   @type t :: %__MODULE__{
-          id: Stripe.id(),
-          object: String.t(),
+          id: Stripe.id() | nil,
+          object: String.t() | nil,
+          business_logo: String.t() | nil,
+          business_logo_large: String.t() | nil,
+          business_name: String.t() | nil,
+          business_primary_color: String.t() | nil,
           business_profile: business_profile | nil,
           business_type: String.t() | nil,
+          business_url: String.t() | nil,
           capabilities: capabilities | nil,
-          charges_enabled: boolean,
+          charges_enabled: boolean | nil,
           company: company | nil,
-          country: String.t(),
+          country: String.t() | nil,
           created: Stripe.timestamp() | nil,
-          default_currency: String.t(),
+          debit_negative_balances: boolean | nil,
+          decline_charge_on: decline_charge_on | nil,
+          default_currency: String.t() | nil,
           details_submitted: boolean,
+          display_name: String.t() | nil,
           email: String.t() | nil,
           external_accounts: Stripe.List.t(Stripe.BankAccount.t() | Stripe.Card.t()),
           individual: individual | nil,
+          legal_entity: legal_entity | nil,
+          mcc: String.t(),
           metadata: Stripe.Types.metadata(),
+          payout_schedule: payout_schedule | nil,
           payouts_enabled: boolean | nil,
+          product_description: String.t() | nil,
           requirements: requirements | nil,
           settings: settings | nil,
           tos_acceptance: tos_acceptance | nil,
-          type: String.t()
+          type: String.t() | nil,
+          verification: verification | nil
         }
 
   defstruct [
     :id,
     :object,
+    :business_logo,
+    :business_logo_large,
+    :business_name,
+    :business_primary_color,
     :business_profile,
     :business_type,
+    :business_url,
     :capabilities,
     :charges_enabled,
     :company,
     :country,
     :created,
+    :debit_negative_balances,
+    :decline_charge_on,
     :default_currency,
     :details_submitted,
+    :display_name,
     :email,
     :external_accounts,
     :individual,
+    :legal_entity,
+    :mcc,
     :metadata,
+    :payout_schedule,
     :payouts_enabled,
+    :product_description,
     :requirements,
     :settings,
     :tos_acceptance,
-    :type
+    :type,
+    :verification
   ]
 
   @singular_endpoint "account"
