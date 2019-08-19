@@ -5,6 +5,7 @@ defmodule Stripe.Session do
   You can:
 
   - Create a new session
+  - Retrieve a session
 
   Stripe API reference: https://stripe.com/docs/api/checkout/sessions
   """
@@ -107,6 +108,17 @@ defmodule Stripe.Session do
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
+    |> make_request()
+  end
+
+  @doc """
+  Retrieve a session.
+  """
+  @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def retrieve(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
     |> make_request()
   end
 end
