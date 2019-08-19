@@ -66,15 +66,37 @@ defmodule Stripe.Session do
   @type t :: %__MODULE__{
           :id => Stripe.id(),
           :object => String.t(),
+          :cancel_url => boolean(),
+          :billing_address_collection => String.t(),
+          :client_reference_id => String.t(),
+          :customer => String.t(),
+          :customer_email => String.t(),
+          :display_items => list(line_item),
+          :livemode => boolean(),
+          :locale => boolean(),
           :payment_intent => Stripe.id() | Stripe.PaymentIntent.t(),
-          :livemode => boolean()
+          :payment_method_types => list(String.t()),
+          :submit_type => String.t(),
+          :subscription => String.t(),
+          :success_url => String.t()
         }
 
   defstruct [
     :id,
     :object,
+    :billing_address_collection,
+    :cancel_url,
+    :client_reference_id,
+    :customer,
+    :customer_email,
+    :display_items,
+    :livemode,
+    :locale,
     :payment_intent,
-    :livemode
+    :payment_method_types,
+    :submit_type,
+    :subscription,
+    :success_url
   ]
 
   @plural_endpoint "checkout/sessions"
