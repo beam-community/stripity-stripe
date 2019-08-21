@@ -66,12 +66,14 @@ defmodule Stripe.Session do
   @type t :: %__MODULE__{
           :id => Stripe.id(),
           :object => String.t(),
+          :payment_intent => Stripe.id() | Stripe.PaymentIntent.t(),
           :livemode => boolean()
         }
 
   defstruct [
     :id,
     :object,
+    :payment_intent,
     :livemode
   ]
 
