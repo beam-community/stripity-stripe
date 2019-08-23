@@ -1,7 +1,6 @@
 defmodule Stripe.APITest do
-  use ExUnit.Case
-
   import Mox
+  use Stripe.StripeCase
 
   test "works with 301 responses without issue" do
     {:error, %Stripe.Error{extra: %{http_status: 301}}} =
@@ -15,6 +14,21 @@ defmodule Stripe.APITest do
     |> expect(:oauth_request, fn method, _endpoint, _body -> method end)
 
     assert Stripe.APIMock.oauth_request(:post, "www", %{body: "body"}) == :post
+  end
+
+  test "gets default api version" do
+    Stripe.API.request(%{}, :get, "products", %{}, [])
+    assert_stripe_requested(:get, "/v1/products", headers: {"Stripe-Version", "2019-05-16"})
+  end
+
+  test "can set custom api version" do
+    Stripe.API.request(%{}, :get, "products", %{},
+      api_version: "2019-05-16; checkout_sessions_beta=v1"
+    )
+
+    assert_stripe_requested(:get, "/v1/products",
+      headers: {"Stripe-Version", "2019-05-16; checkout_sessions_beta=v1"}
+    )
   end
 
   test "oauth_request sets authorization header for deauthorize request" do
