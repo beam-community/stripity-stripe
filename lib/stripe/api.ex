@@ -146,6 +146,17 @@ defmodule Stripe.API do
   @doc """
   A low level utility function to make a direct request to the Stripe API
 
+  ## Setting the api key
+
+      request(%{}, :get, "/customers", %{}, api_key: "bogus key")
+
+  ## Setting api version
+
+  The api version defaults to #{@api_version} but a custom version can be passed
+  in as follows:
+
+      request(%{}, :get, "/customers", %{}, api_version: "2018-11-04")
+
   ## Connect Accounts
 
   If you'd like to make a request on behalf of another Stripe account
