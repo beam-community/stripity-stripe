@@ -1,5 +1,15 @@
 # Latest
 
+## 2.5.0
+
+- [Make stripe version configurable ](https://github.com/code-corps/stripity_stripe/pull/534)
+- [Add Stripe.Topup](https://github.com/code-corps/stripity_stripe/pull/527)
+- [Update util.ex](https://github.com/code-corps/stripity_stripe/pull/529)
+- [Cast cardholder to id](https://github.com/code-corps/stripity_stripe/pull/526)
+- [Allow Customer.create/2 to take Source id in typespecs.](https://github.com/code-corps/stripity_stripe/pull/523)
+- [Pass Hackney options from config](https://github.com/code-corps/stripity_stripe/pull/506)
+- [updated readme with more explicit API version info](https://github.com/code-corps/stripity_stripe/pull/520)
+
 ## 2.4.0
 
 - [Issues/add missing fields](https://github.com/code-corps/stripity_stripe/pull/511)
