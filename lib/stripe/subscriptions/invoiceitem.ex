@@ -77,7 +77,7 @@ defmodule Stripe.Invoiceitem do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:quantity) => integer,
                  optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
-                 optional(:tax_rates) => list(Stripe.TaxRate.t()),
+                 optional(:tax_rates) => list(String.t()),
                  optional(:unit_amount) => integer,
                  optional(:unit_amount_decimal) => String.t()
                }
@@ -115,7 +115,7 @@ defmodule Stripe.Invoiceitem do
                  optional(:discountable) => boolean,
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:quantity) => integer,
-                 optional(:tax_rates) => list(Stripe.TaxRate.t()),
+                 optional(:tax_rates) => list(String.t()),
                  optional(:unit_amount) => integer,
                  optional(:unit_amount_decimal) => String.t()
                }
