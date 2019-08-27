@@ -32,7 +32,9 @@ defmodule Stripe.Invoiceitem do
           quantity: integer,
           subscription: Stripe.id() | Stripe.Subscription.t() | nil,
           subscription_item: Stripe.id() | Stripe.SubscriptionItem.t() | nil,
-          unit_amount: integer
+          tax_rates: list(Stripe.TaxRate.t()),
+          unit_amount: integer,
+          unit_amount_decimal: String.t()
         }
 
   defstruct [
@@ -53,7 +55,9 @@ defmodule Stripe.Invoiceitem do
     :quantity,
     :subscription,
     :subscription_item,
-    :unit_amount
+    :tax_rates,
+    :unit_amount,
+    :unit_amount_decimal
   ]
 
   @plural_endpoint "invoiceitems"
@@ -73,7 +77,9 @@ defmodule Stripe.Invoiceitem do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:quantity) => integer,
                  optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
-                 optional(:unit_amount) => integer
+                 optional(:tax_rates) => list(String.t()),
+                 optional(:unit_amount) => integer,
+                 optional(:unit_amount_decimal) => String.t()
                }
                | %{}
   def create(params, opts \\ []) do
@@ -109,7 +115,9 @@ defmodule Stripe.Invoiceitem do
                  optional(:discountable) => boolean,
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:quantity) => integer,
-                 optional(:unit_amount) => integer
+                 optional(:tax_rates) => list(String.t()),
+                 optional(:unit_amount) => integer,
+                 optional(:unit_amount_decimal) => String.t()
                }
                | %{}
   def update(id, params, opts \\ []) do
