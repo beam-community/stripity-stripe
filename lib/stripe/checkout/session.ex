@@ -70,16 +70,16 @@ defmodule Stripe.Session do
           :billing_address_collection => String.t(),
           :cancel_url => boolean(),
           :client_reference_id => String.t(),
-          :customer => String.t(),
+          :customer => Stripe.id() | Stripe.Customer.t() | nil,
           :customer_email => String.t(),
           :display_items => list(line_item),
           :livemode => boolean(),
           :locale => boolean(),
           :mode => String.t(),
-          :payment_intent => Stripe.id() | Stripe.PaymentIntent.t(),
+          :payment_intent => Stripe.id() | Stripe.PaymentIntent.t() | nil,
           :payment_method_types => list(String.t()),
           :submit_type => String.t(),
-          :subscription => String.t(),
+          :subscription => Stripe.id() | Stripe.Subscription.t() | nil,
           :success_url => String.t()
         }
 
