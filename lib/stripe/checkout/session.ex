@@ -67,8 +67,8 @@ defmodule Stripe.Session do
   @type t :: %__MODULE__{
           :id => Stripe.id(),
           :object => String.t(),
-          :cancel_url => boolean(),
           :billing_address_collection => String.t(),
+          :cancel_url => boolean(),
           :client_reference_id => String.t(),
           :customer => String.t(),
           :customer_email => String.t(),
