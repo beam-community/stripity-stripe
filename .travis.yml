@@ -12,6 +12,8 @@ matrix:
   exclude:
     - otp_release: 19.3
       elixir: 1.8
+    - otp_release: 19.3
+      elixir: 1.9
 sudo: false
 env:
   global:
