@@ -2,6 +2,7 @@
 
 ## 2.5.0
 
+- [Checkout Session retrieval and missing attributes](https://github.com/code-corps/stripity_stripe/pull/532)
 - [Add missing fields](https://github.com/code-corps/stripity_stripe/pull/537)
 - [Add balance to customer entity](https://github.com/code-corps/stripity_stripe/pull/536)
 - [Add payment intent to session](https://github.com/code-corps/stripity_stripe/pull/533)
