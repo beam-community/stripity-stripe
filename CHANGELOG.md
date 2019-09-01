@@ -2,6 +2,8 @@
 
 ## 2.5.0
 
+- [Add missing fields](https://github.com/code-corps/stripity_stripe/pull/537)
+- [Add balance to customer entity](https://github.com/code-corps/stripity_stripe/pull/536)
 - [Add payment intent to session](https://github.com/code-corps/stripity_stripe/pull/533)
 - [Make stripe version configurable ](https://github.com/code-corps/stripity_stripe/pull/534)
 - [Add Stripe.Topup](https://github.com/code-corps/stripity_stripe/pull/527)
