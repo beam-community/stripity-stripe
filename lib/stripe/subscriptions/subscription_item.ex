@@ -17,7 +17,8 @@ defmodule Stripe.SubscriptionItem do
           metadata: Stripe.Types.metadata(),
           plan: Stripe.Plan.t(),
           quantity: non_neg_integer,
-          subscription: Stripe.id() | Stripe.Subscription.t() | nil
+          subscription: Stripe.id() | Stripe.Subscription.t() | nil,
+          tax_rates: list(Stripe.TaxRate.t())
         }
 
   defstruct [
@@ -29,7 +30,8 @@ defmodule Stripe.SubscriptionItem do
     :metadata,
     :plan,
     :quantity,
-    :subscription
+    :subscription,
+    :tax_rates
   ]
 
   @plural_endpoint "subscription_items"
@@ -44,7 +46,8 @@ defmodule Stripe.SubscriptionItem do
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:prorate) => boolean,
                optional(:proration_date) => Stripe.timestamp(),
-               optional(:quantity) => float
+               optional(:quantity) => float,
+               optional(:tax_rates) => list(String.t())
              }
   def create(%{plan: _, subscription: _} = params, opts \\ []) do
     new_request(opts)
@@ -77,7 +80,8 @@ defmodule Stripe.SubscriptionItem do
                optional(:plan) => Stripe.id() | Stripe.Plan.t(),
                optional(:prorate) => boolean,
                optional(:proration_date) => Stripe.timestamp(),
-               optional(:quantity) => float
+               optional(:quantity) => float,
+               optional(:tax_rates) => list(String.t())
              }
   def update(id, params, opts \\ []) do
     new_request(opts)
