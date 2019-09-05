@@ -147,6 +147,7 @@ defmodule Stripe.SetupIntent do
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
     |> put_method(:post)
     |> put_params(params)
+    |> cast_to_id([:customer, :payment_method])
     |> make_request()
   end
 
@@ -168,6 +169,7 @@ defmodule Stripe.SetupIntent do
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}" <> "/confirm")
     |> put_method(:post)
     |> put_params(params)
+    |> cast_to_id([:payment_method])
     |> make_request()
   end
 
@@ -208,7 +210,7 @@ defmodule Stripe.SetupIntent do
     |> put_endpoint(@plural_endpoint)
     |> put_method(:get)
     |> put_params(params)
-    |> cast_to_id([:ending_before, :starting_after])
+    |> cast_to_id([:customer, :ending_before, :starting_after])
     |> make_request()
   end
 end
