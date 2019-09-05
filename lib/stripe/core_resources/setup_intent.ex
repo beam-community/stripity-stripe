@@ -52,6 +52,7 @@ defmodule Stripe.SetupIntent do
           next_action: next_action | nil,
           on_behalf_of: Stripe.id() | Stripe.Account.t() | nil,
           payment_method: Stripe.id() | Stripe.PaymentMethod.t() | nil,
+          payment_method_options: map | nil,
           payment_method_types: list(String.t()),
           status: String.t(),
           usage: String.t()
@@ -72,6 +73,7 @@ defmodule Stripe.SetupIntent do
     :next_action,
     :on_behalf_of,
     :payment_method,
+    :payment_method_options,
     :payment_method_types,
     :status,
     :usage
@@ -92,6 +94,7 @@ defmodule Stripe.SetupIntent do
                  optional(:metadata) => map,
                  optional(:on_behalf_of) => Stripe.id() | Stripe.Account.t(),
                  optional(:payment_method) => Stripe.id(),
+                 optional(:payment_method_options) => map,
                  optional(:payment_method_types) => [String.t()],
                  optional(:return_url) => String.t(),
                  optional(:usage) => String.t()
@@ -156,6 +159,7 @@ defmodule Stripe.SetupIntent do
         when params:
                %{
                  optional(:payment_method) => Stripe.id(),
+                 optional(:payment_method_options) => map,
                  optional(:return_url) => String.t()
                }
                | %{}
