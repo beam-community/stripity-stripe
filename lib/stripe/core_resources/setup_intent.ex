@@ -9,6 +9,7 @@ defmodule Stripe.SetupIntent do
   - [Update a SetupIntent](https://stripe.com/docs/api/setup_intents/update)
   - [Confirm a SetupIntent](https://stripe.com/docs/api/setup_intents/confirm)
   - [Cancel a SetupIntent](https://stripe.com/docs/api/setup_intents/cancel)
+  - [List all SetupIntents](https://stripe.com/docs/api/setup_intents/list)
   """
 
   use Stripe.Entity
@@ -182,6 +183,28 @@ defmodule Stripe.SetupIntent do
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}" <> "/cancel")
     |> put_method(:post)
     |> put_params(params)
+    |> make_request()
+  end
+
+  @doc """
+  Returns a list of SetupIntents.
+  See the [Stripe docs](https://stripe.com/docs/api/setup_intents/list).
+  """
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:created) => Stripe.date_query(),
+               optional(:customer) => Stripe.id() | Stripe.Customer.t(),
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:limit) => 1..100,
+               optional(:starting_after) => t | Stripe.id()
+             }
+  def list(params \\ %{}, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:get)
+    |> put_params(params)
+    |> cast_to_id([:ending_before, :starting_after])
     |> make_request()
   end
 end

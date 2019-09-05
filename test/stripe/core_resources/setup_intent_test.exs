@@ -31,4 +31,11 @@ defmodule Stripe.SetupIntentTest do
 
     assert_stripe_requested(:post, "/v1/setup_intents/pi_123")
   end
+
+  test "is listable" do
+    assert {:ok, %Stripe.List{data: setup_intents}} = Stripe.SetupIntent.list()
+    assert_stripe_requested(:get, "/v1/setup_intents")
+    assert is_list(setup_intents)
+    assert %Stripe.SetupIntent{} = hd(setup_intents)
+  end
 end
