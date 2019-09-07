@@ -1,5 +1,9 @@
 # Latest
 
+## 2.6.0
+
+- [Add support for SetupIntent](https://github.com/code-corps/stripity_stripe/pull/522)
+
 ## 2.5.0
 
 - [Checkout Session retrieval and missing attributes](https://github.com/code-corps/stripity_stripe/pull/532)
