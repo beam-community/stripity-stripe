@@ -50,6 +50,7 @@ defmodule Stripe.Converter do
     recipient
     refund
     review
+    setup_intent
     sku
     source
     subscription
