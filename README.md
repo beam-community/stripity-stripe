@@ -311,4 +311,4 @@ As I began digging things up with these other libraries it became rather apparen
 
 ## Update
 
-As of October 18th, Rob has graciously handed over the reins to the teams at [Code Corps](https://www.codecorps.org/) and [Strumber](https://strumber.com/). To addresses the concerns Rob mentioned above and update the high level api to work with all of the Stripe API Endpoints, they have since worked to release and stripity_stripe 2.0, which is now the actively developed line of releases.
+As of October 18th, Rob has graciously handed over the reins to the teams at [Code Corps](https://www.codecorps.org/) and [Strumber](https://strumber.com/). To address the concerns Rob mentioned above and update the high level api to work with all of the Stripe API Endpoints, they have since worked to release stripity_stripe 2.0, which is now the actively developed line of releases.
