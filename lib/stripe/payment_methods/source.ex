@@ -169,7 +169,7 @@ defmodule Stripe.Source do
           ach_credit_transfer: ach_credit_transfer | nil,
           ach_debit: ach_debit | nil,
           alipay: alipay | nil,
-          amount: integer | nil,
+          amount: non_neg_integer | nil,
           bancontact: bancontact | nil,
           bitcoin: bitcoin | nil,
           card: card | nil,
@@ -240,7 +240,7 @@ defmodule Stripe.Source do
   @spec create(params, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                :type => String.t(),
-               optional(:amount) => String.t(),
+               optional(:amount) => non_neg_integer,
                optional(:currency) => String.t(),
                optional(:flow) => String.t(),
                optional(:mandate) => map,
