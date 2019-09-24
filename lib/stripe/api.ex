@@ -18,7 +18,6 @@ defmodule Stripe.API do
   @pool_name __MODULE__
   @api_version "2018-11-08; checkout_sessions_beta=v1"
 
-  @api_version "2018-08-23"
   @idempotency_key_header "Idempotency-Key"
 
   @default_max_attempts 3
