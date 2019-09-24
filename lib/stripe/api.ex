@@ -369,6 +369,7 @@ defmodule Stripe.API do
   defp do_perform_request_and_retry(_method, _url, _headers, _body, _opts, {:response, response}) do
     handle_response(response)
   end
+
   defp do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, attempts}) do
     response = http_module().request(method, url, headers, body, opts)
 
