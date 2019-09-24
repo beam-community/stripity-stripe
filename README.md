@@ -82,7 +82,7 @@ config :stripity_stripe, json_library: Jason
 
 ### Configuring Automatic Retries
 
-To configure the behaviour to retry requests that fail due to an intermittent network problem, you may optionally add an `:retries` key to the stripity_stripe configuration:
+To configure the behaviour to retry requests that fail due to an intermittent network problem, you may optionally add a `:retries` key to the stripity_stripe configuration:
 
 ```elixir
 config :stripity_stripe, retries: [
@@ -92,7 +92,7 @@ config :stripity_stripe, retries: [
 ]
 ```
 
-If a request is destructive operation, [Idempotency header](https://stripe.com/docs/api/ruby#idempotent_requests) will be added to guarantee that retries are safe.
+If a request is destructive operation, [Idempotency header](https://stripe.com/docs/api/idempotent_requests) will be added to guarantee that retries are safe.
 
 ## Note: Object Expansion
 

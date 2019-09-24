@@ -313,7 +313,7 @@ defmodule Stripe.API do
     |> min(max_backoff)
     |> backoff_jitter()
     |> max(base_backoff)
-    |> trunc
+    |> trunc()
   end
 
   @spec backoff_jitter(float) :: float
