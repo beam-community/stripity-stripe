@@ -315,6 +315,8 @@ defmodule Stripe.API do
       |> add_default_headers()
       |> maybe_add_auth_header_oauth(endpoint, api_key)
       |> add_api_version(api_version)
+      |> add_idempotency_headers(method)
+      |> Map.to_list()
 
     req_opts =
       []
@@ -338,6 +340,8 @@ defmodule Stripe.API do
       |> add_auth_header(api_key)
       |> add_connect_header(connect_account_id)
       |> add_api_version(api_version)
+      |> add_idempotency_headers(method)
+      |> Map.to_list()
 
     req_opts =
       opts
@@ -348,15 +352,10 @@ defmodule Stripe.API do
     do_perform_request(method, req_url, req_headers, body, req_opts)
   end
 
-  @spec do_perform_request(method, String.t(), headers, body, list) ::
+  @spec do_perform_request(method, String.t(), [headers], body, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
   defp do_perform_request(method, url, headers, body, opts) do
-    req_headers =
-      headers
-      |> add_idempotency_headers(method)
-      |> Map.to_list()
-
-    do_perform_request_and_retry(method, url, req_headers, body, opts, {:attempts, 0})
+    do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, 0})
   end
 
   @spec do_perform_request_and_retry(
@@ -370,7 +369,6 @@ defmodule Stripe.API do
   defp do_perform_request_and_retry(_method, _url, _headers, _body, _opts, {:response, response}) do
     handle_response(response)
   end
-
   defp do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, attempts}) do
     response = http_module().request(method, url, headers, body, opts)
 
