@@ -361,7 +361,7 @@ defmodule Stripe.API do
   @spec do_perform_request_and_retry(
           method,
           String.t(),
-          headers,
+          [headers],
           body,
           list,
           {:attempts, non_neg_integer} | {:response, http_success | http_failure}
