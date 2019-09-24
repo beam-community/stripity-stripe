@@ -348,7 +348,8 @@ defmodule Stripe.API do
     do_perform_request(method, req_url, req_headers, body, req_opts)
   end
 
-  @spec do_perform_request(method, String.t(), headers, body, list) :: {:ok, map} | {:error, Stripe.Error.t()}
+  @spec do_perform_request(method, String.t(), headers, body, list) ::
+          {:ok, map} | {:error, Stripe.Error.t()}
   defp do_perform_request(method, url, headers, body, opts) do
     req_headers =
       headers
@@ -358,10 +359,18 @@ defmodule Stripe.API do
     do_perform_request_and_retry(method, url, req_headers, body, opts, {:attempts, 0})
   end
 
-  @spec do_perform_request_and_retry(method, String.t(), headers, body, list, {:attempts, non_neg_integer} | {:response, http_success | http_failure}) :: {:ok, map} | {:error, Stripe.Error.t()}
+  @spec do_perform_request_and_retry(
+          method,
+          String.t(),
+          headers,
+          body,
+          list,
+          {:attempts, non_neg_integer} | {:response, http_success | http_failure}
+        ) :: {:ok, map} | {:error, Stripe.Error.t()}
   defp do_perform_request_and_retry(_method, _url, _headers, _body, _opts, {:response, response}) do
     handle_response(response)
   end
+
   defp do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, attempts}) do
     response = http_module().request(method, url, headers, body, opts)
 
@@ -376,7 +385,7 @@ defmodule Stripe.API do
   end
 
   @spec add_attempts(http_success | http_failure, non_neg_integer, Keyword.t()) ::
-        {:attempts, non_neg_integer} | {:response, http_success | http_failure}
+          {:attempts, non_neg_integer} | {:response, http_success | http_failure}
   defp add_attempts(response, attempts, retry_config) do
     if should_retry?(response, attempts, retry_config) do
       attempts
