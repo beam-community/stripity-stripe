@@ -2,7 +2,7 @@
 
 ## 2.7.0
 
-- [Add idempotent requests](https://github.com/code-corps/stripity_stripe/pull/546)
+- 💜 @ishikawa [Add idempotent requests](https://github.com/code-corps/stripity_stripe/pull/546)
 - [Fix source amount field type](https://github.com/code-corps/stripity_stripe/pull/545)
 
 ## 2.6.0
