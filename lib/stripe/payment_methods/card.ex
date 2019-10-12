@@ -153,7 +153,7 @@ defmodule Stripe.Card do
     new_request(opts)
     |> put_endpoint(endpoint <> "/#{get_id!(id)}")
     |> put_method(:post)
-    |> put_params(params |> Map.delete(:customer))
+    |> put_params(params |> Map.delete(:customer) |> Map.delete(:id))
     |> make_request()
   end
 

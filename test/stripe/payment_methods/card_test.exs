@@ -20,6 +20,11 @@ defmodule Stripe.CardTest do
       assert {:ok, _} = Stripe.Card.update("card_123", %{customer: "cus_123"})
       assert_stripe_requested(:post, "/v1/customers/cus_123/sources/card_123")
     end
+
+    test "passing an 'id' does not result in an error" do
+      assert {:ok, _} = Stripe.Card.update("card_123", %{id: "card_123", customer: "cus_123"})
+      assert_stripe_requested(:post, "/v1/customers/cus_123/sources/card_123")
+    end
   end
 
   describe "delete/2" do
