@@ -45,6 +45,7 @@ defmodule Stripe.Converter do
     payment_intent
     payment_method
     payout
+    person
     plan
     product
     recipient
