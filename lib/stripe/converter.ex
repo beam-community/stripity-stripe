@@ -117,7 +117,7 @@ defmodule Stripe.Converter do
   @spec convert_list(list) :: list
   defp convert_list(list), do: list |> Enum.map(&convert_value/1)
 
-  if Mix.env() == "prod" do
+  if Mix.env() == :prod do
     defp warn_unknown_object(_), do: :ok
   else
     defp warn_unknown_object(%{"object" => object_name}) do
@@ -127,7 +127,7 @@ defmodule Stripe.Converter do
     end
   end
 
-  if Mix.env() == "prod" do
+  if Mix.env() == :prod do
     defp check_for_extra_keys(_, _), do: :ok
   else
     defp check_for_extra_keys(struct_keys, map) do
