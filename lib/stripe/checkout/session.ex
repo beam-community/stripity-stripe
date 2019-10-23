@@ -78,6 +78,7 @@ defmodule Stripe.Session do
           :mode => String.t(),
           :payment_intent => Stripe.id() | Stripe.PaymentIntent.t() | nil,
           :payment_method_types => list(String.t()),
+          :setup_intent => Stripe.id() | Stripe.SetupIntent.t() | nil,
           :submit_type => String.t(),
           :subscription => Stripe.id() | Stripe.Subscription.t() | nil,
           :success_url => String.t()
@@ -97,6 +98,7 @@ defmodule Stripe.Session do
     :mode,
     :payment_intent,
     :payment_method_types,
+    :setup_intent,
     :submit_type,
     :subscription,
     :success_url
