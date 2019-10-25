@@ -3,7 +3,7 @@ defmodule Stripe.SubscriptionScheduleTest do
 
   @invalid_params %{
     customer: "cus_123",
-    renewal_behavior: "release",
+    end_behavior: "release",
     phases: [
       %{
         coupon: nil,
@@ -27,7 +27,7 @@ defmodule Stripe.SubscriptionScheduleTest do
     test "creates a subscription schedule" do
       params = %{
         customer: "cus_123",
-        renewal_behavior: "release",
+        end_behavior: "release",
         phases: [
           %{
             coupon: nil,
@@ -63,7 +63,7 @@ defmodule Stripe.SubscriptionScheduleTest do
   describe "update/2" do
     test "updates a subscription" do
       params = %{
-        renewal_behavior: "release",
+        end_behavior: "release",
         phases: [
           %{
             coupon: nil,

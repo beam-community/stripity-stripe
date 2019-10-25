@@ -131,7 +131,7 @@ defmodule Stripe.Account do
   @type capabilities :: %{
           card_payments: String.t() | nil,
           legacy_payments: String.t() | nil,
-          platform_payments: String.t() | nil
+          transfers: String.t() | nil
         }
 
   @type t :: %__MODULE__{
