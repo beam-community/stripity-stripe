@@ -22,7 +22,6 @@ defmodule Stripe.Subscription do
           billing: String.t() | nil,
           billing_cycle_anchor: Stripe.timestamp() | nil,
           billing_thresholds: Stripe.Types.subscription_billing_thresholds() | nil,
-          cancel_at: Stripe.timestamp() | nil,
           cancel_at_period_end: boolean,
           canceled_at: Stripe.timestamp() | nil,
           collection_method: String.t(),
@@ -59,7 +58,6 @@ defmodule Stripe.Subscription do
     :billing,
     :billing_cycle_anchor,
     :billing_thresholds,
-    :cancel_at,
     :cancel_at_period_end,
     :canceled_at,
     :collection_method,
@@ -100,14 +98,16 @@ defmodule Stripe.Subscription do
                optional(:application_fee_percent) => integer,
                optional(:billing) => String.t(),
                optional(:billing_cycle_anchor) => Stripe.timestamp(),
-               optional(:cancel_at) => Stripe.timestamp(),
                optional(:collection_method) => String.t(),
                optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
                optional(:days_until_due) => non_neg_integer,
-               optional(:items) => [
+               :items => [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
-                   optional(:quantity) => non_neg_integer
+                   optional(:billing_methods) => map,
+                   optional(:metadata) => map,
+                   optional(:quantity) => non_neg_integer,
+                   optional(:tax_rates) => list
                  }
                ],
                optional(:metadata) => Stripe.Types.metadata(),
@@ -147,7 +147,6 @@ defmodule Stripe.Subscription do
                optional(:application_fee_percent) => float,
                optional(:billing) => String.t(),
                optional(:billing_cycle_anchor) => Stripe.timestamp(),
-               optional(:cancel_at) => Stripe.timestamp(),
                optional(:cancel_at_period_end) => boolean(),
                optional(:collection_method) => String.t(),
                optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
@@ -155,7 +154,10 @@ defmodule Stripe.Subscription do
                optional(:items) => [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
-                   optional(:quantity) => non_neg_integer
+                   optional(:billing_methods) => map,
+                   optional(:metadata) => map,
+                   optional(:quantity) => non_neg_integer,
+                   optional(:tax_rates) => list
                  }
                ],
                optional(:metadata) => Stripe.Types.metadata(),
