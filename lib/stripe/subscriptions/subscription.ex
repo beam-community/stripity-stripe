@@ -21,7 +21,7 @@ defmodule Stripe.Subscription do
           application_fee_percent: float | nil,
           collection_method: String.t() | nil,
           collection_method_cycle_anchor: Stripe.timestamp() | nil,
-          collection_method_thresholds: Stripe.Types.subscription_collection_method_thresholds() | nil,
+          collection_method_thresholds: Stripe.Types.collection_method_thresholds() | nil,
           cancel_at: Stripe.timestamp() | nil,
           cancel_at_period_end: boolean,
           canceled_at: Stripe.timestamp() | nil,
