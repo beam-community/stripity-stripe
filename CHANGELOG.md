@@ -1,5 +1,14 @@
 # Latest
 
+## 2.7.1
+
+- [Add setup_intent to checkout session ](https://github.com/code-corps/stripity_stripe/pull/554)
+- [update Read Me](https://github.com/code-corps/stripity_stripe/pull/553)
+- [Fix production env check for additional Stripe response converter logging](https://github.com/code-corps/stripity_stripe/pull/552)
+- [Include person in @supported_objects](https://github.com/code-corps/stripity_stripe/pull/548)
+- [fix: Remove 'id' from the Card update payload](https://github.com/code-corps/stripity_stripe/pull/551)
+- [Update hackney to work around Erlang/OTP 22.1 issue ](https://github.com/code-corps/stripity_stripe/pull/549)
+
 ## 2.7.0
 
 - 💜 @ishikawa [Add idempotent requests](https://github.com/code-corps/stripity_stripe/pull/546)
