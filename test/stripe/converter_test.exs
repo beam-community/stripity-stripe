@@ -12,7 +12,6 @@ defmodule Stripe.ConverterTest do
         object: %Stripe.Customer{
           id: "cus_9ryX7lUQ4Dcpf7",
           object: "customer",
-          account_balance: 0,
           created: 1_483_535_628,
           currency: nil,
           default_source: nil,
@@ -176,7 +175,6 @@ defmodule Stripe.ConverterTest do
     expected_result = %Stripe.Customer{
       id: "cus_9ryX7lUQ4Dcpf7",
       object: "customer",
-      account_balance: 0,
       created: 1_483_535_628,
       currency: "usd",
       default_source: nil,
