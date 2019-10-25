@@ -61,7 +61,6 @@ defmodule Stripe.Account do
           business_name_kanji: String.t() | nil,
           business_tax_id_provided: boolean,
           business_vat_id_provided: boolean,
-          deleted: boolean | nil,
           dob: Stripe.Types.dob(),
           first_name: String.t() | nil,
           first_name_kana: String.t() | nil,
