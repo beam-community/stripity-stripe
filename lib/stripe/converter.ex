@@ -12,6 +12,7 @@ defmodule Stripe.Converter do
 
   @supported_objects ~w(
     account
+    account_link
     application_fee
     fee_refund
     balance
