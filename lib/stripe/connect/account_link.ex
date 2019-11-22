@@ -29,7 +29,7 @@ defmodule Stripe.AccountLink do
   @plural_endpoint "account_links"
 
   @doc """
-  Create an account.
+  Create an account link.
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
