@@ -182,7 +182,7 @@ defmodule Stripe.Invoice do
                %{
                  optional(:application_fee_amount) => integer,
                  optional(:auto_advance) => boolean,
-                 optional(:billing) => String.t(),
+                 optional(:collection_method) => String.t(),
                  :customer => Stripe.id() | Stripe.Customer.t(),
                  optional(:custom_fields) => custom_fields,
                  optional(:days_until_due) => integer,
