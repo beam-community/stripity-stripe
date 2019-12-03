@@ -73,11 +73,6 @@ defmodule Stripe.API do
     Config.resolve(:http_module, :hackney)
   end
 
-  @doc """
-  In config.exs your implicit or expicit configuration for retries is:
-    config :stripity_stripe, :retries,
-      [max_attempts: 3, base_backoff: 500, max_backoff: 2_000]
-  """
   @spec retry_config() :: Keyword.t()
   defp retry_config() do
     Config.resolve(:retries, [])
