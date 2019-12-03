@@ -95,6 +95,14 @@ To set timeouts, pass opts for the http client. The default one is Hackney.
 config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}])
 ```
 
+### Request Retries
+
+To set retries, you can pass the number of attempts and range of backoff (time between attempting the request again) in milliseconds.
+
+```ex
+config :stripity_stripe, :retries, [max_attempts: 3, base_backoff: 500, max_backoff: 2_000]
+```
+
 ## Note: Object Expansion
 
 Some Stripe API endpoints support returning related objects via the object expansion query parameter. To take advantage of this feature, stripity_stripe accepts
