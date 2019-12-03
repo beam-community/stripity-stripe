@@ -97,7 +97,7 @@ config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout
 
 ### Request Retries
 
-To set retries, you can pass the number of attempts and range of backoff (time between tring the request again) in milliseconds
+To set retries, you can pass the number of attempts and range of backoff (time between attempting the request again) in milliseconds.
 
 ```ex
 config :stripity_stripe, :retries, [max_attempts: 3, base_backoff: 500, max_backoff: 2_000]
