@@ -28,8 +28,8 @@ Starting with stripity_stripe version 2.5.0, you can specify the Stripe API Vers
 | `2.1.0 - 2.2.0`    | `2018-05-21`       |
 | `2.2.2`            | `2018-08-23`       |
 | `2.2.3 - 2.3.0`    | `2018-11-08`       |
-| `2.4.0`            | `2019-05-16`       |
-| `master`           | `2019-05-16`       |
+| `2.4.0 - 2.7.0`    | `2019-05-16`       |
+| `master`           | `2019-10-17`       |
 
 # Documentation
 

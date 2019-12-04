@@ -61,7 +61,6 @@ defmodule Stripe.Account do
           business_name_kanji: String.t() | nil,
           business_tax_id_provided: boolean,
           business_vat_id_provided: boolean,
-          deleted: boolean | nil,
           dob: Stripe.Types.dob(),
           first_name: String.t() | nil,
           first_name_kana: String.t() | nil,
@@ -131,7 +130,7 @@ defmodule Stripe.Account do
   @type capabilities :: %{
           card_payments: String.t() | nil,
           legacy_payments: String.t() | nil,
-          platform_payments: String.t() | nil
+          transfers: String.t() | nil
         }
 
   @type t :: %__MODULE__{

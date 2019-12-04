@@ -26,6 +26,10 @@ defmodule Stripe.Issuing.Cardholder do
           metadata: Stripe.Types.metadata(),
           name: String.t(),
           phone_number: String.t() | nil,
+          requirements: %{
+            disabled_reason: String.t() | nil,
+            past_due: list
+          },
           status: String.t() | nil,
           type: atom() | String.t()
         }
@@ -42,6 +46,7 @@ defmodule Stripe.Issuing.Cardholder do
     :metadata,
     :name,
     :phone_number,
+    :requirements,
     :status,
     :type
   ]
