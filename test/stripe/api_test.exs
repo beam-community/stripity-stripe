@@ -2,8 +2,8 @@ defmodule Stripe.APITest do
   import Mox
   use Stripe.StripeCase
 
-  test "works with 301 responses without issue" do
-    {:error, %Stripe.Error{extra: %{http_status: 301}}} =
+  test "works with non existent responses without issue" do
+    {:error, %Stripe.Error{extra: %{http_status: 404}}} =
       Stripe.API.request(%{}, :get, "/", %{}, [])
   end
 
