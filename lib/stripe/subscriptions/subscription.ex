@@ -100,7 +100,7 @@ defmodule Stripe.Subscription do
         when params: %{
                :customer => Stripe.id() | Stripe.Customer.t(),
                optional(:application_fee_percent) => integer,
-               optional(:billing_cycle_anchor) => Strime.timestamp(),
+               optional(:billing_cycle_anchor) => Stripe.timestamp(),
                optional(:billing_thresholds) => map,
                optional(:collection_method) => String.t(),
                optional(:collection_method_cycle_anchor) => Stripe.timestamp(),
@@ -149,7 +149,7 @@ defmodule Stripe.Subscription do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:application_fee_percent) => float,
-               optional(:billing_cycle_anchor) => Strime.timestamp(),
+               optional(:billing_cycle_anchor) => Stripe.timestamp(),
                optional(:billing_thresholds) => map,
                optional(:collection_method) => String.t(),
                optional(:collection_method_cycle_anchor) => Stripe.timestamp(),
