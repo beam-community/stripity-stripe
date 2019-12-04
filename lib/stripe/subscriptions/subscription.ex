@@ -124,7 +124,7 @@ defmodule Stripe.Subscription do
                optional(:trial_from_plan) => boolean,
                optional(:trial_period_days) => non_neg_integer
              }
-  def create(%{customer: _} = params, opts \\ []) do
+  def create(%{customer: _, items: _} = params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
