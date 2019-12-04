@@ -2,8 +2,8 @@ defmodule Stripe.APITest do
   import Mox
   use Stripe.StripeCase
 
-  test "works with 301 responses without issue" do
-    {:error, %Stripe.Error{extra: %{http_status: 301}}} =
+  test "works with non existent responses without issue" do
+    {:error, %Stripe.Error{extra: %{http_status: 404}}} =
       Stripe.API.request(%{}, :get, "/", %{}, [])
   end
 
@@ -85,7 +85,7 @@ defmodule Stripe.APITest do
 
   test "gets default api version" do
     Stripe.API.request(%{}, :get, "products", %{}, [])
-    assert_stripe_requested(:get, "/v1/products", headers: {"Stripe-Version", "2019-05-16"})
+    assert_stripe_requested(:get, "/v1/products", headers: {"Stripe-Version", "2019-10-17"})
   end
 
   test "can set custom api version" do

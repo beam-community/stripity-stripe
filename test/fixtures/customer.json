@@ -1,7 +1,6 @@
 {
   "id": "cus_9ryX7lUQ4Dcpf7",
   "object": "customer",
-  "account_balance": 0,
   "created": 1483535628,
   "currency": "usd",
   "default_source": null,

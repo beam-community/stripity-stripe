@@ -28,8 +28,8 @@ Starting with stripity_stripe version 2.5.0, you can specify the Stripe API Vers
 | `2.1.0 - 2.2.0`    | `2018-05-21`       |
 | `2.2.2`            | `2018-08-23`       |
 | `2.2.3 - 2.3.0`    | `2018-11-08`       |
-| `2.4.0`            | `2019-05-16`       |
-| `master`           | `2019-05-16`       |
+| `2.4.0 - 2.7.0`    | `2019-05-16`       |
+| `master`           | `2019-10-17`       |
 
 # Documentation
 
@@ -93,6 +93,14 @@ To set timeouts, pass opts for the http client. The default one is Hackney.
 
 ```ex
 config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}])
+```
+
+### Request Retries
+
+To set retries, you can pass the number of attempts and range of backoff (time between attempting the request again) in milliseconds.
+
+```ex
+config :stripity_stripe, :retries, [max_attempts: 3, base_backoff: 500, max_backoff: 2_000]
 ```
 
 ## Note: Object Expansion

@@ -8,7 +8,6 @@
     "object": {
       "id": "cus_9ryX7lUQ4Dcpf7",
       "object": "customer",
-      "account_balance": 0,
       "created": 1483535628,
       "currency": null,
       "default_source": null,

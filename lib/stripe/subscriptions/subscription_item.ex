@@ -11,7 +11,7 @@ defmodule Stripe.SubscriptionItem do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
-          billing_thresholds: Stripe.Types.subscription_billing_thresholds() | nil,
+          billing_thresholds: Stripe.Types.collection_method_thresholds() | nil,
           created: Stripe.timestamp(),
           deleted: boolean | nil,
           metadata: Stripe.Types.metadata(),
