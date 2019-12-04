@@ -29,6 +29,9 @@ defmodule Stripe.Issuing.Card do
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           name: String.t(),
+          pin: %{
+            status: :active | :blocked
+          },
           replacement_for: t | Stripe.id() | nil,
           replacement_reason: String.t() | nil,
           shipping: Stripe.Types.shipping() | nil,
@@ -50,6 +53,7 @@ defmodule Stripe.Issuing.Card do
     :livemode,
     :metadata,
     :name,
+    :pin,
     :replacement_for,
     :replacement_reason,
     :shipping,

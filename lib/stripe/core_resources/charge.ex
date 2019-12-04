@@ -103,6 +103,7 @@ defmodule Stripe.Charge do
           source: Stripe.Card.t() | map,
           source_transfer: Stripe.id() | Stripe.Transfer.t() | nil,
           statement_descriptor: String.t() | nil,
+          statement_descriptor_suffix: String.t() | nil,
           status: String.t(),
           transfer: Stripe.id() | Stripe.Transfer.t() | nil,
           transfer_data: transfer_data | nil,
@@ -148,6 +149,7 @@ defmodule Stripe.Charge do
     :source,
     :source_transfer,
     :statement_descriptor,
+    :statement_descriptor_suffix,
     :status,
     :transfer,
     :transfer_data,
@@ -180,6 +182,7 @@ defmodule Stripe.Charge do
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.id() | Stripe.Card.t() | card_info,
                  optional(:statement_descriptor) => String.t(),
+                 optional(:statement_descriptor_suffix) => String.t(),
                  optional(:transfer_data) => transfer_data,
                  optional(:transfer_group) => String.t()
                }
@@ -264,6 +267,7 @@ defmodule Stripe.Charge do
                optional(:application_fee_amount) => non_neg_integer,
                optional(:receipt_email) => String.t(),
                optional(:statement_descriptor) => String.t(),
+               optional(:statement_descriptor_suffix) => String.t(),
                optional(:transfer_data) => transfer_data,
                optional(:transfer_group) => String.t()
              }
