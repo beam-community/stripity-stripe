@@ -28,7 +28,6 @@ defmodule Stripe.URI do
   }
   Stripe.URI.encode_query(card_data) # cards[0][number]=424242424242&cards[0][exp_year]=2014&cards[1][number]=424242424242&cards[1][exp_year]=2017
   """
-  @spec encode_query(map) :: String.t()
   def encode_query(map) do
     map |> UriQuery.params() |> URI.encode_query()
   end
