@@ -20,7 +20,7 @@ defmodule Stripe.Subscription do
           object: String.t(),
           application_fee_percent: float | nil,
           billing_cycle_anchor: Stripe.timestamp() | nil,
-          billing_thresholds: Stripe.Types.subscription_billing_thresholds() | nil,
+          billing_thresholds: map | nil,
           collection_method: String.t() | nil,
           collection_method_cycle_anchor: Stripe.timestamp() | nil,
           collection_method_thresholds: Stripe.Types.collection_method_thresholds() | nil,
