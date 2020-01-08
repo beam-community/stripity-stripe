@@ -89,6 +89,7 @@ defmodule Stripe.Invoice do
           })
 
   @type invoice_settings :: %{
+          default_payment_method: String.t() | nil,
           custom_fields: custom_fields | nil,
           footer: String.t() | nil
         }
