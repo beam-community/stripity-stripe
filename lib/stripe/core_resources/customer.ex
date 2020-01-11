@@ -91,7 +91,8 @@ defmodule Stripe.Customer do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.id() | Stripe.Source.t(),
-                 optional(:tax_info) => Stripe.Types.tax_info()
+                 optional(:tax_info) => Stripe.Types.tax_info(),
+                 optional(:payment_method) => String.t()
                }
                | %{}
   def create(params, opts \\ []) do
@@ -130,8 +131,7 @@ defmodule Stripe.Customer do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.Source.t(),
-                 optional(:tax_info) => Stripe.Types.tax_info(),
-                 optional(:payment_method) => String.t()
+                 optional(:tax_info) => Stripe.Types.tax_info()
                }
                | %{}
   def update(id, params, opts \\ []) do
