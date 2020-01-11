@@ -33,6 +33,7 @@ defmodule Stripe.Customer do
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           name: String.t(),
+          payment_method: String.t() | nil,
           phone: String.t(),
           preferred_locales: list(String.t()),
           shipping: Stripe.Types.shipping() | nil,
@@ -62,6 +63,7 @@ defmodule Stripe.Customer do
     :livemode,
     :metadata,
     :name,
+    :payment_method,
     :phone,
     :preferred_locales,
     :shipping,
@@ -91,7 +93,8 @@ defmodule Stripe.Customer do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.id() | Stripe.Source.t(),
-                 optional(:tax_info) => Stripe.Types.tax_info()
+                 optional(:tax_info) => Stripe.Types.tax_info(),
+                 optional(:payment_method) => String.t()
                }
                | %{}
   def create(params, opts \\ []) do
