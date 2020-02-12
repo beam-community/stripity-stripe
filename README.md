@@ -103,6 +103,77 @@ To set retries, you can pass the number of attempts and range of backoff (time b
 config :stripity_stripe, :retries, [max_attempts: 3, base_backoff: 500, max_backoff: 2_000]
 ```
 
+## Examples
+
+Stripe supports a token based, and intent based approach for processing payments. The token based approach is simpler, but it is not supported in Europe. The intents API is the way forward, and should be used for new development.
+
+### Intents
+
+Create a new `SetupIntent` object in Stripe. The created intent ID will be passed to the frontend to use with Stripe elements so the end user can enter their payment details. Setup intents are ephemeral. It is best to create a new one each time the user reaches your payment page.
+
+```elixir
+{:ok, setup_intent} = Stripe.SetupIntent.create(%{})
+
+# Return the ID to your frontend, and pass it to the confirmCardSetup method from Stripe elements
+{:ok, setup_intent.id}
+```
+
+On the frontend, use the setup intent ID you created in conjunction with Stripe elements `confirmCardSetup` method.
+
+```javascript
+stripe.confirmCardSetup(setupIntentId, {
+    payment_method: {
+      ...
+    }
+  })
+  .then(result => {
+    const setupIntentId = result.setupIntent.id,
+    const paymentMethodId = result.setupIntent.payment_method
+
+    // send the paymentMethodId and optionally (if needed) the setupIntentId
+  })
+```
+
+With the new payment method ID, you can associate the payment method with a Stripe customer.
+
+
+Get an existing customer.
+
+```elixir
+{:ok, stripe_customer} = Stripe.Customer.retrieve(stripe_customer_id)
+```
+
+Or create a new one.
+
+```elixir
+new_customer = %{
+  email: email,
+}
+
+{:ok, stripe_customer} = Stripe.Customer.create(customer)
+```
+
+Attach the payment method to the customer.
+
+```elixir
+{:ok, _result} = Stripe.PaymentMethod.attach(%{customer: stripe_customer.id, payment_method: payment_method_id})
+```
+
+Now you can charge the customer using a `PaymentIntent`. Since we used a setup intent initially, the payment intent will be authorized to make payments off session, for example to charge for a recurring subscription.
+
+
+```elixir
+{:ok, charge} = Stripe.PaymentIntent.create(%{
+  amount: cents_int,
+  currency: "USD",
+  customer: stripe_customer.id,
+  payment_method: payment_method_id,
+  off_session: true,
+  confirm: true
+})
+```
+
+
 ## Note: Object Expansion
 
 Some Stripe API endpoints support returning related objects via the object expansion query parameter. To take advantage of this feature, stripity_stripe accepts
