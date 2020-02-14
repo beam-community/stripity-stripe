@@ -33,8 +33,7 @@ defmodule Stripe.ConverterTest do
             has_more: false,
             total_count: 0,
             url: "/v1/customers/cus_9ryX7lUQ4Dcpf7/subscriptions"
-          },
-          tax_info: nil
+          }
         },
         previous_attributes: %{
           description: "testcustomer",

@@ -27,6 +27,11 @@ defmodule Stripe.TaxID do
           verified_address: String.t() | nil
         }
 
+  @type tax_id_data :: %{
+          type: String.t(),
+          value: String.t()
+        }
+
   defstruct [
     :id,
     :object,

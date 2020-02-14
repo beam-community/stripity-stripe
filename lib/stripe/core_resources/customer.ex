@@ -40,9 +40,7 @@ defmodule Stripe.Customer do
           sources: Stripe.List.t(Stripe.Source.t()),
           subscriptions: Stripe.List.t(Stripe.Subscription.t()),
           tax_exempt: String.t() | nil,
-          tax_ids: Stripe.List.t(Stripe.TaxID.t()),
-          tax_info: Stripe.Types.tax_info() | nil,
-          tax_info_verification: Stripe.Types.tax_info_verification() | nil
+          tax_ids: Stripe.List.t(Stripe.TaxID.t())
         }
 
   defstruct [
@@ -70,9 +68,7 @@ defmodule Stripe.Customer do
     :sources,
     :subscriptions,
     :tax_exempt,
-    :tax_ids,
-    :tax_info,
-    :tax_info_verification
+    :tax_ids
   ]
 
   @plural_endpoint "customers"
@@ -93,7 +89,7 @@ defmodule Stripe.Customer do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.id() | Stripe.Source.t(),
-                 optional(:tax_info) => Stripe.Types.tax_info(),
+                 optional(:tax_id_data) => Stripe.TaxID.tax_id_data(),
                  optional(:payment_method) => String.t()
                }
                | %{}
@@ -133,7 +129,7 @@ defmodule Stripe.Customer do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.Source.t(),
-                 optional(:tax_info) => Stripe.Types.tax_info()
+                 optional(:tax_id_data) => Stripe.TaxID.tax_id_data()
                }
                | %{}
   def update(id, params, opts \\ []) do
