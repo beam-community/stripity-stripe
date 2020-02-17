@@ -109,7 +109,7 @@ Stripe supports a token based, and intent based approach for processing payments
 
 ### Intents
 
-Create a new `SetupIntent` object in Stripe. The created intent ID will be passed to the frontend to use with Stripe elements so the end user can enter their payment details. Setup intents are ephemeral. It is best to create a new one each time the user reaches your payment page.
+Create a new `SetupIntent` object in [Stripe](https://stripe.com/docs/api/setup_intents). The created intent ID will be passed to the frontend to use with Stripe elements so the end user can enter their payment details. SetupIntents are ephemeral. It is best to create a new one each time the user reaches your payment page.
 
 ```elixir
 {:ok, setup_intent} = Stripe.SetupIntent.create(%{})
@@ -122,16 +122,16 @@ On the frontend, use the setup intent ID you created in conjunction with Stripe 
 
 ```javascript
 stripe.confirmCardSetup(setupIntentId, {
-    payment_method: {
-      ...
-    }
-  })
-  .then(result => {
-    const setupIntentId = result.setupIntent.id,
-    const paymentMethodId = result.setupIntent.payment_method
+  payment_method: {
+    ...
+  }
+})
+.then(result => {
+  const setupIntentId = result.setupIntent.id,
+  const paymentMethodId = result.setupIntent.payment_method
 
-    // send the paymentMethodId and optionally (if needed) the setupIntentId
-  })
+  // send the paymentMethodId and optionally (if needed) the setupIntentId
+})
 ```
 
 With the new payment method ID, you can associate the payment method with a Stripe customer.
@@ -159,8 +159,7 @@ Attach the payment method to the customer.
 {:ok, _result} = Stripe.PaymentMethod.attach(%{customer: stripe_customer.id, payment_method: payment_method_id})
 ```
 
-Now you can charge the customer using a `PaymentIntent`. Since we used a setup intent initially, the payment intent will be authorized to make payments off session, for example to charge for a recurring subscription.
-
+Now you can charge the customer using a `PaymentIntent` from [Stripe](https://stripe.com/docs/api/payment_intents). Since we used a setup intent initially, the payment intent will be authorized to make payments off session, for example to charge for a recurring subscription.
 
 ```elixir
 {:ok, charge} = Stripe.PaymentIntent.create(%{
@@ -172,7 +171,6 @@ Now you can charge the customer using a `PaymentIntent`. Since we used a setup i
   confirm: true
 })
 ```
-
 
 ## Note: Object Expansion
 
