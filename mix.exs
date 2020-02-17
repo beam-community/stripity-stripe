@@ -20,7 +20,7 @@ defmodule Stripe.Mixfile do
         "coveralls.html": :test
       ],
       test_coverage: [tool: ExCoveralls],
-      version: "2.7.1",
+      version: "2.7.2",
       source_url: "https://github.com/code-corps/stripity_stripe/",
       docs: [
         main: "readme",

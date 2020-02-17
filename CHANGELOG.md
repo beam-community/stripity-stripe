@@ -1,5 +1,14 @@
 # Latest
 
+## 2.7.2
+
+- [Add documentation for usage of the setup intents and setup payments A...](https://github.com/code-corps/stripity_stripe/pull/570)
+- [Add missing params to Stripe.Customer.create typespecs](https://github.com/code-corps/stripity_stripe/pull/569)
+- [add account links](https://github.com/code-corps/stripity_stripe/pull/562)
+- [Subscription :items is required](https://github.com/code-corps/stripity_stripe/pull/555)
+- [2019-10-17 API update](https://github.com/code-corps/stripity_stripe/pull/556)
+- [DOCUMENTATION: retries](https://github.com/code-corps/stripity_stripe/pull/565)
+
 ## 2.7.1
 
 - [Add setup_intent to checkout session ](https://github.com/code-corps/stripity_stripe/pull/554)
