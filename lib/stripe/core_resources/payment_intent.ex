@@ -138,6 +138,7 @@ defmodule Stripe.PaymentIntent do
                  optional(:customer) => Stripe.id() | Stripe.Customer.t(),
                  optional(:description) => String.t(),
                  optional(:metadata) => map,
+                 optional(:off_session) => boolean,
                  optional(:on_behalf_of) => Stripe.id() | Stripe.Account.t(),
                  optional(:payment_method) => String.t(),
                  optional(:payment_method_options) => map,
