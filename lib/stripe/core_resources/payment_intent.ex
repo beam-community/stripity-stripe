@@ -131,7 +131,6 @@ defmodule Stripe.PaymentIntent do
                %{
                  :amount => pos_integer,
                  :currency => String.t(),
-                 :payment_method_types => [String.t()],
                  optional(:application_fee_amount) => non_neg_integer,
                  optional(:capture_method) => String.t(),
                  optional(:confirm) => boolean,
