@@ -294,6 +294,7 @@ defmodule Stripe.PaymentIntent do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
+               optional(:customer) => Stripe.id() | Stripe.Customer.t(),
                optional(:created) => Stripe.date_query(),
                optional(:ending_before) => t | Stripe.id(),
                optional(:limit) => 1..100,
@@ -305,7 +306,7 @@ defmodule Stripe.PaymentIntent do
     |> put_endpoint(@plural_endpoint)
     |> put_method(:get)
     |> put_params(params)
-    |> cast_to_id([:ending_before, :starting_after])
+    |> cast_to_id([:ending_before, :starting_after, :customer])
     |> make_request()
   end
 end
