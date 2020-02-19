@@ -82,15 +82,18 @@ defmodule Stripe.Customer do
                  optional(:address) => Stripe.Types.address(),
                  optional(:balance) => integer,
                  optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
-                 optional(:default_source) => Stripe.id() | Stripe.Source.t(),
                  optional(:description) => String.t(),
                  optional(:email) => String.t(),
                  optional(:invoice_prefix) => String.t(),
                  optional(:invoice_settings) => Stripe.Invoice.invoice_settings(),
                  optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:name) => String.t(),
                  optional(:payment_method) => String.t(),
+                 optional(:phone) => String.t(),
+                 optional(:preferred_locales) => list(String.t()),
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.id() | Stripe.Source.t(),
+                 optional(:tax_excempt) => String.t(),
                  optional(:tax_id_data) => Stripe.TaxID.tax_id_data()
                }
                | %{}
@@ -129,9 +132,12 @@ defmodule Stripe.Customer do
                  optional(:invoice_prefix) => String.t(),
                  optional(:invoice_settings) => Stripe.Invoice.invoice_settings(),
                  optional(:metadata) => Stripe.Types.metadata(),
-                 optional(:tax_id_data) => Stripe.TaxID.tax_id_data(),
+                 optional(:name) => String.t(),
+                 optional(:phone) => String.t(),
+                 optional(:preferred_locales) => list(String.t()),
                  optional(:shipping) => Stripe.Types.shipping(),
-                 optional(:source) => Stripe.Source.t()
+                 optional(:source) => Stripe.Source.t(),
+                 optional(:tax_excempt) => String.t()
                }
                | %{}
   def update(id, params, opts \\ []) do
