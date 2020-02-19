@@ -79,6 +79,7 @@ defmodule Stripe.Customer do
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
+                 optional(:address) => Stripe.Types.address(),
                  optional(:balance) => integer,
                  optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
                  optional(:default_source) => Stripe.id() | Stripe.Source.t(),
@@ -87,10 +88,10 @@ defmodule Stripe.Customer do
                  optional(:invoice_prefix) => String.t(),
                  optional(:invoice_settings) => Stripe.Invoice.invoice_settings(),
                  optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:payment_method) => String.t(),
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.id() | Stripe.Source.t(),
-                 optional(:tax_id_data) => Stripe.TaxID.tax_id_data(),
-                 optional(:payment_method) => String.t()
+                 optional(:tax_id_data) => Stripe.TaxID.tax_id_data()
                }
                | %{}
   def create(params, opts \\ []) do
@@ -119,6 +120,7 @@ defmodule Stripe.Customer do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
+                 optional(:address) => Stripe.Types.address(),
                  optional(:balance) => integer,
                  optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
                  optional(:default_source) => Stripe.id() | Stripe.Source.t(),
@@ -127,9 +129,9 @@ defmodule Stripe.Customer do
                  optional(:invoice_prefix) => String.t(),
                  optional(:invoice_settings) => Stripe.Invoice.invoice_settings(),
                  optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:tax_id_data) => Stripe.TaxID.tax_id_data(),
                  optional(:shipping) => Stripe.Types.shipping(),
-                 optional(:source) => Stripe.Source.t(),
-                 optional(:tax_id_data) => Stripe.TaxID.tax_id_data()
+                 optional(:source) => Stripe.Source.t()
                }
                | %{}
   def update(id, params, opts \\ []) do
