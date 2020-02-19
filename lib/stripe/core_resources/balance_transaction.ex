@@ -22,6 +22,7 @@ defmodule Stripe.BalanceTransaction do
           fee: integer,
           fee_details: list(Stripe.Types.fee()) | [],
           net: integer,
+          reporting_category: String.t(),
           source: Stripe.id() | Stripe.Source.t() | nil,
           status: String.t(),
           type: String.t()
@@ -39,6 +40,7 @@ defmodule Stripe.BalanceTransaction do
     :fee,
     :fee_details,
     :net,
+    :reporting_category,
     :source,
     :status,
     :type
