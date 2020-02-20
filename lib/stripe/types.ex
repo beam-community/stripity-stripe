@@ -56,16 +56,6 @@ defmodule Stripe.Types do
           reset_billing_cycle_anchor: boolean | nil
         }
 
-  @type tax_info :: %{
-          type: String.t(),
-          tax_id: String.t() | nil
-        }
-
-  @type tax_info_verification :: %{
-          status: String.t() | nil,
-          verified_name: String.t() | nil
-        }
-
   @type transfer_schedule :: %{
           delay_days: non_neg_integer,
           interval: String.t(),

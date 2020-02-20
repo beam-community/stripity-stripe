@@ -22,7 +22,7 @@ defmodule Stripe.Person do
   end
 
   @type relationship :: %{
-          account_opener: boolean() | nil,
+          representative: boolean() | nil,
           director: boolean() | nil,
           owner: boolean() | nil,
           percent_ownership: float() | nil,
