@@ -57,6 +57,7 @@ defmodule Stripe.Event do
           type: String.t()
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

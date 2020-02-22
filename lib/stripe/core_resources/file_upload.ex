@@ -25,6 +25,7 @@ defmodule Stripe.FileUpload do
           url: String.t() | nil
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

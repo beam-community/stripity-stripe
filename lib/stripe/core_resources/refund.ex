@@ -31,6 +31,7 @@ defmodule Stripe.Refund do
           transfer_reversal: Stripe.id() | Stripe.TransferReversal.t() | nil
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

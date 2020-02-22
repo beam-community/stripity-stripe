@@ -81,6 +81,7 @@ defmodule Stripe.PaymentIntent do
           transfer_group: String.t() | nil
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

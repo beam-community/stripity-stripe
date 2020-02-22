@@ -32,6 +32,7 @@ defmodule Stripe.Payout do
           type: String.t()
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

@@ -32,6 +32,7 @@ defmodule Stripe.TaxID do
           value: String.t()
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

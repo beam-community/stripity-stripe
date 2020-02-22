@@ -28,6 +28,7 @@ defmodule Stripe.BalanceTransaction do
           type: String.t()
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

@@ -43,6 +43,7 @@ defmodule Stripe.Customer do
           tax_ids: Stripe.List.t(Stripe.TaxID.t())
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

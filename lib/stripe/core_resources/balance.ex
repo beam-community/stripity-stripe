@@ -25,6 +25,7 @@ defmodule Stripe.Balance do
           pending: list(funds)
         }
 
+  @derive Jason.Encoder
   defstruct [
     :object,
     :available,

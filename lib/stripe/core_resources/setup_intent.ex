@@ -66,6 +66,7 @@ defmodule Stripe.SetupIntent do
           usage: String.t()
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

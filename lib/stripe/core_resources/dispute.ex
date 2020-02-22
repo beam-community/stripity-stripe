@@ -75,6 +75,7 @@ defmodule Stripe.Dispute do
           status: dispute_status
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,

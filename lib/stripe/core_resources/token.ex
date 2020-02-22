@@ -67,6 +67,7 @@ defmodule Stripe.Token do
           used: boolean
         }
 
+  @derive Jason.Encoder
   defstruct [
     :id,
     :object,
