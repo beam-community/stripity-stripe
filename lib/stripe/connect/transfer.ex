@@ -60,7 +60,8 @@ defmodule Stripe.Transfer do
                :destination => Stripe.id() | Stripe.Account.t(),
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:source_transaction) => Stripe.id() | Stripe.Charge.t(),
-               optional(:transfer_group) => String.t()
+               optional(:transfer_group) => String.t(),
+               optional(:description) => String.t()
              }
   def create(%{amount: _, currency: _, destination: _} = params, opts \\ []) do
     new_request(opts)
