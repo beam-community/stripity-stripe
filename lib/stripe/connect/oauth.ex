@@ -76,12 +76,13 @@ defmodule Stripe.Connect.OAuth do
   }
   ```
   """
-  @spec token(String.t()) :: {:ok, map} | {:error, %Stripe.Error{}}
-  def token(code) do
+  @spec token(String.t(), Stripe.options()) :: {:ok, map} | {:error, %Stripe.Error{}}
+  def token(code, opts \\ []) do
     endpoint = "token"
+    {api_key, _} = Keyword.pop(opts, :api_key)
 
     body = %{
-      client_secret: get_client_secret(),
+      client_secret: api_key || get_client_secret(),
       code: code,
       grant_type: "authorization_code"
     }
