@@ -92,7 +92,7 @@ config :stripity_stripe, json_library: Poison
 To set timeouts, pass opts for the http client. The default one is Hackney.
 
 ```ex
-config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}])
+config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}]
 ```
 
 ### Request Retries
