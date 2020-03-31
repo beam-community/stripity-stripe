@@ -42,7 +42,7 @@ Starting with stripity_stripe version 2.5.0, you can specify the Stripe API Vers
 Install the dependency by version:
 
 ```ex
-{:stripity_stripe, "~> 2.0.0"}
+{:stripity_stripe, "~> 2.0"}
 ```
 
 Or by commit reference (still awaiting hex publish rights so this is your best best for now):
