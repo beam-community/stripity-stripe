@@ -1,6 +1,6 @@
 # Latest
 
-## 2.8.0
+## [2.8.0](https://github.com/code-corps/stripity_stripe/compare/2.7.1...2.8.0)
 
 ## 2.7.2
 
