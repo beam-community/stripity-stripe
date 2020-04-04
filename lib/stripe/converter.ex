@@ -68,6 +68,29 @@ defmodule Stripe.Converter do
 
   @no_convert_maps ~w(metadata supported_bank_account_currencies)
 
+  @doc """
+  Returns a list of structs to be used for providing JSON-encoders.
+
+  ## Examples
+
+  Say you are using Jason to encode your JSON, you can provide the following protocol,
+  to directly encode all structs of this library into JSON.
+
+  ```
+  for struct <- Stripe.Converter.structs() do
+    defimpl Jason.Encoder, for: struct do
+      def encode(value, opts) do
+        Jason.Encode.map(Map.delete(value, :__struct__), opts)
+      end
+    end
+  end
+  ```
+  """
+  def structs() do
+    (@supported_objects -- @no_convert_maps)
+    |> Enum.map(&Stripe.Util.object_name_to_module/1)
+  end
+
   @spec convert_value(any) :: any
   defp convert_value(%{"object" => object_name} = value) when is_binary(object_name) do
     case Enum.member?(@supported_objects, object_name) do
