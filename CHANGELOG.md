@@ -1,5 +1,7 @@
 # Latest
 
+## 2.8.0
+
 ## 2.7.2
 
 - [Add documentation for usage of the setup intents and setup payments A...](https://github.com/code-corps/stripity_stripe/pull/570)
