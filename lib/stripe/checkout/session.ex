@@ -47,9 +47,9 @@ defmodule Stripe.Session do
 
   @type subscription_data :: %{
           :items => list(item),
-          :metadata => Stripe.Types.metadata(),
-          :trial_end => integer(),
-          :trial_period_days => integer()
+          optional(:metadata) => Stripe.Types.metadata(),
+          optional(:trial_end) => integer(),
+          optional(:trial_period_days) => integer()
         }
 
   @type create_params :: %{
