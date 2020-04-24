@@ -12,6 +12,18 @@ defmodule Stripe.SessionTest do
     assert_stripe_requested(:post, "/v1/checkout/sessions")
   end
 
+  test "is creatable with metadata" do
+    params = %{
+      cancel_url: "https://stripe.com",
+      payment_method_types: ["card"],
+      success_url: "https://stripe.com",
+      metadata: %{key: "value"}
+    }
+
+    assert {:ok, %Stripe.Session{}} = Stripe.Session.create(params)
+    assert_stripe_requested(:post, "/v1/checkout/sessions")
+  end
+
   describe "retrieve/2" do
     test "retrieves a session" do
       assert {:ok, session = %Stripe.Session{}} = Stripe.Session.retrieve("cs_123")
