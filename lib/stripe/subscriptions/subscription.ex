@@ -164,6 +164,7 @@ defmodule Stripe.Subscription do
                optional(:items) => [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
+                   optional(:id) => Stripe.id() | binary(),
                    optional(:billing_methods) => map,
                    optional(:metadata) => map,
                    optional(:quantity) => non_neg_integer,
