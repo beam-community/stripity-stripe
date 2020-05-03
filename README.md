@@ -127,7 +127,7 @@ stripe.confirmCardSetup(setupIntentId, {
   }
 })
 .then(result => {
-  const setupIntentId = result.setupIntent.id,
+  const setupIntentId = result.setupIntent.id
   const paymentMethodId = result.setupIntent.payment_method
 
   // send the paymentMethodId and optionally (if needed) the setupIntentId
@@ -150,7 +150,7 @@ new_customer = %{
   email: email,
 }
 
-{:ok, stripe_customer} = Stripe.Customer.create(customer)
+{:ok, stripe_customer} = Stripe.Customer.create(new_customer)
 ```
 
 Attach the payment method to the customer.
