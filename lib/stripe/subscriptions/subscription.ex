@@ -14,6 +14,7 @@ defmodule Stripe.Subscription do
 
   use Stripe.Entity
   import Stripe.Request
+  import Stripe.Util, only: [log_deprecation: 1]
 
   @type t :: %__MODULE__{
           id: Stripe.id(),
@@ -207,9 +208,11 @@ defmodule Stripe.Subscription do
   is deprecated.  Use `Subscription.update/2` with
   `cancel_at_period_end: true` instead.
   """
-  @deprecated "Use Stripe.Subscription.update/2 with `cancel_at_period_end: true`"
   @spec delete(Stripe.id() | t, %{at_period_end: true}) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def delete(id, %{at_period_end: true}), do: update(id, %{cancel_at_period_end: true})
+  def delete(id, %{at_period_end: true}) do
+    log_deprecation("Use Stripe.Subscription.update/2 with `cancel_at_period_end: true`")
+    update(id, %{cancel_at_period_end: true})
+  end
 
   @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, opts) when is_list(opts) do
@@ -219,14 +222,12 @@ defmodule Stripe.Subscription do
     |> make_request()
   end
 
-  @doc """
-  DEPRECATED: Use `Subscription.update/3` with `cancel_at_period_end: true` instead.
-  """
-  @deprecated "Use Stripe.Subscription.update/3 with `cancel_at_period_end: true`"
   @spec delete(Stripe.id() | t, %{at_period_end: true}, Stripe.options()) ::
           {:ok, t} | {:error, Stripe.Error.t()}
-  def delete(id, %{at_period_end: true}, opts) when is_list(opts),
-    do: update(id, %{cancel_at_period_end: true}, opts)
+  def delete(id, %{at_period_end: true}, opts) when is_list(opts) do
+    log_deprecation("Use Stripe.Subscription.update/2 with `cancel_at_period_end: true`")
+    update(id, %{cancel_at_period_end: true}, opts)
+  end
 
   @doc """
   List all subscriptions.
