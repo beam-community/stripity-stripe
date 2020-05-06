@@ -88,9 +88,9 @@ defmodule Stripe.Invoice do
           })
 
   @type invoice_settings :: %{
-          optional(:default_payment_method) => String.t() | nil,
-          optional(:custom_fields) => custom_fields | nil,
-          optional(:footer) => String.t() | nil
+          optional(:default_payment_method) => String.t(),
+          optional(:custom_fields) => custom_fields,
+          optional(:footer) => String.t()
         }
 
   @type status_transitions ::
