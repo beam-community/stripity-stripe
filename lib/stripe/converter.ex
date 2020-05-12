@@ -34,7 +34,6 @@ defmodule Stripe.Converter do
     invoiceitem
     issuing.authorization
     issuing.card
-    issuing.card_details
     issuing.cardholder
     issuing.dispute
     issuing.transaction
