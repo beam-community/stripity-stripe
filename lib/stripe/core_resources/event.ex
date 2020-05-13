@@ -6,7 +6,7 @@ defmodule Stripe.Event do
   - Retrieve an event
   - List all events
 
-  Stripe API reference: https://stripe.com/docs/api#event
+  Stripe API reference: https://stripe.com/docs/api/events
   """
 
   use Stripe.Entity

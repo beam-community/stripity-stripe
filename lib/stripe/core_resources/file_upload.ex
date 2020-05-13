@@ -19,8 +19,10 @@ defmodule Stripe.FileUpload do
           object: String.t(),
           created: Stripe.timestamp(),
           filename: String.t() | nil,
+          links: Stripe.List.t(Stripe.FileLink.t()),
           purpose: String.t(),
           size: integer,
+          title: String.t() | nil,
           type: String.t() | nil,
           url: String.t() | nil
         }
@@ -30,8 +32,10 @@ defmodule Stripe.FileUpload do
     :object,
     :created,
     :filename,
+    :links,
     :purpose,
     :size,
+    :title,
     :type,
     :url
   ]
