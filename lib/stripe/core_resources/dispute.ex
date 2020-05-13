@@ -9,7 +9,7 @@ defmodule Stripe.Dispute do
   - Close a dispute
   - List disputes
 
-  Stripe API reference: https://stripe.com/docs/api#disputes
+  Stripe API reference: https://stripe.com/docs/api/disputes
   """
 
   use Stripe.Entity

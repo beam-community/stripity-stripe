@@ -156,7 +156,6 @@ defmodule Stripe.Mixfile do
         Stripe.Issuing.Authorization,
         Stripe.Issuing.Card,
         Stripe.Issuing.Cardholder,
-        Stripe.Issuing.Dispute,
         Stripe.Issuing.Transaction,
         Stripe.Issuing.Types
       ],

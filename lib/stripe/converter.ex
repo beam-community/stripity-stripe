@@ -35,7 +35,6 @@ defmodule Stripe.Converter do
     issuing.authorization
     issuing.card
     issuing.cardholder
-    issuing.dispute
     issuing.transaction
     line_item
     list
