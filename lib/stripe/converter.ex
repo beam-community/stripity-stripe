@@ -30,6 +30,7 @@ defmodule Stripe.Converter do
     event
     external_account
     file
+    file_link
     invoice
     invoiceitem
     issuing.authorization
