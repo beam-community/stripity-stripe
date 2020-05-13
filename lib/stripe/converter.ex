@@ -38,6 +38,7 @@ defmodule Stripe.Converter do
     issuing.transaction
     line_item
     list
+    mandate
     oauth
     order
     order_return

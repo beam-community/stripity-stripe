@@ -101,6 +101,7 @@ defmodule Stripe.Mixfile do
         Stripe.Dispute,
         Stripe.Event,
         Stripe.FileUpload,
+        Stripe.Mandate,
         Stripe.PaymentIntent,
         Stripe.Payout,
         Stripe.Product,
