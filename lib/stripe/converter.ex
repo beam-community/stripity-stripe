@@ -41,6 +41,7 @@ defmodule Stripe.Converter do
     issuing.transaction
     line_item
     list
+    login_link
     mandate
     oauth
     order
