@@ -24,7 +24,9 @@ defmodule Stripe.Converter do
     country_spec
     coupon
     credit_note
+    credit_note_line_item
     customer
+    customer_balance_transaction
     discount
     dispute
     event

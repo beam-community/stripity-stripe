@@ -123,6 +123,8 @@ defmodule Stripe.Mixfile do
       Billing: [
         Stripe.Coupon,
         Stripe.CreditNote,
+        Stripe.CreditNoteLineItem,
+        Stripe.CustomerTransactionBalance,
         Stripe.Discount,
         Stripe.Invoice,
         Stripe.Invoiceitem,
