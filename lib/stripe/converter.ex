@@ -42,6 +42,7 @@ defmodule Stripe.Converter do
     mandate
     oauth
     order
+    order_item
     order_return
     payment_intent
     payment_method
@@ -64,6 +65,7 @@ defmodule Stripe.Converter do
     transfer
     transfer_reversal
     token
+    usage_record
   )
 
   @no_convert_maps ~w(metadata supported_bank_account_currencies)

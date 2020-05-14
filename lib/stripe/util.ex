@@ -58,6 +58,7 @@ defmodule Stripe.Util do
   def object_name_to_module("issuing.cardholder"), do: Stripe.Issuing.Cardholder
   def object_name_to_module("issuing.transaction"), do: Stripe.Issuing.Transaction
   def object_name_to_module("tax_id"), do: Stripe.TaxID
+  def object_name_to_module("usage_record"), do: Stripe.SubscriptionItem.Usage
 
   def object_name_to_module(object_name) do
     module_name =
