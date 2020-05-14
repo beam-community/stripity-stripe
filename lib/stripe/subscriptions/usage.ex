@@ -7,7 +7,7 @@ defmodule Stripe.SubscriptionItem.Usage do
 
   use Stripe.Entity
   import Stripe.Request
-  alias Stripe.Subscription.UsageRecordSummary
+  alias Stripe.SubscriptionItem.UsageRecordSummary
 
   @type t :: %__MODULE__{
           id: Stripe.id(),
