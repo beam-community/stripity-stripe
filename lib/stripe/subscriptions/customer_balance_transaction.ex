@@ -27,7 +27,7 @@ defmodule Stripe.CustomerBalanceTransaction do
           ending_balance: integer,
           invoice: Stripe.id() | Stripe.Invoice.t() | nil,
           livemode: boolean,
-          metadata: Stripe.metadata(),
+          metadata: Stripe.Types.metadata(),
           type: String.t()
         }
 
@@ -98,7 +98,8 @@ defmodule Stripe.CustomerBalanceTransaction do
   @doc """
   Update a Customer Balance Transaction.
   """
-  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec update(Stripe.id() | Stripe.Customer.t(), Stripe.id() | t, params, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:description) => String.t(),
                optional(:metadata) => Stripe.Types.metadata()
