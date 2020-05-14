@@ -61,6 +61,7 @@ defmodule Stripe.Session do
           :payment_method_types => list(String.t()),
           :success_url => String.t(),
           optional(:client_reference_id) => String.t(),
+          optional(:customer) => String.t(),
           optional(:customer_email) => String.t(),
           optional(:line_items) => list(line_item),
           optional(:locale) => String.t(),
