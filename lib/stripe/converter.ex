@@ -68,6 +68,7 @@ defmodule Stripe.Converter do
     transfer_reversal
     token
     usage_record
+    usage_record_summary
   )
 
   @no_convert_maps ~w(metadata supported_bank_account_currencies)

@@ -60,6 +60,9 @@ defmodule Stripe.Util do
   def object_name_to_module("tax_id"), do: Stripe.TaxID
   def object_name_to_module("usage_record"), do: Stripe.SubscriptionItem.Usage
 
+  def object_name_to_module("usage_record_summary"),
+    do: Stripe.SubscriptionItem.UsageRecordSummary
+
   def object_name_to_module(object_name) do
     module_name =
       object_name
