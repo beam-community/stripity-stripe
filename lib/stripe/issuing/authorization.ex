@@ -16,6 +16,14 @@ defmodule Stripe.Issuing.Authorization do
   use Stripe.Entity
   import Stripe.Request
 
+  @type pending_request :: %{
+          amount: integer,
+          currency: String.t(),
+          is_amount_controllable: boolean,
+          merchant_amount: integer,
+          merchant_currency: String.t()
+        }
+
   @type request_history :: %{
           approved: boolean,
           authorized_amount: integer,
@@ -35,53 +43,49 @@ defmodule Stripe.Issuing.Authorization do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
+          amount: integer,
           approved: boolean,
           authorization_method: String.t(),
-          authorized_amount: integer,
-          authorized_currency: String.t() | nil,
           balance_transactions: Stripe.List.t(Stripe.BalanceTransaction.t()),
           card: Stripe.Issuing.Card.t(),
           cardholder: Stripe.id() | Stripe.Issuing.Cardholder.t(),
           created: Stripe.timestamp(),
-          held_amount: integer,
-          held_currency: String.t() | nil,
-          is_held_amount_controllable: boolean,
+          currency: String.t(),
           livemode: boolean,
+          merchant_amount: integer,
+          merchant_currency: String.t(),
           merchant_data: Stripe.Issuing.Types.merchant_data(),
           metadata: Stripe.Types.metadata(),
-          pending_authorized_amount: integer,
-          pending_held_amount: integer,
+          pending_request: pending_request() | nil,
           request_history: Stripe.List.t(request_history()),
           status: String.t(),
           transactions: Stripe.List.t(Stripe.Issuing.Transaction.t()),
           verification_data: verification_data(),
-          wallet_provider: String.t() | nil
+          wallet: String.t() | nil
         }
 
   defstruct [
     :id,
     :object,
+    :amount,
     :approved,
     :authorization_method,
-    :authorized_amount,
-    :authorized_currency,
     :balance_transactions,
     :card,
     :cardholder,
     :created,
-    :held_amount,
-    :held_currency,
-    :is_held_amount_controllable,
+    :currency,
     :livemode,
+    :merchant_amount,
+    :merchant_currency,
     :merchant_data,
     :metadata,
-    :pending_authorized_amount,
-    :pending_held_amount,
+    :pending_request,
     :request_history,
     :status,
     :transactions,
     :verification_data,
-    :wallet_provider
+    :wallet
   ]
 
   @plural_endpoint "issuing/authorizations"

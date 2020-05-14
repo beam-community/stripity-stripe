@@ -25,6 +25,8 @@ defmodule Stripe.Issuing.Transaction do
           created: Stripe.timestamp(),
           currency: String.t() | nil,
           livemode: boolean,
+          merchant_amount: integer,
+          merchant_currency: String.t(),
           merchant_data: Stripe.Issuing.Types.merchant_data(),
           metadata: Stripe.Types.metadata(),
           type: String.t()
@@ -40,8 +42,9 @@ defmodule Stripe.Issuing.Transaction do
     :cardholder,
     :created,
     :currency,
-    :dispute,
     :livemode,
+    :merchant_amount,
+    :merchant_currency,
     :merchant_data,
     :metadata,
     :type
