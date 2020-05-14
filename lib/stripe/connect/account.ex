@@ -9,7 +9,7 @@ defmodule Stripe.Account do
 
   This module does not yet support managed accounts.
 
-  Stripe API reference: https://stripe.com/docs/api#account
+  Stripe API reference: https://stripe.com/docs/api/accounts
   """
 
   use Stripe.Entity
@@ -144,6 +144,7 @@ defmodule Stripe.Account do
           country: String.t(),
           created: Stripe.timestamp() | nil,
           default_currency: String.t(),
+          deleted: boolean | nil,
           details_submitted: boolean,
           email: String.t() | nil,
           external_accounts: Stripe.List.t(Stripe.BankAccount.t() | Stripe.Card.t()),
@@ -167,6 +168,7 @@ defmodule Stripe.Account do
     :country,
     :created,
     :default_currency,
+    :deleted,
     :details_submitted,
     :email,
     :external_accounts,

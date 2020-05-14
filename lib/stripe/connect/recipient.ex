@@ -3,6 +3,9 @@ defmodule Stripe.Recipient do
   Work with Stripe recipient objects.
 
   Stripe API reference: https://stripe.com/docs/api#recipients
+
+  Recent versions of the Stripe API no longer support recipients. Users should
+  migrate to (Connect)[https://stripe.com/docs/connect/recipient-account-migrations].
   """
 
   use Stripe.Entity
@@ -33,6 +36,7 @@ defmodule Stripe.Recipient do
           cards: Stripe.List.t(Stripe.Card.t()),
           created: Stripe.timestamp(),
           default_card: Stripe.id() | Stripe.Card.t(),
+          deleted: boolean | nil,
           description: String.t() | nil,
           email: String.t() | nil,
           livemode: boolean,
@@ -50,6 +54,7 @@ defmodule Stripe.Recipient do
     :cards,
     :created,
     :default_card,
+    :deleted,
     :description,
     :email,
     :livemode,
