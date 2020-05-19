@@ -105,6 +105,7 @@ defmodule Stripe.Mixfile do
         Stripe.Mandate,
         Stripe.PaymentIntent,
         Stripe.Payout,
+        Stripe.Price,
         Stripe.Product,
         Stripe.Refund,
         Stripe.SetupIntent,
