@@ -101,6 +101,8 @@ defmodule Stripe.Mixfile do
         Stripe.Dispute,
         Stripe.Event,
         Stripe.FileUpload,
+        Stripe.FileLink,
+        Stripe.Mandate,
         Stripe.PaymentIntent,
         Stripe.Payout,
         Stripe.Product,
@@ -121,6 +123,8 @@ defmodule Stripe.Mixfile do
       Billing: [
         Stripe.Coupon,
         Stripe.CreditNote,
+        Stripe.CreditNoteLineItem,
+        Stripe.CustomerTransactionBalance,
         Stripe.Discount,
         Stripe.Invoice,
         Stripe.Invoiceitem,
@@ -155,9 +159,7 @@ defmodule Stripe.Mixfile do
       Issuing: [
         Stripe.Issuing.Authorization,
         Stripe.Issuing.Card,
-        Stripe.Issuing.CardDetails,
         Stripe.Issuing.Cardholder,
-        Stripe.Issuing.Dispute,
         Stripe.Issuing.Transaction,
         Stripe.Issuing.Types
       ],

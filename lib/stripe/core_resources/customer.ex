@@ -9,7 +9,7 @@ defmodule Stripe.Customer do
   - Update a customer
   - Delete a customer
 
-  Stripe API reference: https://stripe.com/docs/api#customer
+  Stripe API reference: https://stripe.com/docs/api/customers
   """
 
   use Stripe.Entity
@@ -33,6 +33,7 @@ defmodule Stripe.Customer do
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           name: String.t(),
+          next_invoice_sequence: integer,
           payment_method: String.t() | nil,
           phone: String.t(),
           preferred_locales: list(String.t()),
@@ -61,6 +62,7 @@ defmodule Stripe.Customer do
     :livemode,
     :metadata,
     :name,
+    :next_invoice_sequence,
     :payment_method,
     :phone,
     :preferred_locales,

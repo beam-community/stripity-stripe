@@ -11,6 +11,44 @@ defmodule Stripe.Invoiceitem do
   use Stripe.Entity
   import Stripe.Request
 
+  @type price_tier :: %{
+          flat_amount: integer,
+          flat_amount_decimal: String.t(),
+          unit_amount: integer,
+          unit_amount_decimal: String.t(),
+          up_to: integer
+        }
+
+  @type price :: %{
+          id: Stripe.id(),
+          object: String.t(),
+          active: boolean,
+          billing_scheme: String.t(),
+          created: Stripe.timestamp(),
+          currency: String.t(),
+          livemode: boolean,
+          lookup_key: String.t(),
+          metadata: Stripe.Types.metadata(),
+          nickname: String.t(),
+          product: Stripe.id() | Stripe.Product.t(),
+          recurring: %{
+            aggregate_usage: String.t(),
+            interval: String.t(),
+            interval_count: pos_integer,
+            trial_period_days: pos_integer,
+            usage_type: String.t()
+          },
+          tiers: [price_tier()],
+          tiers_mode: String.t(),
+          transform_quality: %{
+            divide_by: integer,
+            round: String.t()
+          },
+          type: String.t(),
+          unit_amount: integer,
+          unit_amount_decimal: String.t()
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -18,6 +56,7 @@ defmodule Stripe.Invoiceitem do
           currency: String.t(),
           customer: Stripe.id() | Stripe.Customer.t(),
           date: Stripe.timestamp(),
+          deleted: boolean | nil,
           description: String.t(),
           discountable: boolean,
           invoice: Stripe.id() | Stripe.Invoice.t(),
@@ -28,10 +67,10 @@ defmodule Stripe.Invoiceitem do
             end: Stripe.timestamp()
           },
           plan: Stripe.Plan.t() | nil,
+          price: price() | nil,
           proration: boolean,
           quantity: integer,
           subscription: Stripe.id() | Stripe.Subscription.t() | nil,
-          subscription_item: Stripe.id() | Stripe.SubscriptionItem.t() | nil,
           tax_rates: list(Stripe.TaxRate.t()),
           unit_amount: integer,
           unit_amount_decimal: String.t()
@@ -44,6 +83,7 @@ defmodule Stripe.Invoiceitem do
     :currency,
     :customer,
     :date,
+    :deleted,
     :description,
     :discountable,
     :invoice,
@@ -51,10 +91,10 @@ defmodule Stripe.Invoiceitem do
     :metadata,
     :period,
     :plan,
+    :price,
     :proration,
     :quantity,
     :subscription,
-    :subscription_item,
     :tax_rates,
     :unit_amount,
     :unit_amount_decimal

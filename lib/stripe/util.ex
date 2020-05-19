@@ -55,11 +55,13 @@ defmodule Stripe.Util do
   def object_name_to_module("file"), do: Stripe.FileUpload
   def object_name_to_module("issuing.authorization"), do: Stripe.Issuing.Authorization
   def object_name_to_module("issuing.card"), do: Stripe.Issuing.Card
-  def object_name_to_module("issuing.card_details"), do: Stripe.Issuing.CardDetails
   def object_name_to_module("issuing.cardholder"), do: Stripe.Issuing.Cardholder
-  def object_name_to_module("issuing.dispute"), do: Stripe.Issuing.Dispute
   def object_name_to_module("issuing.transaction"), do: Stripe.Issuing.Transaction
   def object_name_to_module("tax_id"), do: Stripe.TaxID
+  def object_name_to_module("usage_record"), do: Stripe.SubscriptionItem.Usage
+
+  def object_name_to_module("usage_record_summary"),
+    do: Stripe.SubscriptionItem.UsageRecordSummary
 
   def object_name_to_module(object_name) do
     module_name =

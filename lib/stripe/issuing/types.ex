@@ -27,6 +27,13 @@ defmodule Stripe.Issuing.Types do
           state: String.t()
         }
 
+  @type spending_controls :: %{
+          allowed_categories: [String.t()] | nil,
+          blocked_categories: [String.t()] | nil,
+          spending_limits: [spending_limits()],
+          spending_limits_currency: String.t() | nil
+        }
+
   @type spending_limits :: %{
           amount: non_neg_integer,
           categories: list(),

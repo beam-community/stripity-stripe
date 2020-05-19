@@ -2,7 +2,7 @@ defmodule Stripe.Sku do
   @moduledoc """
   Work with Stripe Sku objects.
 
-  Stripe API reference: https://stripe.com/docs/api#sku_object
+  Stripe API reference: https://stripe.com/docs/api/skus
   """
 
   use Stripe.Entity
@@ -17,6 +17,7 @@ defmodule Stripe.Sku do
           },
           created: Stripe.timestamp(),
           currency: String.t(),
+          deleted: boolean | nil,
           image: String.t(),
           inventory: %{
             quantity: non_neg_integer | nil,
@@ -45,6 +46,7 @@ defmodule Stripe.Sku do
     :attributes,
     :created,
     :currency,
+    :deleted,
     :image,
     :inventory,
     :livemode,
@@ -58,7 +60,7 @@ defmodule Stripe.Sku do
   @endpoint "skus"
 
   @doc """
-  Create a order.
+  Create a sku.
   """
   @spec create(params, Keyword.t()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
@@ -81,7 +83,7 @@ defmodule Stripe.Sku do
   end
 
   @doc """
-  Retrieve a order.
+  Retrieve a sku.
   """
   @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
@@ -92,7 +94,7 @@ defmodule Stripe.Sku do
   end
 
   @doc """
-  Update a order.
+  Update a sku.
 
   Takes the `id` and a map of changes
   """
@@ -117,7 +119,7 @@ defmodule Stripe.Sku do
   end
 
   @doc """
-  delete an order.
+  delete a sku.
   """
   @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, opts \\ []) do
