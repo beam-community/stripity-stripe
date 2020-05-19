@@ -103,6 +103,7 @@ defmodule Stripe.Mixfile do
         Stripe.FileUpload,
         Stripe.PaymentIntent,
         Stripe.Payout,
+        Stripe.Price,
         Stripe.Product,
         Stripe.Refund,
         Stripe.SetupIntent,

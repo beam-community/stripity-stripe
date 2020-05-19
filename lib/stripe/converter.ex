@@ -48,6 +48,7 @@ defmodule Stripe.Converter do
     payout
     person
     plan
+    price
     product
     recipient
     refund

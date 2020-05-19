@@ -28,6 +28,7 @@ defmodule Stripe.Invoiceitem do
             end: Stripe.timestamp()
           },
           plan: Stripe.Plan.t() | nil,
+          price: Stripe.Price.t() | nil,
           proration: boolean,
           quantity: integer,
           subscription: Stripe.id() | Stripe.Subscription.t() | nil,
@@ -51,6 +52,7 @@ defmodule Stripe.Invoiceitem do
     :metadata,
     :period,
     :plan,
+    :price,
     :proration,
     :quantity,
     :subscription,
@@ -75,6 +77,7 @@ defmodule Stripe.Invoiceitem do
                  optional(:discountable) => boolean,
                  optional(:invoice) => Stripe.id() | Stripe.Invoice.t(),
                  optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:price) => Stripe.id() | Stripe.Price.t(),
                  optional(:quantity) => integer,
                  optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
                  optional(:tax_rates) => list(String.t()),
@@ -87,7 +90,7 @@ defmodule Stripe.Invoiceitem do
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
-    |> cast_to_id([:subscription])
+    |> cast_to_id([:price, :subscription])
     |> make_request()
   end
 
@@ -114,6 +117,7 @@ defmodule Stripe.Invoiceitem do
                  optional(:description) => String.t(),
                  optional(:discountable) => boolean,
                  optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:price) => Stripe.id() | Stripe.Price.t(),
                  optional(:quantity) => integer,
                  optional(:tax_rates) => list(String.t()),
                  optional(:unit_amount) => integer,
@@ -125,6 +129,7 @@ defmodule Stripe.Invoiceitem do
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
     |> put_method(:post)
     |> put_params(params)
+    |> cast_to_id([:price])
     |> make_request()
   end
 
