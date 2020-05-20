@@ -32,6 +32,7 @@ defmodule Stripe.Event do
           | Stripe.Payout.t()
           | Stripe.Plan.t()
           | Stripe.Relay.Product.t()
+          | Stripe.Price.t()
           | Stripe.Product.t()
           | Stripe.Recipient.t()
           | Stripe.Review.t()
