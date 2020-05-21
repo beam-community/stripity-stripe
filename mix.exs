@@ -138,6 +138,9 @@ defmodule Stripe.Mixfile do
         Stripe.SubscriptionSchedule,
         Stripe.TaxRate
       ],
+      "Billing Portal": [
+        Stripe.BillingPortal.Session
+      ],
       Connect: [
         Stripe.Account,
         Stripe.ApplicationFee,
