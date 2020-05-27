@@ -18,8 +18,8 @@ defmodule Stripe.Issuing.Card do
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
-          authorization_controls: Stripe.Issuing.Types.authorization_controls(),
           brand: String.t(),
+          cancellation_reason: String.t() | nil,
           cardholder: Stripe.id() | Stripe.Issuing.Cardholder.t(),
           created: Stripe.timestamp(),
           currency: String.t(),
@@ -28,13 +28,11 @@ defmodule Stripe.Issuing.Card do
           last4: String.t(),
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
-          name: String.t(),
-          pin: %{
-            status: :active | :blocked
-          },
+          replaced_by: t | Stripe.id() | nil,
           replacement_for: t | Stripe.id() | nil,
           replacement_reason: String.t() | nil,
           shipping: Stripe.Types.shipping() | nil,
+          spending_controls: Stripe.Issuing.Types.spending_controls(),
           status: String.t(),
           type: atom() | String.t()
         }
@@ -42,8 +40,8 @@ defmodule Stripe.Issuing.Card do
   defstruct [
     :id,
     :object,
-    :authorization_controls,
     :brand,
+    :cancellation_reason,
     :cardholder,
     :created,
     :currency,
@@ -52,11 +50,11 @@ defmodule Stripe.Issuing.Card do
     :last4,
     :livemode,
     :metadata,
-    :name,
-    :pin,
+    :replaced_by,
     :replacement_for,
     :replacement_reason,
     :shipping,
+    :spending_controls,
     :status,
     :type
   ]

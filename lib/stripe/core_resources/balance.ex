@@ -1,9 +1,9 @@
 defmodule Stripe.Balance do
   @moduledoc """
-  Work with [Stripe `balance` objects](https://stripe.com/docs/api#balance).
+  Work with [Stripe `balance` objects](https://stripe.com/docs/api/balance).
 
   You can:
-  - [Retrieve the current balance](https://stripe.com/docs/api#retrieve_balance)
+  - [Retrieve the current balance](https://stripe.com/docs/api/balance/balance_retrieve)
   """
 
   use Stripe.Entity
@@ -40,7 +40,7 @@ defmodule Stripe.Balance do
 
   This is based on the authentication that was used to make the request.
 
-  See the [Stripe docs](https://stripe.com/docs/api#retrieve_balance).
+  See the [Stripe docs](https://stripe.com/docs/api/balance/balance_retrieve).
   """
   @spec retrieve(Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(opts \\ []) do
@@ -53,7 +53,7 @@ defmodule Stripe.Balance do
   @doc """
   Retrieves a balance transaction
 
-  See the [Stripe docs](https://stripe.com/docs/api#balance_transaction_retrieve).
+  See the [Stripe docs](https://stripe.com/docs/api/balance_transactions/retrieve).
   """
   @spec retrieve_transaction(String.t(), Stripe.options()) ::
           {:ok, t} | {:error, Stripe.Error.t()}
@@ -67,7 +67,7 @@ defmodule Stripe.Balance do
   @doc """
   List balance history
 
-  See the [Stripe docs](https://stripe.com/docs/api#balance_history).
+  See the [Stripe docs](https://stripe.com/docs/api/balance_transactions/list).
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{

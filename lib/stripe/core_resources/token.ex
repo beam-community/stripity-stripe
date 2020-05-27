@@ -8,7 +8,7 @@ defmodule Stripe.Token do
   - Create a token with all options - Only for Unit Tests with Stripe
   - Retrieve a token
 
-  Stripe API reference: https://stripe.com/docs/api#token
+  Stripe API reference: https://stripe.com/docs/api/tokens
 
   """
 
