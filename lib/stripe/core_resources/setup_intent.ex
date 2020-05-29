@@ -56,12 +56,14 @@ defmodule Stripe.SetupIntent do
           description: String.t() | nil,
           last_setup_error: last_setup_error | nil,
           livemode: boolean,
+          mandate: Stripe.id() | Stripe.Mandate.t() | nil,
           metadata: Stripe.Types.metadata(),
           next_action: next_action | nil,
           on_behalf_of: Stripe.id() | Stripe.Account.t() | nil,
           payment_method: Stripe.id() | Stripe.PaymentMethod.t() | nil,
           payment_method_options: payment_method_options | nil,
           payment_method_types: list(String.t()),
+          single_use_mandate: Stripe.id() | Stripe.Mandate.t() | nil,
           status: String.t(),
           usage: String.t()
         }
@@ -77,12 +79,14 @@ defmodule Stripe.SetupIntent do
     :description,
     :last_setup_error,
     :livemode,
+    :mandate,
     :metadata,
     :next_action,
     :on_behalf_of,
     :payment_method,
     :payment_method_options,
     :payment_method_types,
+    :single_use_mandate,
     :status,
     :usage
   ]

@@ -6,7 +6,7 @@ defmodule Stripe.Event do
   - Retrieve an event
   - List all events
 
-  Stripe API reference: https://stripe.com/docs/api#event
+  Stripe API reference: https://stripe.com/docs/api/events
   """
 
   use Stripe.Entity
@@ -32,6 +32,7 @@ defmodule Stripe.Event do
           | Stripe.Payout.t()
           | Stripe.Plan.t()
           | Stripe.Relay.Product.t()
+          | Stripe.Price.t()
           | Stripe.Product.t()
           | Stripe.Recipient.t()
           | Stripe.Review.t()

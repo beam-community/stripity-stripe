@@ -1,13 +1,13 @@
 defmodule Stripe.Charge do
   @moduledoc """
-  Work with [Stripe `charge` objects](https://stripe.com/docs/api#charges).
+  Work with [Stripe `charge` objects](https://stripe.com/docs/api/charges).
 
   You can:
-  - [Create a charge](https://stripe.com/docs/api#create_charge)
-  - [Retrieve a charge](https://stripe.com/docs/api#retrieve_charge)
-  - [Update a charge](https://stripe.com/docs/api#update_charge)
-  - [Capture a charge](https://stripe.com/docs/api#capture_charge)
-  - [List all charges](https://stripe.com/docs/api#list_charges)
+  - [Create a charge](https://stripe.com/docs/api/charges/create)
+  - [Retrieve a charge](https://stripe.com/docs/api/charges/retrieve)
+  - [Update a charge](https://stripe.com/docs/api/charges/update)
+  - [Capture a charge](https://stripe.com/docs/api/charges/capture)
+  - [List all charges](https://stripe.com/docs/api/charges/list)
   """
 
   use Stripe.Entity
@@ -74,12 +74,13 @@ defmodule Stripe.Charge do
           application_fee_amount: Stripe.id() | Stripe.ApplicationFee.t() | nil,
           balance_transaction: Stripe.id() | Stripe.BalanceTransaction.t() | nil,
           billing_details: billing_details | nil,
+          calculated_statement_descriptor: String.t() | nil,
           captured: boolean,
           created: Stripe.timestamp(),
           currency: String.t(),
           customer: Stripe.id() | Stripe.Customer.t() | nil,
           description: String.t() | nil,
-          dispute: Stripe.id() | Stripe.Dispute.t() | nil,
+          disputed: boolean,
           failure_code: Stripe.Error.card_error_code() | nil,
           failure_message: String.t() | nil,
           fraud_details: user_fraud_report | stripe_fraud_report | %{},
@@ -100,7 +101,6 @@ defmodule Stripe.Charge do
           refunds: Stripe.List.t(Stripe.Refund.t()),
           review: Stripe.id() | Stripe.Review.t() | nil,
           shipping: Stripe.Types.shipping() | nil,
-          source: Stripe.Card.t() | map,
           source_transfer: Stripe.id() | Stripe.Transfer.t() | nil,
           statement_descriptor: String.t() | nil,
           statement_descriptor_suffix: String.t() | nil,
@@ -120,12 +120,13 @@ defmodule Stripe.Charge do
     :application_fee_amount,
     :balance_transaction,
     :billing_details,
+    :calculated_statement_descriptor,
     :captured,
     :created,
     :currency,
     :customer,
     :description,
-    :dispute,
+    :disputed,
     :failure_code,
     :failure_message,
     :fraud_details,
@@ -146,7 +147,6 @@ defmodule Stripe.Charge do
     :refunds,
     :review,
     :shipping,
-    :source,
     :source_transfer,
     :statement_descriptor,
     :statement_descriptor_suffix,
@@ -165,7 +165,7 @@ defmodule Stripe.Charge do
   charged, though everything else will occur as if in live mode.
   (Stripe assumes that the charge would have completed successfully).
 
-  See the [Stripe docs](https://stripe.com/docs/api#create_charge).
+  See the [Stripe docs](https://stripe.com/docs/api/charges/create).
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
@@ -204,7 +204,7 @@ defmodule Stripe.Charge do
   the corresponding charge information. The same information is returned when creating or refunding
   the charge.
 
-  See the [Stripe docs](https://stripe.com/docs/api#retrieve_charge).
+  See the [Stripe docs](https://stripe.com/docs/api/charges/retrieve).
   """
   @spec retrieve(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
@@ -225,7 +225,7 @@ defmodule Stripe.Charge do
 
   The charge to be updated may either be passed in as a struct or an ID.
 
-  See the [Stripe docs](https://stripe.com/docs/api#update_charge).
+  See the [Stripe docs](https://stripe.com/docs/api/charges/update).
   """
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
@@ -258,7 +258,7 @@ defmodule Stripe.Charge do
   are not captured by that point in time, they will be marked as refunded and
   will no longer be capturable.
 
-  See the [Stripe docs](https://stripe.com/docs/api#capture_charge).
+  See the [Stripe docs](https://stripe.com/docs/api/charges/capture).
   """
   @spec capture(Stripe.id() | t, params, Stripe.options()) ::
           {:ok, t} | {:error, Stripe.Error.t()}
@@ -307,7 +307,7 @@ defmodule Stripe.Charge do
   Returns a list of charges you’ve previously created. The charges are returned in sorted order,
   with the most recent charges appearing first.
 
-  See the [Stripe docs](https://stripe.com/docs/api#list_charges).
+  See the [Stripe docs](https://stripe.com/docs/api/charges/list).
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{

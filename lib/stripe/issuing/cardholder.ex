@@ -14,14 +14,25 @@ defmodule Stripe.Issuing.Cardholder do
   use Stripe.Entity
   import Stripe.Request
 
+  @type individual :: %{
+          dob: %{
+            day: pos_integer,
+            month: pos_integer,
+            year: pos_integer
+          },
+          first_name: String.t(),
+          last_name: String.t(),
+          verification: %{}
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
-          authorization_controls: Stripe.Issuing.Types.authorization_controls() | nil,
           billing: Stripe.Issuing.Types.billing(),
+          company: %{tax_id_provided: boolean} | nil,
           created: Stripe.timestamp(),
           email: String.t() | nil,
-          is_default: boolean | nil,
+          individual: individual() | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           name: String.t(),
@@ -30,6 +41,7 @@ defmodule Stripe.Issuing.Cardholder do
             disabled_reason: String.t() | nil,
             past_due: list
           },
+          spending_controls: Stripe.Issuing.Types.spending_controls(),
           status: String.t() | nil,
           type: atom() | String.t()
         }
@@ -37,16 +49,17 @@ defmodule Stripe.Issuing.Cardholder do
   defstruct [
     :id,
     :object,
-    :authorization_controls,
     :billing,
+    :company,
     :created,
     :email,
-    :is_default,
+    :individual,
     :livemode,
     :metadata,
     :name,
     :phone_number,
     :requirements,
+    :spending_controls,
     :status,
     :type
   ]

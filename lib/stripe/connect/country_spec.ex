@@ -2,7 +2,7 @@ defmodule Stripe.CountrySpec do
   @moduledoc """
   Work with the Stripe country specs API.
 
-  Stripe API reference: https://stripe.com/docs/api#country_specs
+  Stripe API reference: https://stripe.com/docs/api/country_specs
   """
 
   use Stripe.Entity
@@ -17,6 +17,7 @@ defmodule Stripe.CountrySpec do
           },
           supported_payment_currencies: list(String.t()),
           supported_payment_methods: list(Stripe.Source.source_type() | String.t()),
+          supported_transfer_countries: list(String.t()),
           verification_fields: %{
             individual: %{
               minimum: list(String.t()),
@@ -36,6 +37,7 @@ defmodule Stripe.CountrySpec do
     :supported_bank_account_currencies,
     :supported_payment_currencies,
     :supported_payment_methods,
+    :supported_transfer_countries,
     :verification_fields
   ]
 
