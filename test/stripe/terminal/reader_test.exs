@@ -3,7 +3,8 @@ defmodule Stripe.Terminal.ReaderTest do
 
   describe "Retrieve" do
     test "retrieve reader" do
-      assert {:ok, %Stripe.Terminal.Reader{}} = Stripe.Terminal.Reader.retrieve("tmr_P400-123-456-789")
+      assert {:ok, %Stripe.Terminal.Reader{}} =
+               Stripe.Terminal.Reader.retrieve("tmr_P400-123-456-789")
 
       assert_stripe_requested(:get, "/v1/terminal/readers/tmr_P400-123-456-789")
     end
@@ -14,7 +15,7 @@ defmodule Stripe.Terminal.ReaderTest do
       params = %{
         registration_code: "puppies-plug-could",
         label: "Blue Rabbit",
-        location: "tml_1234",
+        location: "tml_1234"
       }
 
       assert {:ok, %Stripe.Terminal.Reader{}} = Stripe.Terminal.Reader.create(params)
@@ -24,7 +25,9 @@ defmodule Stripe.Terminal.ReaderTest do
 
   describe "Delete" do
     test "delete reader" do
-      assert {:ok, %Stripe.Terminal.Reader{}} = Stripe.Terminal.Reader.delete("tmr_P400-123-456-789")
+      assert {:ok, %Stripe.Terminal.Reader{}} =
+               Stripe.Terminal.Reader.delete("tmr_P400-123-456-789")
+
       assert_stripe_requested(:delete, "/v1/terminal/readers/tmr_P400-123-456-789")
     end
   end

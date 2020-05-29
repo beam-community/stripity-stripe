@@ -1,6 +1,9 @@
 defmodule Stripe.Terminal.ConnectionToken do
   @moduledoc """
   A Connection Token is used by the Stripe Terminal SDK to connect to a reader.
+
+  You can:
+  - [Create a connection token](https://stripe.com/docs/api/terminal/connection_tokens/create)
   """
 
   use Stripe.Entity
@@ -24,7 +27,11 @@ defmodule Stripe.Terminal.ConnectionToken do
   @plural_endpoint "terminal/connection_tokens"
 
   @doc """
-  To connect to a reader the Stripe Terminal SDK needs to retrieve a short-lived connection token from Stripe, proxied through your server. On your backend, add an endpoint that creates and returns a connection token.
+  Create a new Connection Token
+
+  To connect to a reader the Stripe Terminal SDK needs to retrieve a short-lived
+  connection token from Stripe, proxied through your server. On your backend,
+  add an endpoint that creates and returns a connection token.
   """
 
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}

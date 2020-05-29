@@ -1,13 +1,13 @@
 defmodule Stripe.Terminal.Reader do
   @moduledoc """
-  A Location represents a grouping of readers.
+  A Reader represents a physical device for accepting payment details
 
   You can:
-  - [Create a location](https://stripe.com/docs/api/terminal/locations/create)
-  - [Retrieve a location](https://stripe.com/docs/api/terminal/locations/retrieve)
-  - [Update a location](https://stripe.com/docs/api/terminal/locations/update)
-  - [Delete a location](https://stripe.com/docs/api/terminal/locations/delete)
-  - [List all locations](https://stripe.com/docs/api/terminal/locations/list)
+  - [Create a Reader](https://stripe.com/docs/api/terminal/readers/create)
+  - [Retrieve a Reader](https://stripe.com/docs/api/terminal/readers/retrieve)
+  - [Update a Reader](https://stripe.com/docs/api/terminal/readers/update)
+  - [Delete a Reader](https://stripe.com/docs/api/terminal/readers/delete)
+  - [List all Readers](https://stripe.com/docs/api/terminal/readers/list)
   """
 
   use Stripe.Entity
@@ -43,7 +43,6 @@ defmodule Stripe.Terminal.Reader do
   ]
 
   @plural_endpoint "terminal/readers"
-
 
   @doc """
   Create a new reader
