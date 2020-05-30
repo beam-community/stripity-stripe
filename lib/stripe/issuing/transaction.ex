@@ -24,8 +24,9 @@ defmodule Stripe.Issuing.Transaction do
           cardholder: Stripe.id() | Stripe.Issuing.Cardholder.t(),
           created: Stripe.timestamp(),
           currency: String.t() | nil,
-          dispute: Stripe.id() | Stripe.Issuing.Dispute.t(),
           livemode: boolean,
+          merchant_amount: integer,
+          merchant_currency: String.t(),
           merchant_data: Stripe.Issuing.Types.merchant_data(),
           metadata: Stripe.Types.metadata(),
           type: String.t()
@@ -41,8 +42,9 @@ defmodule Stripe.Issuing.Transaction do
     :cardholder,
     :created,
     :currency,
-    :dispute,
     :livemode,
+    :merchant_amount,
+    :merchant_currency,
     :merchant_data,
     :metadata,
     :type
@@ -87,10 +89,8 @@ defmodule Stripe.Issuing.Transaction do
                  optional(:card) => Stripe.Issuing.Card.t() | Stripe.id(),
                  optional(:cardholder) => Stripe.Issuing.Cardholder.t() | Stripe.id(),
                  optional(:created) => String.t() | Stripe.date_query(),
-                 optional(:dispute) => Stripe.Issuing.Dispute.t() | Stripe.id(),
                  optional(:ending_before) => t | Stripe.id(),
                  optional(:limit) => 1..100,
-                 optional(:settlement) => String.t(),
                  optional(:starting_after) => t | Stripe.id()
                }
                | %{}
@@ -100,7 +100,7 @@ defmodule Stripe.Issuing.Transaction do
     |> put_endpoint(@plural_endpoint)
     |> put_method(:get)
     |> put_params(params)
-    |> cast_to_id([:card, :cardholder, :dispute, :ending_before, :starting_after])
+    |> cast_to_id([:card, :cardholder, :ending_before, :starting_after])
     |> make_request()
   end
 end

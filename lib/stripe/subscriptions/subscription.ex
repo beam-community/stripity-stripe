@@ -16,6 +16,24 @@ defmodule Stripe.Subscription do
   import Stripe.Request
   import Stripe.Util, only: [log_deprecation: 1]
 
+  @type pause_collection :: %{
+          behavior: String.t(),
+          resumes_at: Stripe.timestamp()
+        }
+
+  @type pending_invoice_item_interval :: %{
+          interval: String.t(),
+          interval_count: integer
+        }
+
+  @type pending_update :: %{
+          billing_cycle_anchor: Stripe.timestamp(),
+          expires_at: Stripe.timestamp(),
+          subscription_items: [Stripe.SubscriptionItem.t()],
+          trial_end: Stripe.timestamp(),
+          trial_from_plan: boolean
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -42,8 +60,12 @@ defmodule Stripe.Subscription do
           latest_invoice: Stripe.id() | Stripe.Invoice.t() | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
+          next_pending_invoice_item_invoice: Stripe.timestamp() | nil,
+          pending_invoice_item_interval: pending_invoice_item_interval() | nil,
           pending_setup_intent: Stripe.SetupIntent.t() | nil,
+          pending_update: pending_update() | nil,
           plan: Stripe.Plan.t() | nil,
+          pause_collection: pause_collection() | nil,
           quantity: integer | nil,
           schedule: String.t() | nil,
           start_date: Stripe.timestamp(),
@@ -79,8 +101,12 @@ defmodule Stripe.Subscription do
     :latest_invoice,
     :livemode,
     :metadata,
+    :next_pending_invoice_item_invoice,
+    :pending_invoice_item_interval,
     :pending_setup_intent,
+    :pending_update,
     :plan,
+    :pause_collection,
     :quantity,
     :schedule,
     :start_date,

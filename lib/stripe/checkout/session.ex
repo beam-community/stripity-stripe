@@ -70,24 +70,31 @@ defmodule Stripe.Session do
         }
 
   @type t :: %__MODULE__{
-          :id => Stripe.id(),
-          :object => String.t(),
-          :billing_address_collection => String.t(),
-          :cancel_url => boolean(),
-          :client_reference_id => String.t(),
-          :customer => Stripe.id() | Stripe.Customer.t() | nil,
-          :customer_email => String.t(),
-          :display_items => list(line_item),
-          :livemode => boolean(),
-          :locale => boolean(),
-          :metadata => Stripe.Types.metadata(),
-          :mode => String.t(),
-          :payment_intent => Stripe.id() | Stripe.PaymentIntent.t() | nil,
-          :payment_method_types => list(String.t()),
-          :setup_intent => Stripe.id() | Stripe.SetupIntent.t() | nil,
-          :submit_type => String.t(),
-          :subscription => Stripe.id() | Stripe.Subscription.t() | nil,
-          :success_url => String.t()
+          id: Stripe.id(),
+          object: String.t(),
+          billing_address_collection: String.t(),
+          cancel_url: boolean(),
+          client_reference_id: String.t(),
+          customer: Stripe.id() | Stripe.Customer.t() | nil,
+          customer_email: String.t(),
+          display_items: list(line_item),
+          livemode: boolean(),
+          locale: boolean(),
+          metadata: Stripe.Types.metadata(),
+          mode: String.t(),
+          payment_intent: Stripe.id() | Stripe.PaymentIntent.t() | nil,
+          payment_method_types: list(String.t()),
+          setup_intent: Stripe.id() | Stripe.SetupIntent.t() | nil,
+          shipping: %{
+            address: Stripe.Types.shipping(),
+            name: String.t()
+          },
+          shipping_address_collection: %{
+            allowed_countries: [String.t()]
+          },
+          submit_type: String.t() | nil,
+          subscription: Stripe.id() | Stripe.Subscription.t() | nil,
+          success_url: String.t()
         }
 
   defstruct [
@@ -106,6 +113,8 @@ defmodule Stripe.Session do
     :payment_intent,
     :payment_method_types,
     :setup_intent,
+    :shipping,
+    :shipping_address_collection,
     :submit_type,
     :subscription,
     :success_url

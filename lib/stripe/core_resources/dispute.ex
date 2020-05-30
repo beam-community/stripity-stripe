@@ -9,7 +9,7 @@ defmodule Stripe.Dispute do
   - Close a dispute
   - List disputes
 
-  Stripe API reference: https://stripe.com/docs/api#disputes
+  Stripe API reference: https://stripe.com/docs/api/disputes
   """
 
   use Stripe.Entity
@@ -71,6 +71,7 @@ defmodule Stripe.Dispute do
           metadata: %{
             optional(String.t()) => String.t()
           },
+          payment_intent: Stripe.id() | Stripe.PaymentIntent.t() | nil,
           reason: dispute_reason,
           status: dispute_status
         }
@@ -88,6 +89,7 @@ defmodule Stripe.Dispute do
     :is_charge_refundable,
     :livemode,
     :metadata,
+    :payment_intent,
     :reason,
     :status
   ]

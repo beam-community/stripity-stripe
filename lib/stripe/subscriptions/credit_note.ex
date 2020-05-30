@@ -10,34 +10,17 @@ defmodule Stripe.CreditNote do
   - Void a credit note
   - List credit notes
 
-  ```
-  {
-    "id": "ivory-extended-580",
-    "object": "plan",
-    "active": true,
-    "aggregate_usage": null,
-    "amount": 999,
-    "billing_scheme": "per_unit",
-    "created": 1531234812,
-    "currency": "usd",
-    "interval": "month",
-    "interval_count": 1,
-    "livemode": false,
-    "metadata": {
-    },
-    "nickname": null,
-    "product": "prod_DCmtkptv7qHXGE",
-    "tiers": null,
-    "tiers_mode": null,
-    "transform_usage": null,
-    "trial_period_days": null,
-    "usage_type": "licensed"
-  }
-  ```
+  Stripe API reference: https://stripe.com/docs/api/credit_notes
   """
 
   use Stripe.Entity
   import Stripe.Request
+
+  @type tax_amount :: %{
+          amount: integer,
+          inclusive: boolean,
+          tax_rate: Stripe.id() | Stripe.TaxRate.t()
+        }
 
   @type t :: %__MODULE__{
           id: Stripe.id(),
@@ -45,17 +28,25 @@ defmodule Stripe.CreditNote do
           amount: integer,
           created: Stripe.timestamp(),
           currency: String.t(),
-          currency: String.t(),
-          customer: Stripe.id() | nil,
-          invoice: Stripe.id(),
+          customer: Stripe.id() | Stripe.Customer.t() | nil,
+          customer_balance_transaction: Stripe.id() | Stripe.CustomerBalanceTransaction.t() | nil,
+          discount_amount: integer,
+          invoice: Stripe.id() | Stripe.Invoice.t(),
+          lines: Stripe.List.t(Stripe.LineItem.t()),
           livemode: boolean,
+          memo: String.t(),
           metadata: Stripe.Types.metadata(),
           number: String.t(),
+          out_of_band_amount: integer | nil,
           pdf: String.t(),
           reason: String.t() | nil,
           refund: Stripe.id() | Stripe.Refund.t() | nil,
           status: String.t(),
-          type: String.t()
+          subtotal: integer,
+          tax_amounts: [tax_amount()],
+          total: integer,
+          type: String.t(),
+          voided_at: Stripe.timestamp()
         }
 
   defstruct [
@@ -65,16 +56,24 @@ defmodule Stripe.CreditNote do
     :created,
     :currency,
     :customer,
+    :customer_balance_transaction,
+    :discount_amount,
     :invoice,
+    :lines,
     :livemode,
     :memo,
     :metadata,
     :number,
+    :out_of_band_amount,
     :pdf,
     :reason,
     :refund,
     :status,
-    :type
+    :subtotal,
+    :tax_amounts,
+    :total,
+    :type,
+    :voided_at
   ]
 
   @plural_endpoint "credit_notes"
