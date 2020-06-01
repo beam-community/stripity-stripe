@@ -52,8 +52,8 @@ defmodule Stripe.Terminal.Reader do
         when params:
                %{
                  :registration_code => String.t(),
-                 :label => String.t(),
-                 :location => Stripe.id(),
+                 optional(:label) => String.t(),
+                 optional(:location) => Stripe.id(),
                  optional(:metadata) => Stripe.Types.metadata()
                }
                | %{}
