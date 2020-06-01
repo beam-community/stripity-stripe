@@ -9,6 +9,7 @@ defmodule Stripe.SubscriptionSchedule do
 
   @type plans :: %{
           plan: String.t(),
+          price: String.t(),
           quantity: pos_integer
         }
 
@@ -99,7 +100,8 @@ defmodule Stripe.SubscriptionSchedule do
                  %{
                    :plans => [
                      %{
-                       :plan => Stripe.id() | Stripe.Plan.t(),
+                       optional(:plan) => Stripe.id() | Stripe.Plan.t(),
+                       optional(:price) => Stripe.id() | Stripe.Price.t(),
                        optional(:quantity) => non_neg_integer
                      }
                    ],
@@ -152,7 +154,8 @@ defmodule Stripe.SubscriptionSchedule do
                  %{
                    :plans => [
                      %{
-                       :plan => Stripe.id() | Stripe.Plan.t(),
+                       optional(:plan) => Stripe.id() | Stripe.Plan.t(),
+                       optional(:price) => Stripe.id() | Stripe.Price.t(),
                        optional(:quantity) => non_neg_integer
                      }
                    ],

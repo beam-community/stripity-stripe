@@ -29,6 +29,7 @@ defmodule Stripe.LineItem do
             end: Stripe.timestamp()
           },
           plan: Stripe.Plan.t() | nil,
+          price: Stripe.Price.t() | nil,
           proration: boolean,
           quantity: integer,
           subscription: Stripe.id() | nil,
@@ -50,6 +51,7 @@ defmodule Stripe.LineItem do
     :metadata,
     :period,
     :plan,
+    :price,
     :proration,
     :quantity,
     :subscription,
