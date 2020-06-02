@@ -67,6 +67,9 @@ defmodule Stripe.Converter do
     tax_rate
     tax_id
     topup
+    terminal.connection_token
+    terminal.location
+    terminal.reader
     transfer
     transfer_reversal
     token

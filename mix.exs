@@ -174,6 +174,11 @@ defmodule Stripe.Mixfile do
         Stripe.Relay.Product,
         Stripe.Sku
       ],
+      Terminal: [
+        Stripe.Terminal.ConnectionToken,
+        Stripe.Terminal.Location,
+        Stripe.Terminal.Reader
+      ],
       Utilities: [
         Stripe.Config,
         Stripe.Converter,
