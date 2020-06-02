@@ -151,7 +151,7 @@ defmodule Stripe.Subscription do
                optional(:trial_from_plan) => boolean,
                optional(:trial_period_days) => non_neg_integer
              }
-  def create(%{customer: _, items: _} = params, opts \\ []) do
+  def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
@@ -191,6 +191,7 @@ defmodule Stripe.Subscription do
                optional(:items) => [
                  %{
                    :plan => Stripe.id() | Stripe.Plan.t(),
+                   optional(:id) => Stripe.id() | binary(),
                    optional(:billing_methods) => map,
                    optional(:metadata) => map,
                    optional(:quantity) => non_neg_integer,
