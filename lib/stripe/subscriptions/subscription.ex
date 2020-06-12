@@ -269,7 +269,7 @@ defmodule Stripe.Subscription do
                optional(:ending_before) => t | Stripe.id(),
                optional(:limit) => 1..100,
                optional(:plan) => Stripe.Plan.t() | Stripe.id(),
-               optional(:price) => Stripe.Price.t() |Stripe.id(),
+               optional(:price) => Stripe.Price.t() | Stripe.id(),
                optional(:starting_after) => t | Stripe.id(),
                optional(:status) => String.t()
              }
