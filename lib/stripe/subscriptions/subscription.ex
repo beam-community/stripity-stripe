@@ -135,7 +135,8 @@ defmodule Stripe.Subscription do
                optional(:days_until_due) => non_neg_integer,
                :items => [
                  %{
-                   :plan => Stripe.id() | Stripe.Plan.t(),
+                   optional(:plan) => Stripe.id() | Stripe.Plan.t(),
+                   optional(:price) => Stripe.id() | Stripe.Price.t(),
                    optional(:billing_methods) => map,
                    optional(:metadata) => map,
                    optional(:quantity) => non_neg_integer,
@@ -190,8 +191,9 @@ defmodule Stripe.Subscription do
                optional(:days_until_due) => non_neg_integer,
                optional(:items) => [
                  %{
-                   :plan => Stripe.id() | Stripe.Plan.t(),
                    optional(:id) => Stripe.id() | binary(),
+                   optional(:plan) => Stripe.id() | Stripe.Plan.t(),
+                   optional(:price) => Stripe.id() | Stripe.Price.t(),
                    optional(:billing_methods) => map,
                    optional(:metadata) => map,
                    optional(:quantity) => non_neg_integer,
@@ -267,6 +269,7 @@ defmodule Stripe.Subscription do
                optional(:ending_before) => t | Stripe.id(),
                optional(:limit) => 1..100,
                optional(:plan) => Stripe.Plan.t() | Stripe.id(),
+               optional(:price) => Stripe.Price.t() | Stripe.id(),
                optional(:starting_after) => t | Stripe.id(),
                optional(:status) => String.t()
              }
@@ -276,7 +279,7 @@ defmodule Stripe.Subscription do
     |> put_endpoint(@plural_endpoint)
     |> put_method(:get)
     |> put_params(params)
-    |> cast_to_id([:customer, :ending_before, :plan, :starting_after])
+    |> cast_to_id([:customer, :ending_before, :plan, :price, :starting_after])
     |> make_request()
   end
 
