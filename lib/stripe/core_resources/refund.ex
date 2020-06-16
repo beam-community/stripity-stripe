@@ -73,7 +73,8 @@ defmodule Stripe.Refund do
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
-                 :charge => Stripe.Charge.t() | Stripe.id(),
+                 optional(:charge) => Stripe.Charge.t() | Stripe.id(),
+                 optional(:payment_intent) => Stripe.PaymentIntent.t() | Stripe.id(),
                  optional(:amount) => pos_integer,
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:reason) => String.t(),
@@ -86,7 +87,7 @@ defmodule Stripe.Refund do
     |> put_endpoint(@plural_endpoint)
     |> put_method(:post)
     |> put_params(params)
-    |> cast_to_id([:charge])
+    |> cast_to_id([:charge, :payment_intent])
     |> make_request()
   end
 
