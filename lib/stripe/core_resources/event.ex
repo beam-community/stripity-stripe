@@ -13,8 +13,8 @@ defmodule Stripe.Event do
   import Stripe.Request
 
   @type event_data :: %{
-          object: event_data_object,
-          previous_attributes: map
+          :object => event_data_object,
+          optional(:previous_attributes) => map
         }
 
   # TODO: add Scheduled query run
