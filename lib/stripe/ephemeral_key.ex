@@ -12,8 +12,8 @@ defmodule Stripe.EphemeralKey do
   but is required for iOS and Android SDK functionality.
 
   Explained in
-  https://stripe.com/docs/mobile/ios/standard#prepare-your-api
-  https://stripe.com/docs/mobile/android/customer-information#prepare-your-api
+  https://stripe.com/docs/mobile/ios/basic#ephemeral-key
+  https://stripe.com/docs/mobile/android/basic#set-up-ephemeral-key
 
   Stripe API reference: https://stripe.com/docs/api#customer
   """
@@ -41,7 +41,7 @@ defmodule Stripe.EphemeralKey do
                :customer => Stripe.id()
              }
   def create(params, api_version, opts \\ []) do
-    new_request(opts, %{"Stripe-Version": api_version})
+    new_request([api_version: api_version] ++ opts)
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
