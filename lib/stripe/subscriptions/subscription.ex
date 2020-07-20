@@ -224,12 +224,15 @@ defmodule Stripe.Subscription do
   Takes the subscription `id` or a `Stripe.Subscription` struct.
   """
   @spec delete(Stripe.id() | t) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def delete(id), do: delete(id, [])
+  def delete(id), do: delete(id, %{}, [])
 
   @doc """
   Delete a subscription.
 
-  Takes the subscription `id` and an optional map of `params`.
+  Takes the subscription `id` or a `Stripe.Subscription` struct.
+
+  Second argument can be a map of cancellation `params`, such as `invoice_now`,
+  or a list of options, such as custom API key.
 
   ### Deprecated Usage
 
@@ -237,25 +240,55 @@ defmodule Stripe.Subscription do
   is deprecated.  Use `Subscription.update/2` with
   `cancel_at_period_end: true` instead.
   """
+
+  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def delete(id, opts) when is_list(opts) do
+    delete(id, %{}, opts)
+  end
+
   @spec delete(Stripe.id() | t, %{at_period_end: true}) :: {:ok, t} | {:error, Stripe.Error.t()}
   def delete(id, %{at_period_end: true}) do
     log_deprecation("Use Stripe.Subscription.update/2 with `cancel_at_period_end: true`")
     update(id, %{cancel_at_period_end: true})
   end
 
-  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def delete(id, opts) when is_list(opts) do
+  @spec delete(Stripe.id() | t, params) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:invoice_now) => boolean,
+               optional(:prorate) => boolean
+             }
+  def delete(id, params) when is_map(params) do
+    delete(id, params, [])
+  end
+
+  @doc """
+  Delete a subscription.
+
+  Takes the subscription `id` or a `Stripe.Subscription` struct.
+
+  Second argument is a map of cancellation `params`, such as `invoice_now`.
+
+  Third argument is a list of options, such as custom API key.
+  """
+  @spec delete(Stripe.id() | t, %{at_period_end: true}, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
+  def delete(id, %{at_period_end: true}, opts) do
+    log_deprecation("Use Stripe.Subscription.update/2 with `cancel_at_period_end: true`")
+    update(id, %{cancel_at_period_end: true}, opts)
+  end
+
+  @spec delete(Stripe.id() | t, params, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:invoice_now) => boolean,
+               optional(:prorate) => boolean
+             }
+  def delete(id, params, opts) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
     |> put_method(:delete)
+    |> put_params(params)
     |> make_request()
-  end
-
-  @spec delete(Stripe.id() | t, %{at_period_end: true}, Stripe.options()) ::
-          {:ok, t} | {:error, Stripe.Error.t()}
-  def delete(id, %{at_period_end: true}, opts) when is_list(opts) do
-    log_deprecation("Use Stripe.Subscription.update/2 with `cancel_at_period_end: true`")
-    update(id, %{cancel_at_period_end: true}, opts)
   end
 
   @doc """
