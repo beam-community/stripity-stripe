@@ -75,6 +75,7 @@ defmodule Stripe.Converter do
     token
     usage_record
     usage_record_summary
+    webhook_endpoint
   )
 
   @no_convert_maps ~w(metadata supported_bank_account_currencies)
