@@ -130,6 +130,7 @@ defmodule Stripe.Subscription do
                optional(:collection_method) => String.t(),
                optional(:collection_method_cycle_anchor) => Stripe.timestamp(),
                optional(:cancel_at) => Stripe.timestamp(),
+               optional(:cancel_at_period_end) => boolean,
                optional(:collection_method) => String.t(),
                optional(:coupon) => Stripe.id() | Stripe.Coupon.t(),
                optional(:days_until_due) => non_neg_integer,
