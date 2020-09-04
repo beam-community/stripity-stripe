@@ -6,7 +6,7 @@ defmodule Stripe.BillingPortal.Session do
 
   - Create a session
 
-  Stripe API reference: https://stripe.com/docs/api/self_service_portal
+  Stripe API reference: https://stripe.com/docs/api/customer_portal
   """
 
   use Stripe.Entity
