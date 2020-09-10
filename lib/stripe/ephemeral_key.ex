@@ -18,6 +18,7 @@ defmodule Stripe.EphemeralKey do
   Stripe API reference: https://stripe.com/docs/api#customer
   """
 
+  use Stripe.Entity
   import Stripe.Request
 
   defstruct [
@@ -37,9 +38,7 @@ defmodule Stripe.EphemeralKey do
   Create an ephemeral key.
   """
   @spec create(params, String.t(), Keyword.t()) :: {:ok, t} | {:error, %Stripe.Error{}}
-        when params: %{
-               :customer => Stripe.id()
-             }
+        when params: %{:customer => Stripe.id()} | %{issuing_card: Stripe.id()}
   def create(params, api_version, opts \\ []) do
     new_request([api_version: api_version] ++ opts)
     |> put_endpoint(@plural_endpoint)
