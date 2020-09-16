@@ -65,6 +65,7 @@ defmodule Stripe.Session do
           optional(:customer_email) => String.t(),
           optional(:line_items) => list(line_item),
           optional(:locale) => String.t(),
+          optional(:metadata) => Stripe.Types.metadata(),
           optional(:payment_intent_data) => payment_intent_data,
           optional(:subscription_data) => subscription_data
         }
