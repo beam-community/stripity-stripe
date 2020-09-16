@@ -30,6 +30,7 @@ defmodule Stripe.Converter do
     customer_balance_transaction
     discount
     dispute
+    ephemeral_key
     event
     external_account
     file
