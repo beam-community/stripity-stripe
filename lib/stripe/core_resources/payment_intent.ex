@@ -235,7 +235,8 @@ defmodule Stripe.PaymentIntent do
                  optional(:return_url) => String.t(),
                  optional(:save_payment_method) => boolean,
                  optional(:shipping) => Stripe.Types.shipping(),
-                 optional(:source) => Stripe.id() | Stripe.Card.t()
+                 optional(:source) => Stripe.id() | Stripe.Card.t(),
+                 optional(:payment_method) => Stripe.id() | Stripe.PaymentMethod.t()
                }
                | %{}
   def confirm(id, params, opts \\ []) do
@@ -243,6 +244,7 @@ defmodule Stripe.PaymentIntent do
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}" <> "/confirm")
     |> put_method(:post)
     |> put_params(params)
+    |> cast_to_id([:source, :payment_method])
     |> make_request()
   end
 
