@@ -18,4 +18,11 @@ defmodule Stripe.SessionTest do
       assert_stripe_requested(:get, "/v1/checkout/sessions/cs_123")
     end
   end
+
+  describe "list_line_items/2" do
+    test "lists line items" do
+      assert {:ok, %Stripe.List{}} = Stripe.Session.list_line_items("cs_123")
+      assert_stripe_requested(:get, "/v1/checkout/sessions/cs_123/line_items")
+    end
+  end
 end
