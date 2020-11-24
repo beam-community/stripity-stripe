@@ -319,7 +319,8 @@ defmodule Stripe.Charge do
                  optional(:object) => String.t()
                },
                optional(:starting_after) => t | Stripe.id(),
-               optional(:transfer_group) => String.t()
+               optional(:transfer_group) => String.t(),
+               optional(:payment_intent) => Stripe.PaymentIntent.t() | Stripe.id()
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
