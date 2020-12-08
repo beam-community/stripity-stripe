@@ -215,6 +215,15 @@ To run the tests you'll need to install [`stripe-mock`](https://github.com/strip
 
 Start `stripe-mock` before running the tests with `mix test`.
 
+To configure your test environment to use the local stripe-mock server, you'll
+need to set the `api_base_url` field in your config:
+
+```
+config :stripity_stripe,
+  api_key: "sk_test_thisisaboguskey",
+  api_base_url: "http://localhost:12111/v1/"
+```
+
 # Documentation for 1.x.x
 
 <details><summary>Click to expand</summary>
