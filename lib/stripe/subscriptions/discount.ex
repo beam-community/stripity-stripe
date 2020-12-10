@@ -14,7 +14,8 @@ defmodule Stripe.Discount do
           deleted: boolean | nil,
           end: Stripe.timestamp() | nil,
           start: Stripe.timestamp(),
-          subscription: Stripe.id() | nil
+          subscription: Stripe.id() | nil,
+          promotion_code: Stripe.id() | nil
         }
 
   defstruct [
@@ -24,6 +25,7 @@ defmodule Stripe.Discount do
     :deleted,
     :end,
     :start,
-    :subscription
+    :subscription,
+    :promotion_code
   ]
 end

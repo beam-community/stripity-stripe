@@ -228,7 +228,8 @@ defmodule Stripe.ConverterTest do
       end: 1_595_517_288,
       object: "discount",
       start: 1_532_358_888,
-      subscription: "sub_DG9Uq9WOevR9Uo"
+      subscription: "sub_DG9Uq9WOevR9Uo",
+      promotion_code: "promo_1HuRNuKKEsQW5O8UAfIZ33ox"
     }
 
     fixture = Helper.load_fixture("discount.json")
