@@ -32,6 +32,7 @@ defmodule Stripe.Coupon do
           percent_off: number | nil,
           redeem_by: Stripe.timestamp() | nil,
           times_redeemed: non_neg_integer,
+          applies_to: Stripe.List.t() | nil,
           valid: boolean
         }
 
@@ -51,6 +52,7 @@ defmodule Stripe.Coupon do
     :percent_off,
     :redeem_by,
     :times_redeemed,
+    :applies_to,
     :valid
   ]
 
