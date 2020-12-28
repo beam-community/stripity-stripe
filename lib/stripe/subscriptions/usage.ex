@@ -14,7 +14,7 @@ defmodule Stripe.SubscriptionItem.Usage do
           object: String.t(),
           livemode: boolean,
           quantity: non_neg_integer,
-          subscription_item: Stripe.id() | Stripe.SubscriptionItem.t(),
+          subscription_iem: Stripe.id() | Stripe.SubscriptionItem.t(),
           timestamp: Stripe.timestamp()
         }
 
@@ -32,7 +32,7 @@ defmodule Stripe.SubscriptionItem.Usage do
   @doc """
   Creates a usage record for a specified subscription item id and date, and fills it with a quantity.
   def create(id, params, opts \\ [])
-  """
+  
   @spec create(Stripe.id(), params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                :quantity => float | pos_integer | 0,
