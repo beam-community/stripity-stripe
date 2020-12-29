@@ -142,4 +142,6 @@ defmodule Stripe.Session do
     |> put_method(:get)
     |> make_request()
   end
+
+  defdelegate list_line_items(id, opts \\ []), to: Stripe.Checkout.Session.LineItems, as: :list
 end
