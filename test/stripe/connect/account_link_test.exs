@@ -4,9 +4,9 @@ defmodule Stripe.AccountLinkTest do
   test "is creatable" do
     params = %{
       account: "acct_123",
-      failure_url: "https://stripe.com",
-      success_url: "https://stripe.com",
-      type: "custom_account_verification"
+      refresh_url: "https://stripe.com",
+      return_url: "https://stripe.com",
+      type: "account_onboarding"
     }
 
     assert {:ok, %Stripe.AccountLink{}} = Stripe.AccountLink.create(params)

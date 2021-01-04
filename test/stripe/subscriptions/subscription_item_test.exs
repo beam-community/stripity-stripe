@@ -12,7 +12,7 @@ defmodule Stripe.SubscriptionItemTest do
     test "creates a subscription" do
       params = %{
         subscription: "sub_123",
-        plan: "plan_123"
+        price: "price_123"
       }
 
       assert {:ok, %Stripe.SubscriptionItem{}} = Stripe.SubscriptionItem.create(params)
