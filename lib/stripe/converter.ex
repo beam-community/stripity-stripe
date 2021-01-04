@@ -56,6 +56,7 @@ defmodule Stripe.Converter do
     plan
     price
     product
+    promotion_code
     recipient
     refund
     review
