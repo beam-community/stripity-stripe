@@ -366,7 +366,8 @@ defmodule Stripe.Invoice do
                  optional(:forgive) => boolean,
                  optional(:paid_out_of_band) => boolean,
                  optional(:payment_method) => String.t(),
-                 optional(:source) => Stripe.id() | Stripe.Source.t()
+                 optional(:source) => Stripe.id() | Stripe.Source.t(),
+                 optional(:off_session) => boolean
                }
                | %{}
   def pay(id, params, opts \\ []) do
