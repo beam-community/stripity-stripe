@@ -60,7 +60,6 @@ defmodule Stripe.PromotionCode do
   """
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
-               optional(:id) => String.t(),
                :coupon => Stripe.id(),
                optional(:code) => String.t(),
                optional(:active) => boolean,
