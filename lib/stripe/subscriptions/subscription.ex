@@ -149,6 +149,7 @@ defmodule Stripe.Subscription do
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:prorate) => boolean,
                optional(:proration_behavior) => String.t(),
+               optional(:promotion_code) => Stripe.id(),
                optional(:tax_percent) => float,
                optional(:trial_end) => Stripe.timestamp(),
                optional(:trial_from_plan) => boolean,
