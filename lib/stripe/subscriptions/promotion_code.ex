@@ -114,7 +114,9 @@ defmodule Stripe.PromotionCode do
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
+               optional(:active) => boolean,
                optional(:created) => Stripe.date_query(),
+               optional(:code) => String.t(),
                optional(:coupon) => Stripe.id(),
                optional(:customer) => Stripe.id(),
                optional(:ending_before) => t | Stripe.id(),
