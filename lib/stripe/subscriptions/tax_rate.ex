@@ -11,6 +11,7 @@ defmodule Stripe.TaxRate do
           id: Stripe.id(),
           object: String.t(),
           active: boolean,
+          country: String.t() | nil,
           created: Stripe.timestamp(),
           description: String.t() | nil,
           display_name: String.t(),
@@ -18,13 +19,15 @@ defmodule Stripe.TaxRate do
           jurisdiction: String.t() | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
-          percentage: integer
+          percentage: integer,
+          state: String.t() | nil
         }
 
   defstruct [
     :id,
     :object,
     :active,
+    :country,
     :created,
     :description,
     :display_name,
@@ -32,7 +35,8 @@ defmodule Stripe.TaxRate do
     :jurisdiction,
     :livemode,
     :metadata,
-    :percentage
+    :percentage,
+    :state
   ]
 
   @plural_endpoint "tax_rates"
@@ -47,9 +51,11 @@ defmodule Stripe.TaxRate do
                  :display_name => String.t(),
                  :inclusive => boolean,
                  optional(:active) => boolean,
+                 optional(:country) => String.t(),
                  optional(:description) => String.t(),
                  optional(:metadata) => Stripe.Types.metadata(),
-                 optional(:jurisdiction) => String.t()
+                 optional(:jurisdiction) => String.t(),
+                 optional(:state) => String.t()
                }
                | %{}
   def create(params, opts \\ []) do
@@ -80,12 +86,14 @@ defmodule Stripe.TaxRate do
         when params:
                %{
                  optional(:percentage) => number,
+                 optional(:country) => String.t(),
                  optional(:display_name) => String.t(),
                  optional(:inclusive) => boolean,
                  optional(:active) => boolean,
                  optional(:description) => String.t(),
                  optional(:metadata) => Stripe.Types.metadata(),
-                 optional(:jurisdiction) => String.t()
+                 optional(:jurisdiction) => String.t(),
+                 optional(:state) => String.t()
                }
                | %{}
   def update(id, params, opts \\ []) do
