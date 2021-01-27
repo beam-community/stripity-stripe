@@ -62,4 +62,10 @@ defmodule Stripe.Types do
           monthly_anchor: non_neg_integer | nil,
           weekly_anchor: String.t() | nil
         }
+
+  @type action :: %{
+          status: String.t() | nil,
+          type: String.t(),
+          process_payment_intent: map() | nil
+        }
 end

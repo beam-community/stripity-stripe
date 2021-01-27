@@ -8,6 +8,7 @@ defmodule Stripe.Terminal.Reader do
   - [Update a Reader](https://stripe.com/docs/api/terminal/readers/update)
   - [Delete a Reader](https://stripe.com/docs/api/terminal/readers/delete)
   - [List all Readers](https://stripe.com/docs/api/terminal/readers/list)
+  - [Process a payment](not public)
   """
 
   use Stripe.Entity
@@ -25,7 +26,10 @@ defmodule Stripe.Terminal.Reader do
           object: String.t(),
           device_sw_version: String.t(),
           ip_address: String.t(),
-          livemode: boolean()
+          livemode: boolean(),
+          action: Stripe.Types.action(),
+          failure_code: String.t(),
+          failure_message: String.t()
         }
 
   defstruct [
@@ -39,7 +43,10 @@ defmodule Stripe.Terminal.Reader do
     :object,
     :device_sw_version,
     :ip_address,
-    :livemode
+    :livemode,
+    :action,
+    :failure_code,
+    :failure_message
   ]
 
   @plural_endpoint "terminal/readers"
@@ -125,6 +132,25 @@ defmodule Stripe.Terminal.Reader do
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:ending_before, :starting_after])
+    |> make_request()
+  end
+
+  @doc """
+  Process a payment by pushing the request to the provided reader.
+
+  Takes the `id` and a map with a payment intents id
+  """
+  @spec process_payment(Stripe.id() | t, params, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               :payment_intent => String.t()
+             }
+
+  def process_payment(id, params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/process_payment_intent")
+    |> put_method(:post)
+    |> put_params(params)
     |> make_request()
   end
 end

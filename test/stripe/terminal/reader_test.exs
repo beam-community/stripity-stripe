@@ -52,4 +52,18 @@ defmodule Stripe.Terminal.ReaderTest do
       assert %Stripe.Terminal.Reader{} = hd(readers)
     end
   end
+
+  describe "Process Payment" do
+    test "process payment" do
+      assert {:ok, %Stripe.Terminal.Reader{status: "in_progress"}} =
+               Stripe.Terminal.Reader.process_payment("tmr_P400-123-456-789", %{
+                 payment_intent: "pi_1EzmldKDql1vQYcgoDDS8uNK"
+               })
+
+      assert_stripe_requested(
+        :post,
+        "/v1/terminal/readers/tmr_P400-123-456-789/process_payment_intent"
+      )
+    end
+  end
 end
