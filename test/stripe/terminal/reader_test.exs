@@ -55,7 +55,7 @@ defmodule Stripe.Terminal.ReaderTest do
 
   describe "Process Payment" do
     test "process payment" do
-      assert {:ok, %Stripe.Terminal.Reader{status: "in_progress"}} =
+      assert {:ok, %Stripe.Terminal.Reader{action: %{status: "in_progress"}}} =
                Stripe.Terminal.Reader.process_payment("tmr_P400-123-456-789", %{
                  payment_intent: "pi_1EzmldKDql1vQYcgoDDS8uNK"
                })

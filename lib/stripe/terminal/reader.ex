@@ -27,9 +27,15 @@ defmodule Stripe.Terminal.Reader do
           device_sw_version: String.t(),
           ip_address: String.t(),
           livemode: boolean(),
-          action: Stripe.Types.action(),
-          failure_code: String.t(),
-          failure_message: String.t()
+          action: action() | nil
+        }
+
+  @type action :: %{
+          type: String.t() | nil,
+          process_payment_intent: map() | nil,
+          status: String.t() | nil,
+          failure_code: String.t() | nil,
+          failure_message: String.t() | nil
         }
 
   defstruct [
@@ -44,9 +50,7 @@ defmodule Stripe.Terminal.Reader do
     :device_sw_version,
     :ip_address,
     :livemode,
-    :action,
-    :failure_code,
-    :failure_message
+    :action
   ]
 
   @plural_endpoint "terminal/readers"
@@ -136,7 +140,7 @@ defmodule Stripe.Terminal.Reader do
   end
 
   @doc """
-  Process a payment by pushing the request to the provided reader.
+  Process a payment by pushing the request to the provided reader
 
   Takes the `id` and a map with a payment intents id
   """
