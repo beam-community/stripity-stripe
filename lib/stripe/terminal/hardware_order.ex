@@ -101,7 +101,7 @@ defmodule Stripe.Terminal.HardwareOrder do
                optional(:metadata) => Stripe.Types.metadata()
              }
 
-  def create(%{shipping_method: shipping_method} = params, opts \\ []) do
+  def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_params(Map.put(params, :payment_type, :monthly_invoice))
