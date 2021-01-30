@@ -14,7 +14,7 @@ defmodule Stripe.SubscriptionItem.Usage do
           object: String.t(),
           livemode: boolean,
           quantity: non_neg_integer,
-          subscription_iem: Stripe.id() | Stripe.SubscriptionItem.t(),
+          subscription_item: Stripe.id() | Stripe.SubscriptionItem.t(),
           timestamp: Stripe.timestamp()
         }
 
