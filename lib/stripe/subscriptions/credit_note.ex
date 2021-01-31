@@ -4,6 +4,7 @@ defmodule Stripe.CreditNote do
 
   You can:
 
+  - Preview a credit note
   - Create a credit note
   - Retrieve a credit note
   - Update a credit note
@@ -77,6 +78,34 @@ defmodule Stripe.CreditNote do
   ]
 
   @plural_endpoint "credit_notes"
+
+  @doc """
+  Preview a credit note.
+    Stripe.CreditNote.preview(%{
+      invoice: "in_173uNd4Wq104wst7Gf4dgq1Y",
+      amount: 500,
+    })
+  """
+  @spec preview(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params:
+               %{
+                 :amount => number,
+                 :invoice => Stripe.id(),
+                 optional(:credit_amount) => number,
+                 optional(:memo) => String.t(),
+                 optional(:metadata) => Stripe.Types.metadata(),
+                 optional(:reason) => String.t(),
+                 optional(:refund_amount) => number,
+                 optional(:refund) => Stripe.id()
+               }
+               | %{}
+  def preview(params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/preview")
+    |> put_params(params)
+    |> put_method(:get)
+    |> make_request()
+  end
 
   @doc """
   Create a credit note.
