@@ -32,7 +32,7 @@ defmodule Stripe.Coupon do
           percent_off: number | nil,
           redeem_by: Stripe.timestamp() | nil,
           times_redeemed: non_neg_integer,
-          applies_to: Stripe.List.t() | nil,
+          applies_to: map | nil,
           valid: boolean
         }
 
