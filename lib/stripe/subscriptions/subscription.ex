@@ -206,6 +206,7 @@ defmodule Stripe.Subscription do
                optional(:default_payment_method) => Stripe.id(),
                optional(:default_tax_rates) => [Stripe.id()],
                optional(:metadata) => Stripe.Types.metadata(),
+               optional(:pause_collection) => pause_collection(),
                optional(:prorate) => boolean,
                optional(:proration_behavior) => String.t(),
                optional(:proration_date) => Stripe.timestamp(),

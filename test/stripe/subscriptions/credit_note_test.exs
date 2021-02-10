@@ -2,6 +2,22 @@ defmodule Stripe.CreditNoteTest do
   use Stripe.StripeCase, async: true
   doctest Stripe.CreditNote
 
+  describe "preview/2" do
+    test "previews a Credit Note for a customer" do
+      params = %{
+        invoice: "in_173uNd4Wq104wst7Gf4dgq1Y",
+        amount: 500
+      }
+
+      assert {:ok, %Stripe.CreditNote{}} = Stripe.CreditNote.preview(params)
+
+      assert_stripe_requested(
+        :get,
+        "/v1/credit_notes/preview?amount=500&invoice=in_173uNd4Wq104wst7Gf4dgq1Y"
+      )
+    end
+  end
+
   describe "create/2" do
     test "creates a Credit Note for a customer" do
       params = %{
