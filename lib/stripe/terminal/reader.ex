@@ -140,17 +140,17 @@ defmodule Stripe.Terminal.Reader do
   end
 
   @doc """
-  Process a payment by pushing the request to the provided reader
+  Process a payment intent by an async request to the the provided reader
 
   Takes the `id` and a map with a payment intents id
   """
-  @spec process_payment(Stripe.id() | t, params, Stripe.options()) ::
+  @spec process_payment_intent(Stripe.id() | t, params, Stripe.options()) ::
           {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                :payment_intent => String.t()
              }
 
-  def process_payment(id, params, opts \\ []) do
+  def process_payment_intent(id, params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/process_payment_intent")
     |> put_method(:post)
