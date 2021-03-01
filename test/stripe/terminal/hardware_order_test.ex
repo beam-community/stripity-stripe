@@ -11,6 +11,7 @@ defmodule Stripe.Terminal.HardwareOrderTest do
             terminal_hardware_sku: "thsku_FmpapKIE13icT3"
           }
         ],
+        payment_type: "monthly_invoice",
         shipping: %{
           name: "Jenny Rosen",
           address: %{

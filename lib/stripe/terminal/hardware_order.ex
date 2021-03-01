@@ -95,6 +95,7 @@ defmodule Stripe.Terminal.HardwareOrder do
   @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params: %{
                :hardware_order_items => hardware_order_items(),
+               :payment_type => String.t(),
                :shipping => Stripe.Types.shipping(),
                :shipping_method => String.t(),
                optional(:confirm) => boolean,
@@ -104,8 +105,8 @@ defmodule Stripe.Terminal.HardwareOrder do
   def create(params, opts \\ []) do
     new_request(opts)
     |> put_endpoint(@plural_endpoint)
-    |> put_params(Map.put(params, :payment_type, :monthly_invoice))
     |> put_method(:post)
+    |> put_params(params)
     |> make_request()
   end
 

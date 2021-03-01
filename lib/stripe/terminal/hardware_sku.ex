@@ -49,12 +49,17 @@ defmodule Stripe.Terminal.HardwareSku do
   @doc """
   List all available terminal hardware skus
   """
-  @spec list(Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
-  def list(opts \\ []) do
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:country) => String.t(),
+               optional(:product_type) => String.t()
+             }
+  def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> prefix_expansions()
     |> put_endpoint(@plural_endpoint)
     |> put_method(:get)
+    |> put_params(params)
     |> make_request()
   end
 end
