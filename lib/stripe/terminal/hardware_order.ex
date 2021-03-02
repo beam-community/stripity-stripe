@@ -56,7 +56,8 @@ defmodule Stripe.Terminal.HardwareOrder do
 
   @type shipment_tracking ::
           list(%{
-            carrier: String.t()
+            carrier: String.t() | nil,
+            tracking_number: String.t() | nil
           })
 
   @type total_tax_amounts ::
