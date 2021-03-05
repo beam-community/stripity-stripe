@@ -10,6 +10,7 @@ tags
 # elixir LS files
 
 /.elixir_ls
+/.devcontainer
 # IntelliJ IDEA files
 
 /.idea
