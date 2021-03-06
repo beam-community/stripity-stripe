@@ -32,7 +32,8 @@ defmodule Stripe.Coupon do
           percent_off: number | nil,
           redeem_by: Stripe.timestamp() | nil,
           times_redeemed: non_neg_integer,
-          valid: boolean
+          valid: boolean,
+          applies_to: map | nil
         }
 
   defstruct [
@@ -51,7 +52,8 @@ defmodule Stripe.Coupon do
     :percent_off,
     :redeem_by,
     :times_redeemed,
-    :valid
+    :valid,
+    :applies_to
   ]
 
   @plural_endpoint "coupons"
@@ -135,6 +137,7 @@ defmodule Stripe.Coupon do
              }
   def list(params \\ %{}, opts \\ []) do
     new_request(opts)
+    |> prefix_expansions()
     |> put_endpoint(@plural_endpoint)
     |> put_method(:get)
     |> put_params(params)
