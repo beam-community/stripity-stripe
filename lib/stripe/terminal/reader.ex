@@ -8,7 +8,8 @@ defmodule Stripe.Terminal.Reader do
   - [Update a Reader](https://stripe.com/docs/api/terminal/readers/update)
   - [Delete a Reader](https://stripe.com/docs/api/terminal/readers/delete)
   - [List all Readers](https://stripe.com/docs/api/terminal/readers/list)
-  - [Process a payment](not public)
+  - [Process a payment intent](not public)
+  - [Cancel a payment intent](not public)
   """
 
   use Stripe.Entity
@@ -141,8 +142,24 @@ defmodule Stripe.Terminal.Reader do
   end
 
   @doc """
+  Cancel any action pending on the physical reader
+
+  Takes the `id`.
+  """
+  @spec cancel_action(Stripe.id() | t, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
+
+  def cancel_action(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/cancel_action")
+    |> put_method(:post)
+    |> make_request()
+  end
+
+  @doc """
   Process a payment intent by an async request to the the provided reader
-  Takes the `id` and a map with a payment intents id
+
+  Takes the `id` and a map with a payment intents id.
   """
   @spec process_payment_intent(Stripe.id() | t, params, Stripe.options()) ::
           {:ok, t} | {:error, Stripe.Error.t()}
