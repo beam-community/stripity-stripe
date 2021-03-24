@@ -8,8 +8,8 @@ defmodule Stripe.Terminal.Reader do
   - [Update a Reader](https://stripe.com/docs/api/terminal/readers/update)
   - [Delete a Reader](https://stripe.com/docs/api/terminal/readers/delete)
   - [List all Readers](https://stripe.com/docs/api/terminal/readers/list)
+  - [Cancel a reader action](not public)
   - [Process a payment intent](not public)
-  - [Cancel a payment intent](not public)
   """
 
   use Stripe.Entity
