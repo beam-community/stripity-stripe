@@ -62,7 +62,6 @@ defmodule Stripe.CustomerBalanceTransaction do
           {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
-                 :customer => Stripe.id() | Stripe.Customer.t(),
                  :amount => number,
                  :currency => String.t(),
                  optional(:description) => String.t(),
