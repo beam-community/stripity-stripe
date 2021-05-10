@@ -1,8 +1,11 @@
 defmodule Stripe.Capability do
   @moduledoc """
-  Work with Stripe Connect capability objects.
+  Work with [Stripe Connect `capability` objects](https://stripe.com/docs/api/capabilities).
 
-  Stripe API reference: https://stripe.com/docs/api/capabilities
+  You can:
+  - [Retrieve an Account Capability](https://stripe.com/docs/api/capabilities/retrieve)
+  - [Update an Account Capability](https://stripe.com/docs/api/capabilities/update)
+  - [List all account capabilities](https://stripe.com/docs/api/capabilities/list)
   """
 
   use Stripe.Entity
