@@ -45,13 +45,31 @@ defmodule Stripe.Capability do
   @doc """
   Retrieves information about the specified Account Capability.
   """
-  @spec retrieve(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec retrieve(Stripe.id(), map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def retrieve(id, %{account: _} = params, opts \\ []) do
     endpoint = accounts_plural_endpoint(params)
 
     new_request(opts)
     |> put_endpoint(endpoint <> "/#{get_id!(id)}")
     |> put_method(:get)
+    |> make_request()
+  end
+
+  @doc """
+  Updates an existing Account Capability.
+  """
+  @spec update(Stripe.id(), params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               :account => Stripe.id(),
+               optional(:requested) => boolean
+             }
+  def update(id, %{account: _} = params, opts \\ []) do
+    endpoint = accounts_plural_endpoint(params)
+
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:post)
+    |> put_params(params |> Map.delete(:account))
     |> make_request()
   end
 
