@@ -43,6 +43,19 @@ defmodule Stripe.Capability do
   ]
 
   @doc """
+  Retrieves information about the specified Account Capability.
+  """
+  @spec retrieve(Stripe.id() | t, map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def retrieve(id, %{account: _} = params, opts \\ []) do
+    endpoint = accounts_plural_endpoint(params)
+
+    new_request(opts)
+    |> put_endpoint(endpoint <> "/#{get_id!(id)}")
+    |> put_method(:get)
+    |> make_request()
+  end
+
+  @doc """
   Returns a list of capabilities associated with the account
   """
   @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
