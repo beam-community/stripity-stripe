@@ -19,6 +19,7 @@ defmodule Stripe.Converter do
     balance_transaction
     bank_account
     billing_portal.session
+    capability
     card
     charge
     checkout.session
