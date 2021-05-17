@@ -201,7 +201,7 @@ defmodule Stripe.Price do
                  optional(:created) => Stripe.timestamp(),
                  optional(:ending_before) => t | Stripe.id(),
                  optional(:limit) => 1..100,
-                 optional(:lookup_keys) => String.t(),
+                 optional(:lookup_keys) => list(String.t()),
                  optional(:recurring) => recurring() | nil,
                  optional(:starting_after) => t | Stripe.id()
                }
