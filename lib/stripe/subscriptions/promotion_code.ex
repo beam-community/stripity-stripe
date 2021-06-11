@@ -23,6 +23,7 @@ defmodule Stripe.PromotionCode do
           coupon: Stripe.Coupon.t(),
           created: Stripe.timestamp(),
           deleted: boolean | nil,
+          expires_at: Stripe.timestamp() | nil,
           livemode: boolean,
           max_redemptions: pos_integer | nil,
           metadata: Stripe.Types.metadata(),
@@ -45,6 +46,7 @@ defmodule Stripe.PromotionCode do
     :coupon,
     :created,
     :deleted,
+    :expires_at,
     :livemode,
     :max_redemptions,
     :metadata,
@@ -64,6 +66,7 @@ defmodule Stripe.PromotionCode do
                optional(:code) => String.t(),
                optional(:active) => boolean,
                optional(:customer) => Stripe.id(),
+               optional(:expires_at) => Stripe.timestamp(),
                optional(:max_redemptions) => pos_integer,
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:restrictions) => restrictions()
