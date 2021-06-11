@@ -18,4 +18,15 @@ defmodule Stripe.Connect.OAuthTest do
     assert Stripe.Connect.OAuthMock.authorize_url(%{url: "www"}) == "www"
     assert Stripe.Connect.OAuthMock.deauthorize_url("www.google.com") == "www.google.com"
   end
+
+  describe "authorize_url/2" do
+    test "retrurn standard account by default" do
+      assert Stripe.Connect.OAuth.authorize_url() =~ ~r/^https:\/\/connect.stripe.com/
+    end
+
+    test "retrurn express account url" do
+      assert Stripe.Connect.OAuth.authorize_url(%{}, :express) =~
+               ~r/^https:\/\/connect.stripe.com\/express/
+    end
+  end
 end

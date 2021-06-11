@@ -95,7 +95,7 @@ defmodule Stripe.Price do
           transform_quantity: transform_quantity(),
           type: String.t(),
           unit_amount: pos_integer,
-          amount_decimal: String.t()
+          unit_amount_decimal: String.t()
         }
 
   defstruct [
@@ -116,7 +116,7 @@ defmodule Stripe.Price do
     :transform_quantity,
     :type,
     :unit_amount,
-    :amount_decimal
+    :unit_amount_decimal
   ]
 
   @plural_endpoint "prices"
@@ -201,7 +201,7 @@ defmodule Stripe.Price do
                  optional(:created) => Stripe.timestamp(),
                  optional(:ending_before) => t | Stripe.id(),
                  optional(:limit) => 1..100,
-                 optional(:lookup_keys) => String.t(),
+                 optional(:lookup_keys) => list(String.t()),
                  optional(:recurring) => recurring() | nil,
                  optional(:starting_after) => t | Stripe.id()
                }

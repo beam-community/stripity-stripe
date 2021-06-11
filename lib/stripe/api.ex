@@ -63,6 +63,11 @@ defmodule Stripe.API do
     Config.resolve(:api_key, "")
   end
 
+  @spec get_api_version() :: String.t()
+  defp get_api_version() do
+    Config.resolve(:api_version, @api_version)
+  end
+
   @spec use_pool?() :: boolean
   defp use_pool?() do
     Config.resolve(:use_connection_pool)
@@ -178,7 +183,8 @@ defmodule Stripe.API do
   end
 
   @spec add_api_version(headers, String.t() | nil) :: headers
-  defp add_api_version(existing_headers, nil), do: add_api_version(existing_headers, @api_version)
+  defp add_api_version(existing_headers, nil),
+    do: add_api_version(existing_headers, get_api_version())
 
   defp add_api_version(existing_headers, api_version) do
     Map.merge(existing_headers, %{
