@@ -39,17 +39,17 @@ defmodule Stripe.Types do
   @type metadata :: %{
           optional(String.t()) => String.t()
         }
-
+        
   @type shipping :: %{
-          address: Stripe.Types.address(),
-          carrier: String.t() | nil,
-          eta: Stripe.timestamp() | nil,
-          name: String.t(),
-          phone: String.t() | nil,
-          status: String.t() | nil,
-          tracking_number: String.t() | nil,
-          tracking_url: String.t() | nil
-        }
+        required(:name) => String.t(),
+        required(:address) => Stripe.Types.address(),
+        optional(:carrier) => String.t(),
+        optional(:eta) => Stripe.timestamp(),
+        optional(:phone) => String.t(),
+        optional(:status) => String.t(),
+        optional(:tracking_number) => String.t(),
+        optional(:tracking_url) => String.t()
+}      
 
   @type collection_method_thresholds :: %{
           amount_gte: integer | nil,
