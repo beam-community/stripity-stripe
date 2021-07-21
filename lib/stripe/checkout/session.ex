@@ -14,12 +14,44 @@ defmodule Stripe.Session do
   import Stripe.Request
 
   @type line_item :: %{
-          :amount => integer(),
-          :currency => String.t(),
-          :name => String.t(),
-          :quantity => integer(),
+          optional(:name) => String.t(),
+          optional(:quantity) => integer(),
+          optional(:adjustable_quantity) => adjustable_quantity(),
+          optional(:amount) => integer(),
+          optional(:currency) => String.t(),
           optional(:description) => String.t(),
-          optional(:images) => list(String.t())
+          optional(:dynamic_tax_rates) => list(String.t()),
+          optional(:images) => list(String.t()),
+          optional(:price) => String.t(),
+          optional(:price_data) => price_data,
+          optional(:tax_rates) => list(String.t())
+        }
+
+  @type adjustable_quantity :: %{
+          :enabled => boolean(),
+          optional(:maxiumum) => integer(),
+          optional(:minimum) => integer()
+        }
+
+  @type price_data :: %{
+          :currency => String.t(),
+          optional(:product) => String.t(),
+          optional(:product_data) => product_data(),
+          optional(:unit_amount) => integer(),
+          optional(:unit_amount_decimal) => integer(),
+          optional(:recurring) => recurring()
+        }
+
+  @type product_data :: %{
+          :name => String.t(),
+          optional(:description) => String.t(),
+          optional(:images) => list(String.t()),
+          optional(:metadata) => Stripe.Types.metadata()
+        }
+
+  @type recurring :: %{
+          :interval => String.t(),
+          :interval_count => integer()
         }
 
   @type capture_method :: :automatic | :manual
@@ -35,6 +67,7 @@ defmodule Stripe.Session do
           optional(:metadata) => Stripe.Types.metadata(),
           optional(:on_behalf_of) => String.t(),
           optional(:receipt_email) => String.t(),
+          optional(:setup_future_usage) => String.t(),
           optional(:shipping) => Stripe.Types.shipping(),
           optional(:statement_descriptor) => String.t(),
           optional(:transfer_data) => transfer_data

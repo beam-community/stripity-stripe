@@ -116,8 +116,15 @@ defmodule Stripe.Webhook do
   end
 
   defp compute_signature(payload, secret) do
-    :crypto.hmac(:sha256, secret, payload)
+    hmac(:sha256, secret, payload)
     |> Base.encode16(case: :lower)
+  end
+
+  # TODO: remove when we require OTP 22
+  if System.otp_release() >= "22" do
+    defp hmac(digest, key, data), do: :crypto.mac(:hmac, digest, key, data)
+  else
+    defp hmac(digest, key, data), do: :crypto.hmac(digest, key, data)
   end
 
   defp secure_equals?(input, expected) when byte_size(input) == byte_size(expected) do
@@ -135,7 +142,7 @@ defmodule Stripe.Webhook do
     import Bitwise
 
     acc
-    |> bor(input_codepoint ^^^ expected_codepoint)
+    |> bor(bxor(input_codepoint, expected_codepoint))
     |> secure_compare(input, expected)
   end
 
