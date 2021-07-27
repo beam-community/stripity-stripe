@@ -152,7 +152,9 @@ defmodule Stripe.Session do
     :shipping_address_collection,
     :submit_type,
     :subscription,
-    :success_url
+    :success_url,
+    :url,
+    :payment_status
   ]
 
   @plural_endpoint "checkout/sessions"
