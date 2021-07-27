@@ -129,7 +129,9 @@ defmodule Stripe.Session do
           },
           submit_type: String.t() | nil,
           subscription: Stripe.id() | Stripe.Subscription.t() | nil,
-          success_url: String.t()
+          success_url: String.t(),
+          url: String.t(),
+          payment_status: String.t()
         }
 
   defstruct [
