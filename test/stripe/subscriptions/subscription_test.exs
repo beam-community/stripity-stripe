@@ -43,6 +43,26 @@ defmodule Stripe.SubscriptionTest do
 
       assert_stripe_requested(:post, "/v1/subscriptions")
     end
+
+    test "creates a subscription accept transfer_data parameter" do
+      params = %{
+        application_fee_percent: 5,
+        customer: "cus_123",
+        transfer_data: %{
+          destination: "acct_1JK"
+        },
+        items: [
+          %{
+            plan: "ruby-express-932",
+            quantity: 1
+          }
+        ]
+      }
+
+      assert {:ok, %Stripe.Subscription{transfer_data: _}} = Stripe.Subscription.create(params)
+
+      assert_stripe_requested(:post, "/v1/subscriptions")
+    end
   end
 
   describe "update/2" do

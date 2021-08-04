@@ -34,6 +34,10 @@ defmodule Stripe.Subscription do
           trial_from_plan: boolean
         }
 
+  @type transfer_data :: %{
+          :destination => String.t()
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -71,6 +75,7 @@ defmodule Stripe.Subscription do
           start_date: Stripe.timestamp(),
           status: String.t(),
           tax_percent: float | nil,
+          transfer_data: transfer_data,
           trial_end: Stripe.timestamp() | nil,
           trial_start: Stripe.timestamp() | nil
         }
@@ -112,6 +117,7 @@ defmodule Stripe.Subscription do
     :start_date,
     :status,
     :tax_percent,
+    :transfer_data,
     :trial_end,
     :trial_start
   ]
@@ -151,6 +157,7 @@ defmodule Stripe.Subscription do
                optional(:proration_behavior) => String.t(),
                optional(:promotion_code) => Stripe.id(),
                optional(:tax_percent) => float,
+               optional(:transfer_data) => transfer_data,
                optional(:trial_end) => Stripe.timestamp(),
                optional(:trial_from_plan) => boolean,
                optional(:trial_period_days) => non_neg_integer
