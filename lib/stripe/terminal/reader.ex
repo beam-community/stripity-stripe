@@ -189,7 +189,26 @@ defmodule Stripe.Terminal.Reader do
   end
 
   @doc """
-  Sets the reader display to the the provided reader
+  Process a setup intent by an async request to the the provided reader
+
+  Takes the `id` and a map with a setup intents id.
+  """
+  @spec process_setup_intent(Stripe.id() | t, params, Stripe.options()) ::
+          {:ok, t} | {:error, Stripe.Error.t()}
+        when params: %{
+               :setup_intent => String.t()
+             }
+
+  def process_setup_intent(id, params, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/process_setup_intent")
+    |> put_method(:post)
+    |> put_params(params)
+    |> make_request()
+  end
+
+  @doc """
+  Sets the reader display of the provided reader
 
   Takes the `id` and a map with type:cart and cart:%cart{}.
   """
