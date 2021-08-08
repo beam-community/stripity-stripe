@@ -25,9 +25,6 @@ jobs:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 			- name: Run script
-				run: |
-					echo "hi"
-				shell: bash
       - run: mix deps.get
       - run: mix test
 
