@@ -33,17 +33,7 @@ jobs:
     - name: Install Stripe
       run: go get -u github.com/stripe/stripe-mock
     - name: Go PATH
-      run: export GOPATH=$HOME/go
-    - name: Go PATH echo
-      run: echo "$GOPATH"
-    - name: Start Stripe Mock
-      run: stripe-mock
-    - name: Mix dependency install
-      run: mix deps.get
-    - name: Coveralls
-      run: mix coveralls.github
-    - name: Test run
-      run: MIX_ENV=dev mix dialyzer --halt-exit-status
+      run: go version
 
   lint:
     runs-on: ubuntu-latest
