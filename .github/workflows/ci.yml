@@ -27,8 +27,10 @@ jobs:
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
-      - run: mix deps.get
-      - run: mix test
+      - name: Run tests for Elixir version: ${{matrix.elixir}}
+				run: |
+					mix deps.get
+      		mix test
 				env:
 					STRIPE_MOCK_VERSION: 0.95.0
 					STRIPE_SECRET_KEY: non_empty_secret_key_string
