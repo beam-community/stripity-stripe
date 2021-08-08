@@ -21,13 +21,16 @@ jobs:
     steps:
       - name: checkout
 				uses: actions/checkout@v2
+
       - name: beam
 				uses: erlef/setup-beam@v1
 					with:
 						otp-version: ${{matrix.otp}}
 						elixir-version: ${{matrix.elixir}}
+
       - name: hi
 				run: mix deps.get
+
       - name: foo
 				run: mix test
 
