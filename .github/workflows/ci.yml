@@ -31,6 +31,10 @@ jobs:
       run: bash ${{ github.workspace }}/.github/setup.sh
     - name: Setup PATH
       run: export PATH=$PATH:$PWD/stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}/
+    - name: Mix dependency install
+      run: mix deps.get
+    - name: Test run
+      run: mix test
 
   lint:
     runs-on: ubuntu-latest
