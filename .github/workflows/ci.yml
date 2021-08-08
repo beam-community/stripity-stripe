@@ -11,8 +11,6 @@ jobs:
   test:
     env:
       MIX_ENV: test
-			STRIPE_MOCK_VERSION: '0.95.0'
-      STRIPE_SECRET_KEY: 'non_empty_secret_key_string'
     runs-on: ubuntu-latest
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
@@ -31,6 +29,9 @@ jobs:
           elixir-version: ${{matrix.elixir}}
       - run: mix deps.get
       - run: mix test
+				env:
+					STRIPE_MOCK_VERSION: 0.95.0
+					STRIPE_SECRET_KEY: non_empty_secret_key_string
 
   lint:
     runs-on: ubuntu-latest
