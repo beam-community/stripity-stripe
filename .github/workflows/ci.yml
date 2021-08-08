@@ -31,7 +31,9 @@ jobs:
     - name: Setup Stripe folder
       run: bash ${{ github.workspace }}/.github/setup.sh
     - name: Setup PATH
-      run: export PATH=$PATH:$PWD/stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}/
+      run: echo "$HOME/stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}" >> $GITHUB_PATH
+    - name: PRINT
+      run: echo $PATH
     - name: Mix dependency install
       run: mix deps.get
     - name: Coveralls
