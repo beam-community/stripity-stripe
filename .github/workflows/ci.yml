@@ -19,20 +19,14 @@ jobs:
         # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
         otp: [24, 23, 22]
     steps:
-      - name: checkout
-				uses: actions/checkout@v2
-
-      - name: beam
-				uses: erlef/setup-beam@v1
-					with:
-						otp-version: ${{matrix.otp}}
-						elixir-version: ${{matrix.elixir}}
-
-      - name: hi
-				run: mix deps.get
-
-      - name: foo
-				run: mix test
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+			- run: bash PWD/setup.sh
+      - run: mix deps.get
+      - run: mix test
 
   lint:
     runs-on: ubuntu-latest
