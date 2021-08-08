@@ -32,6 +32,8 @@ jobs:
           elixir-version: ${{ matrix.elixir }}
     - name: Install Stripe
       run: go get -u github.com/stripe/stripe-mock
+    - name: Add to path
+      run: echo "$GOPATH/bin" >> $GITHUB_PATH
     - name: Start Stripe Mock
       run: stripe-mock &
     - name: Mix Dependencies
