@@ -1,9 +1,33 @@
 name: Continuous Integration
 
 on:
+  pull_request:
+    types: [opened, reopened, synchronize]
   push:
+    branches:
+      - 'master'
 
 jobs:
+  test:
+    env:
+      MIX_ENV: test
+      STRIPE_MOCK_VERSION: 0.95.0
+      STRIPE_SECRET_KEY: non_empty_secret_key_string
+    runs-on: ubuntu-latest
+    name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
+    strategy:
+     	matrix:
+				elixir: ['1.12', '1.11', '1.10']
+				otp: [24, 23, 22]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+      - run: mix deps.get
+      - run: mix test
+
   lint:
     runs-on: ubuntu-latest
     name: Linting
