@@ -23,17 +23,17 @@ jobs:
     steps:
     - name: Clone code
       uses: actions/checkout@v2
+    - name: Setup Go
+      uses: actions/setup-go@v2
     - name: Setup dependencies
       uses: erlef/setup-beam@v1
       with:
           otp-version: ${{ matrix.otp }}
           elixir-version: ${{ matrix.elixir }}
     - name: Setup Stripe folder
-      run: bash ${{ github.workspace }}/.github/setup.sh
-    - name: Setup PATH
-      run: echo "$HOME/stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}" >> $GITHUB_PATH
-    - name: PRINT
-      run: echo $PATH
+      run: go get -u github.com/stripe/stripe-mock
+    - name: Start Stripe Mock
+      run: stripe-mock
     - name: Mix dependency install
       run: mix deps.get
     - name: Coveralls
