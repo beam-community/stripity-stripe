@@ -8,6 +8,28 @@ on:
       - 'master'
 
 jobs:
+  test:
+    env:
+      MIX_ENV: test
+    runs-on: ubuntu-latest
+    name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
+    strategy:
+      matrix:
+        elixir: ['1.12', '1.11', '1.10', '1.9']
+        # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
+        otp: [24, 23, 22, 21]
+        exclude:
+          - {otp: '21', elixir: '1.12'}
+          - {otp: '24', elixir: '1.9'}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+      - run: mix deps.get
+      - run: mix test
+
   lint:
     runs-on: ubuntu-latest
     name: Linting
