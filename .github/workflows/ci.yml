@@ -38,10 +38,8 @@ jobs:
       run: stripe-mock &
     - name: Mix Dependencies
       run: mix deps.get
-    - name: Coveralls
-      run: mix coveralls.github
-    - name: Test run
-      run: MIX_ENV=dev mix dialyzer --halt-exit-status
+    - name: Test
+      run: mix test
 
   lint:
     runs-on: ubuntu-latest
