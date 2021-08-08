@@ -14,11 +14,12 @@ jobs:
       STRIPE_MOCK_VERSION: 0.95.0
       STRIPE_SECRET_KEY: non_empty_string
     runs-on: ubuntu-latest
+    name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
        matrix:
-         elixir: ['1.12', '1.11', '1.10']
+         elixir: ['1.12']
          # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
-         otp: [24, 23, 22]
+         otp: [24]
     steps:
     - name: Clone code
       uses: actions/checkout@v2
@@ -33,8 +34,10 @@ jobs:
       run: export PATH=$PATH:$PWD/stripe-mock/stripe-mock_${STRIPE_MOCK_VERSION}/
     - name: Mix dependency install
       run: mix deps.get
+    - name: Coveralls
+      run: mix coveralls.github
     - name: Test run
-      run: mix test
+      run: MIX_ENV=dev mix dialyzer --halt-exit-status
 
   lint:
     runs-on: ubuntu-latest
