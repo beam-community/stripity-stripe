@@ -30,8 +30,12 @@ jobs:
       with:
           otp-version: ${{ matrix.otp }}
           elixir-version: ${{ matrix.elixir }}
+    - name: Install Stripe
+      run: go get -u github.com/stripe/stripe-mock
+    - name: Add to path
+      run: echo "$GOPATH/bin" >> $GITHUB_PATH
     - name: Start Stripe Mock
-      run: docker run --rm -p 12111-12112:12111-12112 stripemock/stripe-mock:latest
+      run: stripe-mock
     - name: Mix Dependencies
       run: mix deps.get
     - name: Test
