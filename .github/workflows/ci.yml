@@ -13,6 +13,7 @@ jobs:
       MIX_ENV: test
       STRIPE_MOCK_VERSION: 0.95.0
       STRIPE_SECRET_KEY: non_empty_string
+      SKIP_STRIPE_MOCK_RUN: true
     runs-on: ubuntu-latest
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
