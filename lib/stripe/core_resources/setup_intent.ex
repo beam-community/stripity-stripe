@@ -86,6 +86,7 @@ defmodule Stripe.SetupIntent do
     :customer,
     :description,
     :last_setup_error,
+    :latest_attempt,
     :livemode,
     :mandate,
     :metadata,
