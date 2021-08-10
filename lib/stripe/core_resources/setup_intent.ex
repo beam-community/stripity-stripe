@@ -26,6 +26,13 @@ defmodule Stripe.SetupIntent do
           type: String.t()
         }
 
+  @type latest_attempt :: %{
+          id: Stripe.id(),
+          object: String.t(),
+          payment_method: Stripe.id() | Stripe.PaymentMethod.t() | nil,
+          payment_method_details: map
+        }
+
   @type next_action :: %{
           redirect_to_url: redirect_to_url | nil,
           type: String.t(),
@@ -55,6 +62,7 @@ defmodule Stripe.SetupIntent do
           customer: Stripe.id() | Stripe.Customer.t() | nil,
           description: String.t() | nil,
           last_setup_error: last_setup_error | nil,
+          latest_attempt: Stripe.id() | latest_attempt | nil,
           livemode: boolean,
           mandate: Stripe.id() | Stripe.Mandate.t() | nil,
           metadata: Stripe.Types.metadata(),
