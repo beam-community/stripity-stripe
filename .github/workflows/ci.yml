@@ -17,9 +17,9 @@ jobs:
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
        matrix:
-         elixir: ['1.12']
+         elixir: ['1.9']
          # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
-         otp: [24]
+         otp: [21.1]
     services:
        stripe-mock:
          image: stripemock/stripe-mock:v0.95.0
