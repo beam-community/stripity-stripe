@@ -71,7 +71,7 @@ defmodule Stripe.Mixfile do
       {:mox, "~> 0.4", only: :test},
       {:jason, "~> 1.1"},
       {:uri_query, "~> 0.1.2"},
-      {:exexec, "~> 0.1.0", only: :test},
+      {:exexec, "~> 0.2.0", only: :test},
       {:plug, "~> 1.0", optional: true}
     ]
   end
