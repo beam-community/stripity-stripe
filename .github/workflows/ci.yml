@@ -13,13 +13,14 @@ jobs:
       MIX_ENV: test
       STRIPE_MOCK_VERSION: 0.95.0
       STRIPE_SECRET_KEY: non_empty_string
+      SKIP_STRIPE_MOCK_RUN: true
     runs-on: ubuntu-latest
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
        matrix:
-         elixir: ['1.9']
+         elixir: ['1.12']
          # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
-         otp: [21.1]
+         otp: [24]
     services:
        stripe-mock:
          image: stripemock/stripe-mock:v0.95.0
