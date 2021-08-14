@@ -41,4 +41,3 @@ defmodule Helper do
   end
 end
 
-Helper.wait_until_stripe_mock_launch()
