@@ -33,9 +33,8 @@ defmodule Stripe.SubscriptionScheduleTest do
             coupon: nil,
             default_tax_rates: [],
             end_date: 1_557_566_037,
-            plans: [
+            items: [
               %{
-                billing_thresholds: nil,
                 plan: "some plan",
                 quantity: 2,
                 tax_rates: []
@@ -69,9 +68,8 @@ defmodule Stripe.SubscriptionScheduleTest do
             coupon: nil,
             default_tax_rates: [],
             end_date: 1_557_566_037,
-            plans: [
+            items: [
               %{
-                billing_thresholds: nil,
                 plan: "some plan",
                 quantity: 2,
                 tax_rates: []

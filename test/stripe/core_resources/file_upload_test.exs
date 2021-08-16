@@ -16,8 +16,8 @@ defmodule Stripe.FileUploadTest do
 
   describe "retrieve/2" do
     test "retrieves an file" do
-      assert {:ok, _} = Stripe.FileUpload.retrieve("file_123")
-      assert_stripe_requested(:get, "/v1/files/file_123")
+      assert {:ok, _} = Stripe.FileUpload.retrieve("file_19yVPO2eZvKYlo2CIrGjfyCO")
+      assert_stripe_requested(:get, "/v1/files/file_19yVPO2eZvKYlo2CIrGjfyCO")
     end
   end
 

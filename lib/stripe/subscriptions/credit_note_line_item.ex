@@ -16,12 +16,18 @@ defmodule Stripe.CreditNoteLineItem do
           tax_rate: Stripe.id() | Stripe.TaxRate.t()
         }
 
+  @type discount :: %{
+          amount: integer,
+          discount: String.t(),
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
           amount: integer,
           description: String.t(),
           discount_amount: integer,
+          discount_amounts: [discount],
           invoice_line_item: Stripe.id() | nil,
           livemode: boolean,
           quantity: integer,
@@ -38,6 +44,7 @@ defmodule Stripe.CreditNoteLineItem do
     :amount,
     :description,
     :discount_amount,
+    :discount_amounts,
     :invoice_line_item,
     :livemode,
     :quantity,

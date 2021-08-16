@@ -4,13 +4,13 @@ defmodule Stripe.Relay.ProductTest do
   describe "create/2" do
     test "creates an product" do
       assert {:ok, %Stripe.Product{}} =
-               Stripe.Relay.Product.create(%{name: "Plus", type: "service"})
+               Stripe.Relay.Product.create(%{name: "Plus"})
 
       assert_stripe_requested(:post, "/v1/products")
     end
 
     test "creates an product with more params" do
-      params = %{name: "Plus", type: "service", description: "dowat?"}
+      params = %{name: "Plus", description: "dowat?"}
       assert {:ok, %Stripe.Product{}} = Stripe.Relay.Product.create(params)
       assert_stripe_requested(:post, "/v1/products")
     end
