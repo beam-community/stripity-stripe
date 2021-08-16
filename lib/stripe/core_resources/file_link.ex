@@ -76,7 +76,7 @@ defmodule Stripe.FileLink do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(file_link)}")
     |> put_method(:get)
-    |> make_file_upload_request()
+    |> make_request()
   end
 
   @doc """
@@ -125,6 +125,6 @@ defmodule Stripe.FileLink do
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:ending_before, :starting_after, :limit, :purpose])
-    |> make_file_upload_request()
+    |> make_request()
   end
 end
