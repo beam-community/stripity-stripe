@@ -10,7 +10,7 @@ defmodule Stripe.Mixfile do
         plt_add_apps: [:mix],
         plt_file: {:no_warn, "priv/plts/stripity_stripe.plt"}
       ],
-      elixir: "~> 1.9",
+      elixir: "~> 1.10",
       package: package(),
       elixirc_paths: elixirc_paths(Mix.env()),
       preferred_cli_env: [
@@ -20,7 +20,7 @@ defmodule Stripe.Mixfile do
         "coveralls.html": :test
       ],
       test_coverage: [tool: ExCoveralls],
-      version: "2.11.0",
+      version: "2.12.0",
       source_url: "https://github.com/code-corps/stripity_stripe/",
       docs: [
         main: "readme",
