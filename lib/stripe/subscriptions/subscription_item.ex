@@ -49,7 +49,7 @@ defmodule Stripe.SubscriptionItem do
                optional(:metadata) => Stripe.Types.metadata(),
                optional(:prorate) => boolean,
                optional(:proration_date) => Stripe.timestamp(),
-               optional(:quantity) => float,
+               optional(:quantity) => non_neg_integer,
                optional(:tax_rates) => list(String.t())
              }
   def create(%{subscription: _} = params, opts \\ []) do
@@ -84,7 +84,7 @@ defmodule Stripe.SubscriptionItem do
                optional(:price) => Stripe.id() | Stripe.Price.t(),
                optional(:prorate) => boolean,
                optional(:proration_date) => Stripe.timestamp(),
-               optional(:quantity) => float,
+               optional(:quantity) => non_neg_integer,
                optional(:tax_rates) => list(String.t())
              }
   def update(id, params, opts \\ []) do
