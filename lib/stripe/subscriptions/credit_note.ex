@@ -23,6 +23,11 @@ defmodule Stripe.CreditNote do
           tax_rate: Stripe.id() | Stripe.TaxRate.t()
         }
 
+  @type discount :: %{
+          amount: integer,
+          discount: String.t(),
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -32,6 +37,7 @@ defmodule Stripe.CreditNote do
           customer: Stripe.id() | Stripe.Customer.t() | nil,
           customer_balance_transaction: Stripe.id() | Stripe.CustomerBalanceTransaction.t() | nil,
           discount_amount: integer,
+          discount_amounts: [discount],
           invoice: Stripe.id() | Stripe.Invoice.t(),
           lines: Stripe.List.t(Stripe.LineItem.t()),
           livemode: boolean,
@@ -59,6 +65,7 @@ defmodule Stripe.CreditNote do
     :customer,
     :customer_balance_transaction,
     :discount_amount,
+    :discount_amounts,
     :invoice,
     :lines,
     :livemode,
