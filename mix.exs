@@ -35,7 +35,7 @@ defmodule Stripe.Mixfile do
   def application do
     [
       applications: apps(Mix.env()),
-      extra_applications: [:plug, :exexec],
+      extra_applications: [:plug],
       env: env(),
       mod: {Stripe, []}
     ]
