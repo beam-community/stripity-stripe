@@ -13,6 +13,7 @@ defmodule Stripe.WebhookEndpoint do
   require Stripe.Util
 
   @type t :: %__MODULE__{
+          application: String.t() | nil,
           created: Stripe.timestamp(),
           deleted: boolean,
           description: String.t(),
@@ -27,6 +28,7 @@ defmodule Stripe.WebhookEndpoint do
         }
 
   defstruct [
+    :application,
     :created,
     :deleted,
     :description,
