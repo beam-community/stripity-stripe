@@ -163,6 +163,9 @@ defmodule Stripe.Mixfile do
       Fraud: [
         Stripe.Review
       ],
+      Identity: [
+        Stripe.Identity.VerificationSession
+      ],
       Issuing: [
         Stripe.Issuing.Authorization,
         Stripe.Issuing.Card,
