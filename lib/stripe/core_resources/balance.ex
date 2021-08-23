@@ -17,10 +17,20 @@ defmodule Stripe.Balance do
           }
         }
 
+  @type issuing_funds :: %{
+          currency: String.t(),
+          amount: integer
+        }
+
+  @type issuing :: %{
+          available: list(issuing_funds)
+        }
+
   @type t :: %__MODULE__{
           object: String.t(),
           available: list(funds),
           connect_reserved: list(funds) | nil,
+          issuing: issuing,
           livemode: boolean,
           pending: list(funds)
         }
@@ -29,6 +39,7 @@ defmodule Stripe.Balance do
     :object,
     :available,
     :connect_reserved,
+    :issuing,
     :livemode,
     :pending
   ]
