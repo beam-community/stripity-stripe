@@ -8,6 +8,7 @@ defmodule Stripe.Discount do
   use Stripe.Entity
 
   @type t :: %__MODULE__{
+          id: Stripe.id(),
           object: String.t(),
           coupon: Stripe.Coupon.t(),
           customer: Stripe.id() | Stripe.Customer.t() | nil,
@@ -19,6 +20,7 @@ defmodule Stripe.Discount do
         }
 
   defstruct [
+    :id,
     :object,
     :coupon,
     :customer,

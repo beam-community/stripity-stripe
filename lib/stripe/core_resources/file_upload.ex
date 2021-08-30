@@ -18,6 +18,7 @@ defmodule Stripe.FileUpload do
           id: Stripe.id(),
           object: String.t(),
           created: Stripe.timestamp(),
+          expires_at: Stripe.timestamp(),
           filename: String.t() | nil,
           links: Stripe.List.t(Stripe.FileLink.t()),
           purpose: String.t(),
@@ -31,6 +32,7 @@ defmodule Stripe.FileUpload do
     :id,
     :object,
     :created,
+    :expires_at,
     :filename,
     :links,
     :purpose,
@@ -64,7 +66,7 @@ defmodule Stripe.FileUpload do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
     |> put_method(:get)
-    |> make_file_upload_request()
+    |> make_request()
   end
 
   @doc """
@@ -85,6 +87,6 @@ defmodule Stripe.FileUpload do
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:ending_before, :starting_after, :limit, :purpose])
-    |> make_file_upload_request()
+    |> make_request()
   end
 end

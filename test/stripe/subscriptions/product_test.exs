@@ -3,7 +3,7 @@ defmodule Stripe.ProductTest do
 
   describe "create/2" do
     test "creates an product" do
-      assert {:ok, %Stripe.Product{}} = Stripe.Product.create(%{name: "Plus", type: "service"})
+      assert {:ok, %Stripe.Product{}} = Stripe.Product.create(%{name: "Plus"})
       assert_stripe_requested(:post, "/v1/products")
     end
   end
