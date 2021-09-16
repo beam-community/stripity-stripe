@@ -164,7 +164,8 @@ defmodule Stripe.Mixfile do
         Stripe.Review
       ],
       Identity: [
-        Stripe.Identity.VerificationSession
+        Stripe.Identity.VerificationSession,
+        Stripe.Identity.VerificationReport
       ],
       Issuing: [
         Stripe.Issuing.Authorization,

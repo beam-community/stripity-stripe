@@ -37,6 +37,7 @@ defmodule Stripe.Converter do
     file
     file_link
     identity.verification_session
+    identity.verification_report
     invoice
     invoiceitem
     issuing.authorization

@@ -58,6 +58,9 @@ defmodule Stripe.Util do
   def object_name_to_module("identity.verification_session"),
     do: Stripe.Identity.VerificationSession
 
+  def object_name_to_module("identity.verification_report"),
+    do: Stripe.Identity.VerificationReport
+
   def object_name_to_module("issuing.authorization"), do: Stripe.Issuing.Authorization
   def object_name_to_module("issuing.card"), do: Stripe.Issuing.Card
   def object_name_to_module("issuing.cardholder"), do: Stripe.Issuing.Cardholder
