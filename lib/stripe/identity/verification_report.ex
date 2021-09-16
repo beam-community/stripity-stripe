@@ -114,10 +114,6 @@ defmodule Stripe.Identity.VerificationReport do
 
   @doc """
   Retrieves an existing VerificationReport.
-
-  When the session status is requires_input,
-  you can use this method to retrieve a valid
-  client_secret or url to allow re-submission.
   """
   @spec retrieve(Stripe.id() | t(), Stripe.options()) :: {:ok, t()} | {:error, Stripe.Error.t()}
   def retrieve(id, opts \\ []) do
