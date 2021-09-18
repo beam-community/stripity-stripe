@@ -1,7 +1,3 @@
-"""
-These tests are unable to be run until the endpoints needed are added to StripeMock
-"""
-
 defmodule Stripe.Identity.VerificationSessionTest do
   use Stripe.StripeCase, async: true
 
@@ -23,27 +19,29 @@ defmodule Stripe.Identity.VerificationSessionTest do
 
   test "is retrievable" do
     assert {:ok, %Stripe.Identity.VerificationSession{}} =
-             Stripe.Identity.VerificationSession.retrieve()
+             Stripe.Identity.VerificationSession.retrieve("vs_123xxx")
 
-    assert_stripe_requested(:get, "/v1/identity/verification_sessions")
+    assert_stripe_requested(:get, "/v1/identity/verification_sessions/vs_123xxx")
   end
 
-  describe "update/2" do
-    test "updates a capability" do
-      assert {:ok, %Stripe.Identity.VerificationSession{}} =
-               Stripe.Identity.VerificationSession.update("card_payments", %{account: "acct_123"})
+  test "is updatable" do
+    assert {:ok, %Stripe.Identity.VerificationSession{}} =
+             Stripe.Identity.VerificationSession.update("vs_123xxx", %{type: "document"})
 
-      assert_stripe_requested(:post, "/v1/identity/verification_sessions")
-    end
+    assert_stripe_requested(:post, "/v1/identity/verification_sessions/vs_123xxx")
+  end
 
-    test "passing an 'requested' does not result in an error" do
-      assert {:ok, %Stripe.Identity.VerificationSession{}} =
-               Stripe.Identity.VerificationSession.update("card_payments", %{
-                 account: "acct_123",
-                 requested: true
-               })
+  test "is cancelable" do
+    assert {:ok, %Stripe.Identity.VerificationSession{}} =
+             Stripe.Identity.VerificationSession.cancel("vs_123xxx")
 
-      assert_stripe_requested(:post, "/v1/identity/verification_sessions")
-    end
+    assert_stripe_requested(:post, "/v1/identity/verification_sessions/vs_123xxx/cancel")
+  end
+
+  test "is redactable" do
+    assert {:ok, %Stripe.Identity.VerificationSession{}} =
+             Stripe.Identity.VerificationSession.redact("vs_123xxx")
+
+    assert_stripe_requested(:post, "/v1/identity/verification_sessions/vs_123xxx/redact")
   end
 end
