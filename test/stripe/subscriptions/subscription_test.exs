@@ -27,6 +27,30 @@ defmodule Stripe.SubscriptionTest do
       assert_stripe_requested(:post, "/v1/subscriptions")
     end
 
+    test "creates a subscription with invoice items" do
+      params = %{
+        application_fee_percent: 5,
+        customer: "cus_123",
+        items: [
+          %{
+            plan: "ruby-express-932",
+            quantity: 1
+          }
+        ],
+        add_invoice_items: [
+          %{
+            price: "one-time-price-100",
+            quantity: 1
+          }
+        ]
+      }
+
+      assert {:ok, %Stripe.Subscription{}} =
+               Stripe.Subscription.create(params, connect_account: "acct_123")
+
+      assert_stripe_requested(:post, "/v1/subscriptions")
+    end
+
     test "fails with source param [since 2018-08-23]" do
       params = %{
         customer: "cus_123",

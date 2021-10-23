@@ -148,6 +148,16 @@ defmodule Stripe.Subscription do
                    optional(:tax_rates) => list
                  }
                ],
+               optional(:add_invoice_items) => [
+                 %{
+                   optional(:plan) => Stripe.id() | Stripe.Plan.t(),
+                   optional(:price) => Stripe.id() | Stripe.Price.t(),
+                   optional(:billing_methods) => map,
+                   optional(:metadata) => map,
+                   optional(:quantity) => non_neg_integer,
+                   optional(:tax_rates) => list
+                 }
+               ],
                optional(:default_payment_method) => Stripe.id(),
                optional(:default_tax_rates) => [Stripe.id()],
                optional(:metadata) => Stripe.Types.metadata(),
