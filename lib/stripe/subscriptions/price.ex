@@ -43,8 +43,10 @@ defmodule Stripe.Price do
       "trial_period_days": null,
       "usage_type": "licensed"
     },
+    "tax_behavior": "unspecified",
     "tiers": null,
     "tiers_mode": null,
+    "transform_lookup_key": false,
     "transform_quantity": null,
     "type": "recurring",
     "unit_amount": 999,
@@ -57,11 +59,11 @@ defmodule Stripe.Price do
   import Stripe.Request
 
   @type recurring :: %{
-          aggregate_usage: String.t(),
-          interval: String.t(),
-          interval_count: pos_integer,
-          trial_period_days: pos_integer,
-          usage_type: String.t()
+          optional(:aggregate_usage) => String.t(),
+          optional(:interval) => String.t(),
+          optional(:interval_count) => pos_integer,
+          optional(:trial_period_days) => pos_integer,
+          optional(:usage_type) => String.t()
         }
 
   @type price_tier :: %{
@@ -90,8 +92,10 @@ defmodule Stripe.Price do
           nickname: String.t(),
           product: Stripe.id() | Stripe.Product.t(),
           recurring: recurring(),
+          tax_behavior: String.t(),
           tiers: [price_tier()],
           tiers_mode: String.t(),
+          transform_lookup_key: boolean(),
           transform_quantity: transform_quantity(),
           type: String.t(),
           unit_amount: pos_integer,
@@ -111,8 +115,10 @@ defmodule Stripe.Price do
     :nickname,
     :product,
     :recurring,
+    :tax_behavior,
     :tiers,
     :tiers_mode,
+    :transform_lookup_key,
     :transform_quantity,
     :type,
     :unit_amount,
@@ -135,6 +141,7 @@ defmodule Stripe.Price do
                  optional(:nickname) => String.t(),
                  optional(:product) => Stripe.id() | Stripe.Product.t(),
                  optional(:recurring) => recurring(),
+                 optional(:tax_behavior) => String.t(),
                  optional(:tiers) => [price_tier()],
                  optional(:tiers_mode) => String.t(),
                  optional(:billing_scheme) => String.t(),
