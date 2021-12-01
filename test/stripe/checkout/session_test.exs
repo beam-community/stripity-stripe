@@ -19,10 +19,10 @@ defmodule Stripe.SessionTest do
     end
   end
 
-  describe "expire" do
+  describe "expire/2" do
     test "expires a session" do
       assert {:ok, session = %Stripe.Session{}} = Stripe.Session.expire("cs_123")
-      assert_stripe_requested(:post, "/v1/checkout/sessions/cs_123")
+      assert_stripe_requested(:post, "/v1/checkout/sessions/cs_123/expire")
     end
   end
 
