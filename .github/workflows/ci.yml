@@ -23,7 +23,7 @@ jobs:
          otp: [24]
     services:
        stripe-mock:
-         image: stripemock/stripe-mock:v0.110.0
+         image: stripemock/stripe-mock:v0.116.0
          ports:
            - 12111:12111
            - 12112:12112
