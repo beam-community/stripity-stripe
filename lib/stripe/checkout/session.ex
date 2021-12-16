@@ -360,5 +360,16 @@ defmodule Stripe.Session do
     |> make_request()
   end
 
+  @doc """
+  Invalidates a session
+  """
+  @spec expire(Stripe.id() | t) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def expire(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/expire")
+    |> put_method(:post)
+    |> make_request()
+  end
+
   defdelegate list_line_items(id, opts \\ []), to: Stripe.Checkout.Session.LineItems, as: :list
 end
