@@ -25,7 +25,7 @@ defmodule Stripe.API do
   @default_max_backoff 2_000
 
   @doc """
-  In config.exs your implicit or expicit configuration is:
+  In config.exs your implicit or explicit configuration is:
     config :stripity_stripe,
       json_library: Poison # defaults to Jason but can be configured to Poison
   """

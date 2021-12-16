@@ -122,7 +122,7 @@ defmodule Stripe.Connect.OAuth do
   @doc ~S"""
   Generate the URL to start a Stripe workflow.
 
-  ## Paremeter Map Keys
+  ## Parameter Map Keys
 
   The parameter map keys are derived from the [valid request parameter](https://stripe.com/docs/connect/reference)
   for the Stripe Connect authorize endpoint. A parameter only needs to be provided if

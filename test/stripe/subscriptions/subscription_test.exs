@@ -101,7 +101,7 @@ defmodule Stripe.SubscriptionTest do
       assert_stripe_requested(:post, "/v1/subscriptions/sub_123")
     end
 
-    test "deletes a subscription with provided cancelation params" do
+    test "deletes a subscription with provided cancellation params" do
       params = %{invoice_now: true, prorate: true}
 
       assert {:ok, %Stripe.Subscription{} = subscription} =
