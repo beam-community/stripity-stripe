@@ -160,7 +160,7 @@ defmodule Stripe.Session do
 
   @type adjustable_quantity :: %{
           :enabled => boolean(),
-          optional(:maxiumum) => integer(),
+          optional(:maximum) => integer(),
           optional(:minimum) => integer()
         }
 
