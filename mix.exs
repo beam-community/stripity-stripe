@@ -1,16 +1,16 @@
 defmodule Stripe.Mixfile do
   use Mix.Project
 
+  @source_url "https://github.com/code-corps/stripity_stripe"
+  @version "2.12.1"
+
   def project do
     [
       app: :stripity_stripe,
-      deps: deps(),
-      description: description(),
-      dialyzer: [
-        plt_add_apps: [:mix],
-        plt_file: {:no_warn, "priv/plts/stripity_stripe.plt"}
-      ],
+      version: @version,
       elixir: "~> 1.10",
+      deps: deps(),
+      docs: docs(),
       package: package(),
       elixirc_paths: elixirc_paths(Mix.env()),
       preferred_cli_env: [
@@ -19,15 +19,11 @@ defmodule Stripe.Mixfile do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
-      test_coverage: [tool: ExCoveralls],
-      version: "2.12.1",
-      source_url: "https://github.com/code-corps/stripity_stripe/",
-      docs: [
-        main: "readme",
-        extras: ["README.md"],
-        groups_for_modules: groups_for_modules(),
-        nest_modules_by_prefix: nest_modules_by_prefix()
-      ]
+      dialyzer: [
+        plt_add_apps: [:mix],
+        plt_file: {:no_warn, "priv/plts/stripity_stripe.plt"}
+      ],
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -45,7 +41,7 @@ defmodule Stripe.Mixfile do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
-  defp env() do
+  defp env do
     [
       api_base_url: "https://api.stripe.com/v1/",
       api_upload_url: "https://files.stripe.com/v1/",
@@ -59,12 +55,12 @@ defmodule Stripe.Mixfile do
 
   defp apps(:test), do: apps()
   defp apps(_), do: apps()
-  defp apps(), do: [:hackney, :logger, :jason, :uri_query]
+  defp apps, do: [:hackney, :logger, :jason, :uri_query]
 
   defp deps do
     [
       {:dialyxir, "1.1.0", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.23.0", only: :dev},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:excoveralls, "~> 0.14.1", only: :test},
       {:hackney, "~> 1.15"},
       {:inch_ex, "~> 2.0", only: [:dev, :test]},
@@ -76,20 +72,36 @@ defmodule Stripe.Mixfile do
     ]
   end
 
-  defp description do
-    """
-    A Stripe client for Elixir.
-    """
+  defp docs do
+    [
+      extras: [
+        "CHANGELOG.md": [title: "Changelog"],
+        "LICENSE.md": [title: "License"],
+        "README.md": [title: "Overview"]
+      ],
+      main: "readme",
+      source_url: @source_url,
+      source_ref: "master",
+      formatters: ["html"],
+      groups_for_modules: groups_for_modules(),
+      nest_modules_by_prefix: nest_modules_by_prefix()
+    ]
   end
 
   defp package do
     [
-      files: ["lib", "LICENSE*", "mix.exs", "README*"],
-      licenses: ["New BSD"],
+      description: "A Stripe client for Elixir.",
+      files: ["lib", "LICENSE*", "mix.exs", "README*", "CHANGELOG*"],
+      licenses: ["BSD-3-Clause"],
+      maintainers: [
+        "Dan Matthews",
+        "Josh Smith",
+        "Nikola Begedin",
+        "Scott Newcomer"
+      ],
       links: %{
-        "GitHub" => "https://github.com/code-corps/stripity_stripe"
-      },
-      maintainers: ["Dan Matthews", "Josh Smith", "Nikola Begedin", "Scott Newcomer"]
+        "GitHub" => @source_url
+      }
     ]
   end
 
