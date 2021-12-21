@@ -297,6 +297,7 @@ defmodule Stripe.Invoice do
   @spec upcoming(map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def upcoming(params, opts \\ [])
   def upcoming(params = %{customer: _customer}, opts), do: get_upcoming(params, opts)
+  def upcoming(params = %{customer_details: _customer_details}, opts), do: get_upcoming(params, opts)
   def upcoming(params = %{subscription: _subscription}, opts), do: get_upcoming(params, opts)
 
   defp get_upcoming(params, opts) do
