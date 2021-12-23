@@ -79,6 +79,15 @@ defmodule Stripe.Price do
           round: String.t()
         }
 
+  @type product_data :: %{
+          :name => String.t(),
+          optional(:active) => boolean,
+          optional(:metadata) => map,
+          optional(:statement_descriptor) => String.t(),
+          optional(:tax_code) => String.t(),
+          optional(:unit_label) => String.t()
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -140,6 +149,7 @@ defmodule Stripe.Price do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:nickname) => String.t(),
                  optional(:product) => Stripe.id() | Stripe.Product.t(),
+                 optional(:product_data) => product_data,
                  optional(:recurring) => recurring(),
                  optional(:tax_behavior) => String.t(),
                  optional(:tiers) => [price_tier()],
