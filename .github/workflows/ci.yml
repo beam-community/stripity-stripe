@@ -11,7 +11,7 @@ jobs:
   test:
     env:
       MIX_ENV: test
-      STRIPE_MOCK_VERSION: 0.110.0
+      STRIPE_MOCK_VERSION: 0.116.0
       STRIPE_SECRET_KEY: non_empty_string
       SKIP_STRIPE_MOCK_RUN: true
     runs-on: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
          otp: [24]
     services:
        stripe-mock:
-         image: stripemock/stripe-mock:v0.110.0
+         image: stripe/stripe-mock:v0.116.0
          ports:
            - 12111:12111
            - 12112:12112

@@ -133,6 +133,26 @@ defmodule Stripe.Account do
           transfers: String.t() | nil
         }
 
+  @type future_requirements :: %{
+          alternatives: list(alternatives) | nil,
+          current_deadline: Stripe.timestamp() | nil,
+          currently_due: Stripe.List.t(String.t()) | nil,
+          disabled_reason: String.t() | nil,
+          errors: Stripe.List.t(error) | nil,
+          eventually_due: Stripe.List.t(String.t()) | nil,
+          past_due: Stripe.List.t(String.t()) | nil,
+          pending_verification: Stripe.List.t(String.t()) | nil
+        }
+
+  @type alternatives :: %{
+          alternative_fields_due: Stripe.List.t(String.t()) | nil,
+          original_fields_due: Stripe.List.t(String.t()) | nil
+        }
+
+  @type error :: %{
+          code: String.t()
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -149,6 +169,7 @@ defmodule Stripe.Account do
           details_submitted: boolean,
           email: String.t() | nil,
           external_accounts: Stripe.List.t(Stripe.BankAccount.t() | Stripe.Card.t()),
+          future_requirements: future_requirements | nil,
           individual: individual | nil,
           metadata: Stripe.Types.metadata(),
           payouts_enabled: boolean | nil,
@@ -174,6 +195,7 @@ defmodule Stripe.Account do
     :details_submitted,
     :email,
     :external_accounts,
+    :future_requirements,
     :individual,
     :metadata,
     :payouts_enabled,

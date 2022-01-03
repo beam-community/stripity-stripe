@@ -5,8 +5,8 @@ defmodule Stripe.Config do
 
   @doc """
   Resolves the given key from the application's configuration returning the
-  wrapped expanded value. If the value was a function it get's evaluated, if
-  the value is a touple of three elements it gets applied.
+  wrapped expanded value. If the value was a function it gets evaluated, if
+  the value is a tuple of three elements it gets applied.
   """
   @spec resolve(atom, any) :: any
   def resolve(key, default \\ nil)
