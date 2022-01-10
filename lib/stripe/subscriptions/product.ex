@@ -109,9 +109,14 @@ defmodule Stripe.Product do
                  optional(:active) => boolean,
                  optional(:attributes) => list,
                  optional(:description) => String.t(),
+                 optional(:images) => list(String.t()),
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:name) => String.t(),
+                 optional(:package_dimensions) => map,
+                 optional(:shippable) => boolean,
                  optional(:statement_descriptor) => String.t(),
+                 optional(:tax_code) => String.t(),
+                 optional(:unit_label) => String.t(),
                  optional(:url) => String.t()
                }
                | %{}
