@@ -36,7 +36,10 @@ defmodule Stripe.WebhookPlug do
 
   Your event handler module should implement the `Stripe.WebhookHandler`
   behavior, defining a `handle_event/1` function which takes a `Stripe.Event`
-  struct and returns either `{:ok, term}` or `:ok`. 
+  struct and returns either `{:ok, term}` or `:ok`. This will mark the event as
+  successfully processed. Alternatively handler can signal an error by returning
+  `:error` or `{:error, reason}` tuple, where reason is an atom or a string.
+  HTTP status code 400 will be used for errors.
 
   ### Example
 
@@ -133,6 +136,7 @@ defmodule Stripe.WebhookPlug do
          :ok <- handle_event!(handler, event) do
       send_resp(conn, 200, "Webhook received.") |> halt()
     else
+      {:handle_error, reason} -> send_resp(conn, 400, reason) |> halt()
       _ -> send_resp(conn, 400, "Bad request.") |> halt()
     end
   end
@@ -161,9 +165,18 @@ defmodule Stripe.WebhookPlug do
       :ok ->
         :ok
 
+      {:error, reason} when is_binary(reason) ->
+        {:handle_error, reason}
+
+      {:error, reason} when is_atom(reason) ->
+        {:handle_error, Atom.to_string(reason)}
+
+      :error ->
+        {:handle_error, ""}
+
       resp ->
         raise """
-        #{inspect(handler)}.handle_event/1 returned an invalid response. Expected {:ok, term} or :ok
+        #{inspect(handler)}.handle_event/1 returned an invalid response. Expected {:ok, term}, :ok, {:error, reason} or :error
         Got: #{inspect(resp)}
 
         Event data: #{inspect(event)}
