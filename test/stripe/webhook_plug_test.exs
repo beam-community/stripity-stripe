@@ -19,6 +19,27 @@ defmodule Stripe.WebhookPlugTest do
     def handle_event(%Stripe.Event{object: "event"}), do: :ok
   end
 
+  defmodule ErrorTupleStringHandler do
+    @behaviour Stripe.WebhookHandler
+
+    @impl true
+    def handle_event(%Stripe.Event{object: "event"}), do: {:error, "string error message"}
+  end
+
+  defmodule ErrorTupleAtomHandler do
+    @behaviour Stripe.WebhookHandler
+
+    @impl true
+    def handle_event(%Stripe.Event{object: "event"}), do: {:error, :atom_error_message}
+  end
+
+  defmodule ErrorAtomHandler do
+    @behaviour Stripe.WebhookHandler
+
+    @impl true
+    def handle_event(%Stripe.Event{object: "event"}), do: :error
+  end
+
   defmodule BadHandler do
     def handle_event(_), do: nil
   end
@@ -29,10 +50,11 @@ defmodule Stripe.WebhookPlugTest do
     timestamp = System.system_time(:second)
 
     # TODO: remove when we require OTP 22
-    code = case System.otp_release() >= "22" do
-      true -> :crypto.mac(:hmac, :sha256, @secret, "#{timestamp}.#{payload}")
-      false -> :crypto.mac(:sha256, @secret, "#{timestamp}.#{payload}")
-    end
+    code =
+      case System.otp_release() >= "22" do
+        true -> :crypto.mac(:hmac, :sha256, @secret, "#{timestamp}.#{payload}")
+        false -> :crypto.mac(:sha256, @secret, "#{timestamp}.#{payload}")
+      end
 
     signature =
       code
@@ -105,6 +127,50 @@ defmodule Stripe.WebhookPlugTest do
       result = WebhookPlug.call(conn, opts)
       assert result.state == :sent
       assert result.status == 200
+    end
+
+    test "returns 400 status code with string message if handler returns error tuple", %{
+      conn: conn
+    } do
+      opts =
+        WebhookPlug.init(
+          at: "/webhook/stripe",
+          handler: __MODULE__.ErrorTupleStringHandler,
+          secret: @secret
+        )
+
+      result = WebhookPlug.call(conn, opts)
+      assert result.state == :sent
+      assert result.status == 400
+      assert result.resp_body == "string error message"
+    end
+
+    test "returns 400 status code with atom message if handler returns error tuple", %{conn: conn} do
+      opts =
+        WebhookPlug.init(
+          at: "/webhook/stripe",
+          handler: __MODULE__.ErrorTupleAtomHandler,
+          secret: @secret
+        )
+
+      result = WebhookPlug.call(conn, opts)
+      assert result.state == :sent
+      assert result.status == 400
+      assert result.resp_body == "atom_error_message"
+    end
+
+    test "returns 400 status code with no message if handler returns :error atom", %{conn: conn} do
+      opts =
+        WebhookPlug.init(
+          at: "/webhook/stripe",
+          handler: __MODULE__.ErrorAtomHandler,
+          secret: @secret
+        )
+
+      result = WebhookPlug.call(conn, opts)
+      assert result.state == :sent
+      assert result.status == 400
+      assert result.resp_body == ""
     end
 
     test "crash hard if handler fails", %{conn: conn} do
