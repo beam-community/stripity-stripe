@@ -222,7 +222,7 @@ defmodule Stripe.Session do
 
   @type create_params :: %{
           :cancel_url => String.t(),
-          :payment_method_types => list(String.t()),
+          optional(:payment_method_types) => list(String.t()),
           :success_url => String.t(),
           optional(:mode) => String.t(),
           optional(:client_reference_id) => String.t(),
