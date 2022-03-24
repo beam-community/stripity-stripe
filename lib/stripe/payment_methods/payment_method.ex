@@ -8,6 +8,12 @@ defmodule Stripe.PaymentMethod do
   use Stripe.Entity
   import Stripe.Request
 
+  @type au_becs_debit :: %{
+          bsb_number: String.t(),
+          fingerprint: String.t(),
+          last4: String.t()
+        }
+
   @type sepa_debit :: %{
           bank_code: String.t() | nil,
           branch_code: String.t() | nil,
@@ -30,6 +36,7 @@ defmodule Stripe.PaymentMethod do
           customer: Stripe.id() | Stripe.Customer.t() | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
+          au_becs_debit: au_becs_debit() | nil,
           sepa_debit: sepa_debit() | nil,
           type: String.t()
         }
@@ -43,6 +50,7 @@ defmodule Stripe.PaymentMethod do
     :customer,
     :livemode,
     :metadata,
+    :au_becs_debit,
     :sepa_debit,
     :type
   ]
