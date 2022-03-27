@@ -66,7 +66,7 @@ end
 To make API calls, it is necessary to configure your Stripe secret key.
 
 ```elixir
-use Mix.Config
+import Config
 
 config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
 # OR
@@ -254,7 +254,7 @@ end
 To make API calls, it is necessary to configure your Stripe secret key (and optional platform client id if you are using Stripe Connect):
 
 ```elixir
-use Mix.Config
+import Config
 
 config :stripity_stripe, secret_key: "YOUR SECRET KEY"
 config :stripity_stripe, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
