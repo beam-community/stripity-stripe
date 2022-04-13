@@ -210,7 +210,7 @@ defmodule Stripe.Session do
         }
 
   @type subscription_data :: %{
-          :items => list(item),
+          optional(:items) => list(item),
           optional(:application_fee_percent) => float(),
           optional(:coupon) => String.t(),
           optional(:default_tax_rates) => list(String.t()),
