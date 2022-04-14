@@ -172,7 +172,7 @@ defmodule Stripe.PaymentLink do
              }
   def list_line_items(id, params \\ %{}) do
     new_request()
-    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}" <> "line_items")
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}" <> "/line_items")
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:ending_before, :starting_after])
