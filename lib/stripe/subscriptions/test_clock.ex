@@ -1,4 +1,18 @@
 defmodule Stripe.TestClock do
+  @moduledoc """
+  Work with Stripe Test Clock object
+
+  You can:
+
+  - Create a Test Clock
+  - Retrieve a Test Clock
+  - Advance a Test Clock
+  - Delete a Test Clock
+  - List Test Clocks
+
+  Stripe API reference: https://stripe.com/docs/api/test_clocks
+  """
+
   use Stripe.Entity
   import Stripe.Request
 
