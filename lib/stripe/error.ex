@@ -123,7 +123,9 @@ defmodule Stripe.Error do
       source: :network,
       code: :network_error,
       message:
-        "An error occurred while making the network request. The HTTP client returned the following reason: #{inspect(reason)}",
+        "An error occurred while making the network request. The HTTP client returned the following reason: #{
+          inspect(reason)
+        }",
       extra: %{
         hackney_reason: reason
       }
