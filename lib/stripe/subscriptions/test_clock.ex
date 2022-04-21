@@ -57,6 +57,7 @@ defmodule Stripe.TestClock do
     opts
     |> new_request()
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/advance")
+    |> put_method(:post)
     |> put_params(params)
     |> make_request()
   end
