@@ -24,6 +24,17 @@ defmodule Stripe.TopupTest do
       assert {:ok, %Stripe.Topup{}} = Stripe.Topup.create(params)
       assert_stripe_requested(:post, "/v1/topups")
     end
+
+    test "is creatable with destination balance" do
+      params = %{
+        amount: 100_000,
+        currency: "usd",
+        destination_balance: :issuing
+      }
+
+      assert {:ok, %Stripe.Topup{}} = Stripe.Topup.create(params)
+      assert_stripe_requested(:post, "/v1/topups")
+    end
   end
 
   test "is retrievable" do
