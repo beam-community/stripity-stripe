@@ -107,6 +107,11 @@ defmodule Stripe.Session do
           oxxo: oxxo() | nil
         }
 
+  @typedoc """
+  One of `"if_required"`, or `"always"`.
+  """
+  @type customer_creation :: String.t()
+
   @type customer_details :: %{
           email: String.t() | nil,
           tax_exempt: String.t() | nil,
@@ -257,6 +262,20 @@ defmodule Stripe.Session do
   """
   @type payment_status :: String.t()
 
+  @type phone_number_collection :: %{
+    :enabled => boolean()
+  }
+
+  @type shipping_option :: %{
+    :shipping_amount => non_neg_integer(),
+    :shipping_rate => String.t()
+  }
+
+  @typedoc """
+  One of `"open"`, `"complete"`, or `"expired"`.
+  """
+  @type status :: String.t()
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -272,6 +291,7 @@ defmodule Stripe.Session do
           consent_collection: consent_collection() | nil,
           currency: String.t(),
           customer: Stripe.id() | Stripe.Customer.t() | nil,
+          customer_creation: customer_creation() | nil,
           customer_details: customer_details() | nil,
           customer_email: String.t(),
           display_items: list(line_item),
@@ -281,9 +301,14 @@ defmodule Stripe.Session do
           metadata: Stripe.Types.metadata(),
           mode: mode(),
           payment_intent: Stripe.id() | Stripe.PaymentIntent.t() | nil,
+          payment_link: String.t() | nil,
           payment_method_options: payment_method_options() | nil,
           payment_method_types: list(String.t()),
           payment_status: payment_status(),
+          phone_number_collection: phone_number_collection() | nil,
+          shipping_options: list(shipping_option()) | nil,
+          shipping_rate: String.t() | nil,
+          status: status() | nil,
           recovered_from: Stripe.id() | nil,
           setup_intent: Stripe.id() | Stripe.SetupIntent.t() | nil,
           shipping: %{
@@ -314,6 +339,7 @@ defmodule Stripe.Session do
     :consent_collection,
     :currency,
     :customer,
+    :customer_creation,
     :customer_details,
     :customer_email,
     :display_items,
@@ -323,19 +349,24 @@ defmodule Stripe.Session do
     :metadata,
     :mode,
     :payment_intent,
+    :payment_link,
     :payment_method_options,
     :payment_method_types,
+    :payment_status,
+    :phone_number_collection,
     :recovered_from,
     :setup_intent,
     :shipping,
     :shipping_address_collection,
+    :shipping_options,
+    :shipping_rate,
+    :status,
     :submit_type,
     :subscription,
     :success_url,
     :tax_id_collection,
     :total_details,
-    :url,
-    :payment_status
+    :url
   ]
 
   @plural_endpoint "checkout/sessions"
