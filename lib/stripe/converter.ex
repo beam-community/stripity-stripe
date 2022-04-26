@@ -32,6 +32,7 @@ defmodule Stripe.Converter do
     discount
     dispute
     ephemeral_key
+    radar.early_fraud_warning
     event
     external_account
     file

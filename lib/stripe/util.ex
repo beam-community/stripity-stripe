@@ -53,6 +53,7 @@ defmodule Stripe.Util do
   @spec object_name_to_module(String.t()) :: module
   def object_name_to_module("billing_portal.session"), do: Stripe.BillingPortal.Session
   def object_name_to_module("checkout.session"), do: Stripe.Session
+  def object_name_to_module("radar.early_fraud_warning"), do: Stripe.Fraud.EarlyFraudWarning
   def object_name_to_module("file"), do: Stripe.FileUpload
 
   def object_name_to_module("identity.verification_session"),
