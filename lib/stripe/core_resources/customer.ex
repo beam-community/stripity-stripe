@@ -107,7 +107,7 @@ defmodule Stripe.Customer do
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
-    |> cast_to_id([:coupon, :default_source, :source])
+    |> cast_to_id([:coupon, :default_source, :source, :test_clock])
     |> make_request()
   end
 
