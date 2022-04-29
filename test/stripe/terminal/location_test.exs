@@ -37,7 +37,7 @@ defmodule Stripe.Terminal.LocationTest do
 
   describe "Update" do
     test "updates location" do
-      assert {:ok, %Stripe.Terminal.Location{display_name: "name"}} =
+      assert {:ok, %Stripe.Terminal.Location{}} =
                Stripe.Terminal.Location.update("loc_123", %{
                  display_name: "name"
                })
