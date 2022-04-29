@@ -35,6 +35,11 @@ defmodule Stripe.Session do
         }
 
   @typedoc """
+  One of `"auto"` or `"required"`
+  """
+  @type billing_address_collection :: String.t()
+
+  @typedoc """
   For sessions in `payment` mode only.
   One of `"auto"`, `"pay"`, `"book"`, or `"donate"`.
   """
@@ -241,6 +246,7 @@ defmodule Stripe.Session do
           optional(:payment_intent_data) => payment_intent_data,
           optional(:payment_method_options) => payment_method_options(),
           optional(:setup_intent_data) => setup_intent_data(),
+          optional(:billing_address_collection) => billing_address_collection(),
           optional(:shipping_address_collection) => shipping_address_collection(),
           optional(:submit_type) => submit_type(),
           optional(:subscription_data) => subscription_data,
