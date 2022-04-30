@@ -32,4 +32,11 @@ defmodule Stripe.SessionTest do
       assert_stripe_requested(:get, "/v1/checkout/sessions/cs_123/line_items")
     end
   end
+
+  test "is listable" do
+    assert {:ok, %Stripe.List{data: sessions}} = Stripe.Session.list()
+    assert_stripe_requested(:get, "/v1/checkout/sessions")
+    assert is_list(sessions)
+    assert %Stripe.Session{} = hd(sessions)
+  end
 end

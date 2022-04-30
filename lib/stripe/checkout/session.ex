@@ -408,5 +408,26 @@ defmodule Stripe.Session do
     |> make_request()
   end
 
+  @doc """
+  List all sessions
+  """
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
+               optional(:payment_intent) => Stripe.id() | Stripe.PaymentIntent.t(),
+               optional(:limit) => 1..100,
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:starting_after) => t | Stripe.id()
+             }
+  def list(params \\ %{}, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:get)
+    |> put_params(params)
+    |> cast_to_id([:payment_intent, :customer, :ending_before, :starting_after])
+    |> make_request()
+  end
+
   defdelegate list_line_items(id, opts \\ []), to: Stripe.Checkout.Session.LineItems, as: :list
 end
