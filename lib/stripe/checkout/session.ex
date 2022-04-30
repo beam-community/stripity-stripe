@@ -388,7 +388,7 @@ defmodule Stripe.Session do
                optional(:ending_before) => t | Stripe.id(),
                optional(:starting_after) => t | Stripe.id()
              }
-  def list(params, opts \\ []) do
+  def list(params \\ %{}, opts \\ []) do
     new_request(opts)
     |> prefix_expansions()
     |> put_endpoint(@plural_endpoint)
