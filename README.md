@@ -211,11 +211,33 @@ For details on which objects can be expanded check out the [stripe object expans
 
 # Testing
 
-To run the tests you'll need to install [`stripe-mock`](https://github.com/stripe/stripe-mock) It is a mock HTTP server that responds like the real Stripe API. It's powered by the [Stripe OpenAPI specification](https://github.com/stripe/openapi), which is generated from within Stripe's API.
+## Starting stripe-mock
 
-Start `stripe-mock` before running the tests with `mix test`.
+To run the tests you'll need to install [`stripe-mock`](https://github.com/stripe/stripe-mock).
+It is a mock HTTP server that responds like the real Stripe API. It's powered by
+the [Stripe OpenAPI specification](https://github.com/stripe/openapi), which is
+generated from within Stripe's API.
 
-To configure your test environment to use the local stripe-mock server, you'll
+The [stripe-mock instructions](https://github.com/stripe/stripe-mock#usage)
+have more details, but if you have docker installed already you can quickly
+and easily start an instance to test against:
+
+```sh
+docker run --rm -it -p 12111-12112:12111-12112 stripemock/stripe-mock:latest
+```
+
+## Running the tests
+
+By default, `mix test` will start `stripe-mock` by finding and invoking the
+`stripe-mock` executable.  If you would prefer to start it yourself, do so
+and add an env var `SKIP_STRIPE_MOCK_RUN` to skip starting stripe-mock.  Any
+value will do.  Example:
+
+```sh
+SKIP_STRIPE_MOCK_RUN=1 mix test
+```
+
+To configure your test environment to use the local stripe-mock server, you may
 need to set the `api_base_url` field in your config:
 
 ```
