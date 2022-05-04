@@ -76,7 +76,7 @@ defmodule Stripe.PaymentLink do
   @doc """
   Creates a payment link.
   """
-  @spec create(params) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec create(params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
                  :line_items => [line_items],
@@ -95,8 +95,8 @@ defmodule Stripe.PaymentLink do
                  optional(:transfer_data) => transfer_data
                }
                | %{}
-  def create(params) do
-    new_request()
+  def create(params, opts \\ []) do
+    new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
@@ -107,10 +107,10 @@ defmodule Stripe.PaymentLink do
   @doc """
   Retrieves the details of a PaymentLink that has previously been created.
   """
-  @spec retrieve(Stripe.id()) ::
+  @spec retrieve(Stripe.id(), Stripe.options()) ::
           {:ok, t} | {:error, Stripe.Error.t()}
-  def retrieve(id) do
-    new_request()
+  def retrieve(id, opts \\ []) do
+    new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
     |> put_method(:get)
     |> make_request()
@@ -119,7 +119,7 @@ defmodule Stripe.PaymentLink do
   @doc """
   Updates a PaymentLink object.
   """
-  @spec update(Stripe.id() | t, params) :: {:ok, t} | {:error, Stripe.Error.t()}
+  @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
                  optional(:active) => boolean,
@@ -133,8 +133,8 @@ defmodule Stripe.PaymentLink do
                  optional(:shipping_address_collection) => map()
                }
                | %{}
-  def update(id, params) do
-    new_request()
+  def update(id, params, opts \\ []) do
+    new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
     |> put_method(:post)
     |> put_params(params)
@@ -144,15 +144,15 @@ defmodule Stripe.PaymentLink do
   @doc """
   Returns a list of PaymentLinks.
   """
-  @spec list(params) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:active) => boolean,
                optional(:ending_before) => Stripe.id(),
                optional(:limit) => pos_integer(),
                optional(:starting_after) => Stripe.id()
              }
-  def list(params \\ %{}) do
-    new_request()
+  def list(params \\ %{}, opts \\ []) do
+    new_request(opts)
     |> put_endpoint(@plural_endpoint)
     |> put_method(:get)
     |> put_params(params)
@@ -163,15 +163,15 @@ defmodule Stripe.PaymentLink do
   @doc """
   Returns a list of PaymentLink's Line Items.
   """
-  @spec list_line_items(Stripe.id() | t, params) ::
+  @spec list_line_items(Stripe.id() | t, params, Stripe.options()) ::
           {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
         when params: %{
                optional(:ending_before) => Stripe.id(),
                optional(:limit) => pos_integer(),
                optional(:starting_after) => Stripe.id()
              }
-  def list_line_items(id, params \\ %{}) do
-    new_request()
+  def list_line_items(id, params \\ %{}, opts \\ []) do
+    new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}" <> "/line_items")
     |> put_method(:get)
     |> put_params(params)
