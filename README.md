@@ -45,7 +45,7 @@ Install the dependency by version:
 {:stripity_stripe, "~> 2.0"}
 ```
 
-Or by commit reference (still awaiting hex publish rights so this is your best best for now):
+Or by commit reference:
 
 ```elixir
 {:stripity_stripe, git: "https://github.com/code-corps/stripity_stripe", ref: "8c091d4278d29a917bacef7bb2f0606317fcc025"}
