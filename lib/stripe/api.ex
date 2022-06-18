@@ -385,13 +385,13 @@ defmodule Stripe.API do
       headers,
       body,
       opts,
-      add_attempts(response, attempts, retry_config())
+      add_attempts(method, response, attempts, retry_config())
     )
   end
 
-  @spec add_attempts(http_success | http_failure, non_neg_integer, Keyword.t()) ::
+  @spec add_attempts(method, http_success | http_failure, non_neg_integer, Keyword.t()) ::
           {:attempts, non_neg_integer} | {:response, http_success | http_failure}
-  defp add_attempts(response, attempts, retry_config) do
+  defp add_attempts(method, response, attempts, retry_config) when method in [:post, :patch] do
     if should_retry?(response, attempts, retry_config) do
       attempts
       |> backoff(retry_config)
@@ -401,6 +401,10 @@ defmodule Stripe.API do
     else
       {:response, response}
     end
+  end
+
+  defp add_attempts(_method, response, attempts, retry_config) do
+    {:response, response}
   end
 
   @doc """
