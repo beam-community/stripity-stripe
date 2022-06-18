@@ -428,7 +428,7 @@ defmodule Stripe.API do
   # 409 conflict
   defp retry_response?({:error, 409, _headers, _body}), do: true
   # https://github.com/beam-community/stripity_stripe/issues/686
-  defp retry_response?({:errro, 429, _headers, _body}), do: true
+  defp retry_response?({:error, 429, _headers, _body}), do: true
   # Destination refused the connection, the connection was reset, or a
   # variety of other connection failures. This could occur from a single
   # saturated server, so retry in case it's intermittent.
