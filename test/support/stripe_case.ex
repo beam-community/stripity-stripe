@@ -19,6 +19,12 @@ defmodule Stripe.StripeCase do
     assert_stripe_request_headers(expected_headers, headers)
   end
 
+  def get_stripe_request_headers() do
+    assert_received({method, url, headers, body, _})
+
+    Enum.into(headers, %{})
+  end
+
   def stripe_base_url() do
     Application.get_env(:stripity_stripe, :api_base_url)
   end
@@ -69,7 +75,7 @@ defmodule Stripe.StripeCase do
   using do
     quote do
       import Stripe.StripeCase,
-        only: [assert_stripe_requested: 2, assert_stripe_requested: 3, stripe_base_url: 0]
+        only: [assert_stripe_requested: 2, assert_stripe_requested: 3, get_stripe_request_headers: 0, stripe_base_url: 0]
 
       Application.put_env(:stripity_stripe, :http_module, HackneyMock)
     end

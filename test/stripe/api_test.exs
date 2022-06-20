@@ -121,7 +121,6 @@ defmodule Stripe.APITest do
     assert Map.keys(body) |> Enum.member?("Authorization") == false
   end
 
-  @tag :wip
   test "reads hackney timeout opts from config" do
     # Return request opts as response body
     defmodule HackneyMock do
