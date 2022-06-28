@@ -1,0 +1,38 @@
+{
+    "object": "search_result",
+    "url": "/v1/customers/search",
+    "has_more": false,
+    "data": [
+      {
+        "id": "cus_LxK1UWzf44dEKX",
+        "object": "customer",
+        "address": null,
+        "balance": 0,
+        "created": 1656364912,
+        "currency": "usd",
+        "default_source": null,
+        "delinquent": false,
+        "description": null,
+        "discount": null,
+        "email": null,
+        "invoice_prefix": "2B6E364",
+        "invoice_settings": {
+          "custom_fields": null,
+          "default_payment_method": null,
+          "footer": null,
+          "rendering_options": null
+        },
+        "livemode": false,
+        "metadata": {
+          "foo": "bar"
+        },
+        "name": "fakename",
+        "next_invoice_sequence": 1,
+        "phone": null,
+        "preferred_locales": [],
+        "shipping": null,
+        "tax_exempt": "none",
+        "test_clock": null
+      }
+    ]
+  }

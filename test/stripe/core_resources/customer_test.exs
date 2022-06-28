@@ -32,6 +32,16 @@ defmodule Stripe.CustomerTest do
     assert %Stripe.Customer{} = hd(customers)
   end
 
+  test "is searchable" do
+    search_query = "name:'fakename' AND metadata['foo']:'bar'"
+    assert {:ok, %Stripe.SearchResult{data: customers}} =
+             Stripe.Customer.search(%{query: search_query})
+
+    assert_stripe_requested(:get, "/v1/customers/search", query: [query: search_query])
+    assert is_list(customers)
+    assert %Stripe.Customer{} = hd(customers)
+  end
+
   describe "delete_discount/2" do
     test "deletes a customer's discount" do
       {:ok, customer} = Stripe.Customer.retrieve("sub_123")

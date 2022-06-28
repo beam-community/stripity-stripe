@@ -18,6 +18,7 @@ defmodule Stripe.Price do
   - Retrieve a price
   - Update a price
   - List all prices
+  - Search prices
 
   Stripe API reference: https://stripe.com/docs/api/prices
 
@@ -229,6 +230,25 @@ defmodule Stripe.Price do
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:product, :ending_before, :starting_after])
+    |> make_request()
+  end
+
+  @doc """
+  Search prices
+  """
+  @spec search(params, Stripe.options()) ::
+          {:ok, Stripe.SearchResult.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               :query => Stripe.search_query(),
+               optional(:limit) => 1..100,
+               optional(:page) => String.t()
+             }
+  def search(params \\ %{}, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@plural_endpoint <> "/search")
+    |> put_method(:get)
+    |> put_params(params)
     |> make_request()
   end
 end

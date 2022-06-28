@@ -8,6 +8,7 @@ defmodule Stripe.Charge do
   - [Update a charge](https://stripe.com/docs/api/charges/update)
   - [Capture a charge](https://stripe.com/docs/api/charges/capture)
   - [List all charges](https://stripe.com/docs/api/charges/list)
+  - [Search charges] (https://stripe.com/docs/api/charges/search)
   """
 
   use Stripe.Entity
@@ -331,6 +332,27 @@ defmodule Stripe.Charge do
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:customer, :ending_before, :starting_after])
+    |> make_request()
+  end
+
+  @doc """
+  Search charges
+
+  See the [Stripe docs](https://stripe.com/docs/api/charges/search).
+  """
+  @spec search(params, Stripe.options()) ::
+          {:ok, Stripe.SearchResult.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               :query => Stripe.search_query(),
+               optional(:limit) => 1..100,
+               optional(:page) => String.t()
+             }
+  def search(params \\ %{}, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@plural_endpoint <> "/search")
+    |> put_method(:get)
+    |> put_params(params)
     |> make_request()
   end
 end
