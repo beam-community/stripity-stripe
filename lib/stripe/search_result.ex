@@ -3,16 +3,9 @@ defmodule Stripe.SearchResult do
   Work with Stripe search result objects.
 
   A search result is a object which holds one or more
-  other Stripe objects in its "data" property. It's very similar to Stripe.List
-  but with simple paging
-
-  In its current iteration it simply allows serializing into a properly
-  typed struct.
-
-  In future iterations, it should:
-  - Support multiple types of objects in its collection
-  - Support fetching the next set of objects (pagination)
+  other Stripe objects in its "data" property. It's similar to Stripe.List
   """
+
   use Stripe.Entity
 
   @type value :: term
