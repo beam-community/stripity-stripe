@@ -14,6 +14,13 @@ defmodule Stripe.LineItem do
           tax_rate: Stripe.id() | Stripe.TaxRate.t()
         }
 
+  @type proration_details :: %{
+    credited_items: %{
+      invoice: String.t(),
+      invoice_line_items: [String.t()]
+    } | nil
+  }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -31,6 +38,7 @@ defmodule Stripe.LineItem do
           plan: Stripe.Plan.t() | nil,
           price: Stripe.Price.t() | nil,
           proration: boolean,
+          proration_details: proration_details(),
           quantity: integer,
           subscription: Stripe.id() | nil,
           subscription_item: Stripe.id() | nil,
@@ -53,6 +61,7 @@ defmodule Stripe.LineItem do
     :plan,
     :price,
     :proration,
+    :proration_details,
     :quantity,
     :subscription,
     :subscription_item,
