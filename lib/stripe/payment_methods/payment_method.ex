@@ -16,6 +16,17 @@ defmodule Stripe.PaymentMethod do
           last4: String.t() | nil
         }
 
+  @type us_bank_account :: %{
+          account_holder_type: String.t() | nil,
+          account_number: String.t() | nil,
+          account_type: String.t() | nil,
+          bank_name: String.t() | nil,
+          financial_connections_account: String.t() | nil,
+          fingerprint: String.t() | nil,
+          last4: String.t() | nil,
+          routing_number: String.t() | nil
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -31,7 +42,8 @@ defmodule Stripe.PaymentMethod do
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
           sepa_debit: sepa_debit() | nil,
-          type: String.t()
+          type: String.t(),
+          us_bank_account: us_bank_account() | nil
         }
 
   defstruct [
@@ -44,7 +56,8 @@ defmodule Stripe.PaymentMethod do
     :livemode,
     :metadata,
     :sepa_debit,
-    :type
+    :type,
+    :us_bank_account
   ]
 
   defp plural_endpoint() do

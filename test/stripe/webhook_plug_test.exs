@@ -29,10 +29,11 @@ defmodule Stripe.WebhookPlugTest do
     timestamp = System.system_time(:second)
 
     # TODO: remove when we require OTP 22
-    code = case System.otp_release() >= "22" do
-      true -> :crypto.mac(:hmac, :sha256, @secret, "#{timestamp}.#{payload}")
-      false -> :crypto.mac(:sha256, @secret, "#{timestamp}.#{payload}")
-    end
+    code =
+      case System.otp_release() >= "22" do
+        true -> :crypto.mac(:hmac, :sha256, @secret, "#{timestamp}.#{payload}")
+        false -> :crypto.mac(:sha256, @secret, "#{timestamp}.#{payload}")
+      end
 
     signature =
       code

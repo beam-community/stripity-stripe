@@ -163,6 +163,17 @@ defmodule Stripe.Source do
           customer: String.t() | nil
         }
 
+  @type us_bank_account :: %{
+          account_holder_type: String.t() | nil,
+          account_number: String.t() | nil,
+          account_type: String.t() | nil,
+          bank_name: String.t() | nil,
+          financial_connections_account: String.t() | nil,
+          fingerprint: String.t() | nil,
+          last4: String.t() | nil,
+          routing_number: String.t() | nil
+        }
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -194,7 +205,8 @@ defmodule Stripe.Source do
           status: String.t(),
           three_d_secure: three_d_secure | nil,
           type: source_type,
-          usage: String.t() | nil
+          usage: String.t() | nil,
+          us_bank_account: us_bank_account | nil
         }
 
   defstruct [
@@ -230,7 +242,8 @@ defmodule Stripe.Source do
     :three_d_secure,
     :type,
     :usage,
-    :klarna
+    :klarna,
+    :us_bank_account
   ]
 
   @plural_endpoint "sources"

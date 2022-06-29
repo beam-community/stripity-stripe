@@ -18,7 +18,7 @@ defmodule Stripe.CreditNoteLineItem do
 
   @type discount :: %{
           amount: integer,
-          discount: String.t(),
+          discount: String.t()
         }
 
   @type t :: %__MODULE__{
