@@ -39,7 +39,7 @@ defmodule Stripe.CreditNote do
           discount_amount: integer,
           discount_amounts: [discount],
           invoice: Stripe.id() | Stripe.Invoice.t(),
-          lines: Stripe.List.t(Stripe.LineItem.t()),
+          lines: Stripe.List.t(Stripe.CreditNoteLineItem.t()),
           livemode: boolean,
           memo: String.t(),
           metadata: Stripe.Types.metadata(),

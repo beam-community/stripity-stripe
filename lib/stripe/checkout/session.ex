@@ -35,6 +35,11 @@ defmodule Stripe.Session do
         }
 
   @typedoc """
+  One of `"auto"` or `"required"`
+  """
+  @type billing_address_collection :: String.t()
+
+  @typedoc """
   For sessions in `payment` mode only.
   One of `"auto"`, `"pay"`, `"book"`, or `"donate"`.
   """
@@ -107,6 +112,11 @@ defmodule Stripe.Session do
           oxxo: oxxo() | nil
         }
 
+  @typedoc """
+  One of `"if_required"`, or `"always"`.
+  """
+  @type customer_creation :: String.t()
+
   @type customer_details :: %{
           email: String.t() | nil,
           tax_exempt: String.t() | nil,
@@ -160,7 +170,7 @@ defmodule Stripe.Session do
 
   @type adjustable_quantity :: %{
           :enabled => boolean(),
-          optional(:maxiumum) => integer(),
+          optional(:maximum) => integer(),
           optional(:minimum) => integer()
         }
 
@@ -210,7 +220,7 @@ defmodule Stripe.Session do
         }
 
   @type subscription_data :: %{
-          :items => list(item),
+          optional(:items) => list(item),
           optional(:application_fee_percent) => float(),
           optional(:coupon) => String.t(),
           optional(:default_tax_rates) => list(String.t()),
@@ -222,7 +232,7 @@ defmodule Stripe.Session do
 
   @type create_params :: %{
           :cancel_url => String.t(),
-          :payment_method_types => list(String.t()),
+          optional(:payment_method_types) => list(String.t()),
           :success_url => String.t(),
           optional(:mode) => String.t(),
           optional(:client_reference_id) => String.t(),
@@ -241,6 +251,7 @@ defmodule Stripe.Session do
           optional(:payment_intent_data) => payment_intent_data,
           optional(:payment_method_options) => payment_method_options(),
           optional(:setup_intent_data) => setup_intent_data(),
+          optional(:billing_address_collection) => billing_address_collection(),
           optional(:shipping_address_collection) => shipping_address_collection(),
           optional(:submit_type) => submit_type(),
           optional(:subscription_data) => subscription_data,
@@ -257,6 +268,20 @@ defmodule Stripe.Session do
   """
   @type payment_status :: String.t()
 
+  @type phone_number_collection :: %{
+    :enabled => boolean()
+  }
+
+  @type shipping_option :: %{
+    :shipping_amount => non_neg_integer(),
+    :shipping_rate => String.t()
+  }
+
+  @typedoc """
+  One of `"open"`, `"complete"`, or `"expired"`.
+  """
+  @type status :: String.t()
+
   @type t :: %__MODULE__{
           id: Stripe.id(),
           object: String.t(),
@@ -272,6 +297,7 @@ defmodule Stripe.Session do
           consent_collection: consent_collection() | nil,
           currency: String.t(),
           customer: Stripe.id() | Stripe.Customer.t() | nil,
+          customer_creation: customer_creation() | nil,
           customer_details: customer_details() | nil,
           customer_email: String.t(),
           display_items: list(line_item),
@@ -281,9 +307,14 @@ defmodule Stripe.Session do
           metadata: Stripe.Types.metadata(),
           mode: mode(),
           payment_intent: Stripe.id() | Stripe.PaymentIntent.t() | nil,
+          payment_link: String.t() | nil,
           payment_method_options: payment_method_options() | nil,
           payment_method_types: list(String.t()),
           payment_status: payment_status(),
+          phone_number_collection: phone_number_collection() | nil,
+          shipping_options: list(shipping_option()) | nil,
+          shipping_rate: String.t() | nil,
+          status: status() | nil,
           recovered_from: Stripe.id() | nil,
           setup_intent: Stripe.id() | Stripe.SetupIntent.t() | nil,
           shipping: %{
@@ -314,6 +345,7 @@ defmodule Stripe.Session do
     :consent_collection,
     :currency,
     :customer,
+    :customer_creation,
     :customer_details,
     :customer_email,
     :display_items,
@@ -323,19 +355,24 @@ defmodule Stripe.Session do
     :metadata,
     :mode,
     :payment_intent,
+    :payment_link,
     :payment_method_options,
     :payment_method_types,
+    :payment_status,
+    :phone_number_collection,
     :recovered_from,
     :setup_intent,
     :shipping,
     :shipping_address_collection,
+    :shipping_options,
+    :shipping_rate,
+    :status,
     :submit_type,
     :subscription,
     :success_url,
     :tax_id_collection,
     :total_details,
-    :url,
-    :payment_status
+    :url
   ]
 
   @plural_endpoint "checkout/sessions"
@@ -357,6 +394,38 @@ defmodule Stripe.Session do
     new_request(opts)
     |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
     |> put_method(:get)
+    |> make_request()
+  end
+
+  @doc """
+  Invalidates a session
+  """
+  @spec expire(Stripe.id() | t) :: {:ok, t} | {:error, Stripe.Error.t()}
+  def expire(id, opts \\ []) do
+    new_request(opts)
+    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}/expire")
+    |> put_method(:post)
+    |> make_request()
+  end
+
+  @doc """
+  List all sessions
+  """
+  @spec list(params, Stripe.options()) :: {:ok, Stripe.List.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
+               optional(:payment_intent) => Stripe.id() | Stripe.PaymentIntent.t(),
+               optional(:limit) => 1..100,
+               optional(:ending_before) => t | Stripe.id(),
+               optional(:starting_after) => t | Stripe.id()
+             }
+  def list(params \\ %{}, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@plural_endpoint)
+    |> put_method(:get)
+    |> put_params(params)
+    |> cast_to_id([:payment_intent, :customer, :ending_before, :starting_after])
     |> make_request()
   end
 

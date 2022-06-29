@@ -1,20 +1,24 @@
-New BSD License
+# New BSD License
+
 http://www.opensource.org/licenses/bsd-license.php
+
 Copyright (c) 2015-2016, Rob Conery
-              2016, Code Corps PBC and Strumber
+
+Copyright (c) 2016, Code Corps PBC and Strumber
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-Redistributions of source code must retain the above copyright notice, this list
+1. Redistributions of source code must retain the above copyright notice, this list
 of conditions and the following disclaimer.
 
-Redistributions in binary form must reproduce the above copyright notice, this
+2. Redistributions in binary form must reproduce the above copyright notice, this
 list of conditions and the following disclaimer in the documentation and/or
 other materials provided with the distribution.
 
-Neither the names Code Corps nor Strumber, nor the names of its contributors may
+3. Neither the names Code Corps nor Strumber, nor the names of its contributors may
 be used to endorse or promote products derived from this software without
 specific prior written permission.
 

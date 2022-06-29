@@ -8,9 +8,21 @@ defmodule Stripe.ChargeTest do
     assert %Stripe.Charge{} = hd(charges)
   end
 
+  test "is listable does not include idempotency key" do
+    assert {:ok, %Stripe.List{data: charges}} = Stripe.Charge.list()
+
+    refute Map.has_key?(get_stripe_request_headers(), "Idempotency-Key")
+  end
+
   test "is retrievable" do
     assert {:ok, %Stripe.Charge{}} = Stripe.Charge.retrieve("ch_123")
     assert_stripe_requested(:get, "/v1/charges/ch_123")
+  end
+
+  test "is retrievable does not include idempotency key" do
+    assert {:ok, %Stripe.Charge{}} = Stripe.Charge.retrieve("ch_123")
+
+    refute Map.has_key?(get_stripe_request_headers(), "Idempotency-Key")
   end
 
   test "is creatable" do
@@ -19,9 +31,22 @@ defmodule Stripe.ChargeTest do
     assert_stripe_requested(:post, "/v1/charges")
   end
 
+  test "is creatable has idempotency key" do
+    params = %{amount: 100, currency: "USD", source: "src_123"}
+    assert {:ok, %Stripe.Charge{}} = Stripe.Charge.create(params)
+
+    assert Map.has_key?(get_stripe_request_headers(), "Idempotency-Key")
+  end
+
   test "is updateable" do
     assert {:ok, %Stripe.Charge{}} = Stripe.Charge.update("ch_123", %{metadata: %{foo: "bar"}})
     assert_stripe_requested(:post, "/v1/charges/ch_123")
+  end
+
+  test "is updateable has idempotency key" do
+    assert {:ok, %Stripe.Charge{}} = Stripe.Charge.update("ch_123", %{metadata: %{foo: "bar"}})
+
+    assert Map.has_key?(get_stripe_request_headers(), "Idempotency-Key")
   end
 
   test "is captureable" do

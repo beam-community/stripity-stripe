@@ -41,13 +41,13 @@ Starting with stripity_stripe version 2.5.0, you can specify the Stripe API Vers
 
 Install the dependency by version:
 
-```ex
+```elixir
 {:stripity_stripe, "~> 2.0"}
 ```
 
-Or by commit reference (still awaiting hex publish rights so this is your best best for now):
+Or by commit reference:
 
-```ex
+```elixir
 {:stripity_stripe, git: "https://github.com/code-corps/stripity_stripe", ref: "8c091d4278d29a917bacef7bb2f0606317fcc025"}
 ```
 
@@ -55,7 +55,7 @@ Next, add to your applications:
 
 _Not necessary if using elixir >= 1.4_
 
-```ex
+```elixir
 defp application do
   [applications: [:stripity_stripe]]
 end
@@ -65,8 +65,8 @@ end
 
 To make API calls, it is necessary to configure your Stripe secret key.
 
-```ex
-use Mix.Config
+```elixir
+import Config
 
 config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
 # OR
@@ -75,7 +75,7 @@ config :stripity_stripe, api_key: "YOUR SECRET KEY"
 
 It's possible to use a function or a tuple to resolve the secret:
 
-```ex
+```elixir
 config :stripity_stripe, api_key: {MyApp.Secrets, :stripe_secret, []}
 # OR
 config :stripity_stripe, api_key: fn -> System.get_env("STRIPE_SECRET") end
@@ -83,7 +83,7 @@ config :stripity_stripe, api_key: fn -> System.get_env("STRIPE_SECRET") end
 
 Moreover, if you are using Poison instead of Jason, you can configure the library to use Poison like so:
 
-```ex
+```elixir
 config :stripity_stripe, json_library: Poison
 ```
 
@@ -91,7 +91,7 @@ config :stripity_stripe, json_library: Poison
 
 To set timeouts, pass opts for the http client. The default one is Hackney.
 
-```ex
+```elixir
 config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}]
 ```
 
@@ -99,7 +99,7 @@ config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout
 
 To set retries, you can pass the number of attempts and range of backoff (time between attempting the request again) in milliseconds.
 
-```ex
+```elixir
 config :stripity_stripe, :retries, [max_attempts: 3, base_backoff: 500, max_backoff: 2_000]
 ```
 
@@ -211,11 +211,33 @@ For details on which objects can be expanded check out the [stripe object expans
 
 # Testing
 
-To run the tests you'll need to install [`stripe-mock`](https://github.com/stripe/stripe-mock) It is a mock HTTP server that responds like the real Stripe API. It's powered by the [Stripe OpenAPI specification](https://github.com/stripe/openapi), which is generated from within Stripe's API.
+## Starting stripe-mock
 
-Start `stripe-mock` before running the tests with `mix test`.
+To run the tests you'll need to install [`stripe-mock`](https://github.com/stripe/stripe-mock).
+It is a mock HTTP server that responds like the real Stripe API. It's powered by
+the [Stripe OpenAPI specification](https://github.com/stripe/openapi), which is
+generated from within Stripe's API.
 
-To configure your test environment to use the local stripe-mock server, you'll
+The [stripe-mock instructions](https://github.com/stripe/stripe-mock#usage)
+have more details, but if you have docker installed already you can quickly
+and easily start an instance to test against:
+
+```sh
+docker run --rm -it -p 12111-12112:12111-12112 stripemock/stripe-mock:latest
+```
+
+## Running the tests
+
+By default, `mix test` will start `stripe-mock` by finding and invoking the
+`stripe-mock` executable.  If you would prefer to start it yourself, do so
+and add an env var `SKIP_STRIPE_MOCK_RUN` to skip starting stripe-mock.  Any
+value will do.  Example:
+
+```sh
+SKIP_STRIPE_MOCK_RUN=1 mix test
+```
+
+To configure your test environment to use the local stripe-mock server, you may
 need to set the `api_base_url` field in your config:
 
 ```
@@ -237,13 +259,13 @@ Works with API version 2015-10-16
 
 Install the dependency:
 
-```ex
+```elixir
 {:stripity_stripe, "~> 1.6"}
 ```
 
 Next, add to your applications:
 
-```ex
+```elixir
 defp application do
   [applications: [:stripity_stripe]]
 end
@@ -253,8 +275,8 @@ end
 
 To make API calls, it is necessary to configure your Stripe secret key (and optional platform client id if you are using Stripe Connect):
 
-```ex
-use Mix.Config
+```elixir
+import Config
 
 config :stripity_stripe, secret_key: "YOUR SECRET KEY"
 config :stripity_stripe, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
@@ -275,13 +297,13 @@ I've tried to make the API somewhat comprehensive and intuitive. If you'd like t
 
 In general, if Stripe requires some information for a given API call, you'll find that as part of the arity of the given function. For instance if you want to delete a Customer, you'll find that you _must_ pass the id along:
 
-```ex
+```elixir
 {:ok, result} = Stripe.Customers.delete "some_id"
 ```
 
 For optional arguments, you can send in a Keyword list that will get translated to parameters. So if you want to update a Subscription, for instance, you must send in the `customer_id` and `subscription_id` with the list of changes:
 
-```ex
+```elixir
 # Change customer to the Premium subscription
 {:ok, result} = Stripe.Customers.change_subscription "customer_id", "sub_id", [plan: "premium"]
 ```
@@ -290,7 +312,7 @@ Metadata (metadata:) key is supported on most object type and allow the storage 
 
 That's the rule of thumb with this library. If there are any errors with your call, they will bubble up to you in the `{:error, message}` match.
 
-```ex
+```elixir
 # Example of paging through events
 {:ok, events} = Stripe.Events.list(key, "", 100) # second arg is a marker for paging
 
@@ -312,7 +334,7 @@ Stripe Connect allows you to provide your customers with an easy onboarding to t
 
 First, you need to register your platform on Stripe Connect to obtain a `client_id`. In your account settings, there's a "Connect" tab, select it. Then fill the information to activate your connect platform settings. The select he `client_id` (notice there's one for dev and one for prod), stash this `client_id` in the config file under
 
-```ex
+```elixir
 config :stripity_stripe, platform_client_id: "ac_???"
 ```
 
@@ -325,7 +347,7 @@ Here's an example of a button to start the workflow:
 
 You can generate this URL using:
 
-```ex
+```elixir
 url = Stripe.Connect.generate_button_url csrf_token
 ```
 
@@ -343,14 +365,14 @@ or
 
 Using the code request parameter, you make the following call:
 
-```ex
+```elixir
 {:ok, resp} -> Stripe.Connect.oauth_token_callback code
 resp[:access_token]
 ```
 
 `resp` will look like this:
 
-```ex
+```elixir
 %{
   token_type: "bearer",
   stripe_publishable_key: PUBLISHABLE_KEY,
@@ -383,7 +405,7 @@ Feedback, feature requests, and fixes are welcomed and encouraged. Please make a
 
 # License
 
-Please see [LICENSE](LICENSE) for licensing details.
+Please see [LICENSE.md](./LICENSE.md) for licensing details.
 
 # History
 

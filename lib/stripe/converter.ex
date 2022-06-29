@@ -32,6 +32,7 @@ defmodule Stripe.Converter do
     discount
     dispute
     ephemeral_key
+    radar.early_fraud_warning
     event
     external_account
     file
@@ -53,6 +54,7 @@ defmodule Stripe.Converter do
     order_item
     order_return
     payment_intent
+    payment_link
     payment_method
     payout
     person

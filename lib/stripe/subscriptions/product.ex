@@ -106,10 +106,18 @@ defmodule Stripe.Product do
   @spec update(Stripe.id() | t, params, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
         when params:
                %{
+                 optional(:active) => boolean,
                  optional(:attributes) => list,
-                 optional(:name) => String.t(),
+                 optional(:description) => String.t(),
+                 optional(:images) => list(String.t()),
                  optional(:metadata) => Stripe.Types.metadata(),
-                 optional(:statement_descriptor) => String.t()
+                 optional(:name) => String.t(),
+                 optional(:package_dimensions) => map,
+                 optional(:shippable) => boolean,
+                 optional(:statement_descriptor) => String.t(),
+                 optional(:tax_code) => String.t(),
+                 optional(:unit_label) => String.t(),
+                 optional(:url) => String.t()
                }
                | %{}
   def update(id, params, opts \\ []) do

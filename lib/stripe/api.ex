@@ -25,7 +25,7 @@ defmodule Stripe.API do
   @default_max_backoff 2_000
 
   @doc """
-  In config.exs your implicit or expicit configuration is:
+  In config.exs your implicit or explicit configuration is:
     config :stripity_stripe,
       json_library: Poison # defaults to Jason but can be configured to Poison
   """
@@ -144,7 +144,7 @@ defmodule Stripe.API do
   end
 
   @spec add_idempotency_headers(headers, method) :: headers
-  defp add_idempotency_headers(existing_headers, method) when method in [:get, :head] do
+  defp add_idempotency_headers(existing_headers, method) when method in [:get, :head, :put, :delete] do
     existing_headers
   end
 
@@ -322,7 +322,6 @@ defmodule Stripe.API do
       |> maybe_add_auth_header_oauth(endpoint, api_key)
       |> add_api_version(api_version)
       |> add_idempotency_headers(method)
-      |> Map.to_list()
 
     req_opts =
       []
@@ -347,7 +346,6 @@ defmodule Stripe.API do
       |> add_connect_header(connect_account_id)
       |> add_api_version(api_version)
       |> add_idempotency_headers(method)
-      |> Map.to_list()
 
     req_opts =
       opts
@@ -358,7 +356,7 @@ defmodule Stripe.API do
     do_perform_request(method, req_url, req_headers, body, req_opts)
   end
 
-  @spec do_perform_request(method, String.t(), [headers], body, list) ::
+  @spec do_perform_request(method, String.t(), headers, body, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
   defp do_perform_request(method, url, headers, body, opts) do
     do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, 0})
@@ -367,7 +365,7 @@ defmodule Stripe.API do
   @spec do_perform_request_and_retry(
           method,
           String.t(),
-          [headers],
+          headers,
           body,
           list,
           {:attempts, non_neg_integer} | {:response, http_success | http_failure}
@@ -377,7 +375,7 @@ defmodule Stripe.API do
   end
 
   defp do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, attempts}) do
-    response = http_module().request(method, url, headers, body, opts)
+    response = http_module().request(method, url, headers |> Map.to_list(), body, opts)
 
     do_perform_request_and_retry(
       method,
@@ -385,13 +383,14 @@ defmodule Stripe.API do
       headers,
       body,
       opts,
-      add_attempts(response, attempts, retry_config())
+      add_attempts(headers, response, attempts, retry_config())
     )
   end
 
-  @spec add_attempts(http_success | http_failure, non_neg_integer, Keyword.t()) ::
+  @spec add_attempts(headers, http_success | http_failure, non_neg_integer, Keyword.t()) ::
           {:attempts, non_neg_integer} | {:response, http_success | http_failure}
-  defp add_attempts(response, attempts, retry_config) do
+  defp add_attempts(%{@idempotency_key_header => _}, response, attempts, retry_config) do
+    # only retry if allowed Stripe idempotency method
     if should_retry?(response, attempts, retry_config) do
       attempts
       |> backoff(retry_config)
@@ -401,6 +400,10 @@ defmodule Stripe.API do
     else
       {:response, response}
     end
+  end
+
+  defp add_attempts(_headers, response, _attempts, _retry_config) do
+    {:response, response}
   end
 
   @doc """
@@ -426,7 +429,9 @@ defmodule Stripe.API do
 
   @spec retry_response?(http_success | http_failure) :: boolean
   # 409 conflict
-  defp retry_response?({:ok, 409, _headers, _body}), do: true
+  defp retry_response?({:error, 409, _headers, _body}), do: true
+  # https://github.com/beam-community/stripity_stripe/issues/686
+  defp retry_response?({:error, 429, _headers, _body}), do: true
   # Destination refused the connection, the connection was reset, or a
   # variety of other connection failures. This could occur from a single
   # saturated server, so retry in case it's intermittent.

@@ -136,6 +136,15 @@ defmodule Stripe.InvoiceTest do
       assert {:ok, %Stripe.Invoice{} = _sent_invoice} = Stripe.Invoice.delete(invoice)
       assert_stripe_requested(:delete, "/v1/invoices/#{invoice.id}")
     end
+
+    test "deletes an invoice does not inclue idempotency key" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+
+      assert {:ok, %Stripe.Invoice{} = _sent_invoice} = Stripe.Invoice.delete(invoice)
+
+      refute Map.has_key?(get_stripe_request_headers(), "Idempotency-Key")
+    end
   end
 
   describe "mark_as_uncollectible/2" do
