@@ -179,7 +179,7 @@ defmodule Stripe.Relay.Product do
                optional(:limit) => 1..100,
                optional(:page) => String.t()
              }
-  def search(params \\ %{}, opts \\ []) do
+  def search(params, opts \\ []) do
     new_request(opts)
     |> prefix_expansions()
     |> put_endpoint(@endpoint <> "/search")

@@ -186,7 +186,7 @@ defmodule Stripe.Customer do
   end
 
   @doc """
-  Search customers by custom search query
+  Search customers
   """
   @spec search(params, Stripe.options()) ::
           {:ok, Stripe.SearchResult.t(t)} | {:error, Stripe.Error.t()}
@@ -195,7 +195,7 @@ defmodule Stripe.Customer do
                optional(:limit) => 1..100,
                optional(:page) => String.t()
              }
-  def search(params \\ %{}, opts \\ []) do
+  def search(params, opts \\ []) do
     new_request(opts)
     |> prefix_expansions()
     |> put_endpoint(@plural_endpoint <> "/search")

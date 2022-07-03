@@ -353,7 +353,7 @@ defmodule Stripe.Invoice do
                optional(:limit) => 1..100,
                optional(:page) => String.t()
              }
-  def search(params \\ %{}, opts \\ []) do
+  def search(params, opts \\ []) do
     new_request(opts)
     |> prefix_expansions()
     |> put_endpoint(@plural_endpoint <> "/search")
