@@ -8,10 +8,24 @@ defmodule Stripe.PaymentMethod do
   use Stripe.Entity
   import Stripe.Request
 
+  @type acss_debit :: %{
+          bank_name: String.t() | nil,
+          fingerprint: String.t() | nil,
+          institution_number: String.t() | nil,
+          last4: String.t() | nil,
+          transit_number: String.t() | nil
+        }
+
   @type au_becs_debit :: %{
           bsb_number: String.t(),
           fingerprint: String.t(),
           last4: String.t()
+        }
+
+  @type bacs_debit :: %{
+          fingerprint: String.t() | nil,
+          last4: String.t() | nil,
+          sort_code: String.t() | nil
         }
 
   @type sepa_debit :: %{
@@ -20,6 +34,17 @@ defmodule Stripe.PaymentMethod do
           country: String.t() | nil,
           fingerprint: String.t() | nil,
           last4: String.t() | nil
+        }
+
+  @type us_bank_account :: %{
+          account_holder_type: String.t() | nil,
+          account_type: String.t() | nil,
+          bank_name: String.t() | nil,
+          financial_connections_account: String.t() | nil,
+          fingerprint: String.t() | nil,
+          last4: String.t() | nil,
+          networks: %{preferred: String.t() | nil, supported: list | nil} | nil,
+          routing_number: String.t() | nil
         }
 
   @type t :: %__MODULE__{
@@ -37,8 +62,11 @@ defmodule Stripe.PaymentMethod do
           link: %{persistent_token: String.t() | nil} | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
+          acss_debit: acss_debit() | nil,
           au_becs_debit: au_becs_debit() | nil,
+          bacs_debit: bacs_debit() | nil,
           sepa_debit: sepa_debit() | nil,
+          us_bank_account: us_bank_account() | nil,
           type: String.t()
         }
 
@@ -52,8 +80,11 @@ defmodule Stripe.PaymentMethod do
     :link,
     :livemode,
     :metadata,
+    :acss_debit,
     :au_becs_debit,
+    :bacs_debit,
     :sepa_debit,
+    :us_bank_account,
     :type
   ]
 
