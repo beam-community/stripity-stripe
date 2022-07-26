@@ -157,7 +157,7 @@ defmodule Stripe.Subscription do
                optional(:proration_behavior) => String.t(),
                optional(:promotion_code) => Stripe.id(),
                optional(:tax_percent) => float,
-               optional(:trial_end) => Stripe.timestamp(),
+               optional(:trial_end) => Stripe.timestamp() | :now,
                optional(:trial_from_plan) => boolean,
                optional(:trial_period_days) => non_neg_integer
              }
@@ -217,7 +217,7 @@ defmodule Stripe.Subscription do
                optional(:proration_behavior) => String.t(),
                optional(:proration_date) => Stripe.timestamp(),
                optional(:tax_percent) => float,
-               optional(:trial_end) => Stripe.timestamp(),
+               optional(:trial_end) => Stripe.timestamp() | :now,
                optional(:trial_from_plan) => boolean
              }
   def update(id, params, opts \\ []) do
