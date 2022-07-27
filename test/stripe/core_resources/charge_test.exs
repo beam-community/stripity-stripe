@@ -8,6 +8,16 @@ defmodule Stripe.ChargeTest do
     assert %Stripe.Charge{} = hd(charges)
   end
 
+  test "is searchable" do
+    search_query = "amount>999 AND metadata['order_id']:'6735'"
+    assert {:ok, %Stripe.SearchResult{data: charges}} =
+             Stripe.Charge.search(%{query: search_query})
+
+    assert_stripe_requested(:get, "/v1/charges/search", query: [query: search_query])
+    assert is_list(charges)
+    assert %Stripe.Charge{} = hd(charges)
+  end
+
   test "is listable does not include idempotency key" do
     assert {:ok, %Stripe.List{data: charges}} = Stripe.Charge.list()
 

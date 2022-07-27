@@ -8,6 +8,7 @@ defmodule Stripe.Invoice do
   - Retrieve an invoice
   - Update an invoice
   - Void an invoice
+  - Search invoices
 
   Does not take options yet.
 
@@ -337,6 +338,27 @@ defmodule Stripe.Invoice do
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:customer, :ending_before, :starting_after, :subscription])
+    |> make_request()
+  end
+
+  @doc """
+  Search invoices
+
+  See the [Stripe docs](https://stripe.com/docs/api/invoices/search).
+  """
+  @spec search(params, Stripe.options()) ::
+          {:ok, Stripe.SearchResult.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               :query => Stripe.search_query(),
+               optional(:limit) => 1..100,
+               optional(:page) => String.t()
+             }
+  def search(params, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@plural_endpoint <> "/search")
+    |> put_method(:get)
+    |> put_params(params)
     |> make_request()
   end
 

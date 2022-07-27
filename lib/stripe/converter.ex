@@ -65,6 +65,7 @@ defmodule Stripe.Converter do
     recipient
     refund
     review
+    search_result
     setup_intent
     sku
     source

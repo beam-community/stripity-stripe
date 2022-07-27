@@ -8,6 +8,16 @@ defmodule Stripe.PaymentIntentTest do
     assert %Stripe.PaymentIntent{} = hd(payment_intents)
   end
 
+  test "is searchable" do
+    search_query = "status:'succeeded' AND metadata['order_id']:'6735'"
+    assert {:ok, %Stripe.SearchResult{data: payment_intents}} =
+             Stripe.PaymentIntent.search(%{query: search_query})
+
+    assert_stripe_requested(:get, "/v1/payment_intents/search", query: [query: search_query])
+    assert is_list(payment_intents)
+    assert %Stripe.PaymentIntent{} = hd(payment_intents)
+  end
+
   test "is retrievable" do
     assert {:ok, %Stripe.PaymentIntent{}} = Stripe.PaymentIntent.retrieve("pi_123", %{})
     assert_stripe_requested(:get, "/v1/payment_intents/pi_123")

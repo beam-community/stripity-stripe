@@ -170,6 +170,55 @@ defmodule Stripe.ConverterTest do
     assert result == expected_result
   end
 
+  test "converts a search result response properly" do
+    expected_result = %Stripe.SearchResult{
+      data: [
+        %Stripe.Customer{
+          address: nil,
+          balance: 0,
+          created: 1656364912,
+          currency: "usd",
+          default_source: nil,
+          deleted: nil,
+          delinquent: false,
+          description: nil,
+          discount: nil,
+          email: nil,
+          id: "cus_LxK1UWzf44dEKX",
+          invoice_prefix: "2B6E364",
+          invoice_settings: %{
+            custom_fields: nil,
+            default_payment_method: nil,
+            footer: nil,
+            rendering_options: nil
+          },
+          livemode: false,
+          metadata: %{"foo" => "bar"},
+          name: "fakename",
+          next_invoice_sequence: 1,
+          object: "customer",
+          payment_method: nil,
+          phone: nil,
+          preferred_locales: [],
+          shipping: nil,
+          sources: nil,
+          subscriptions: nil,
+          tax_exempt: "none",
+          tax_ids: nil
+        }
+      ],
+      has_more: false,
+      next_page: nil,
+      object: "search_result",
+      total_count: nil,
+      url: "/v1/customers/search"
+    }
+    fixture = Helper.load_fixture("customer_search.json")
+    result = Converter.convert_result(fixture)
+
+    assert result == expected_result
+  end
+
   test "converts a customer response with a list of sources properly" do
     expected_result = %Stripe.Customer{
       id: "cus_9ryX7lUQ4Dcpf7",

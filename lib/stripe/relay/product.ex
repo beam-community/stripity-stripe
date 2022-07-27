@@ -168,4 +168,23 @@ defmodule Stripe.Relay.Product do
     |> cast_to_id([:ending_before, :starting_after])
     |> make_request()
   end
+
+  @doc """
+  Search products
+  """
+  @spec search(params, Stripe.options()) ::
+          {:ok, Stripe.SearchResult.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               :query => Stripe.search_query(),
+               optional(:limit) => 1..100,
+               optional(:page) => String.t()
+             }
+  def search(params, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@endpoint <> "/search")
+    |> put_method(:get)
+    |> put_params(params)
+    |> make_request()
+  end
 end

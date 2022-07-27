@@ -120,6 +120,18 @@ defmodule Stripe.SubscriptionTest do
     end
   end
 
+  describe "search/2" do
+    test "searches subscriptions" do
+      query = "name:'fakename' AND metadata['foo']:'bar'"
+      assert {:ok, %Stripe.SearchResult{data: subscriptions}} =
+              Stripe.Subscription.search(%{query: query})
+
+      assert_stripe_requested(:get, "/v1/subscriptions/search", query: [query: query])
+      assert is_list(subscriptions)
+      assert %Stripe.Subscription{} = hd(subscriptions)
+    end
+  end
+
   describe "delete_discount/2" do
     test "deletes a subscription's discount" do
       {:ok, subscription} = Stripe.Subscription.retrieve("sub_123")

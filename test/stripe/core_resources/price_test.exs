@@ -71,4 +71,17 @@ defmodule Stripe.PriceTest do
       assert %Stripe.Price{} = hd(prices)
     end
   end
+
+
+  describe "search/2" do
+    test "searches Prices" do
+      search_query = "active:'true' AND metadata['order_id']:'6735'"
+      assert {:ok, %Stripe.SearchResult{data: prices}} =
+              Stripe.Price.search(%{query: search_query})
+
+      assert_stripe_requested(:get, "/v1/prices/search", query: [query: search_query])
+      assert is_list(prices)
+      assert %Stripe.Price{} = hd(prices)
+    end
+  end
 end

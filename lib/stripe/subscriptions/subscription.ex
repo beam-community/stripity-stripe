@@ -8,6 +8,7 @@ defmodule Stripe.Subscription do
   - Retrieve a subscription
   - Update a subscription
   - Delete a subscription
+  - Search subscriptions
 
   Stripe API reference: https://stripe.com/docs/api#subscription
   """
@@ -324,6 +325,25 @@ defmodule Stripe.Subscription do
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:customer, :ending_before, :plan, :price, :starting_after])
+    |> make_request()
+  end
+
+  @doc """
+  Search subscriptions
+  """
+  @spec search(params, Stripe.options()) ::
+          {:ok, Stripe.SearchResult.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               :query => Stripe.search_query(),
+               optional(:limit) => 1..100,
+               optional(:page) => String.t()
+             }
+  def search(params, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@plural_endpoint <> "/search")
+    |> put_method(:get)
+    |> put_params(params)
     |> make_request()
   end
 

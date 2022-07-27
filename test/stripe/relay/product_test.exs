@@ -48,6 +48,19 @@ defmodule Stripe.Relay.ProductTest do
     end
   end
 
+  describe "search/2" do
+    test "searches invoices" do
+      search_query = "name:'fakename' AND metadata['foo']:'bar'"
+      assert {:ok, %Stripe.SearchResult{data: invoices}} =
+              Stripe.Invoice.search(%{query: search_query})
+
+      assert_stripe_requested(:get, "/v1/invoices/search", query: [query: search_query])
+      assert is_list(invoices)
+      assert %Stripe.Invoice{} = hd(invoices)
+    end
+  end
+
+
   describe "delete/1" do
     test "deletes a product" do
       {:ok, product} = Stripe.Relay.Product.retrieve("Plus")

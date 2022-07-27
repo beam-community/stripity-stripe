@@ -65,6 +65,7 @@ defmodule Stripe do
   use Application
 
   @type id :: String.t()
+  @type search_query :: String.t()
   @type date_query :: %{
           optional(:gt) => timestamp,
           optional(:gte) => timestamp,

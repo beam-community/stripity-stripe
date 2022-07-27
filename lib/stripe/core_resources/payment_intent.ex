@@ -9,6 +9,7 @@ defmodule Stripe.PaymentIntent do
   - [Capture a payment_intent](https://stripe.com/docs/api/payment_intents/capture)
   - [Cancel a payment_intent](https://stripe.com/docs/api/payment_intents/cancel)
   - [List all payment_intent](https://stripe.com/docs/api/payment_intents/list)
+  - [Search payment_intents] (https://stripe.com/docs/api/payment_intents/search)
   """
 
   use Stripe.Entity
@@ -309,6 +310,27 @@ defmodule Stripe.PaymentIntent do
     |> put_method(:get)
     |> put_params(params)
     |> cast_to_id([:ending_before, :starting_after, :customer])
+    |> make_request()
+  end
+
+  @doc """
+  Search PaymentIntents
+
+  See the [Stripe docs](https://stripe.com/docs/api/payment_intents/search).
+  """
+  @spec search(params, Stripe.options()) ::
+          {:ok, Stripe.SearchResult.t(t)} | {:error, Stripe.Error.t()}
+        when params: %{
+               :query => Stripe.search_query(),
+               optional(:limit) => 1..100,
+               optional(:page) => String.t()
+             }
+  def search(params, opts \\ []) do
+    new_request(opts)
+    |> prefix_expansions()
+    |> put_endpoint(@plural_endpoint <> "/search")
+    |> put_method(:get)
+    |> put_params(params)
     |> make_request()
   end
 end
