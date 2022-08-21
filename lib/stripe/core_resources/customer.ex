@@ -42,7 +42,8 @@ defmodule Stripe.Customer do
           sources: Stripe.List.t(Stripe.Source.t()),
           subscriptions: Stripe.List.t(Stripe.Subscription.t()),
           tax_exempt: String.t() | nil,
-          tax_ids: Stripe.List.t(Stripe.TaxID.t())
+          tax_ids: Stripe.List.t(Stripe.TaxID.t()),
+          test_clock: Stripe.id()
         }
 
   defstruct [
@@ -71,7 +72,8 @@ defmodule Stripe.Customer do
     :sources,
     :subscriptions,
     :tax_exempt,
-    :tax_ids
+    :tax_ids,
+    :test_clock
   ]
 
   @plural_endpoint "customers"
@@ -97,7 +99,8 @@ defmodule Stripe.Customer do
                  optional(:shipping) => Stripe.Types.shipping(),
                  optional(:source) => Stripe.id() | Stripe.Source.t(),
                  optional(:tax_excempt) => String.t(),
-                 optional(:tax_id_data) => Stripe.TaxID.tax_id_data()
+                 optional(:tax_id_data) => Stripe.TaxID.tax_id_data(),
+                 optional(:test_clock) => Stripe.id()
                }
                | %{}
   def create(params, opts \\ []) do
@@ -105,7 +108,7 @@ defmodule Stripe.Customer do
     |> put_endpoint(@plural_endpoint)
     |> put_params(params)
     |> put_method(:post)
-    |> cast_to_id([:coupon, :default_source, :source])
+    |> cast_to_id([:coupon, :default_source, :source, :test_clock])
     |> make_request()
   end
 

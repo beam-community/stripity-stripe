@@ -78,6 +78,7 @@ defmodule Stripe.Converter do
     terminal.connection_token
     terminal.location
     terminal.reader
+    test_helpers.test_clock
     transfer
     transfer_reversal
     token
