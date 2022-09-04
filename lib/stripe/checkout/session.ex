@@ -155,17 +155,25 @@ defmodule Stripe.Session do
         }
 
   @type line_item :: %{
-          optional(:name) => String.t(),
-          optional(:quantity) => integer(),
-          optional(:adjustable_quantity) => adjustable_quantity(),
-          optional(:amount) => integer(),
-          optional(:currency) => String.t(),
-          optional(:description) => String.t(),
-          optional(:dynamic_tax_rates) => list(String.t()),
-          optional(:images) => list(String.t()),
-          optional(:price) => String.t(),
-          optional(:price_data) => price_data,
-          optional(:tax_rates) => list(String.t())
+          optional(:object) => String.t(),
+          optional(:data) => %{
+            optional(:id) => Stripe.id(),
+            optional(:object) => String.t(),
+            optional(:quantity) => integer(),
+            optional(:amount_discount) => integer(),
+            optional(:amount_subtotal) => integer(),
+            optional(:amount_tax) => integer(),
+            optional(:amount_total) => integer(),
+            optional(:currency) => String.t(),
+            optional(:description) => String.t(),
+            optional(:discounts) => list(map),
+            optional(:dynamic_tax_rates) => list(String.t()),
+            optional(:price) => String.t(),
+            optional(:price_data) => price_data,
+            optional(:taxes) => list(map),
+          }
+          optional(:has_more) => boolean,
+          optional(:url) => String.t(),
         }
 
   @type adjustable_quantity :: %{
@@ -300,7 +308,7 @@ defmodule Stripe.Session do
           customer_creation: customer_creation() | nil,
           customer_details: customer_details() | nil,
           customer_email: String.t(),
-          display_items: list(line_item),
+          line_items: list(line_item),
           expires_at: Stripe.timestamp() | nil,
           livemode: boolean(),
           locale: boolean(),
@@ -348,7 +356,7 @@ defmodule Stripe.Session do
     :customer_creation,
     :customer_details,
     :customer_email,
-    :display_items,
+    :line_items,
     :expires_at,
     :livemode,
     :locale,
