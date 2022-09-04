@@ -7,19 +7,24 @@ defmodule Stripe.SubscriptionSchedule do
   use Stripe.Entity
   import Stripe.Request
 
-  @type plans :: %{
-          plan: String.t(),
+  @type items :: %{
+          billing_thresholds: Stripe.Types.collection_method_thresholds(),
           price: String.t(),
-          quantity: pos_integer
+          quantity: pos_integer,
+          tax_rates: [Stripe.TaxRate.t()],
         }
 
   @type phases :: %{
+          collection_method: string | nil,
+          collection_method: string | nil,
+          coupon: string | nil,
+          default_payment_method: string | nil,
+          default_tax_rates: float | nil,
           application_fee_percent: float | nil,
           end_date: Stripe.timestamp(),
           start_date: Stripe.timestamp(),
-          tax_percent: float | nil,
           trial_end: Stripe.timestamp(),
-          plans: list(plans)
+          items: list(items)
         }
 
   @type default_settings :: %{
@@ -49,6 +54,7 @@ defmodule Stripe.SubscriptionSchedule do
           revision: String.t(),
           status: String.t(),
           subscription: Stripe.id() | Stripe.Subscription.t(),
+          test_clock: Stripe.id() | Stripe.Subscription.t(),
           customer: Stripe.id() | Stripe.Customer.t(),
           released_subscription: Stripe.id() | Stripe.Subscription.t() | nil,
           phases: list(phases)
@@ -71,7 +77,8 @@ defmodule Stripe.SubscriptionSchedule do
     :livemode,
     :metadata,
     :end_behavior,
-    :revision
+    :revision,
+    :test_clock,
   ]
 
   @plural_endpoint "subscription_schedules"
@@ -98,11 +105,12 @@ defmodule Stripe.SubscriptionSchedule do
                },
                optional(:phases) => [
                  %{
-                   :plans => [
+                   :items => [
                      %{
-                       optional(:plan) => Stripe.id() | Stripe.Plan.t(),
+                       optional(:billing_thresholds): Stripe.Types.collection_method_thresholds()
                        optional(:price) => Stripe.id() | Stripe.Price.t(),
-                       optional(:quantity) => non_neg_integer
+                       optional(:quantity) => non_neg_integer,
+                       optional(:tax_rates) => [Stripe.TaxRate.t()]
                      }
                    ],
                    optional(:application_fee_percent) => non_neg_integer,
@@ -110,7 +118,6 @@ defmodule Stripe.SubscriptionSchedule do
                    optional(:end_date) => Stripe.timestamp(),
                    optional(:iterations) => non_neg_integer,
                    optional(:start_date) => Stripe.timestamp(),
-                   optional(:tax_percent) => float,
                    optional(:trial) => boolean(),
                    optional(:trial_end) => Stripe.timestamp()
                  }
@@ -152,11 +159,12 @@ defmodule Stripe.SubscriptionSchedule do
                },
                optional(:phases) => [
                  %{
-                   :plans => [
+                   :items => [
                      %{
-                       optional(:plan) => Stripe.id() | Stripe.Plan.t(),
+                       optional(:billing_thresholds): Stripe.Types.collection_method_thresholds() | nil,
                        optional(:price) => Stripe.id() | Stripe.Price.t(),
                        optional(:quantity) => non_neg_integer
+                       optional(:tax_rates) => [Stripe.TaxRate.t()]
                      }
                    ],
                    optional(:application_fee_percent) => non_neg_integer,
@@ -164,7 +172,6 @@ defmodule Stripe.SubscriptionSchedule do
                    optional(:end_date) => Stripe.timestamp(),
                    optional(:iterations) => non_neg_integer,
                    optional(:start_date) => Stripe.timestamp(),
-                   optional(:tax_percent) => float,
                    optional(:trial) => boolean(),
                    optional(:trial_end) => Stripe.timestamp()
                  }
