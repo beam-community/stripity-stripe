@@ -171,7 +171,7 @@ defmodule Stripe.Session do
             optional(:price) => String.t(),
             optional(:price_data) => price_data,
             optional(:taxes) => list(map),
-          }
+          },
           optional(:has_more) => boolean,
           optional(:url) => String.t(),
         }
