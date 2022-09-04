@@ -49,6 +49,7 @@ defmodule Stripe.Subscription do
           cancel_at_period_end: boolean,
           canceled_at: Stripe.timestamp() | nil,
           created: Stripe.timestamp(),
+          currency: String.t() | nil,
           current_period_end: Stripe.timestamp() | nil,
           current_period_start: Stripe.timestamp() | nil,
           customer: Stripe.id() | Stripe.Customer.t(),
@@ -68,11 +69,11 @@ defmodule Stripe.Subscription do
           pending_update: pending_update() | nil,
           plan: Stripe.Plan.t() | nil,
           pause_collection: pause_collection() | nil,
+          promotion_code: pause_collection() | nil,
           quantity: integer | nil,
           schedule: String.t() | nil,
           start_date: Stripe.timestamp(),
           status: String.t(),
-          tax_percent: float | nil,
           transfer_data: map,
           trial_end: Stripe.timestamp() | nil,
           trial_start: Stripe.timestamp() | nil
@@ -91,6 +92,7 @@ defmodule Stripe.Subscription do
     :cancel_at,
     :cancel_at_period_end,
     :canceled_at,
+    :currency,
     :created,
     :current_period_end,
     :current_period_start,
@@ -115,7 +117,8 @@ defmodule Stripe.Subscription do
     :schedule,
     :start_date,
     :status,
-    :tax_percent,
+    :tax_rate,
+    :test_clock,
     :transfer_data,
     :trial_end,
     :trial_start
@@ -157,7 +160,7 @@ defmodule Stripe.Subscription do
                optional(:prorate) => boolean,
                optional(:proration_behavior) => String.t(),
                optional(:promotion_code) => Stripe.id(),
-               optional(:tax_percent) => float,
+               optional(:tax_rate) => Stripe.id() | Stripe.TaxRate.t()
                optional(:trial_end) => Stripe.timestamp() | :now,
                optional(:trial_from_plan) => boolean,
                optional(:trial_period_days) => non_neg_integer
@@ -217,7 +220,7 @@ defmodule Stripe.Subscription do
                optional(:prorate) => boolean,
                optional(:proration_behavior) => String.t(),
                optional(:proration_date) => Stripe.timestamp(),
-               optional(:tax_percent) => float,
+                optional(:tax_rate) => Stripe.id() | Stripe.TaxRate.t()
                optional(:trial_end) => Stripe.timestamp() | :now,
                optional(:trial_from_plan) => boolean
              }
@@ -227,79 +230,6 @@ defmodule Stripe.Subscription do
     |> put_method(:post)
     |> put_params(params)
     |> cast_to_id([:coupon])
-    |> make_request()
-  end
-
-  @doc """
-  Delete a subscription.
-
-  Takes the subscription `id` or a `Stripe.Subscription` struct.
-  """
-  @spec delete(Stripe.id() | t) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def delete(id), do: delete(id, %{}, [])
-
-  @doc """
-  Delete a subscription.
-
-  Takes the subscription `id` or a `Stripe.Subscription` struct.
-
-  Second argument can be a map of cancellation `params`, such as `invoice_now`,
-  or a list of options, such as custom API key.
-
-  ### Deprecated Usage
-
-  Passing a map with `at_period_end: true` to `Subscription.delete/2`
-  is deprecated.  Use `Subscription.update/2` with
-  `cancel_at_period_end: true` instead.
-  """
-
-  @spec delete(Stripe.id() | t, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def delete(id, opts) when is_list(opts) do
-    delete(id, %{}, opts)
-  end
-
-  @spec delete(Stripe.id() | t, %{at_period_end: true}) :: {:ok, t} | {:error, Stripe.Error.t()}
-  def delete(id, %{at_period_end: true}) do
-    log_deprecation("Use Stripe.Subscription.update/2 with `cancel_at_period_end: true`")
-    update(id, %{cancel_at_period_end: true})
-  end
-
-  @spec delete(Stripe.id() | t, params) :: {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               optional(:invoice_now) => boolean,
-               optional(:prorate) => boolean
-             }
-  def delete(id, params) when is_map(params) do
-    delete(id, params, [])
-  end
-
-  @doc """
-  Delete a subscription.
-
-  Takes the subscription `id` or a `Stripe.Subscription` struct.
-
-  Second argument is a map of cancellation `params`, such as `invoice_now`.
-
-  Third argument is a list of options, such as custom API key.
-  """
-  @spec delete(Stripe.id() | t, %{at_period_end: true}, Stripe.options()) ::
-          {:ok, t} | {:error, Stripe.Error.t()}
-  def delete(id, %{at_period_end: true}, opts) do
-    log_deprecation("Use Stripe.Subscription.update/2 with `cancel_at_period_end: true`")
-    update(id, %{cancel_at_period_end: true}, opts)
-  end
-
-  @spec delete(Stripe.id() | t, params, Stripe.options()) ::
-          {:ok, t} | {:error, Stripe.Error.t()}
-        when params: %{
-               optional(:invoice_now) => boolean,
-               optional(:prorate) => boolean
-             }
-  def delete(id, params, opts) do
-    new_request(opts)
-    |> put_endpoint(@plural_endpoint <> "/#{get_id!(id)}")
-    |> put_method(:delete)
-    |> put_params(params)
     |> make_request()
   end
 
