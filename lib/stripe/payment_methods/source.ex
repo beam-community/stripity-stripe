@@ -158,7 +158,7 @@ defmodule Stripe.Source do
         }
 
   @type three_d_secure :: %{
-          authenticated: boolean | nil,
+          result: String.t() | nil,
           card: String.t() | nil,
           customer: String.t() | nil
         }
