@@ -15,10 +15,10 @@ defmodule Stripe.SubscriptionSchedule do
         }
 
   @type phases :: %{
-          collection_method: string | nil,
-          collection_method: string | nil,
-          coupon: string | nil,
-          default_payment_method: string | nil,
+          collection_method: String.t() | nil,
+          collection_method: String.t() | nil,
+          coupon: String.t() | nil,
+          default_payment_method: String.t() | nil,
           default_tax_rates: float | nil,
           application_fee_percent: float | nil,
           end_date: Stripe.timestamp(),

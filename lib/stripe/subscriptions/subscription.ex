@@ -15,7 +15,6 @@ defmodule Stripe.Subscription do
 
   use Stripe.Entity
   import Stripe.Request
-  import Stripe.Util, only: [log_deprecation: 1]
 
   @type pause_collection :: %{
           behavior: String.t(),
