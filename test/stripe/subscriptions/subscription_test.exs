@@ -59,58 +59,6 @@ defmodule Stripe.SubscriptionTest do
     end
   end
 
-  describe "delete/1" do
-    test "deletes a subscription" do
-      assert {:ok, %Stripe.Subscription{} = subscription} = Stripe.Subscription.delete("sub_123")
-      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
-    end
-  end
-
-  describe "delete/2" do
-    test "deletes a subscription when second argument is a list" do
-      assert {:ok, %Stripe.Subscription{} = subscription} =
-               Stripe.Subscription.delete("sub_123", [])
-
-      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
-    end
-
-    test "deletes a subscription when second argument is a map" do
-      assert {:ok, %Stripe.Subscription{} = subscription} =
-               Stripe.Subscription.delete("sub_123", %{})
-
-      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
-    end
-
-    test "with `at_period_end` is deprecated [since 2018-08-23]" do
-      assert {:ok, %Stripe.Subscription{} = subscription} =
-               Stripe.Subscription.delete("sub_123", %{at_period_end: true})
-
-      assert subscription.cancel_at_period_end
-
-      # The deprecated function acts as a facade for `cancel_at_period_end: true`.
-      assert_stripe_requested(:post, "/v1/subscriptions/#{subscription.id}")
-    end
-  end
-
-  describe "delete/3" do
-    test "with `at_period_end` is deprecated [since 2018-08-23]" do
-      assert {:ok, %Stripe.Subscription{cancel_at_period_end: true}} =
-               Stripe.Subscription.delete("sub_123", %{at_period_end: true}, [])
-
-      # The deprecated function acts as a facade for `cancel_at_period_end: true`.
-      assert_stripe_requested(:post, "/v1/subscriptions/sub_123")
-    end
-
-    test "deletes a subscription with provided cancellation params" do
-      params = %{invoice_now: true, prorate: true}
-
-      assert {:ok, %Stripe.Subscription{} = subscription} =
-               Stripe.Subscription.delete("sub_123", params)
-
-      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}", body: params)
-    end
-  end
-
   describe "list/2" do
     test "lists all subscriptions" do
       assert {:ok, %Stripe.List{data: subscriptions}} = Stripe.Subscription.list()
