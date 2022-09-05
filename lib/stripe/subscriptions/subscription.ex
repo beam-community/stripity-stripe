@@ -113,6 +113,7 @@ defmodule Stripe.Subscription do
     :pending_update,
     :plan,
     :pause_collection,
+    :promotion_code,
     :quantity,
     :schedule,
     :start_date,
@@ -160,7 +161,7 @@ defmodule Stripe.Subscription do
                optional(:prorate) => boolean,
                optional(:proration_behavior) => String.t(),
                optional(:promotion_code) => Stripe.id(),
-               optional(:tax_rate) => Stripe.id() | Stripe.TaxRate.t()
+               optional(:tax_rate) => Stripe.id() | Stripe.TaxRate.t(),
                optional(:trial_end) => Stripe.timestamp() | :now,
                optional(:trial_from_plan) => boolean,
                optional(:trial_period_days) => non_neg_integer
@@ -220,7 +221,7 @@ defmodule Stripe.Subscription do
                optional(:prorate) => boolean,
                optional(:proration_behavior) => String.t(),
                optional(:proration_date) => Stripe.timestamp(),
-                optional(:tax_rate) => Stripe.id() | Stripe.TaxRate.t()
+               optional(:tax_rate) => Stripe.id() | Stripe.TaxRate.t(),
                optional(:trial_end) => Stripe.timestamp() | :now,
                optional(:trial_from_plan) => boolean
              }

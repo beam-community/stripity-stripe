@@ -107,7 +107,7 @@ defmodule Stripe.SubscriptionSchedule do
                  %{
                    :items => [
                      %{
-                       optional(:billing_thresholds): Stripe.Types.collection_method_thresholds()
+                       optional(:billing_thresholds) => Stripe.Types.collection_method_thresholds(),
                        optional(:price) => Stripe.id() | Stripe.Price.t(),
                        optional(:quantity) => non_neg_integer,
                        optional(:tax_rates) => [Stripe.TaxRate.t()]
@@ -161,9 +161,9 @@ defmodule Stripe.SubscriptionSchedule do
                  %{
                    :items => [
                      %{
-                       optional(:billing_thresholds): Stripe.Types.collection_method_thresholds() | nil,
+                       optional(:billing_thresholds) => Stripe.Types.collection_method_thresholds(),
                        optional(:price) => Stripe.id() | Stripe.Price.t(),
-                       optional(:quantity) => non_neg_integer
+                       optional(:quantity) => non_neg_integer,
                        optional(:tax_rates) => [Stripe.TaxRate.t()]
                      }
                    ],
