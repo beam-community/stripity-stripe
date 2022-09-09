@@ -111,8 +111,9 @@ defmodule Stripe.InvoiceTest do
   describe "search/2" do
     test "searches invoices" do
       search_query = "name:'fakename' AND metadata['foo']:'bar'"
+
       assert {:ok, %Stripe.SearchResult{data: invoices}} =
-              Stripe.Invoice.search(%{query: search_query})
+               Stripe.Invoice.search(%{query: search_query})
 
       assert_stripe_requested(:get, "/v1/invoices/search", query: [query: search_query])
       assert is_list(invoices)

@@ -10,6 +10,7 @@ defmodule Stripe.PaymentIntentTest do
 
   test "is searchable" do
     search_query = "status:'succeeded' AND metadata['order_id']:'6735'"
+
     assert {:ok, %Stripe.SearchResult{data: payment_intents}} =
              Stripe.PaymentIntent.search(%{query: search_query})
 

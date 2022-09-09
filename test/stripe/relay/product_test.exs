@@ -3,8 +3,7 @@ defmodule Stripe.Relay.ProductTest do
 
   describe "create/2" do
     test "creates an product" do
-      assert {:ok, %Stripe.Product{}} =
-               Stripe.Relay.Product.create(%{name: "Plus"})
+      assert {:ok, %Stripe.Product{}} = Stripe.Relay.Product.create(%{name: "Plus"})
 
       assert_stripe_requested(:post, "/v1/products")
     end
@@ -51,15 +50,15 @@ defmodule Stripe.Relay.ProductTest do
   describe "search/2" do
     test "searches invoices" do
       search_query = "name:'fakename' AND metadata['foo']:'bar'"
+
       assert {:ok, %Stripe.SearchResult{data: invoices}} =
-              Stripe.Invoice.search(%{query: search_query})
+               Stripe.Invoice.search(%{query: search_query})
 
       assert_stripe_requested(:get, "/v1/invoices/search", query: [query: search_query])
       assert is_list(invoices)
       assert %Stripe.Invoice{} = hd(invoices)
     end
   end
-
 
   describe "delete/1" do
     test "deletes a product" do

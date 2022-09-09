@@ -11,7 +11,7 @@ defmodule Stripe.SubscriptionSchedule do
           billing_thresholds: Stripe.Types.collection_method_thresholds(),
           price: String.t(),
           quantity: pos_integer,
-          tax_rates: [Stripe.TaxRate.t()],
+          tax_rates: [Stripe.TaxRate.t()]
         }
 
   @type phases :: %{
@@ -78,7 +78,7 @@ defmodule Stripe.SubscriptionSchedule do
     :metadata,
     :end_behavior,
     :revision,
-    :test_clock,
+    :test_clock
   ]
 
   @plural_endpoint "subscription_schedules"
@@ -107,7 +107,8 @@ defmodule Stripe.SubscriptionSchedule do
                  %{
                    :items => [
                      %{
-                       optional(:billing_thresholds) => Stripe.Types.collection_method_thresholds(),
+                       optional(:billing_thresholds) =>
+                         Stripe.Types.collection_method_thresholds(),
                        optional(:price) => Stripe.id() | Stripe.Price.t(),
                        optional(:quantity) => non_neg_integer,
                        optional(:tax_rates) => [Stripe.TaxRate.t()]
@@ -161,7 +162,8 @@ defmodule Stripe.SubscriptionSchedule do
                  %{
                    :items => [
                      %{
-                       optional(:billing_thresholds) => Stripe.Types.collection_method_thresholds(),
+                       optional(:billing_thresholds) =>
+                         Stripe.Types.collection_method_thresholds(),
                        optional(:price) => Stripe.id() | Stripe.Price.t(),
                        optional(:quantity) => non_neg_integer,
                        optional(:tax_rates) => [Stripe.TaxRate.t()]
