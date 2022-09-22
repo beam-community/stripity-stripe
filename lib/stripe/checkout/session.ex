@@ -279,13 +279,13 @@ defmodule Stripe.Session do
   @type payment_status :: String.t()
 
   @type phone_number_collection :: %{
-    :enabled => boolean()
-  }
+          :enabled => boolean()
+        }
 
   @type shipping_option :: %{
-    :shipping_amount => non_neg_integer(),
-    :shipping_rate => String.t()
-  }
+          :shipping_amount => non_neg_integer(),
+          :shipping_rate => String.t()
+        }
 
   @typedoc """
   One of `"open"`, `"complete"`, or `"expired"`.
