@@ -45,9 +45,12 @@ jobs:
     name: Linting
     strategy:
       matrix:
-        elixir: ['1.13', '1.12']
+        elixir: ['1.14', '1.13', '1.12']
         # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
         otp: [24, 23, 22]
+        exclude:
+          - elixir: '1.14'
+            otp: 22
     steps:
       - uses: actions/checkout@v2
       - uses: erlef/setup-beam@v1
