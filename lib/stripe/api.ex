@@ -144,7 +144,8 @@ defmodule Stripe.API do
   end
 
   @spec add_idempotency_headers(headers, method) :: headers
-  defp add_idempotency_headers(existing_headers, method) when method in [:get, :head, :put, :delete] do
+  defp add_idempotency_headers(existing_headers, method)
+       when method in [:get, :head, :put, :delete] do
     existing_headers
   end
 

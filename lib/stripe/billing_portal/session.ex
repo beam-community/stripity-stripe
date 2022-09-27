@@ -24,7 +24,7 @@ defmodule Stripe.BillingPortal.Session do
 
   @type create_params :: %{
           :customer => String.t(),
-          optional(:return_url) => String.t(), 
+          optional(:return_url) => String.t(),
           optional(:locale) => String.t()
         }
 

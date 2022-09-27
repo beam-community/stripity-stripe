@@ -64,6 +64,8 @@ defmodule Stripe.Converter do
     promotion_code
     recipient
     refund
+    reporting.report_run
+    reporting.report_type
     review
     search_result
     setup_intent

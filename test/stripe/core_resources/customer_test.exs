@@ -34,6 +34,7 @@ defmodule Stripe.CustomerTest do
 
   test "is searchable" do
     search_query = "name:'fakename' AND metadata['foo']:'bar'"
+
     assert {:ok, %Stripe.SearchResult{data: customers}} =
              Stripe.Customer.search(%{query: search_query})
 

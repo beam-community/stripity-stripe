@@ -176,7 +176,7 @@ defmodule Stripe.ConverterTest do
         %Stripe.Customer{
           address: nil,
           balance: 0,
-          created: 1656364912,
+          created: 1_656_364_912,
           currency: "usd",
           default_source: nil,
           deleted: nil,
@@ -213,6 +213,7 @@ defmodule Stripe.ConverterTest do
       total_count: nil,
       url: "/v1/customers/search"
     }
+
     fixture = Helper.load_fixture("customer_search.json")
     result = Converter.convert_result(fixture)
 

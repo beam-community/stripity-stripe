@@ -170,10 +170,10 @@ defmodule Stripe.Session do
             optional(:dynamic_tax_rates) => list(String.t()),
             optional(:price) => String.t(),
             optional(:price_data) => price_data,
-            optional(:taxes) => list(map),
+            optional(:taxes) => list(map)
           },
           optional(:has_more) => boolean,
-          optional(:url) => String.t(),
+          optional(:url) => String.t()
         }
 
   @type adjustable_quantity :: %{
@@ -277,13 +277,13 @@ defmodule Stripe.Session do
   @type payment_status :: String.t()
 
   @type phone_number_collection :: %{
-    :enabled => boolean()
-  }
+          :enabled => boolean()
+        }
 
   @type shipping_option :: %{
-    :shipping_amount => non_neg_integer(),
-    :shipping_rate => String.t()
-  }
+          :shipping_amount => non_neg_integer(),
+          :shipping_rate => String.t()
+        }
 
   @typedoc """
   One of `"open"`, `"complete"`, or `"expired"`.
