@@ -9,7 +9,7 @@ defmodule Stripe.SubscriptionScheduleTest do
         coupon: nil,
         default_tax_rates: [],
         end_date: 1_557_566_037,
-        start_date: 1_554_974_037,
+        start_date: 1_554_974_037
       }
     ]
   }
@@ -38,7 +38,7 @@ defmodule Stripe.SubscriptionScheduleTest do
                 tax_rates: []
               }
             ],
-            start_date: 1_554_974_037,
+            start_date: 1_554_974_037
           }
         ]
       }
@@ -71,7 +71,7 @@ defmodule Stripe.SubscriptionScheduleTest do
                 tax_rates: []
               }
             ],
-            start_date: 1_554_974_037,
+            start_date: 1_554_974_037
           }
         ]
       }

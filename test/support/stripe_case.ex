@@ -75,7 +75,12 @@ defmodule Stripe.StripeCase do
   using do
     quote do
       import Stripe.StripeCase,
-        only: [assert_stripe_requested: 2, assert_stripe_requested: 3, get_stripe_request_headers: 0, stripe_base_url: 0]
+        only: [
+          assert_stripe_requested: 2,
+          assert_stripe_requested: 3,
+          get_stripe_request_headers: 0,
+          stripe_base_url: 0
+        ]
 
       Application.put_env(:stripity_stripe, :http_module, HackneyMock)
     end

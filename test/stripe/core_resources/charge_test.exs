@@ -10,6 +10,7 @@ defmodule Stripe.ChargeTest do
 
   test "is searchable" do
     search_query = "amount>999 AND metadata['order_id']:'6735'"
+
     assert {:ok, %Stripe.SearchResult{data: charges}} =
              Stripe.Charge.search(%{query: search_query})
 

@@ -59,6 +59,40 @@ defmodule Stripe.SubscriptionTest do
     end
   end
 
+  describe "delete/1" do
+    test "deletes a subscription" do
+      assert {:ok, %Stripe.Subscription{} = subscription} = Stripe.Subscription.delete("sub_123")
+      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
+    end
+  end
+
+  describe "delete/2" do
+    test "deletes a subscription when second argument is a list" do
+      assert {:ok, %Stripe.Subscription{} = subscription} =
+               Stripe.Subscription.delete("sub_123", [])
+
+      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
+    end
+
+    test "deletes a subscription when second argument is a map" do
+      assert {:ok, %Stripe.Subscription{} = subscription} =
+               Stripe.Subscription.delete("sub_123", %{})
+
+      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
+    end
+  end
+
+  describe "delete/3" do
+    test "deletes a subscription with provided cancellation params" do
+      params = %{invoice_now: true, prorate: true}
+
+      assert {:ok, %Stripe.Subscription{} = subscription} =
+               Stripe.Subscription.delete("sub_123", params)
+
+      assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}", body: params)
+    end
+  end
+
   describe "list/2" do
     test "lists all subscriptions" do
       assert {:ok, %Stripe.List{data: subscriptions}} = Stripe.Subscription.list()
@@ -71,8 +105,9 @@ defmodule Stripe.SubscriptionTest do
   describe "search/2" do
     test "searches subscriptions" do
       query = "name:'fakename' AND metadata['foo']:'bar'"
+
       assert {:ok, %Stripe.SearchResult{data: subscriptions}} =
-              Stripe.Subscription.search(%{query: query})
+               Stripe.Subscription.search(%{query: query})
 
       assert_stripe_requested(:get, "/v1/subscriptions/search", query: [query: query])
       assert is_list(subscriptions)

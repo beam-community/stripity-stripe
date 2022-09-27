@@ -144,7 +144,8 @@ defmodule Stripe.API do
   end
 
   @spec add_idempotency_headers(headers, method) :: headers
-  defp add_idempotency_headers(existing_headers, method) when method in [:get, :head, :put, :delete] do
+  defp add_idempotency_headers(existing_headers, method)
+       when method in [:get, :head, :put, :delete] do
     existing_headers
   end
 
@@ -239,7 +240,7 @@ defmodule Stripe.API do
       request(%{}, :get, "/customers", %{}, connect_account: "acc_134151")
 
   """
-  @spec request(body, method, String.t(), headers, list) ::
+  @spec request(map, method, String.t(), headers, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
   def request(body, :get, endpoint, headers, opts) do
     {expansion, opts} = Keyword.pop(opts, :expand)
@@ -274,7 +275,7 @@ defmodule Stripe.API do
   @doc """
   A low level utility function to make a direct request to the files Stripe API
   """
-  @spec request_file_upload(body, method, String.t(), headers, list) ::
+  @spec request_file_upload(map, method, String.t(), headers, list) ::
           {:ok, map} | {:error, Stripe.Error.t()}
   def request_file_upload(body, :post, endpoint, headers, opts) do
     base_url = get_upload_url()

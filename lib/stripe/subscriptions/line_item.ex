@@ -15,11 +15,13 @@ defmodule Stripe.LineItem do
         }
 
   @type proration_details :: %{
-    credited_items: %{
-      invoice: String.t(),
-      invoice_line_items: [String.t()]
-    } | nil
-  }
+          credited_items:
+            %{
+              invoice: String.t(),
+              invoice_line_items: [String.t()]
+            }
+            | nil
+        }
 
   @type t :: %__MODULE__{
           id: Stripe.id(),

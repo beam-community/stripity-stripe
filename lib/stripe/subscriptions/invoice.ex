@@ -224,7 +224,7 @@ defmodule Stripe.Invoice do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:payment_settings) => map,
                  optional(:statement_descriptor) => String.t(),
-                 optional(:subscription) => Stripe.id() | Stripe.Subscription.t(),
+                 optional(:subscription) => Stripe.id() | Stripe.Subscription.t()
                }
                | %{}
   def create(params, opts \\ []) do
@@ -280,7 +280,7 @@ defmodule Stripe.Invoice do
                  optional(:metadata) => Stripe.Types.metadata(),
                  optional(:paid) => boolean,
                  optional(:payment_settings) => map,
-                 optional(:statement_descriptor) => String.t(),
+                 optional(:statement_descriptor) => String.t()
                }
                | %{}
   def update(id, params, opts \\ []) do
@@ -304,7 +304,10 @@ defmodule Stripe.Invoice do
   @spec upcoming(map, Stripe.options()) :: {:ok, t} | {:error, Stripe.Error.t()}
   def upcoming(params, opts \\ [])
   def upcoming(params = %{customer: _customer}, opts), do: get_upcoming(params, opts)
-  def upcoming(params = %{customer_details: _customer_details}, opts), do: get_upcoming(params, opts)
+
+  def upcoming(params = %{customer_details: _customer_details}, opts),
+    do: get_upcoming(params, opts)
+
   def upcoming(params = %{subscription: _subscription}, opts), do: get_upcoming(params, opts)
 
   defp get_upcoming(params, opts) do
