@@ -127,8 +127,14 @@ defmodule Stripe.Session do
           promotions: String.t()
         }
 
+  @typedoc """
+  One of `"required"`, `"none"`.
+  """
+  @type consent_collection_terms_of_service :: String.t()
+  
   @type consent_collection :: %{
-          promotions: String.t()
+          promotions: String.t(),
+          terms_of_service: consent_collection_terms_of_service() | nil
         }
 
   @typedoc """
