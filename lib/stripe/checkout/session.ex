@@ -128,7 +128,8 @@ defmodule Stripe.Session do
         }
 
   @type consent_collection :: %{
-          promotions: String.t()
+          promotions: String.t(),
+          terms_of_service: String.t()
         }
 
   @typedoc """
