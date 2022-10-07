@@ -247,6 +247,7 @@ defmodule Stripe.Session do
           :success_url => String.t(),
           optional(:mode) => String.t(),
           optional(:client_reference_id) => String.t(),
+          optional(:currency) => String.t(),
           optional(:customer) => String.t(),
           optional(:customer_email) => String.t(),
           optional(:line_items) => list(line_item_data()),
