@@ -16,6 +16,7 @@ defmodule Stripe.BillingPortal.Session do
           :id => Stripe.id(),
           :object => String.t(),
           :created => Stripe.timestamp(),
+          :configuration => String.t(),
           :customer => Stripe.id() | Stripe.Customer.t(),
           :livemode => boolean(),
           :return_url => String.t(),
@@ -24,6 +25,7 @@ defmodule Stripe.BillingPortal.Session do
 
   @type create_params :: %{
           :customer => String.t(),
+          optional(:configuration) => String.t(),
           optional(:return_url) => String.t(),
           optional(:locale) => String.t()
         }
@@ -32,6 +34,7 @@ defmodule Stripe.BillingPortal.Session do
     :id,
     :object,
     :created,
+    :configuration,
     :customer,
     :livemode,
     :return_url,

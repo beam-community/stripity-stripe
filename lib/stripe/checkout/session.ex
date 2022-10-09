@@ -128,7 +128,8 @@ defmodule Stripe.Session do
         }
 
   @type consent_collection :: %{
-          promotions: String.t()
+          promotions: String.t(),
+          terms_of_service: String.t()
         }
 
   @typedoc """
@@ -246,6 +247,7 @@ defmodule Stripe.Session do
           :success_url => String.t(),
           optional(:mode) => String.t(),
           optional(:client_reference_id) => String.t(),
+          optional(:currency) => String.t(),
           optional(:customer) => String.t(),
           optional(:customer_email) => String.t(),
           optional(:line_items) => list(line_item_data()),
