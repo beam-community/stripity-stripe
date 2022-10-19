@@ -159,6 +159,7 @@ defmodule Stripe.Session do
           optional(:id) => Stripe.id(),
           optional(:object) => String.t(),
           optional(:quantity) => integer(),
+          optional(:adjustable_quantity) => adjustable_quantity(),
           optional(:amount_discount) => integer(),
           optional(:amount_subtotal) => integer(),
           optional(:amount_tax) => integer(),
