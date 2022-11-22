@@ -18,7 +18,7 @@ defmodule Stripe.Issuing.Transaction do
           id: Stripe.id(),
           object: String.t(),
           amount: integer,
-          authorization: Stripe.id() | Stripe.Issuing.Authorization.t(),
+          authorization: Stripe.id() | Stripe.Issuing.Authorization.t() | nil,
           balance_transaction: String.t(),
           card: Stripe.id() | Stripe.Issuing.Card.t(),
           cardholder: Stripe.id() | Stripe.Issuing.Cardholder.t(),
