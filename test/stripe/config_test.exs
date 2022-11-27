@@ -8,18 +8,18 @@ defmodule Stripe.ConfigTest do
   end
 
   test "returns the requested configuration value" do
-    Application.put_env(:stripity_stripe, :__test, "test-test")
+    Application.put_env(:stripe_elixir, :__test, "test-test")
     assert(Stripe.Config.resolve(:__test) == "test-test")
   end
 
   test "evaluates functions" do
-    Application.put_env(:stripity_stripe, :__test, fn -> "test-test" end)
+    Application.put_env(:stripe_elixir, :__test, fn -> "test-test" end)
     assert(Stripe.Config.resolve(:__test) == "test-test")
   end
 
   test "applies tuples" do
     Application.put_env(
-      :stripity_stripe,
+      :stripe_elixir,
       :__test,
       {ValueExpansionTestModule, :value, []}
     )
@@ -29,7 +29,7 @@ defmodule Stripe.ConfigTest do
 
   test "if no value exists for the given key it uses the default value" do
     Application.put_env(
-      :stripity_stripe,
+      :stripe_elixir,
       :__test,
       {ValueExpansionTestModule, :value, []}
     )
@@ -39,7 +39,7 @@ defmodule Stripe.ConfigTest do
 
   test "raises if the key isn't an atom" do
     Application.put_env(
-      :stripity_stripe,
+      :stripe_elixir,
       :__test,
       {ValueExpansionTestModule, :value, []}
     )
