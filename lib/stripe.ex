@@ -9,13 +9,13 @@ defmodule Stripe do
   You need to set your API key in your application configuration. Typically
   this is done in `config/config.exs` or a similar file. For example:
 
-      config :stripity_stripe, api_key: "sk_test_abc123456789qwerty"
+      config :stripe_elixir, api_key: "sk_test_abc123456789qwerty"
 
   You can also utilize `System.get_env/1` to retrieve the API key from
   an environment variable, but remember that this can cause issues if
   you use a release tool like exrm or Distillery.
 
-      config :stripity_stripe, api_key: System.get_env("STRIPE_API_KEY")
+      config :stripe_elixir, api_key: System.get_env("STRIPE_API_KEY")
 
   ### Shared Options
 
@@ -52,14 +52,14 @@ defmodule Stripe do
   Both these settings are located under the `:pool_options` key in
   your application configuration:
 
-      config :stripity_stripe, :pool_options,
+      config :stripe_elixir, :pool_options,
         timeout: 5_000,
         max_connections: 10
 
   If you prefer, you can also turn pooling off completely using
   the `:use_connection_pool` setting:
 
-      config :stripity_stripe, use_connection_pool: false
+      config :stripe_elixir, use_connection_pool: false
 
   """
   use Application

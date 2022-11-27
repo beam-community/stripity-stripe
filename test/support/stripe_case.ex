@@ -26,7 +26,7 @@ defmodule Stripe.StripeCase do
   end
 
   def stripe_base_url() do
-    Application.get_env(:stripity_stripe, :api_base_url)
+    Application.get_env(:stripe_elixir, :api_base_url)
   end
 
   defp assert_stripe_request_headers(nil, _), do: nil
@@ -82,7 +82,7 @@ defmodule Stripe.StripeCase do
           stripe_base_url: 0
         ]
 
-      Application.put_env(:stripity_stripe, :http_module, HackneyMock)
+      Application.put_env(:stripe_elixir, :http_module, HackneyMock)
     end
   end
 end
