@@ -1,0 +1,100 @@
+name: stripe-codegen
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    ## Scheduled nightly at 00:23
+    - cron: '23 0 * * *'
+
+jobs:
+  check:
+    runs-on: ubuntu-20.04
+    name: Check if changed
+    strategy:
+      fail-fast: false
+
+    outputs:
+      current_tag: ${{ steps.current-tag.outputs.CURRENT_TAG }}
+      latest_tag: ${{ steps.latest-tag.outputs.LATEST_TAG }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get tag used for generated files
+        id: current-tag
+        run: |
+          # check if the file exist before
+          [[ -f .latest-tag-stripe-openapi-sdk ]] && CURRENT_TAG=$(<.latest-tag-stripe-openapi-sdk) || CURRENT_TAG=''
+          echo "::set-output name=CURRENT_TAG::${CURRENT_TAG}"
+      - name: Get latest Stripe SDK tag
+        id: latest-tag
+        run: |
+          wget https://api.github.com/repos/stripe/openapi/releases/latest
+          tag_name=$(cat latest | jq -r '.tag_name')
+          echo "::set-output name=LATEST_TAG::${tag_name}"
+  generate:
+    runs-on: ubuntu-20.04
+    name: Update services
+    needs: check
+    if: ${{ needs.check.outputs.current_tag != needs.check.outputs.latest_tag }}
+
+    env:
+      LATEST_STRIPE_SDK_TAG: ${{ needs.check.outputs.latest_tag }}
+      OTP_VERSION: "25.0"
+      ELIXIR_VERSION: "1.14.0"
+
+    strategy:
+      fail-fast: false
+    services:
+       stripe-mock:
+         image: stripe/stripe-mock:v0.144.0
+         ports:
+           - 12111:12111
+           - 12112:12112
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ env.OTP_VERSION }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+
+      - name: Checkout stripe/openapi (official OpenApi definitions)
+        uses: actions/checkout@v2
+        with:
+          repository: stripe/openapi
+          path: tmp/openapi
+          ref: ${{ env.LATEST_STRIPE_SDK_TAG }}
+
+      - name: Copy in OpenApi definitions
+        run: cp tmp/openapi/openapi/spec3.sdk.json ./priv/openapi
+      - name: Install Dependencies
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get
+      - name: Test generated code
+        run: |
+          mix test
+      - name: Generate docs
+        run: |
+          mix docs
+      - name: Update latest tag file
+        run: |
+          echo "${LATEST_STRIPE_SDK_TAG}" > .latest-tag-stripe-openapi-sdk
+      - name: Commit files
+        run: |
+          git config --local user.email "noreply@github.com"
+          git config --local user.name "github-actions[bot]"
+          git add priv/openapi
+          git add .latest-tag-stripe-openapi-sdk
+          echo "Update services based on ${{ env.LATEST_STRIPE_SDK_TAG }} of Stripe OpenApi SDK" >> commit-msg
+          echo >> commit-msg
+          echo "Reference: https://github.com/stripe/openapi/releases/tag/${{ env.LATEST_STRIPE_SDK_TAG }}" >> commit-msg
+          git commit -F commit-msg
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
