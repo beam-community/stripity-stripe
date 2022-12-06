@@ -14,7 +14,7 @@ jobs:
       STRIPE_MOCK_VERSION: 0.123.0
       STRIPE_SECRET_KEY: non_empty_string
       SKIP_STRIPE_MOCK_RUN: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
        matrix:
@@ -41,7 +41,7 @@ jobs:
       run: mix test
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     name: Linting
     strategy:
       matrix:
