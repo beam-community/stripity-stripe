@@ -2,25 +2,17 @@
 
 An Elixir library for working with [Stripe](https://stripe.com/).
 
-[![Hex.pm](https://img.shields.io/hexpm/v/stripe_elixir.svg?maxAge=2592000)](https://hex.pm/packages/stripe_elixir) [![Hex.pm](https://img.shields.io/hexpm/dt/stripe_elixir.svg?maxAge=2592000)](https://hex.pm/packages/stripe_elixir)
+[![Hex.pm](https://img.shields.io/hexpm/v/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe) [![Hex.pm](https://img.shields.io/hexpm/dt/stripity_stripe.svg?maxAge=2592000)](https://hex.pm/packages/stripity_stripe)
 
 ## 2.x.x status
 
-[![Build Status](https://travis-ci.org/beam-community/stripe-elixir.svg?branch=master)](https://travis-ci.org/beam-community/stripe-elixir) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripe_elixir) [![Inline docs](http://inch-ci.org/github/beam-community/stripe-elixir.svg?branch=master)](http://inch-ci.org/github/beam-community/stripe-elixir?branch=master) [![Coverage Status](https://coveralls.io/repos/github/beam-community/stripe-elixir/badge.svg?branch=master)](https://coveralls.io/github/beam-community/stripe-elixir?branch=master)
-
-## 1.x.x status
-
-[![Build Status](https://travis-ci.org/beam-community/stripe-elixir.svg?branch=1.x.x)](https://travis-ci.org/beam-community/stripe-elixir) [![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripe_elixir/1.6.2) [![Inline docs](http://inch-ci.org/github/beam-community/stripe-elixir.svg?branch=1.x.x)](http://inch-ci.org/github/beam-community/stripe-elixir?branch=1.x.x) [![Coverage Status](https://coveralls.io/repos/github/beam-community/stripe-elixir/badge.svg?branch=1.x.x)](https://coveralls.io/github/beam-community/stripe-elixir?branch=1.x.x)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe) [![Inline docs](http://inch-ci.org/github/beam-community/stripe-elixir.svg?branch=master)](http://inch-ci.org/github/beam-community/stripe-elixir?branch=master) [![Coverage Status](https://coveralls.io/repos/github/beam-community/stripe-elixir/badge.svg?branch=master)](https://coveralls.io/github/beam-community/stripe-elixir?branch=master)
 
 # Which version should I use?
 
-The old `1.x.x` line of releases has been kept and is being published separately for backwards compatibility, since `2.0` was a complete rewrite. To contribute to that line (bugfixes, mainly), create pull requests against the `1.x.x` branch.
+Below is a list of which Stripe API version recent releases of Stripe Elixir. It only indicates the API version being called, not necessarily its compatibility. See the [Stripe API Upgrades page](https://stripe.com/docs/upgrades) for more details.
 
-The actively developed line of releases is `2.x.x` and is contained within the `master` branch. New features are being added to this line of releases, so to develop this library further, create pull requests against the master branch.
-
-Below is a list of which Stripe API version recent releases of Stripity Stripe use. It only indicates the API version being called, not necessarily its compatibility. See the [Stripe API Upgrades page](https://stripe.com/docs/upgrades) for more details.
-
-Starting with stripe_elixir version 2.5.0, you can specify the Stripe API Version to use for a specific request by including the `:api_version` option. Note that while this will use a specific Stripe API Version to make the request, the library will still expect a response matching its corresponding default Stripe API Version. See the [Shared Options documentation](https://hexdocs.pm/stripe_elixir/2.7.0/Stripe.html#module-shared-options) for more details.
+Starting with stripe_elixir version 2.5.0, you can specify the Stripe API Version to use for a specific request by including the `:api_version` option. Note that while this will use a specific Stripe API Version to make the request, the library will still expect a response matching its corresponding default Stripe API Version. See the [Shared Options documentation](https://hexdocs.pm/stripity_stripe/2.17.2/Stripe.html#module-shared-options) for more details.
 
 | `:stripe_elixir` | Stripe API Version |
 | ------------------ | ------------------ |
@@ -33,9 +25,7 @@ Starting with stripe_elixir version 2.5.0, you can specify the Stripe API Versio
 
 # Documentation
 
-- [Latest HexDocs](https://hexdocs.pm/stripe_elixir/)
-
-- [1.x.x](https://hexdocs.pm/stripe_elixir/1.6.1/)
+- [Latest HexDocs](https://hexdocs.pm/stripity_stripe/)
 
 ## Installation
 

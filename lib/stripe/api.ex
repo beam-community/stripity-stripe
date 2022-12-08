@@ -189,7 +189,7 @@ defmodule Stripe.API do
 
   defp add_api_version(existing_headers, api_version) do
     Map.merge(existing_headers, %{
-      "User-Agent" => "Stripe/v1 stripity-stripe/#{api_version}",
+      "User-Agent" => "Stripe/v1 stripe-elixir/#{api_version}",
       "Stripe-Version" => api_version
     })
   end
