@@ -62,13 +62,14 @@ defmodule Stripe.Mixfile do
       {:dialyxir, "1.1.0", only: [:dev, :test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:excoveralls, "~> 0.14.1", only: :test},
-      {:hackney, "~> 1.15"},
+      {:hackney, "~> 1.18"},
       {:inch_ex, "~> 2.0", only: [:dev, :test]},
       {:mox, "~> 0.4", only: :test},
       {:jason, "~> 1.1"},
+      {:telemetry, "~> 1.1"},
       {:uri_query, "~> 0.1.2"},
       {:exexec, "~> 0.1.0", only: :test},
-      {:plug, "~> 1.0", optional: true}
+      {:plug, "~> 1.14", optional: true}
     ]
   end
 
