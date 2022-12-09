@@ -56,6 +56,7 @@ defmodule Stripe.Invoice do
           due_date: Stripe.timestamp() | nil,
           ending_balance: integer | nil,
           footer: String.t() | nil,
+          from_invoice: from_invoice() | nil,
           hosted_invoice_url: String.t() | nil,
           invoice_pdf: String.t() | nil,
           last_finalization_error: map,
@@ -120,6 +121,11 @@ defmodule Stripe.Invoice do
             voided_at: Stripe.timestamp() | nil
           })
 
+  @type from_invoice :: %{
+          action: String.t(),
+          invoice: Stripe.id()
+  }
+
   defstruct [
     :id,
     :object,
@@ -158,6 +164,7 @@ defmodule Stripe.Invoice do
     :due_date,
     :ending_balance,
     :footer,
+    :from_invoice,
     :hosted_invoice_url,
     :invoice_pdf,
     :last_finalization_error,
