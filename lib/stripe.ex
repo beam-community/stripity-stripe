@@ -64,6 +64,13 @@ defmodule Stripe do
   """
   use Application
 
+  use Stripe.OpenApi,
+  path:
+    [:code.priv_dir(:stripe_elixir), "openapi", "spec3.sdk.json"]
+    |> IO.inspect
+    |> Path.join(),
+  base_url: "https://api.stripe.com"
+
   @type id :: String.t()
   @type search_query :: String.t()
   @type date_query :: %{
