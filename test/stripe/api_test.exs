@@ -109,7 +109,7 @@ defmodule Stripe.APITest do
       end
     end
 
-    Application.put_env(:stripe_elixir, :http_module, HackneyMock)
+    Application.put_env(:stripity_stripe, :http_module, HackneyMock)
 
     {:ok, body} = Stripe.API.oauth_request(:post, "deauthorize", %{})
     assert body["Authorization"] == "Bearer sk_test_123"
@@ -141,13 +141,13 @@ defmodule Stripe.APITest do
       end
     end
 
-    Application.put_env(:stripe_elixir, :http_module, HackneyMock)
+    Application.put_env(:stripity_stripe, :http_module, HackneyMock)
 
     {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
     refute Map.has_key?(request_opts, "connect_timeout")
     refute Map.has_key?(request_opts, "recv_timeout")
 
-    Application.put_env(:stripe_elixir, :hackney_opts, [
+    Application.put_env(:stripity_stripe, :hackney_opts, [
       {:connect_timeout, 1000},
       {:recv_timeout, 5000}
     ])
