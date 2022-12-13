@@ -31,7 +31,7 @@ defmodule Stripe.OpenApi do
         max_network_retries: 3,
         user_agent: "stripity-stripe",
         base_url: unquote(opts[:base_url]),
-        http_client: Stripe.HTTPClient.HTTPC
+        http_client: Stripe.Request
       ]
 
       @doc """
@@ -54,7 +54,6 @@ defmodule Stripe.OpenApi do
       @spec new(Keyword.t()) :: __MODULE__.t()
       def new(opts) do
         client = struct!(__MODULE__, opts)
-        client.http_client.init()
         client
       end
     end

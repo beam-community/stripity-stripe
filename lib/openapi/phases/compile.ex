@@ -101,7 +101,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
                       unquote(argument_values)
                     )
 
-                  Stripe.request(@operation.method, path, client, params, opts)
+                  Stripe.API.request(client, @operation.method, path, params, opts)
                 end
               else
                 @spec unquote(function_name)(
@@ -124,7 +124,13 @@ defmodule Stripe.OpenApi.Phases.Compile do
                       unquote(argument_values)
                     )
 
-                  Stripe.request(@operation.method, path, client, %{}, opts)
+                  headers =
+                    opts
+                    |> Keyword.get(:headers, %{})
+                    |> Map.merge(headers)
+
+                  req = %Request{path: path, opts: opts, headers: headers}
+                  Stripe.API.make_request(req)
                 end
               end
             end
