@@ -12,9 +12,9 @@ An Elixir library for working with [Stripe](https://stripe.com/).
 
 Below is a list of which Stripe API version recent releases of Stripe Elixir. It only indicates the API version being called, not necessarily its compatibility. See the [Stripe API Upgrades page](https://stripe.com/docs/upgrades) for more details.
 
-Starting with stripe_elixir version 2.5.0, you can specify the Stripe API Version to use for a specific request by including the `:api_version` option. Note that while this will use a specific Stripe API Version to make the request, the library will still expect a response matching its corresponding default Stripe API Version. See the [Shared Options documentation](https://hexdocs.pm/stripity_stripe/2.17.2/Stripe.html#module-shared-options) for more details.
+Starting with stripity_stripe version 2.5.0, you can specify the Stripe API Version to use for a specific request by including the `:api_version` option. Note that while this will use a specific Stripe API Version to make the request, the library will still expect a response matching its corresponding default Stripe API Version. See the [Shared Options documentation](https://hexdocs.pm/stripity_stripe/2.17.2/Stripe.html#module-shared-options) for more details.
 
-| `:stripe_elixir` | Stripe API Version |
+| `:stripity_stripe` | Stripe API Version |
 | ------------------ | ------------------ |
 | `2.0.x`            | `2018-02-28`       |
 | `2.1.0 - 2.2.0`    | `2018-05-21`       |
@@ -32,13 +32,13 @@ Starting with stripe_elixir version 2.5.0, you can specify the Stripe API Versio
 Install the dependency by version:
 
 ```elixir
-{:stripe_elixir, "~> 2.0"}
+{:stripity_stripe, "~> 2.0"}
 ```
 
 Or by commit reference:
 
 ```elixir
-{:stripe_elixir, git: "https://github.com/beam-community/stripe-elixir", ref: "8c091d4278d29a917bacef7bb2f0606317fcc025"}
+{:stripity_stripe, git: "https://github.com/code-corps/stripity_stripe", ref: "8c091d4278d29a917bacef7bb2f0606317fcc025"}
 ```
 
 Next, add to your applications:
@@ -47,7 +47,7 @@ _Not necessary if using elixir >= 1.4_
 
 ```elixir
 defp application do
-  [applications: [:stripe_elixir]]
+  [applications: [:stripity_stripe]]
 end
 ```
 
@@ -58,23 +58,23 @@ To make API calls, it is necessary to configure your Stripe secret key.
 ```elixir
 import Config
 
-config :stripe_elixir, api_key: System.get_env("STRIPE_SECRET")
+config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
 # OR
-config :stripe_elixir, api_key: "YOUR SECRET KEY"
+config :stripity_stripe, api_key: "YOUR SECRET KEY"
 ```
 
 It's possible to use a function or a tuple to resolve the secret:
 
 ```elixir
-config :stripe_elixir, api_key: {MyApp.Secrets, :stripe_secret, []}
+config :stripity_stripe, api_key: {MyApp.Secrets, :stripe_secret, []}
 # OR
-config :stripe_elixir, api_key: fn -> System.get_env("STRIPE_SECRET") end
+config :stripity_stripe, api_key: fn -> System.get_env("STRIPE_SECRET") end
 ```
 
 Moreover, if you are using Poison instead of Jason, you can configure the library to use Poison like so:
 
 ```elixir
-config :stripe_elixir, json_library: Poison
+config :stripity_stripe, json_library: Poison
 ```
 
 ### Timeout
@@ -82,7 +82,7 @@ config :stripe_elixir, json_library: Poison
 To set timeouts, pass opts for the http client. The default one is Hackney.
 
 ```elixir
-config :stripe_elixir, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}]
+config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}]
 ```
 
 ### Request Retries
@@ -90,7 +90,7 @@ config :stripe_elixir, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 
 To set retries, you can pass the number of attempts and range of backoff (time between attempting the request again) in milliseconds.
 
 ```elixir
-config :stripe_elixir, :retries, [max_attempts: 3, base_backoff: 500, max_backoff: 2_000]
+config :stripity_stripe, :retries, [max_attempts: 3, base_backoff: 500, max_backoff: 2_000]
 ```
 
 ## Examples
@@ -164,7 +164,7 @@ Now you can charge the customer using a `PaymentIntent` from [Stripe](https://st
 
 ## Note: Object Expansion
 
-Some Stripe API endpoints support returning related objects via the object expansion query parameter. To take advantage of this feature, stripe_elixir accepts
+Some Stripe API endpoints support returning related objects via the object expansion query parameter. To take advantage of this feature, stripity_stripe accepts
 a list of strings to be passed into `opts` under the `:expand` key indicating which objects should be expanded.
 
 For example, calling `Charge.retrieve("ch_123")` would return a charge without expanding any objects.
@@ -231,7 +231,7 @@ To configure your test environment to use the local stripe-mock server, you may
 need to set the `api_base_url` field in your config:
 
 ```
-config :stripe_elixir,
+config :stripity_stripe,
   api_key: "sk_test_thisisaboguskey",
   api_base_url: "http://localhost:12111/v1/"
 ```
@@ -250,14 +250,14 @@ Works with API version 2015-10-16
 Install the dependency:
 
 ```elixir
-{:stripe_elixir, "~> 1.6"}
+{:stripity_stripe, "~> 1.6"}
 ```
 
 Next, add to your applications:
 
 ```elixir
 defp application do
-  [applications: [:stripe_elixir]]
+  [applications: [:stripity_stripe]]
 end
 ```
 
@@ -268,8 +268,8 @@ To make API calls, it is necessary to configure your Stripe secret key (and opti
 ```elixir
 import Config
 
-config :stripe_elixir, secret_key: "YOUR SECRET KEY"
-config :stripe_elixir, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
+config :stripity_stripe, secret_key: "YOUR SECRET KEY"
+config :stripity_stripe, platform_client_id: "YOUR CONNECT PLATFORM CLIENT ID"
 ```
 
 ## Testing
@@ -325,7 +325,7 @@ Stripe Connect allows you to provide your customers with an easy onboarding to t
 First, you need to register your platform on Stripe Connect to obtain a `client_id`. In your account settings, there's a "Connect" tab, select it. Then fill the information to activate your connect platform settings. The select he `client_id` (notice there's one for dev and one for prod), stash this `client_id` in the config file under
 
 ```elixir
-config :stripe_elixir, platform_client_id: "ac_???"
+config :stripity_stripe, platform_client_id: "ac_???"
 ```
 
 or in an env var named `STRIPE_PLATFORM_CLIENT_ID`.
@@ -412,4 +412,4 @@ As I began digging things up with these other libraries it became rather apparen
 
 ## Update
 
-As of October 18th, Rob has graciously handed over the reins to the teams at [Code Corps](https://www.codecorps.org/) and [Strumber](https://strumber.com/). To address the concerns Rob mentioned above and update the high level api to work with all of the Stripe API Endpoints, they have since worked to release stripe_elixir 2.0, which is now the actively developed line of releases.
+As of October 18th, Rob has graciously handed over the reins to the teams at [Code Corps](https://www.codecorps.org/) and [Strumber](https://strumber.com/). To address the concerns Rob mentioned above and update the high level api to work with all of the Stripe API Endpoints, they have since worked to release stripity_stripe 2.0, which is now the actively developed line of releases.
