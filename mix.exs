@@ -1,12 +1,12 @@
 defmodule Stripe.Mixfile do
   use Mix.Project
 
-  @source_url "https://github.com/beam-community/stripe-elixir"
+  @source_url "https://github.com/code-corps/stripity_stripe"
   @version "2.17.2"
 
   def project do
     [
-      app: :stripe_elixir,
+      app: :stripity_stripe,
       version: @version,
       elixir: "~> 1.10",
       deps: deps(),
@@ -21,7 +21,7 @@ defmodule Stripe.Mixfile do
       ],
       dialyzer: [
         plt_add_apps: [:mix],
-        plt_file: {:no_warn, "priv/plts/stripe_elixir.plt"}
+        plt_file: {:no_warn, "priv/plts/stripity_stripe.plt"}
       ],
       test_coverage: [tool: ExCoveralls]
     ]

@@ -13,10 +13,10 @@ end
 api_base_url = System.get_env("STRIPE_API_BASE_URL") || "http://localhost:12111/v1/"
 api_upload_url = System.get_env("STRIPE_API_UPLOAD_URL") || "http://localhost:12112/v1/"
 
-Application.put_env(:stripe_elixir, :api_base_url, api_base_url)
-Application.put_env(:stripe_elixir, :api_upload_url, api_upload_url)
-Application.put_env(:stripe_elixir, :api_key, "sk_test_123")
-Application.put_env(:stripe_elixir, :log_level, :debug)
+Application.put_env(:stripity_stripe, :api_base_url, api_base_url)
+Application.put_env(:stripity_stripe, :api_upload_url, api_upload_url)
+Application.put_env(:stripity_stripe, :api_key, "sk_test_123")
+Application.put_env(:stripity_stripe, :log_level, :debug)
 
 Mox.defmock(Stripe.Connect.OAuthMock, for: Stripe.Connect.OAuth)
 Mox.defmock(Stripe.APIMock, for: Stripe.API)

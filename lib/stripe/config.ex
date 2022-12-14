@@ -12,7 +12,7 @@ defmodule Stripe.Config do
   def resolve(key, default \\ nil)
 
   def resolve(key, default) when is_atom(key) do
-    Application.get_env(:stripe_elixir, key, default)
+    Application.get_env(:stripity_stripe, key, default)
     |> expand_value()
   end
 

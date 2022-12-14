@@ -26,7 +26,7 @@ defmodule Stripe.API do
 
   @doc """
   In config.exs your implicit or explicit configuration is:
-    config :stripe_elixir,
+    config :stripity_stripe,
       json_library: Poison # defaults to Jason but can be configured to Poison
   """
   @spec json_library() :: module
@@ -431,7 +431,7 @@ defmodule Stripe.API do
   @spec retry_response?(http_success | http_failure) :: boolean
   # 409 conflict
   defp retry_response?({:error, 409, _headers, _body}), do: true
-  # https://github.com/beam-community/stripe_elixir/issues/686
+  # https://github.com/beam-community/stripity_stripe/issues/686
   defp retry_response?({:error, 429, _headers, _body}), do: true
   # Destination refused the connection, the connection was reset, or a
   # variety of other connection failures. This could occur from a single
