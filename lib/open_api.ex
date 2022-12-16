@@ -43,7 +43,7 @@ defmodule Stripe.OpenApi do
         * `:api_key` Set Stripe api keys. Test mode secret keys have the prefix `sk_test_` and live mode secret keys have the prefix `sk_live_`.
         * `:idempotency_key` Override default idempotency key
         * `:base_url` Override default base url. E.g. for local testing
-        * `:http_client` Override http client, defaults to Stripe.HTTPClient.HTTPC. Must conform to Stripe.HTTPClient behaviour.
+        * `:http_client` Override http client, defaults to Hackney. Must conform to Stripe.HTTPClient behaviour.
 
       #### Example
       ```elixir
