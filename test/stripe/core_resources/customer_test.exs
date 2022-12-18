@@ -21,7 +21,7 @@ defmodule Stripe.CustomerTest do
     {:ok, customer} = Stripe.Customer.retrieve("cus_123")
     assert_stripe_requested(:get, "/v1/customers/#{customer.id}")
 
-    assert {:ok, %Stripe.Customer{}} = Stripe.Customer.delete(customer)
+    assert {:ok, %Stripe.Customer{}} = Stripe.Customer.delete(customer.id)
     assert_stripe_requested(:delete, "/v1/customers/#{customer.id}")
   end
 

@@ -61,7 +61,7 @@ defmodule Stripe.SubscriptionTest do
 
   describe "delete/1" do
     test "deletes a subscription" do
-      assert {:ok, %Stripe.Subscription{} = subscription} = Stripe.Subscription.delete("sub_123")
+      assert {:ok, %Stripe.Subscription{} = subscription} = Stripe.Subscription.cancel("sub_123")
       assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
     end
   end
@@ -69,14 +69,14 @@ defmodule Stripe.SubscriptionTest do
   describe "delete/2" do
     test "deletes a subscription when second argument is a list" do
       assert {:ok, %Stripe.Subscription{} = subscription} =
-               Stripe.Subscription.delete("sub_123", [])
+               Stripe.Subscription.cancel("sub_123", [])
 
       assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
     end
 
     test "deletes a subscription when second argument is a map" do
       assert {:ok, %Stripe.Subscription{} = subscription} =
-               Stripe.Subscription.delete("sub_123", %{})
+               Stripe.Subscription.cancel("sub_123", %{})
 
       assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}")
     end
@@ -87,7 +87,7 @@ defmodule Stripe.SubscriptionTest do
       params = %{invoice_now: true, prorate: true}
 
       assert {:ok, %Stripe.Subscription{} = subscription} =
-               Stripe.Subscription.delete("sub_123", params)
+               Stripe.Subscription.cancel("sub_123", params)
 
       assert_stripe_requested(:delete, "/v1/subscriptions/#{subscription.id}", body: params)
     end
@@ -115,7 +115,7 @@ defmodule Stripe.SubscriptionTest do
     end
   end
 
-  describe "delete_discount/2" do
+  describe "cancel/2" do
     test "deletes a subscription's discount" do
       {:ok, subscription} = Stripe.Subscription.retrieve("sub_123")
       assert_stripe_requested(:get, "/v1/subscriptions/#{subscription.id}")

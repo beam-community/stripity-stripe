@@ -79,7 +79,6 @@ defmodule Stripe.OpenApi.Phases.Compile do
 
               if unquote(params?) do
                 @spec unquote(function_name)(
-                        client :: Stripe.t(),
                         unquote_splicing(argument_specs),
                         params :: unquote(to_inline_spec(param_specs)),
                         opts :: Keyword.t()
@@ -87,9 +86,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
                         {:ok, unquote(success_response_spec)}
                         | {:error, Stripe.ApiErrors.t()}
                         | {:error, term()}
-
                 def unquote(function_name)(
-                      client,
                       unquote_splicing(argument_names),
                       params \\ %{},
                       opts \\ []
@@ -98,18 +95,17 @@ defmodule Stripe.OpenApi.Phases.Compile do
                     Stripe.OpenApi.Path.replace_path_params(
                       @operation.path,
                       @operation.path_parameters,
-                      unquote(argument_values)
+                      unquote(argument_names)
                     )
 
                   Stripe.Request.new_request(opts)
                   |> Stripe.Request.put_endpoint(path)
                   |> Stripe.Request.put_params(params)
-                  |> Stripe.Request.put_method(:post)
+                  |> Stripe.Request.put_method(@operation.method)
                   |> Stripe.Request.make_request()
                 end
               else
                 @spec unquote(function_name)(
-                        client :: Stripe.t(),
                         unquote_splicing(argument_specs),
                         opts :: Keyword.t()
                       ) ::
@@ -117,10 +113,10 @@ defmodule Stripe.OpenApi.Phases.Compile do
                         | {:error, Stripe.ApiErrors.t()}
                         | {:error, term()}
                 def unquote(function_name)(
-                      client,
                       unquote_splicing(argument_names),
                       opts \\ []
                     ) do
+                  IO.inspect {"else", @operation.method}
                   path =
                     Stripe.OpenApi.Path.replace_path_params(
                       @operation.path,
@@ -130,7 +126,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
 
                   Stripe.Request.new_request(opts)
                   |> Stripe.Request.put_endpoint(path)
-                  |> Stripe.Request.put_method(:post)
+                  |> Stripe.Request.put_method(@operation.method)
                   |> Stripe.Request.make_request()
                 end
               end
@@ -164,6 +160,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
 
       body =
         quote do
+          use Stripe.Entity
+
           @moduledoc unquote(component.description)
           if unquote(fields) != nil do
             defstruct unquote(fields)

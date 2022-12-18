@@ -344,7 +344,7 @@ defmodule Stripe.ConverterTest do
   end
 
   test "converts a checkout.session response properly" do
-    expected_result = %Stripe.Session{
+    expected_result = %Stripe.Checkout.Session{
       id: "CdWP8EBmSp1tJNIw4ZLF6w3XKd8MNKkEvlnSK7QmwFlDZ8rrjqBn9VI9vKiVdhfE",
       livemode: false,
       object: "checkout.session"

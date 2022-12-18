@@ -2,7 +2,7 @@ defmodule Stripe.RefundTest do
   use Stripe.StripeCase, async: true
 
   test "is listable" do
-    assert {:ok, %Stripe.List{data: refunds}} = Stripe.Refund.list()
+    assert {:ok, %Stripe.List{data: refunds}} = Stripe.Refund.list("ab123")
     assert_stripe_requested(:get, "/v1/refunds")
     assert is_list(refunds)
     assert %Stripe.Refund{} = hd(refunds)
@@ -21,5 +21,10 @@ defmodule Stripe.RefundTest do
   test "is updateable" do
     assert {:ok, refund} = Stripe.Refund.update("re_123", %{metadata: %{foo: "bar"}})
     assert_stripe_requested(:post, "/v1/refunds/#{refund.id}")
+  end
+
+  test "is cancellable" do
+    assert {:ok, refund} = Stripe.Refund.cancel("re_123")
+    assert_stripe_requested(:post, "/v1/refunds/#{refund.id}/cancel")
   end
 end

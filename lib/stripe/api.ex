@@ -16,7 +16,7 @@ defmodule Stripe.API do
   @typep http_failure :: {:error, term}
 
   @pool_name __MODULE__
-  @api_version "2020-08-27"
+  @api_version "2022-11-15"
 
   @idempotency_key_header "Idempotency-Key"
 

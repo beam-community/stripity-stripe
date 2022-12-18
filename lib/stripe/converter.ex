@@ -10,84 +10,84 @@ defmodule Stripe.Converter do
   @spec convert_result(%{String.t() => any}) :: struct
   def convert_result(result), do: convert_value(result)
 
-  @supported_objects ~w(
-    account
-    account_link
-    application_fee
-    fee_refund
-    balance
-    balance_transaction
-    bank_account
-    billing_portal.session
-    capability
-    card
-    charge
-    checkout.session
-    country_spec
-    coupon
-    credit_note
-    credit_note_line_item
-    customer
-    customer_balance_transaction
-    discount
-    dispute
-    ephemeral_key
-    radar.early_fraud_warning
-    event
-    external_account
-    file
-    file_link
-    identity.verification_session
-    identity.verification_report
-    invoice
-    invoiceitem
-    issuing.authorization
-    issuing.card
-    issuing.cardholder
-    issuing.transaction
-    line_item
-    list
-    login_link
-    mandate
-    oauth
-    order
-    order_item
-    order_return
-    payment_intent
-    payment_link
-    payment_method
-    payout
-    person
-    plan
-    price
-    product
-    promotion_code
-    recipient
-    refund
-    reporting.report_run
-    reporting.report_type
-    review
-    search_result
-    setup_intent
-    sku
-    source
-    subscription
-    subscription_item
-    subscription_schedule
-    tax_rate
-    tax_id
-    topup
-    terminal.connection_token
-    terminal.location
-    terminal.reader
-    test_helpers.test_clock
-    transfer
-    transfer_reversal
-    token
-    usage_record
-    usage_record_summary
-    webhook_endpoint
-  )
+  # @supported_objects ~w(
+  #   account
+  #   account_link
+  #   application_fee
+  #   fee_refund
+  #   balance
+  #   balance_transaction
+  #   bank_account
+  #   billing_portal.session
+  #   capability
+  #   card
+  #   charge
+  #   checkout.session
+  #   country_spec
+  #   coupon
+  #   credit_note
+  #   credit_note_line_item
+  #   customer
+  #   customer_balance_transaction
+  #   discount
+  #   dispute
+  #   ephemeral_key
+  #   radar.early_fraud_warning
+  #   event
+  #   external_account
+  #   file
+  #   file_link
+  #   identity.verification_session
+  #   identity.verification_report
+  #   invoice
+  #   invoiceitem
+  #   issuing.authorization
+  #   issuing.card
+  #   issuing.cardholder
+  #   issuing.transaction
+  #   line_item
+  #   list
+  #   login_link
+  #   mandate
+  #   oauth
+  #   order
+  #   order_item
+  #   order_return
+  #   payment_intent
+  #   payment_link
+  #   payment_method
+  #   payout
+  #   person
+  #   plan
+  #   price
+  #   product
+  #   promotion_code
+  #   recipient
+  #   refund
+  #   reporting.report_run
+  #   reporting.report_type
+  #   review
+  #   search_result
+  #   setup_intent
+  #   sku
+  #   source
+  #   subscription
+  #   subscription_item
+  #   subscription_schedule
+  #   tax_rate
+  #   tax_id
+  #   topup
+  #   terminal.connection_token
+  #   terminal.location
+  #   terminal.reader
+  #   test_helpers.test_clock
+  #   transfer
+  #   transfer_reversal
+  #   token
+  #   usage_record
+  #   usage_record_summary
+  #   webhook_endpoint
+  # )
 
   @no_convert_maps ~w(metadata supported_bank_account_currencies)
 
@@ -109,14 +109,14 @@ defmodule Stripe.Converter do
   end
   ```
   """
-  def structs() do
-    (@supported_objects -- @no_convert_maps)
-    |> Enum.map(&Stripe.Util.object_name_to_module/1)
-  end
+  # def structs() do
+  #   (@supported_objects -- @no_convert_maps)
+  #   |> Enum.map(&Stripe.Util.object_name_to_module/1)
+  # end
 
   @spec convert_value(any) :: any
   defp convert_value(%{"object" => object_name} = value) when is_binary(object_name) do
-    case Enum.member?(@supported_objects, object_name) do
+    case known_struct?(object_type_to_struct(object_name)) do
       true ->
         convert_stripe_object(value)
 
@@ -210,5 +210,19 @@ defmodule Stripe.Converter do
 
       :ok
     end
+  end
+
+  defp object_type_to_struct(object, deleted: true) do
+    module = object |> String.split(".") |> Enum.map(&Macro.camelize/1)
+    Module.concat(["Stripe", "Deleted#{module}"])
+  end
+
+  defp object_type_to_struct(object) do
+    module = object |> String.split(".") |> Enum.map(&Macro.camelize/1)
+    Module.concat(["Stripe" | module])
+  end
+
+  defp known_struct?(struct) do
+    function_exported?(struct, :__struct__, 0)
   end
 end
