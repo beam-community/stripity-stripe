@@ -56,7 +56,7 @@ defmodule Stripe.PaymentIntentTest do
     assert_stripe_requested(:get, "/v1/payment_intents/pi_123")
 
     assert {:ok, %Stripe.PaymentIntent{}} =
-             Stripe.PaymentIntent.capture(payment_intent, %{amount_to_capture: 1000})
+             Stripe.PaymentIntent.capture(payment_intent.id, %{amount_to_capture: 1000})
 
     assert_stripe_requested(:post, "/v1/payment_intents/pi_123/capture")
   end

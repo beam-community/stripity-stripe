@@ -24,7 +24,7 @@ defmodule Stripe.FileLinkTest do
     test "retrieves a file link by FileLink struct" do
       file_link = %Stripe.FileLink{id: "filelink_123"}
 
-      assert {:ok, %Stripe.FileLink{}} = Stripe.FileLink.retrieve(file_link)
+      assert {:ok, %Stripe.FileLink{}} = Stripe.FileLink.retrieve(file_link.id)
       assert_stripe_requested(:get, "/v1/file_links/filelink_123")
     end
   end

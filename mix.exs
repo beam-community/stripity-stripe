@@ -124,7 +124,7 @@ defmodule Stripe.Mixfile do
         Stripe.Product,
         Stripe.Refund,
         Stripe.SetupIntent,
-        Stripe.TaxID,
+        Stripe.TaxId,
         Stripe.Token
       ],
       "Payment Methods": [

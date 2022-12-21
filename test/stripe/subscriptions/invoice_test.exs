@@ -1,21 +1,21 @@
 defmodule Stripe.InvoiceTest do
   use Stripe.StripeCase, async: true
 
-  describe "create/2" do
+  describe "create/1" do
     test "creates an invoice" do
       assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.create(%{customer: "cus_123"})
       assert_stripe_requested(:post, "/v1/invoices")
     end
   end
 
-  describe "retrieve/2" do
+  describe "retrieve/1" do
     test "retrieves an invoice" do
       assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.retrieve("in_123")
       assert_stripe_requested(:get, "/v1/invoices/in_123")
     end
   end
 
-  describe "upcoming/2" do
+  describe "upcoming/1" do
     test "retrieves an upcoming invoice for a customer" do
       params = %{customer: "cus_123", subscription: "sub_123"}
       assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.upcoming(params)
@@ -69,35 +69,35 @@ defmodule Stripe.InvoiceTest do
     end
   end
 
-  # describe "finalize/3" do
-  #   test "finalizes an invoice" do
-  #     {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
-  #     assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+  describe "finalize/2" do
+    test "finalizes an invoice" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
 
-  #     assert {:ok, %Stripe.Invoice{} = _paid_invoice} = Stripe.Invoice.finalize(invoice, %{})
-  #     assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/finalize")
-  #   end
-  # end
+      assert {:ok, %Stripe.Invoice{} = _paid_invoice} = Stripe.Invoice.finalize_invoice(invoice.id, %{})
+      assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/finalize")
+    end
+  end
 
-  # describe "pay/3" do
-  #   test "pays an invoice" do
-  #     {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
-  #     assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+  describe "pay/2" do
+    test "pays an invoice" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
 
-  #     assert {:ok, %Stripe.Invoice{} = _paid_invoice} = Stripe.Invoice.pay(invoice, %{})
-  #     assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/pay")
-  #   end
+      assert {:ok, %Stripe.Invoice{} = _paid_invoice} = Stripe.Invoice.pay(invoice.id, %{})
+      assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/pay")
+    end
 
-  #   test "pays an invoice with a specific source" do
-  #     {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
-  #     assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+    test "pays an invoice with a specific source" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
 
-  #     params = %{source: "src_123"}
-  #     assert {:ok, %Stripe.Invoice{} = _paid_invoice} = Stripe.Invoice.pay(invoice, params)
+      params = %{source: "src_123"}
+      assert {:ok, %Stripe.Invoice{} = _paid_invoice} = Stripe.Invoice.pay(invoice.id, params)
 
-  #     assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/pay", body: %{source: "src_123"})
-  #   end
-  # end
+      assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/pay", body: %{source: "src_123"})
+    end
+  end
 
   describe "list/2" do
     test "lists all invoices" do
@@ -141,34 +141,34 @@ defmodule Stripe.InvoiceTest do
     end
   end
 
-  # describe "delete/2" do
-  #   test "deletes an invoice" do
-  #     {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
-  #     assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+  describe "delete/1" do
+    test "deletes an invoice" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
 
-  #     assert {:ok, %Stripe.Invoice{} = _sent_invoice} = Stripe.Invoice.delete(invoice)
-  #     assert_stripe_requested(:delete, "/v1/invoices/#{invoice.id}")
-  #   end
+      assert {:ok, %Stripe.Invoice{} = _sent_invoice} = Stripe.Invoice.delete(invoice.id)
+      assert_stripe_requested(:delete, "/v1/invoices/#{invoice.id}")
+    end
 
-  #   test "deletes an invoice does not inclue idempotency key" do
-  #     {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
-  #     assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+    test "deletes an invoice does not inclue idempotency key" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
 
-  #     assert {:ok, %Stripe.Invoice{} = _sent_invoice} = Stripe.Invoice.delete(invoice)
+      assert {:ok, %Stripe.Invoice{} = _sent_invoice} = Stripe.Invoice.delete(invoice.id)
 
-  #     refute Map.has_key?(get_stripe_request_headers(), "Idempotency-Key")
-  #   end
-  # end
+      refute Map.has_key?(get_stripe_request_headers(), "Idempotency-Key")
+    end
+  end
 
-  # describe "mark_as_uncollectible/2" do
-  #   test "marks an invoice as uncollectible" do
-  #     {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
-  #     assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
+  describe "mark_uncollectible/1" do
+    test "marks an invoice as uncollectible" do
+      {:ok, invoice} = Stripe.Invoice.retrieve("in_123")
+      assert_stripe_requested(:get, "/v1/invoices/#{invoice.id}")
 
-  #     assert {:ok, %Stripe.Invoice{} = _sent_invoice} =
-  #              Stripe.Invoice.mark_as_uncollectible(invoice)
+      assert {:ok, %Stripe.Invoice{} = _sent_invoice} =
+               Stripe.Invoice.mark_uncollectible(invoice.id)
 
-  #     assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/mark_uncollectible")
-  #   end
-  # end
+      assert_stripe_requested(:post, "/v1/invoices/#{invoice.id}/mark_uncollectible")
+    end
+  end
 end
