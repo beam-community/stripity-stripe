@@ -127,10 +127,42 @@ defmodule Stripe.Account do
           url: String.t() | nil
         }
 
+  @type capability_option :: %{requested: boolean()}
+
   @type capabilities :: %{
-          card_payments: String.t() | nil,
-          legacy_payments: String.t() | nil,
-          transfers: String.t() | nil
+          optional(:acss_debit_payments) => capability_option,
+          optional(:affirm_payments) => capability_option,
+          optional(:afterpay_clearpay_payments) => capability_option,
+          optional(:au_becs_debit_payments) => capability_option,
+          optional(:bacs_debit_payments) => capability_option,
+          optional(:bancontact_payments) => capability_option,
+          optional(:bank_transfer_payments) => capability_option,
+          optional(:blik_payments) => capability_option,
+          optional(:boleto_payments) => capability_option,
+          optional(:card_issuing) => capability_option,
+          optional(:card_payments) => capability_option,
+          optional(:cartes_bancaires_payments) => capability_option,
+          optional(:eps_payments) => capability_option,
+          optional(:fpx_payments) => capability_option,
+          optional(:giropay_payments) => capability_option,
+          optional(:grabpay_payments) => capability_option,
+          optional(:ideal_payments) => capability_option,
+          optional(:india_international_payments) => capability_option,
+          optional(:jcb_payments) => capability_option,
+          optional(:klarna_payments) => capability_option,
+          optional(:konbini_payments) => capability_option,
+          optional(:legacy_payments) => capability_option,
+          optional(:link_payments) => capability_option,
+          optional(:oxxo_payments) => capability_option,
+          optional(:p24_payments) => capability_option,
+          optional(:paynow_payments) => capability_option,
+          optional(:promptpay_payments) => capability_option,
+          optional(:sepa_debit_payments) => capability_option,
+          optional(:sofort_payments) => capability_option,
+          optional(:tax_reporting_us_1099_k) => capability_option,
+          optional(:tax_reporting_us_1099_misc) => capability_option,
+          optional(:transfers) => capability_option,
+          optional(:us_bank_account_ach_payments) => capability_option
         }
 
   @type future_requirements :: %{
@@ -218,12 +250,12 @@ defmodule Stripe.Account do
                optional(:account_token) => String.t(),
                optional(:business_profile) => business_profile,
                optional(:business_type) => String.t(),
+               optional(:capabilities) => capabilities,
                optional(:company) => company,
                optional(:email) => String.t(),
                optional(:external_account) => String.t(),
                optional(:individual) => individual,
                optional(:metadata) => Stripe.Types.metadata(),
-               optional(:requested_capabilities) => capabilities,
                optional(:settings) => settings,
                optional(:tos_acceptance) => tos_acceptance
              }
@@ -272,13 +304,13 @@ defmodule Stripe.Account do
                optional(:account_token) => String.t(),
                optional(:business_profile) => business_profile,
                optional(:business_type) => String.t(),
+               optional(:capabilities) => capabilities,
                optional(:company) => company,
                optional(:default_currency) => String.t(),
                optional(:email) => String.t(),
                optional(:external_accounts) => String.t(),
                optional(:individual) => individual,
                optional(:metadata) => Stripe.Types.metadata(),
-               optional(:requested_capabilities) => capabilities,
                optional(:settings) => settings,
                optional(:tos_acceptance) => tos_acceptance
              }

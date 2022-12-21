@@ -16,6 +16,17 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested(:post, "/v1/accounts")
   end
 
+  test "is creatable with capabilities" do
+    assert {:ok, %Stripe.Account{}} =
+             Stripe.Account.create(%{
+               metadata: %{},
+               type: "standard",
+               capabilities: %{card_payments: %{requested: true}, transfers: %{requested: true}}
+             })
+
+    assert_stripe_requested(:post, "/v1/accounts")
+  end
+
   test "is updateable" do
     assert {:ok, %Stripe.Account{id: id}} =
              Stripe.Account.update("acct_123", %{metadata: %{foo: "bar"}})
