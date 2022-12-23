@@ -149,7 +149,7 @@ defmodule Stripe.Mixfile do
         Stripe.Plan,
         Stripe.Subscription,
         Stripe.SubscriptionItem,
-        Stripe.SubscriptionItem.Usage,
+        Stripe.UsageRecord,
         Stripe.SubscriptionSchedule,
         Stripe.TaxRate
       ],
