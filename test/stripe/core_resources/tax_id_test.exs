@@ -3,7 +3,7 @@ defmodule Stripe.TaxIdTest do
 
   test "is listable" do
     assert {:ok, %Stripe.List{data: charges}} =
-             Stripe.TaxId.list(%{customer: "cus_FDVoXj36NmFrao"})
+             Stripe.TaxId.list("cus_FDVoXj36NmFrao")
 
     assert_stripe_requested(:get, "/v1/customers/cus_FDVoXj36NmFrao/tax_ids")
     assert is_list(charges)
@@ -12,7 +12,7 @@ defmodule Stripe.TaxIdTest do
 
   test "is retrievable" do
     assert {:ok, %Stripe.TaxId{}} =
-             Stripe.TaxId.retrieve("txi_123456789", %{customer: "cus_FDVoXj36NmFrao"})
+             Stripe.TaxId.retrieve("cus_FDVoXj36NmFrao", "txi_123456789")
 
     assert_stripe_requested(:get, "/v1/customers/cus_FDVoXj36NmFrao/tax_ids/txi_123456789")
   end

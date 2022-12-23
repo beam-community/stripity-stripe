@@ -116,7 +116,6 @@ defmodule Stripe.OpenApi.Phases.Compile do
                       unquote_splicing(argument_names),
                       opts \\ []
                     ) do
-                  IO.inspect {"else", @operation.method}
                   path =
                     Stripe.OpenApi.Path.replace_path_params(
                       @operation.path,
