@@ -174,7 +174,7 @@ defmodule Stripe.Mixfile do
         Stripe.TransferReversal
       ],
       Fraud: [
-        Stripe.Fraud.EarlyFraudWarning,
+        Stripe.Radar.EarlyFraudWarning,
         Stripe.Review
       ],
       Identity: [
