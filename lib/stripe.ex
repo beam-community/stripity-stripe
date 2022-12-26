@@ -66,7 +66,7 @@ defmodule Stripe do
 
   use Stripe.OpenApi,
   path:
-    [:code.priv_dir(:stripe_elixir), "openapi", "spec3.sdk.json"]
+    [:code.priv_dir(:stripity_stripe), "openapi", "spec3.sdk.json"]
     |> Path.join(),
   base_url: "https://api.stripe.com"
 
