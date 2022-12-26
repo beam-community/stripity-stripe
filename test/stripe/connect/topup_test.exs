@@ -16,9 +16,7 @@ defmodule Stripe.TopupTest do
       params = %{
         amount: 100_000,
         currency: "usd",
-        source: %Stripe.Source{
-          id: "src_123"
-        }
+        source: "src_123",
       }
 
       assert {:ok, %Stripe.Topup{}} = Stripe.Topup.create(params)

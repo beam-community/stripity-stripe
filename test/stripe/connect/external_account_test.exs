@@ -4,49 +4,49 @@ defmodule Stripe.ExternalAccountTest do
   describe "create/2" do
     test "creates a bank account for an account" do
       {:ok, _} =
-        Stripe.ExternalAccount.create(%{account: "acct_123", token: "tok_stripetestbank"})
+        Stripe.ExternalAccount.create("acct_123", %{external_account: "tok_stripetestbank"})
 
       assert_stripe_requested(:post, "/v1/accounts/acct_123/external_accounts")
     end
 
     test "creates a card for an account" do
-      {:ok, _} = Stripe.ExternalAccount.create(%{account: "acct_123", token: "tok_amex"})
+      {:ok, _} = Stripe.ExternalAccount.create("acct_123", %{external_account: "tok_amex"})
       assert_stripe_requested(:post, "/v1/accounts/acct_123/external_accounts")
     end
   end
 
   describe "retrieve/2" do
     test "retrieves a bank account" do
-      {:ok, _} = Stripe.ExternalAccount.retrieve("ba_123", %{account: "acct_123"})
+      {:ok, _} = Stripe.ExternalAccount.retrieve("acct_123", "ba_123")
       assert_stripe_requested(:get, "/v1/accounts/acct_123/external_accounts/ba_123")
     end
 
     test "retrieves a card" do
-      {:ok, _} = Stripe.ExternalAccount.retrieve("card_123", %{account: "acct_123"})
+      {:ok, _} = Stripe.ExternalAccount.retrieve("acct_123", "card_123")
       assert_stripe_requested(:get, "/v1/accounts/acct_123/external_accounts/card_123")
     end
   end
 
   describe "update/2" do
     test "updates a bank account" do
-      {:ok, _} = Stripe.ExternalAccount.update("ba_123", %{account: "acct_123"})
+      {:ok, _} = Stripe.ExternalAccount.update("acct_123", "ba_123")
       assert_stripe_requested(:post, "/v1/accounts/acct_123/external_accounts/ba_123")
     end
 
     test "updates a card" do
-      {:ok, _} = Stripe.ExternalAccount.update("card_123", %{account: "acct_123"})
+      {:ok, _} = Stripe.ExternalAccount.update("acct_123", "card_123")
       assert_stripe_requested(:post, "/v1/accounts/acct_123/external_accounts/card_123")
     end
   end
 
   describe "delete/2" do
     test "deletes a bank account" do
-      {:ok, _} = Stripe.ExternalAccount.delete("ba_123", %{account: "acct_123"})
+      {:ok, _} = Stripe.ExternalAccount.delete("acct_123", "ba_123")
       assert_stripe_requested(:delete, "/v1/accounts/acct_123/external_accounts/ba_123")
     end
 
     test "deletes a card" do
-      {:ok, _} = Stripe.ExternalAccount.delete("card_123", %{account: "acct_123"})
+      {:ok, _} = Stripe.ExternalAccount.delete("acct_123", "card_123")
       assert_stripe_requested(:delete, "/v1/accounts/acct_123/external_accounts/card_123")
     end
   end
