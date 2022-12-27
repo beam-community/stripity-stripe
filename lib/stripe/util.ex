@@ -54,7 +54,7 @@ defmodule Stripe.Util do
   def object_name_to_module("billing_portal.session"), do: Stripe.BillingPortal.Session
   def object_name_to_module("checkout.session"), do: Stripe.Checkout.Session
   def object_name_to_module("radar.early_fraud_warning"), do: Stripe.Radar.EarlyFraudWarning
-  def object_name_to_module("file"), do: Stripe.FileUpload
+  def object_name_to_module("file"), do: Stripe.File
 
   def object_name_to_module("identity.verification_session"),
     do: Stripe.Identity.VerificationSession

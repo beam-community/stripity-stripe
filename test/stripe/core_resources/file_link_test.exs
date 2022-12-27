@@ -2,13 +2,13 @@ defmodule Stripe.FileLinkTest do
   use Stripe.StripeCase, async: true
 
   describe "create/2" do
-    test "creates a file with FileUpload ID" do
+    test "creates a file with File ID" do
       assert {:ok, %Stripe.FileLink{}} = Stripe.FileLink.create(%{file: "file_123"})
       assert_stripe_requested(:post, "/v1/file_links")
     end
 
-    test "creates a file with FileUpload struct" do
-      file_upload = %Stripe.FileUpload{id: "file_123"}
+    test "creates a file with File struct" do
+      file_upload = %Stripe.File{id: "file_123"}
 
       assert {:ok, %Stripe.FileLink{}} = Stripe.FileLink.create(%{file: file_upload})
       assert_stripe_requested(:post, "/v1/file_links")

@@ -105,28 +105,48 @@ defmodule Stripe.OpenApi.Phases.Compile do
                   |> Stripe.Request.make_request()
                 end
               else
-                @spec unquote(function_name)(
-                        unquote_splicing(argument_specs),
-                        opts :: Keyword.t()
-                      ) ::
-                        {:ok, unquote(success_response_spec)}
-                        | {:error, Stripe.ApiErrors.t()}
-                        | {:error, term()}
-                def unquote(function_name)(
-                      unquote_splicing(argument_names),
-                      opts \\ []
-                    ) do
-                  path =
-                    Stripe.OpenApi.Path.replace_path_params(
-                      @operation.path,
-                      @operation.path_parameters,
-                      unquote(argument_values)
-                    )
+                if @operation.path == "/v1/files" and @operation.method == :post do
+                  @spec unquote(function_name)(
+                          unquote_splicing(argument_specs),
+                          opts :: Keyword.t()
+                        ) ::
+                          {:ok, unquote(success_response_spec)}
+                          | {:error, Stripe.ApiErrors.t()}
+                          | {:error, term()}
+                  def unquote(function_name)(
+                    params \\ %{},
+                    opts \\ []
+                  ) do
+                    Stripe.Request.new_request(opts)
+                    |> Stripe.Request.put_endpoint(@operation.path)
+                    |> Stripe.Request.put_method(@operation.method)
+                    |> Stripe.Request.put_params(params)
+                    |> Stripe.Request.make_file_upload_request()
+                  end
+                else
+                  @spec unquote(function_name)(
+                          unquote_splicing(argument_specs),
+                          opts :: Keyword.t()
+                        ) ::
+                          {:ok, unquote(success_response_spec)}
+                          | {:error, Stripe.ApiErrors.t()}
+                          | {:error, term()}
+                  def unquote(function_name)(
+                        unquote_splicing(argument_names),
+                        opts \\ []
+                      ) do
+                    path =
+                      Stripe.OpenApi.Path.replace_path_params(
+                        @operation.path,
+                        @operation.path_parameters,
+                        unquote(argument_values)
+                      )
 
-                  Stripe.Request.new_request(opts)
-                  |> Stripe.Request.put_endpoint(path)
-                  |> Stripe.Request.put_method(@operation.method)
-                  |> Stripe.Request.make_request()
+                    Stripe.Request.new_request(opts)
+                    |> Stripe.Request.put_endpoint(path)
+                    |> Stripe.Request.put_method(@operation.method)
+                    |> Stripe.Request.make_request()
+                  end
                 end
               end
             end
