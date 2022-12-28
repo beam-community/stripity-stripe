@@ -188,13 +188,6 @@ defmodule Stripe.Mixfile do
         Stripe.Issuing.Transaction,
         Stripe.Issuing.Types
       ],
-      "Relay/Orders": [
-        Stripe.Order,
-        Stripe.OrderItem,
-        Stripe.OrderReturn,
-        Stripe.Relay.Product,
-        Stripe.Sku
-      ],
       Terminal: [
         Stripe.Terminal.ConnectionToken,
         Stripe.Terminal.Location,

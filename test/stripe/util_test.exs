@@ -21,7 +21,6 @@ defmodule Stripe.UtilTest do
       assert object_name_to_module("line_item") == Stripe.LineItem
       assert object_name_to_module("list") == Stripe.List
       assert object_name_to_module("order") == Stripe.Order
-      assert object_name_to_module("order_return") == Stripe.OrderReturn
       assert object_name_to_module("payment_intent") == Stripe.PaymentIntent
       assert object_name_to_module("payment_link") == Stripe.PaymentLink
       assert object_name_to_module("plan") == Stripe.Plan
@@ -31,7 +30,6 @@ defmodule Stripe.UtilTest do
       assert object_name_to_module("setup_intent") == Stripe.SetupIntent
       assert object_name_to_module("subscription") == Stripe.Subscription
       assert object_name_to_module("subscription_item") == Stripe.SubscriptionItem
-      assert object_name_to_module("sku") == Stripe.Sku
       assert object_name_to_module("topup") == Stripe.Topup
       assert object_name_to_module("transfer") == Stripe.Transfer
       assert object_name_to_module("transfer_reversal") == Stripe.TransferReversal

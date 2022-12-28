@@ -6,13 +6,6 @@ defmodule Stripe.FileLinkTest do
       assert {:ok, %Stripe.FileLink{}} = Stripe.FileLink.create(%{file: "file_123"})
       assert_stripe_requested(:post, "/v1/file_links")
     end
-
-    test "creates a file with File struct" do
-      file_upload = %Stripe.File{id: "file_123"}
-
-      assert {:ok, %Stripe.FileLink{}} = Stripe.FileLink.create(%{file: file_upload})
-      assert_stripe_requested(:post, "/v1/file_links")
-    end
   end
 
   describe "retrieve/2" do
