@@ -20,7 +20,7 @@ defmodule Stripe.StripeCase do
   end
 
   def get_stripe_request_headers() do
-    assert_received({method, url, headers, body, _})
+    assert_received({_method, _url, headers, _body, _})
 
     Enum.into(headers, %{})
   end
@@ -51,11 +51,11 @@ defmodule Stripe.StripeCase do
     assert body == Stripe.URI.encode_query(expected_body)
   end
 
-  defp build_url("/v1/" <> path, nil) do
+  defp build_url(path, nil) do
     stripe_base_url() <> path
   end
 
-  defp build_url("/v1/" <> path, query_params) do
+  defp build_url(path, query_params) do
     stripe_base_url() <> path <> "?" <> URI.encode_query(query_params)
   end
 

@@ -15,13 +15,12 @@ defmodule Stripe.UtilTest do
       assert object_name_to_module("dispute") == Stripe.Dispute
       assert object_name_to_module("event") == Stripe.Event
       assert object_name_to_module("external_account") == Stripe.ExternalAccount
-      assert object_name_to_module("file") == Stripe.FileUpload
+      assert object_name_to_module("file") == Stripe.File
       assert object_name_to_module("invoice") == Stripe.Invoice
       assert object_name_to_module("invoiceitem") == Stripe.Invoiceitem
       assert object_name_to_module("line_item") == Stripe.LineItem
       assert object_name_to_module("list") == Stripe.List
       assert object_name_to_module("order") == Stripe.Order
-      assert object_name_to_module("order_return") == Stripe.OrderReturn
       assert object_name_to_module("payment_intent") == Stripe.PaymentIntent
       assert object_name_to_module("payment_link") == Stripe.PaymentLink
       assert object_name_to_module("plan") == Stripe.Plan
@@ -31,7 +30,6 @@ defmodule Stripe.UtilTest do
       assert object_name_to_module("setup_intent") == Stripe.SetupIntent
       assert object_name_to_module("subscription") == Stripe.Subscription
       assert object_name_to_module("subscription_item") == Stripe.SubscriptionItem
-      assert object_name_to_module("sku") == Stripe.Sku
       assert object_name_to_module("topup") == Stripe.Topup
       assert object_name_to_module("transfer") == Stripe.Transfer
       assert object_name_to_module("transfer_reversal") == Stripe.TransferReversal

@@ -1,4 +1,4 @@
-defmodule Stripe.SubscriptionItem.UsageTest do
+defmodule Stripe.UsageRecordTest do
   use Stripe.StripeCase, async: true
 
   describe "create/2" do
@@ -10,7 +10,7 @@ defmodule Stripe.SubscriptionItem.UsageTest do
         timestamp: 1_543_335_582
       }
 
-      assert {:ok, record} = Stripe.SubscriptionItem.Usage.create(item_id, params)
+      assert {:ok, record} = Stripe.UsageRecord.create(item_id, params)
       assert %{subscription_item: _sub_id} = record
       assert_stripe_requested(:post, "/v1/subscription_items/#{item_id}/usage_records")
     end
@@ -25,7 +25,7 @@ defmodule Stripe.SubscriptionItem.UsageTest do
         timestamp: 1_543_335_582
       }
 
-      assert {:ok, record} = Stripe.SubscriptionItem.Usage.create(Map.get(item, :id), params)
+      assert {:ok, record} = Stripe.UsageRecord.create(Map.get(item, :id), params)
       assert %{subscription_item: _sub_id} = record
       assert_stripe_requested(:post, "/v1/subscription_items/#{item.id}/usage_records")
     end
@@ -35,7 +35,7 @@ defmodule Stripe.SubscriptionItem.UsageTest do
     test "list usage records for subscription items" do
       item_id = "si_123"
 
-      assert {:ok, %Stripe.List{data: usages}} = Stripe.SubscriptionItem.Usage.list(item_id)
+      assert {:ok, %Stripe.List{data: usages}} = Stripe.UsageRecordSummary.list(item_id)
       assert_stripe_requested(:get, "/v1/subscription_items/#{item_id}/usage_record_summaries")
       assert is_list(usages)
       assert %{subscription_item: _sub_item_id} = hd(usages)
@@ -51,7 +51,7 @@ defmodule Stripe.SubscriptionItem.UsageTest do
       }
 
       assert {:ok, %Stripe.List{data: usages}} =
-               Stripe.SubscriptionItem.Usage.list(item_id, params)
+               Stripe.UsageRecordSummary.list(item_id, params)
 
       assert_stripe_requested(
         :get,

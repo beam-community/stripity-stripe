@@ -179,7 +179,6 @@ defmodule Stripe.ConverterTest do
           created: 1_656_364_912,
           currency: "usd",
           default_source: nil,
-          deleted: nil,
           delinquent: false,
           description: nil,
           discount: nil,
@@ -197,7 +196,6 @@ defmodule Stripe.ConverterTest do
           name: "fakename",
           next_invoice_sequence: 1,
           object: "customer",
-          payment_method: nil,
           phone: nil,
           preferred_locales: [],
           shipping: nil,
@@ -256,81 +254,6 @@ defmodule Stripe.ConverterTest do
     assert result == expected_result
   end
 
-  test "converts a discount response properly" do
-    expected_result = %Stripe.Discount{
-      coupon: %Stripe.Coupon{
-        amount_off: nil,
-        created: 1_532_358_691,
-        currency: nil,
-        duration: "repeating",
-        duration_in_months: 24,
-        id: "student-discount",
-        livemode: false,
-        max_redemptions: nil,
-        metadata: %{},
-        object: "coupon",
-        percent_off: 50.5,
-        redeem_by: nil,
-        times_redeemed: 3,
-        valid: true
-      },
-      customer: "cus_DCUJlLSyrGaqab",
-      end: 1_595_517_288,
-      object: "discount",
-      start: 1_532_358_888,
-      subscription: "sub_DG9Uq9WOevR9Uo",
-      promotion_code: "promo_1HuRNuKKEsQW5O8UAfIZ33ox"
-    }
-
-    fixture = Helper.load_fixture("discount.json")
-    result = Converter.convert_result(fixture)
-
-    assert result == expected_result
-  end
-
-  test "converts a recipient response properly" do
-    expected_result = %Stripe.Recipient{
-      id: "rp_19p5Zf2eZvKYlo2CipXKLoSU",
-      object: "recipient",
-      active_account: %Stripe.BankAccount{
-        id: "ba_19p5Ze2eZvKYlo2C1fs6Ar4u",
-        object: "bank_account",
-        account_holder_name: nil,
-        account_holder_type: nil,
-        bank_name: "STRIPE TEST BANK",
-        country: "US",
-        currency: "usd",
-        customer: nil,
-        fingerprint: "1JWtPxqbdX5Gamtc",
-        last4: "6789",
-        metadata: %{},
-        routing_number: "110000000",
-        status: "new"
-      },
-      cards: %Stripe.List{
-        object: "list",
-        data: [],
-        has_more: false,
-        total_count: 0,
-        url: "/v1/recipients/rp_19p5Zf2eZvKYlo2CipXKLoSU/cards"
-      },
-      created: 1_487_552_563,
-      default_card: nil,
-      description: nil,
-      email: nil,
-      livemode: false,
-      metadata: %{},
-      migrated_to: "acct_1AIQkLDw6ebINMj3",
-      name: "John Doe",
-      type: "individual"
-    }
-
-    fixture = Helper.load_fixture("recipient.json")
-    result = Converter.convert_result(fixture)
-
-    assert result == expected_result
-  end
-
   test "converts a deleted response properly" do
     expected_result = %{
       deleted: true,
@@ -344,7 +267,7 @@ defmodule Stripe.ConverterTest do
   end
 
   test "converts a checkout.session response properly" do
-    expected_result = %Stripe.Session{
+    expected_result = %Stripe.Checkout.Session{
       id: "CdWP8EBmSp1tJNIw4ZLF6w3XKd8MNKkEvlnSK7QmwFlDZ8rrjqBn9VI9vKiVdhfE",
       livemode: false,
       object: "checkout.session"

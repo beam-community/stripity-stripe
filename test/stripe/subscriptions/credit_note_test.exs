@@ -47,12 +47,12 @@ defmodule Stripe.CreditNoteTest do
     end
   end
 
-  describe "void/2" do
+  describe "void_credit_note/2" do
     test "voids a CreditNote" do
       {:ok, credit_note} = Stripe.CreditNote.retrieve("cn_1EXwJk4Wq104wst7IISdh9ed")
       assert_stripe_requested(:get, "/v1/credit_notes/#{credit_note.id}")
 
-      assert {:ok, %Stripe.CreditNote{}} = Stripe.CreditNote.void(credit_note)
+      assert {:ok, %Stripe.CreditNote{}} = Stripe.CreditNote.void_credit_note(credit_note.id)
       assert_stripe_requested(:post, "/v1/credit_notes/#{credit_note.id}/void")
     end
   end

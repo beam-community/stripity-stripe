@@ -6,10 +6,11 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested(:get, "/v1/account")
   end
 
-  test "is retrievable using plural endpoint" do
-    assert {:ok, %Stripe.Account{}} = Stripe.Account.retrieve("acct_123")
-    assert_stripe_requested(:get, "/v1/accounts/acct_123")
-  end
+  # ellided by build_modules.ex > Enum.uniq_by(& &1["method_name"])
+  # test "is retrievable using plural endpoint" do
+  #   assert {:ok, %Stripe.Account{}} = Stripe.Account.retrieve("acct_123")
+  #   assert_stripe_requested(:get, "/v1/accounts/acct_123")
+  # end
 
   test "is creatable" do
     assert {:ok, %Stripe.Account{}} = Stripe.Account.create(%{metadata: %{}, type: "standard"})
@@ -41,15 +42,10 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested(:post, "/v1/accounts")
 
     assert {:ok, %Stripe.Account{} = rejected_account} =
-             Stripe.Account.reject(account, "terms_of_service")
+             Stripe.Account.reject(account.id, %{reason: "terms_of_service"})
 
     assert_stripe_requested(:post, "/v1/accounts/#{account.id}/reject")
     assert account.id == rejected_account.id
     refute rejected_account.charges_enabled
-  end
-
-  test "can create a login link" do
-    assert {:ok, _login_link} = Stripe.Account.create_login_link("acct_123", %{})
-    assert_stripe_requested(:post, "/v1/accounts/acct_123/login_links")
   end
 end

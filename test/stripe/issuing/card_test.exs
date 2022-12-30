@@ -24,24 +24,6 @@ defmodule Stripe.Issuing.CardTest do
 
       assert_stripe_requested(:post, "/v1/issuing/cards")
     end
-
-    test "is create with cardholder struct" do
-      cardholder = %Stripe.Issuing.Cardholder{
-        id: "ich_123",
-        object: "issuing.cardholder",
-        type: "individual"
-      }
-
-      params = %{
-        currency: "usd",
-        type: :virtual,
-        cardholder: cardholder
-      }
-
-      assert {:ok, %Stripe.Issuing.Card{}} = Stripe.Issuing.Card.create(params)
-
-      assert_stripe_requested(:post, "/v1/issuing/cards")
-    end
   end
 
   test "is retrievable" do

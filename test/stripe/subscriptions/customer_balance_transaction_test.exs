@@ -15,21 +15,6 @@ defmodule Stripe.CustomerBalanceTransactionTest do
 
       assert_stripe_requested(:post, "/v1/customers/#{customer_id}/balance_transactions")
     end
-
-    test "with a Customer struct" do
-      customer_id = "cust_123"
-      customer = %Stripe.Customer{id: customer_id}
-
-      params = %{
-        amount: 500,
-        currency: "usd"
-      }
-
-      assert {:ok, %Stripe.CustomerBalanceTransaction{}} =
-               Stripe.CustomerBalanceTransaction.create(customer, params)
-
-      assert_stripe_requested(:post, "/v1/customers/#{customer_id}/balance_transactions")
-    end
   end
 
   describe "retrieve/3" do

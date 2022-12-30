@@ -233,7 +233,7 @@ need to set the `api_base_url` field in your config:
 ```
 config :stripity_stripe,
   api_key: "sk_test_thisisaboguskey",
-  api_base_url: "http://localhost:12111/v1/"
+  api_base_url: "http://localhost:12111"
 ```
 
 # Documentation for 1.x.x

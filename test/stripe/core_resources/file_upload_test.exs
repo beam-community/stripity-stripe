@@ -1,11 +1,11 @@
-defmodule Stripe.FileUploadTest do
+defmodule Stripe.FileTest do
   use Stripe.StripeCase, async: true
 
+  @tag :skip
   describe "create/2" do
-    @tag :skip
     test "creates a file" do
-      assert {:ok, %Stripe.FileUpload{}} =
-               Stripe.FileUpload.create(%{
+      assert {:ok, %Stripe.File{}} =
+               Stripe.File.create(%{
                  file: "@/path/to/a/file.jpg",
                  purpose: "dispute_evidence"
                })
@@ -16,14 +16,14 @@ defmodule Stripe.FileUploadTest do
 
   describe "retrieve/2" do
     test "retrieves an file" do
-      assert {:ok, _} = Stripe.FileUpload.retrieve("file_19yVPO2eZvKYlo2CIrGjfyCO")
+      assert {:ok, _} = Stripe.File.retrieve("file_19yVPO2eZvKYlo2CIrGjfyCO")
       assert_stripe_requested(:get, "/v1/files/file_19yVPO2eZvKYlo2CIrGjfyCO")
     end
   end
 
   describe "list/2" do
     test "lists all files" do
-      assert {:ok, _} = Stripe.FileUpload.list()
+      assert {:ok, _} = Stripe.File.list()
       assert_stripe_requested(:get, "/v1/files")
     end
   end

@@ -43,7 +43,7 @@ defmodule Stripe.Mixfile do
 
   defp env do
     [
-      api_base_url: "https://api.stripe.com/v1/",
+      api_base_url: "https://api.stripe.com",
       api_upload_url: "https://files.stripe.com/v1/",
       pool_options: [
         timeout: 5_000,
@@ -95,8 +95,7 @@ defmodule Stripe.Mixfile do
       files: ["lib", "LICENSE*", "mix.exs", "README*", "CHANGELOG*"],
       licenses: ["BSD-3-Clause"],
       maintainers: [
-        "Dan Matthews",
-        "Josh Smith",
+        "Maarten van Vliet",
         "Nikola Begedin",
         "Scott Newcomer"
       ],
@@ -124,7 +123,7 @@ defmodule Stripe.Mixfile do
         Stripe.Product,
         Stripe.Refund,
         Stripe.SetupIntent,
-        Stripe.TaxID,
+        Stripe.TaxId,
         Stripe.Token
       ],
       "Payment Methods": [
@@ -134,7 +133,7 @@ defmodule Stripe.Mixfile do
         Stripe.Source
       ],
       Checkout: [
-        Stripe.Session
+        Stripe.Checkout.Session
       ],
       Billing: [
         Stripe.Coupon,
@@ -149,7 +148,7 @@ defmodule Stripe.Mixfile do
         Stripe.Plan,
         Stripe.Subscription,
         Stripe.SubscriptionItem,
-        Stripe.SubscriptionItem.Usage,
+        Stripe.UsageRecord,
         Stripe.SubscriptionSchedule,
         Stripe.TaxRate
       ],
@@ -174,7 +173,7 @@ defmodule Stripe.Mixfile do
         Stripe.TransferReversal
       ],
       Fraud: [
-        Stripe.Fraud.EarlyFraudWarning,
+        Stripe.Radar.EarlyFraudWarning,
         Stripe.Review
       ],
       Identity: [
@@ -187,13 +186,6 @@ defmodule Stripe.Mixfile do
         Stripe.Issuing.Cardholder,
         Stripe.Issuing.Transaction,
         Stripe.Issuing.Types
-      ],
-      "Relay/Orders": [
-        Stripe.Order,
-        Stripe.OrderItem,
-        Stripe.OrderReturn,
-        Stripe.Relay.Product,
-        Stripe.Sku
       ],
       Terminal: [
         Stripe.Terminal.ConnectionToken,

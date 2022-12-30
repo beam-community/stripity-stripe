@@ -52,9 +52,9 @@ defmodule Stripe.Util do
 
   @spec object_name_to_module(String.t()) :: module
   def object_name_to_module("billing_portal.session"), do: Stripe.BillingPortal.Session
-  def object_name_to_module("checkout.session"), do: Stripe.Session
-  def object_name_to_module("radar.early_fraud_warning"), do: Stripe.Fraud.EarlyFraudWarning
-  def object_name_to_module("file"), do: Stripe.FileUpload
+  def object_name_to_module("checkout.session"), do: Stripe.Checkout.Session
+  def object_name_to_module("radar.early_fraud_warning"), do: Stripe.Radar.EarlyFraudWarning
+  def object_name_to_module("file"), do: Stripe.File
 
   def object_name_to_module("identity.verification_session"),
     do: Stripe.Identity.VerificationSession
@@ -72,15 +72,15 @@ defmodule Stripe.Util do
   def object_name_to_module("issuing.card"), do: Stripe.Issuing.Card
   def object_name_to_module("issuing.cardholder"), do: Stripe.Issuing.Cardholder
   def object_name_to_module("issuing.transaction"), do: Stripe.Issuing.Transaction
-  def object_name_to_module("tax_id"), do: Stripe.TaxID
-  def object_name_to_module("usage_record"), do: Stripe.SubscriptionItem.Usage
+  def object_name_to_module("tax_id"), do: Stripe.TaxId
+  def object_name_to_module("usage_record"), do: Stripe.UsageRecord
   def object_name_to_module("terminal.connection_token"), do: Stripe.Terminal.ConnectionToken
   def object_name_to_module("terminal.location"), do: Stripe.Terminal.Location
   def object_name_to_module("terminal.reader"), do: Stripe.Terminal.Reader
   def object_name_to_module("test_helpers.test_clock"), do: Stripe.TestClock
 
   def object_name_to_module("usage_record_summary"),
-    do: Stripe.SubscriptionItem.UsageRecordSummary
+    do: Stripe.UsageRecordSummary
 
   def object_name_to_module(object_name) do
     module_name =
