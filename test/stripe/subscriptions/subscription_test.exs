@@ -24,7 +24,7 @@ defmodule Stripe.SubscriptionTest do
       assert {:ok, %Stripe.Subscription{}} =
                Stripe.Subscription.create(params, connect_account: "acct_123")
 
-      assert_stripe_requested(:post, "/v1/subscriptions")
+      assert_stripe_requested(:post, "/v1/subscriptions", [headers: [{"Stripe-Account", "acct_123"}]])
     end
 
     test "fails with source param [since 2018-08-23]" do

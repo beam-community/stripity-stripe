@@ -20,7 +20,7 @@ defmodule Stripe.StripeCase do
   end
 
   def get_stripe_request_headers() do
-    assert_received({method, url, headers, body, _})
+    assert_received({_method, _url, headers, _body, _})
 
     Enum.into(headers, %{})
   end

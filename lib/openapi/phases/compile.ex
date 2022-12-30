@@ -119,8 +119,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
                   ) do
                     Stripe.Request.new_request(opts)
                     |> Stripe.Request.put_endpoint(@operation.path)
-                    |> Stripe.Request.put_method(@operation.method)
                     |> Stripe.Request.put_params(params)
+                    |> Stripe.Request.put_method(@operation.method)
                     |> Stripe.Request.make_file_upload_request()
                   end
                 else
