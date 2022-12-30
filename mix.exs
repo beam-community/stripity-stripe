@@ -95,8 +95,7 @@ defmodule Stripe.Mixfile do
       files: ["lib", "LICENSE*", "mix.exs", "README*", "CHANGELOG*"],
       licenses: ["BSD-3-Clause"],
       maintainers: [
-        "Dan Matthews",
-        "Josh Smith",
+        "Maarten van Vliet",
         "Nikola Begedin",
         "Scott Newcomer"
       ],
