@@ -11,19 +11,22 @@ jobs:
   test:
     env:
       MIX_ENV: test
-      STRIPE_MOCK_VERSION: 0.123.0
+      STRIPE_MOCK_VERSION: 0.144.0
       STRIPE_SECRET_KEY: non_empty_string
       SKIP_STRIPE_MOCK_RUN: true
     runs-on: ubuntu-20.04
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
        matrix:
-         elixir: ['1.12']
+         elixir: ['1.12', '1.13', '1.14']
          # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
-         otp: [24]
+         otp: [22, 23, 24]
+         exclude:
+           - elixir: '1.14'
+             otp: 22
     services:
        stripe-mock:
-         image: stripe/stripe-mock:v0.123.0
+         image: stripe/stripe-mock:v0.144.0
          ports:
            - 12111:12111
            - 12112:12112
@@ -45,14 +48,12 @@ jobs:
     name: Linting
     strategy:
       matrix:
-        elixir: ['1.14', '1.13', '1.12', '1.11']
+        elixir: ['1.14', '1.13', '1.12']
         # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
         otp: [24, 23, 22]
         exclude:
           - elixir: '1.14'
             otp: 22
-          - elixir: '1.11'
-            otp: 24
     steps:
       - uses: actions/checkout@v2
       - uses: erlef/setup-beam@v1
