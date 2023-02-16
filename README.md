@@ -213,7 +213,7 @@ have more details, but if you have docker installed already you can quickly
 and easily start an instance to test against:
 
 ```sh
-docker run --rm -it -p 12111-12112:12111-12112 stripemock/stripe-mock:latest
+docker run --rm -it -p 12111-12112:12111-12112 stripe/stripe-mock:latest
 ```
 
 ## Running the tests
