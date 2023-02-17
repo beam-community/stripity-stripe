@@ -7,6 +7,10 @@ defmodule Stripe.APITest do
       Stripe.API.request(%{}, :get, "/", %{}, [])
   end
 
+  test "request_id is a string" do
+    {:error, %Stripe.Error{request_id: "req_123"}} = Stripe.API.request(%{}, :get, "/", %{}, [])
+  end
+
   test "oauth_request works" do
     verify_on_exit!()
 
