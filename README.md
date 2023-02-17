@@ -6,7 +6,7 @@ An Elixir library for working with [Stripe](https://stripe.com/).
 
 ## 2.x.x status
 
-[![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe) [![Inline docs](http://inch-ci.org/github/beam-community/stripe-elixir.svg?branch=master)](http://inch-ci.org/github/beam-community/stripe-elixir?branch=master) [![Coverage Status](https://coveralls.io/repos/github/beam-community/stripe-elixir/badge.svg?branch=master)](https://coveralls.io/github/beam-community/stripe-elixir?branch=master)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe) [![Inline docs](http://inch-ci.org/github/beam-community/stripity_stripe.svg?branch=master)](http://inch-ci.org/github/beam-community/stripity_stripe?branch=master) [![Coverage Status](https://coveralls.io/repos/github/beam-community/stripity_stripe/badge.svg?branch=master)](https://coveralls.io/github/beam-community/stripity_stripe?branch=master)
 
 # Which version should I use?
 
@@ -38,7 +38,7 @@ Install the dependency by version:
 Or by commit reference:
 
 ```elixir
-{:stripity_stripe, git: "https://github.com/code-corps/stripity_stripe", ref: "8c091d4278d29a917bacef7bb2f0606317fcc025"}
+{:stripity_stripe, git: "https://github.com/beam-community/stripity_stripe", ref: "017d7ecdb5aeadccc03986c02396791079178ba2"}
 ```
 
 Next, add to your applications:
@@ -409,7 +409,3 @@ Why another Stripe Library? Currently there are a number of them in the Elixir w
 - function calls that returned a standard `{:ok, result}` or `{:error, message}` response
 
 As I began digging things up with these other libraries it became rather apparent that I was not only tweaking the API, but also ripping out a lot of the existing code... and that usually means I should probably do my own thing. So I did.
-
-## Update
-
-As of October 18th, Rob has graciously handed over the reins to the teams at [Code Corps](https://www.codecorps.org/) and [Strumber](https://strumber.com/). To address the concerns Rob mentioned above and update the high level api to work with all of the Stripe API Endpoints, they have since worked to release stripity_stripe 2.0, which is now the actively developed line of releases.
