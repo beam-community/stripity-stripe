@@ -453,7 +453,11 @@ defmodule Stripe.API do
   end
 
   defp handle_response({:ok, status, headers, body}) when status >= 300 and status <= 599 do
-    request_id = headers |> List.keyfind("Request-Id", 0)
+    request_id =
+      Enum.find_value(headers, fn
+        {"Request-Id", request_id} -> request_id
+        _header -> nil
+      end)
 
     error =
       case json_library().decode(body) do
