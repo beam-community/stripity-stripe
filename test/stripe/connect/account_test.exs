@@ -6,11 +6,10 @@ defmodule Stripe.AccountTest do
     assert_stripe_requested(:get, "/v1/account")
   end
 
-  # ellided by build_modules.ex > Enum.uniq_by(& &1["method_name"])
-  # test "is retrievable using plural endpoint" do
-  #   assert {:ok, %Stripe.Account{}} = Stripe.Account.retrieve("acct_123")
-  #   assert_stripe_requested(:get, "/v1/accounts/acct_123")
-  # end
+  test "is retrievable using plural endpoint" do
+    assert {:ok, %Stripe.Account{}} = Stripe.Account.retrieve_by_id("acct_123")
+    assert_stripe_requested(:get, "/v1/accounts/acct_123")
+  end
 
   test "is creatable" do
     assert {:ok, %Stripe.Account{}} = Stripe.Account.create(%{metadata: %{}, type: "standard"})
