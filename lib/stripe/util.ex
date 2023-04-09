@@ -51,6 +51,7 @@ defmodule Stripe.Util do
   def atomize_key(k), do: k
 
   @spec object_name_to_module(String.t()) :: module
+  def object_name_to_module("billing_portal.configuration"), do: Stripe.BillingPortal.Configuration
   def object_name_to_module("billing_portal.session"), do: Stripe.BillingPortal.Session
   def object_name_to_module("checkout.session"), do: Stripe.Checkout.Session
   def object_name_to_module("radar.early_fraud_warning"), do: Stripe.Radar.EarlyFraudWarning
