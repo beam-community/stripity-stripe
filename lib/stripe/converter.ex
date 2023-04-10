@@ -116,6 +116,6 @@ defmodule Stripe.Converter do
   end
 
   defp known_struct?(struct) do
-    function_exported?(struct, :__struct__, 0)
+    Code.ensure_loaded?(struct) && function_exported?(struct, :__struct__, 0)
   end
 end
