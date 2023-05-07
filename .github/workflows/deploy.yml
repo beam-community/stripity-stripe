@@ -1,0 +1,20 @@
+name: Publish to Hex.pm
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  Publish:
+    runs-on: ubuntu-latest
+    env:
+      HEX_API_KEY: ${{ secrets.HEXPM_SECRET }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: 25
+          elixir-version: 1.14
+      - run: mix deps.get
+      - run: mix compile --docs
+      - run: mix hex.publish --yes
