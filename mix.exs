@@ -82,7 +82,7 @@ defmodule Stripe.Mixfile do
       ],
       main: "readme",
       source_url: @source_url,
-      source_ref: "main",
+      source_ref: "v#{@version}",
       formatters: ["html"],
       groups_for_modules: groups_for_modules(),
       nest_modules_by_prefix: nest_modules_by_prefix()
