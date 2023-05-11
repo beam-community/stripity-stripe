@@ -262,6 +262,7 @@ defmodule Stripe.Session do
           optional(:expires_at) => Stripe.timestamp(),
           optional(:payment_intent_data) => payment_intent_data,
           optional(:payment_method_options) => payment_method_options(),
+          optional(:phone_number_collection) => phone_number_collection(),
           optional(:setup_intent_data) => setup_intent_data(),
           optional(:billing_address_collection) => billing_address_collection(),
           optional(:shipping_address_collection) => shipping_address_collection(),
