@@ -77,6 +77,9 @@ jobs:
           mix deps.get
       - name: Test generated code
         run: |
+          mix stripe.generate
+      - name: Test generated code
+        run: |
           mix test
       - name: Generate docs
         run: |
@@ -89,6 +92,7 @@ jobs:
           git config --local user.email "noreply@github.com"
           git config --local user.name "github-actions[bot]"
           git add priv/openapi
+          git add lib/generated
           git add .latest-tag-stripe-openapi-sdk
           echo "Update services based on ${{ env.LATEST_STRIPE_SDK_TAG }} of Stripe OpenApi SDK" >> commit-msg
           echo >> commit-msg

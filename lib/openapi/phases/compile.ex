@@ -68,16 +68,9 @@ defmodule Stripe.OpenApi.Phases.Compile do
 
           object_types = MapSet.to_list(object_types)
 
-          ast =
-            quote do
-              if unquote(operation_definition.deprecated) do
-                @deprecated "Stripe has deprecated this operation"
-              end
-
-              @operation unquote(Macro.escape(operation_definition))
-              @doc unquote(operation_definition.description)
-
-              if unquote(params?) do
+          function_code =
+            if params? do
+              quote do
                 @spec unquote(function_name)(
                         unquote_splicing(argument_specs),
                         params :: unquote(to_inline_spec(param_specs)),
@@ -93,19 +86,21 @@ defmodule Stripe.OpenApi.Phases.Compile do
                     ) do
                   path =
                     Stripe.OpenApi.Path.replace_path_params(
-                      @operation.path,
-                      @operation.path_parameters,
+                      unquote(operation_definition.path),
+                      unquote(operation_definition.path_parameters),
                       unquote(argument_names)
                     )
 
                   Stripe.Request.new_request(opts)
                   |> Stripe.Request.put_endpoint(path)
                   |> Stripe.Request.put_params(params)
-                  |> Stripe.Request.put_method(@operation.method)
+                  |> Stripe.Request.put_method(unquote(operation_definition.method))
                   |> Stripe.Request.make_request()
                 end
-              else
-                if @operation.path == "/v1/files" and @operation.method == :post do
+              end
+            else
+              if operation_definition.path == "/v1/files" and operation_definition.method == :post do
+                quote do
                   @spec unquote(function_name)(
                           unquote_splicing(argument_specs),
                           opts :: Keyword.t()
@@ -114,16 +109,18 @@ defmodule Stripe.OpenApi.Phases.Compile do
                           | {:error, Stripe.ApiErrors.t()}
                           | {:error, term()}
                   def unquote(function_name)(
-                    params \\ %{},
-                    opts \\ []
-                  ) do
+                        params \\ %{},
+                        opts \\ []
+                      ) do
                     Stripe.Request.new_request(opts)
-                    |> Stripe.Request.put_endpoint(@operation.path)
+                    |> Stripe.Request.put_endpoint(unquote(operation_definition.path))
                     |> Stripe.Request.put_params(params)
-                    |> Stripe.Request.put_method(@operation.method)
+                    |> Stripe.Request.put_method(unquote(operation_definition.method))
                     |> Stripe.Request.make_file_upload_request()
                   end
-                else
+                end
+              else
+                quote do
                   @spec unquote(function_name)(
                           unquote_splicing(argument_specs),
                           opts :: Keyword.t()
@@ -137,18 +134,37 @@ defmodule Stripe.OpenApi.Phases.Compile do
                       ) do
                     path =
                       Stripe.OpenApi.Path.replace_path_params(
-                        @operation.path,
-                        @operation.path_parameters,
+                        unquote(operation_definition.path),
+                        unquote(operation_definition.path_parameters),
                         unquote(argument_values)
                       )
 
                     Stripe.Request.new_request(opts)
                     |> Stripe.Request.put_endpoint(path)
-                    |> Stripe.Request.put_method(@operation.method)
+                    |> Stripe.Request.put_method(unquote(operation_definition.method))
                     |> Stripe.Request.make_request()
                   end
                 end
               end
+            end
+
+          deprecated =
+            if operation_definition.deprecated do
+              quote do
+                @deprecated "Stripe has deprecated this operation"
+              end
+            else
+              quote do
+              end
+            end
+
+          ast =
+            quote do
+              unquote(deprecated)
+
+              @doc unquote(operation_definition.description)
+
+              unquote(function_code)
             end
 
           {ast, object_types}
@@ -161,15 +177,18 @@ defmodule Stripe.OpenApi.Phases.Compile do
       types =
         List.flatten(types)
         |> Enum.uniq_by(fn {_, meta, _} -> meta[:name] end)
+        |> Enum.sort()
         |> Enum.map(&to_type_spec/1)
+
 
       specs =
         Enum.map(component.properties, fn {key, value} ->
           {String.to_atom(key), build_spec(value, modules)}
         end)
+        |> Enum.sort
 
       typedoc_fields =
-        component.properties |> Enum.map_join("\n", fn {key, value} -> typedoc(key, value) end)
+        component.properties |> Enum.sort |> Enum.map_join("\n", fn {key, value} -> typedoc(key, value) end)
 
       typedoc = """
       The `#{component.name}` type.
@@ -177,12 +196,9 @@ defmodule Stripe.OpenApi.Phases.Compile do
       #{typedoc_fields}
       """
 
-      body =
-        quote do
-          use Stripe.Entity
-
-          @moduledoc unquote(component.description)
-          if unquote(fields) != nil do
+      type_doc =
+        if fields != nil do
+          quote do
             defstruct unquote(fields)
 
             @typedoc unquote(typedoc)
@@ -190,13 +206,40 @@ defmodule Stripe.OpenApi.Phases.Compile do
                     unquote_splicing(specs)
                   }
           end
+        else
+          quote do
+          end
+        end
+
+      body =
+        quote do
+          use Stripe.Entity
+
+          @moduledoc unquote(component.description)
+          unquote(type_doc)
 
           unquote_splicing(types)
 
-          (unquote_splicing(funcs))
+          unquote_splicing(funcs)
         end
 
-      Module.create(component.module, body, Macro.Env.location(__ENV__))
+      # Module.create(component.module, body, Macro.Env.location(__ENV__))
+      code =
+        quote do
+          defmodule unquote(component.module) do
+            unquote(body)
+          end
+        end
+
+      bin =
+        code
+        |> Macro.to_string()
+        |> Code.format_string!()
+
+      [_ | names] = Module.split(component.module)
+      filename = names |> Enum.map_join("__", & Macro.underscore/1)
+
+      File.write!("lib/generated/#{filename}.ex", bin)
     end
 
     {:ok, blueprint}

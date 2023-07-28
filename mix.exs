@@ -107,6 +107,15 @@ defmodule Stripe.Mixfile do
 
   defp groups_for_modules do
     [
+      "Main": [
+        Stripe,
+        Stripe.API,
+        Stripe.ApiErrors,
+        Stripe.Entity,
+        Stripe.List,
+        Stripe.Request,
+        Stripe.SearchResult
+      ],
       "Core Resources": [
         Stripe.Balance,
         Stripe.BalanceTransaction,
@@ -196,6 +205,9 @@ defmodule Stripe.Mixfile do
         Stripe.Config,
         Stripe.Converter,
         Stripe.Types
+      ],
+      Other: [
+        ~r/.*/
       ]
     ]
   end
