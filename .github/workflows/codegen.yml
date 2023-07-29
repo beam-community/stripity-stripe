@@ -84,6 +84,8 @@ jobs:
       - name: Generate docs
         run: |
           mix docs
+      - name: Run formatter
+        run: mix format
       - name: Update latest tag file
         run: |
           echo "${LATEST_STRIPE_SDK_TAG}" > .latest-tag-stripe-openapi-sdk

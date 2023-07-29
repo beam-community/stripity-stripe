@@ -50,8 +50,7 @@ defmodule Stripe.UsageRecordTest do
         limit: 10
       }
 
-      assert {:ok, %Stripe.List{data: usages}} =
-               Stripe.UsageRecordSummary.list(item_id, params)
+      assert {:ok, %Stripe.List{data: usages}} = Stripe.UsageRecordSummary.list(item_id, params)
 
       assert_stripe_requested(
         :get,

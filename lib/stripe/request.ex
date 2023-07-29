@@ -93,6 +93,7 @@ defmodule Stripe.Request do
   def put_params(%Request{params: params} = request, new_params) when is_list(new_params) do
     %{request | params: Map.merge(params, Map.new(new_params))}
   end
+
   @spec put_params(t, map) :: t
   def put_params(%Request{params: params} = request, new_params) do
     %{request | params: Map.merge(params, new_params)}

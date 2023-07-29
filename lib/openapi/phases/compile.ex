@@ -180,15 +180,16 @@ defmodule Stripe.OpenApi.Phases.Compile do
         |> Enum.sort()
         |> Enum.map(&to_type_spec/1)
 
-
       specs =
         Enum.map(component.properties, fn {key, value} ->
           {String.to_atom(key), build_spec(value, modules)}
         end)
-        |> Enum.sort
+        |> Enum.sort()
 
       typedoc_fields =
-        component.properties |> Enum.sort |> Enum.map_join("\n", fn {key, value} -> typedoc(key, value) end)
+        component.properties
+        |> Enum.sort()
+        |> Enum.map_join("\n", fn {key, value} -> typedoc(key, value) end)
 
       typedoc = """
       The `#{component.name}` type.
@@ -237,7 +238,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
         |> Code.format_string!()
 
       [_ | names] = Module.split(component.module)
-      filename = names |> Enum.map_join("__", & Macro.underscore/1)
+      filename = names |> Enum.map_join("__", &Macro.underscore/1)
 
       File.write!("lib/generated/#{filename}.ex", bin)
     end

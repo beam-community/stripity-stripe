@@ -3,8 +3,7 @@ defmodule Stripe.CapabilityTest do
 
   describe "retrieve/2" do
     test "is retrievable" do
-      assert {:ok, %Stripe.Capability{}} =
-               Stripe.Capability.retrieve("acct_123", "card_payments")
+      assert {:ok, %Stripe.Capability{}} = Stripe.Capability.retrieve("acct_123", "card_payments")
 
       assert_stripe_requested(:get, "/v1/accounts/acct_123/capabilities/card_payments")
     end
@@ -12,8 +11,7 @@ defmodule Stripe.CapabilityTest do
 
   describe "update/2" do
     test "updates a capability" do
-      assert {:ok, %Stripe.Capability{}} =
-               Stripe.Capability.update("acct_123", "card_payments")
+      assert {:ok, %Stripe.Capability{}} = Stripe.Capability.update("acct_123", "card_payments")
 
       assert_stripe_requested(:post, "/v1/accounts/acct_123/capabilities/card_payments")
     end
@@ -28,8 +26,7 @@ defmodule Stripe.CapabilityTest do
 
   describe "list/2" do
     test "is listable" do
-      assert {:ok, %Stripe.List{data: capabilities}} =
-               Stripe.Capability.list("acct_123")
+      assert {:ok, %Stripe.List{data: capabilities}} = Stripe.Capability.list("acct_123")
 
       assert_stripe_requested(:get, "/v1/accounts/acct_123/capabilities")
       assert is_list(capabilities)

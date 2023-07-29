@@ -40,7 +40,9 @@ defmodule Stripe.SubscriptionItemTest do
 
   describe "list/2" do
     test "lists all subscription_items" do
-      assert {:ok, %Stripe.List{data: subscriptions}} = Stripe.SubscriptionItem.list(%{subscription: "sub_123"})
+      assert {:ok, %Stripe.List{data: subscriptions}} =
+               Stripe.SubscriptionItem.list(%{subscription: "sub_123"})
+
       assert_stripe_requested(:get, "/v1/subscription_items", query: %{subscription: "sub_123"})
       assert is_list(subscriptions)
       assert %Stripe.SubscriptionItem{} = hd(subscriptions)

@@ -7,7 +7,7 @@ defmodule Stripe.BalanceTest do
   end
 
   test "is retrievable with Stripe-Version header" do
-    assert {:ok, %Stripe.Balance{}} = Stripe.Balance.retrieve(%{}, [api_version: "2020-08-23"])
-    assert_stripe_requested(:get, "/v1/balance", [headers: {"Stripe-Version", "2020-08-23"}])
+    assert {:ok, %Stripe.Balance{}} = Stripe.Balance.retrieve(%{}, api_version: "2020-08-23")
+    assert_stripe_requested(:get, "/v1/balance", headers: {"Stripe-Version", "2020-08-23"})
   end
 end

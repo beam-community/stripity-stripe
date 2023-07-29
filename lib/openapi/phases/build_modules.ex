@@ -15,7 +15,8 @@ defmodule Stripe.OpenApi.Phases.BuildModules do
            description: map["description"],
            operations:
              (map["x-stripeOperations"] || [])
-             |> Enum.uniq_by(& &1["method_name"]) # see connect/account_test.exs
+             # see connect/account_test.exs
+             |> Enum.uniq_by(& &1["method_name"])
              |> Enum.map(&%{&1 | "method_name" => Macro.underscore(&1["method_name"])}),
            module: Module.concat(["Stripe" | resource]),
            properties: map["properties"] || %{},

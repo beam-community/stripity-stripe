@@ -107,7 +107,7 @@ defmodule Stripe.Mixfile do
 
   defp groups_for_modules do
     [
-      "Main": [
+      Main: [
         Stripe,
         Stripe.API,
         Stripe.ApiErrors,

@@ -45,8 +45,7 @@ defmodule Stripe.PaymentMethodTest do
 
   describe "detach/2" do
     test "detaches payment method from customer" do
-      assert {:ok, %Stripe.PaymentMethod{}} =
-               Stripe.PaymentMethod.detach("pm_123")
+      assert {:ok, %Stripe.PaymentMethod{}} = Stripe.PaymentMethod.detach("pm_123")
 
       assert_stripe_requested(:post, "/v1/payment_methods/pm_123/detach")
     end

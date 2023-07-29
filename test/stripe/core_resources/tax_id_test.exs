@@ -2,8 +2,7 @@ defmodule Stripe.TaxIdTest do
   use Stripe.StripeCase, async: true
 
   test "is listable" do
-    assert {:ok, %Stripe.List{data: charges}} =
-             Stripe.TaxId.list("cus_FDVoXj36NmFrao")
+    assert {:ok, %Stripe.List{data: charges}} = Stripe.TaxId.list("cus_FDVoXj36NmFrao")
 
     assert_stripe_requested(:get, "/v1/customers/cus_FDVoXj36NmFrao/tax_ids")
     assert is_list(charges)
@@ -11,8 +10,7 @@ defmodule Stripe.TaxIdTest do
   end
 
   test "is retrievable" do
-    assert {:ok, %Stripe.TaxId{}} =
-             Stripe.TaxId.retrieve("cus_FDVoXj36NmFrao", "txi_123456789")
+    assert {:ok, %Stripe.TaxId{}} = Stripe.TaxId.retrieve("cus_FDVoXj36NmFrao", "txi_123456789")
 
     assert_stripe_requested(:get, "/v1/customers/cus_FDVoXj36NmFrao/tax_ids/txi_123456789")
   end
