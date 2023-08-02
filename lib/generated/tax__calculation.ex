@@ -42,12 +42,12 @@ defmodule Stripe.Tax.Calculation do
   (
     @typedoc "The customer's postal address (for example, home or business location)."
     @type address :: %{
-            optional(:city) => binary,
+            optional(:city) => binary | binary,
             optional(:country) => binary,
-            optional(:line1) => binary,
-            optional(:line2) => binary,
-            optional(:postal_code) => binary,
-            optional(:state) => binary
+            optional(:line1) => binary | binary,
+            optional(:line2) => binary | binary,
+            optional(:postal_code) => binary | binary,
+            optional(:state) => binary | binary
           }
   )
 

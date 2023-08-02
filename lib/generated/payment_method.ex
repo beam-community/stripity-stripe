@@ -131,8 +131,8 @@ defmodule Stripe.PaymentMethod do
     @type billing_details :: %{
             optional(:address) => address | binary,
             optional(:email) => binary | binary,
-            optional(:name) => binary,
-            optional(:phone) => binary
+            optional(:name) => binary | binary,
+            optional(:phone) => binary | binary
           }
   )
 

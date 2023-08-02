@@ -216,13 +216,18 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The card_issuing capability."
-    @type card_issuing :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to the account's use of the Card Issuing product."
+    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
   )
 
   (
-    @typedoc "The card_payments capability."
-    @type card_payments :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to card charging on the account."
+    @type card_payments :: %{
+            optional(:decline_on) => decline_on,
+            optional(:statement_descriptor_prefix) => binary,
+            optional(:statement_descriptor_prefix_kana) => binary | binary,
+            optional(:statement_descriptor_prefix_kanji) => binary | binary
+          }
   )
 
   (
@@ -330,7 +335,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "An identifying document, either a passport or local ID card."
+    @typedoc "A document verifying the business."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -568,10 +573,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the Stripe Treasury Services Agreement."
+    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
+            optional(:service_agreement) => binary,
             optional(:user_agent) => binary
           }
   )
@@ -582,8 +588,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's Treasury FinancialAccounts."
-    @type treasury :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The treasury capability."
+    @type treasury :: %{optional(:requested) => boolean}
   )
 
   (

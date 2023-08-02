@@ -144,7 +144,7 @@ defmodule Stripe.Subscription do
   (
     @typedoc "Details about why this subscription was cancelled"
     @type cancellation_details :: %{
-            optional(:comment) => binary,
+            optional(:comment) => binary | binary,
             optional(:feedback) =>
               :customer_service
               | :low_quality
@@ -516,9 +516,9 @@ defmodule Stripe.Subscription do
                 optional(:coupon) => binary,
                 optional(:days_until_due) => integer,
                 optional(:default_payment_method) => binary,
-                optional(:default_source) => binary,
+                optional(:default_source) => binary | binary,
                 optional(:default_tax_rates) => list(binary) | binary,
-                optional(:description) => binary,
+                optional(:description) => binary | binary,
                 optional(:expand) => list(binary),
                 optional(:items) => list(items),
                 optional(:metadata) => %{optional(binary) => binary} | binary,

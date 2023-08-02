@@ -120,7 +120,7 @@ defmodule Stripe.Terminal.Location do
               location :: binary(),
               params :: %{
                 optional(:address) => address,
-                optional(:configuration_overrides) => binary,
+                optional(:configuration_overrides) => binary | binary,
                 optional(:display_name) => binary,
                 optional(:expand) => list(binary),
                 optional(:metadata) => %{optional(binary) => binary} | binary

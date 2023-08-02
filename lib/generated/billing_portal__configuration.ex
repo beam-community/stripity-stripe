@@ -40,7 +40,7 @@ defmodule Stripe.BillingPortal.Configuration do
   (
     @typedoc "The business information shown to customers in the portal."
     @type business_profile :: %{
-            optional(:headline) => binary,
+            optional(:headline) => binary | binary,
             optional(:privacy_policy_url) => binary,
             optional(:terms_of_service_url) => binary
           }

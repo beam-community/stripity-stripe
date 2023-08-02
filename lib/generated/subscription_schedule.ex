@@ -109,7 +109,7 @@ defmodule Stripe.SubscriptionSchedule do
             optional(:billing_thresholds) => billing_thresholds | binary,
             optional(:collection_method) => :charge_automatically | :send_invoice,
             optional(:default_payment_method) => binary,
-            optional(:description) => binary,
+            optional(:description) => binary | binary,
             optional(:invoice_settings) => invoice_settings,
             optional(:on_behalf_of) => binary | binary,
             optional(:transfer_data) => transfer_data | binary
@@ -147,7 +147,7 @@ defmodule Stripe.SubscriptionSchedule do
             optional(:currency) => binary,
             optional(:default_payment_method) => binary,
             optional(:default_tax_rates) => list(binary) | binary,
-            optional(:description) => binary,
+            optional(:description) => binary | binary,
             optional(:end_date) => integer,
             optional(:invoice_settings) => invoice_settings,
             optional(:items) => list(items),

@@ -116,7 +116,7 @@ defmodule Stripe.Person do
 
   (
     @typedoc "One or more documents that demonstrate proof that this person is authorized to represent the company."
-    @type company_authorization :: %{optional(:files) => list(binary)}
+    @type company_authorization :: %{optional(:files) => list(binary | binary)}
   )
 
   (
@@ -144,7 +144,7 @@ defmodule Stripe.Person do
 
   (
     @typedoc "One or more documents showing the person's passport page with photo and personal data."
-    @type passport :: %{optional(:files) => list(binary)}
+    @type passport :: %{optional(:files) => list(binary | binary)}
   )
 
   (
@@ -179,7 +179,7 @@ defmodule Stripe.Person do
 
   (
     @typedoc "One or more documents showing the person's visa required for living in the country where they are residing."
-    @type visa :: %{optional(:files) => list(binary)}
+    @type visa :: %{optional(:files) => list(binary | binary)}
   )
 
   (

@@ -41,10 +41,10 @@ defmodule Stripe.Issuing.Dispute do
             optional(:additional_documentation) => binary | binary,
             optional(:canceled_at) => integer | binary,
             optional(:cancellation_policy_provided) => boolean | binary,
-            optional(:cancellation_reason) => binary,
+            optional(:cancellation_reason) => binary | binary,
             optional(:expected_at) => integer | binary,
-            optional(:explanation) => binary,
-            optional(:product_description) => binary,
+            optional(:explanation) => binary | binary,
+            optional(:product_description) => binary | binary,
             optional(:product_type) => :merchandise | :service,
             optional(:return_status) => :merchant_rejected | :successful,
             optional(:returned_at) => integer | binary
@@ -68,7 +68,7 @@ defmodule Stripe.Issuing.Dispute do
             optional(:card_statement) => binary | binary,
             optional(:cash_receipt) => binary | binary,
             optional(:check_image) => binary | binary,
-            optional(:explanation) => binary,
+            optional(:explanation) => binary | binary,
             optional(:original_transaction) => binary
           }
   )
@@ -98,7 +98,7 @@ defmodule Stripe.Issuing.Dispute do
     @typedoc nil
     @type fraudulent :: %{
             optional(:additional_documentation) => binary | binary,
-            optional(:explanation) => binary
+            optional(:explanation) => binary | binary
           }
   )
 
@@ -106,9 +106,9 @@ defmodule Stripe.Issuing.Dispute do
     @typedoc nil
     @type merchandise_not_as_described :: %{
             optional(:additional_documentation) => binary | binary,
-            optional(:explanation) => binary,
+            optional(:explanation) => binary | binary,
             optional(:received_at) => integer | binary,
-            optional(:return_description) => binary,
+            optional(:return_description) => binary | binary,
             optional(:return_status) => :merchant_rejected | :successful,
             optional(:returned_at) => integer | binary
           }
@@ -119,8 +119,8 @@ defmodule Stripe.Issuing.Dispute do
     @type not_received :: %{
             optional(:additional_documentation) => binary | binary,
             optional(:expected_at) => integer | binary,
-            optional(:explanation) => binary,
-            optional(:product_description) => binary,
+            optional(:explanation) => binary | binary,
+            optional(:product_description) => binary | binary,
             optional(:product_type) => :merchandise | :service
           }
   )
@@ -129,8 +129,8 @@ defmodule Stripe.Issuing.Dispute do
     @typedoc nil
     @type other :: %{
             optional(:additional_documentation) => binary | binary,
-            optional(:explanation) => binary,
-            optional(:product_description) => binary,
+            optional(:explanation) => binary | binary,
+            optional(:product_description) => binary | binary,
             optional(:product_type) => :merchandise | :service
           }
   )
@@ -140,8 +140,8 @@ defmodule Stripe.Issuing.Dispute do
     @type service_not_as_described :: %{
             optional(:additional_documentation) => binary | binary,
             optional(:canceled_at) => integer | binary,
-            optional(:cancellation_reason) => binary,
-            optional(:explanation) => binary,
+            optional(:cancellation_reason) => binary | binary,
+            optional(:explanation) => binary | binary,
             optional(:received_at) => integer | binary
           }
   )

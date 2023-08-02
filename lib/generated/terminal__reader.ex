@@ -83,7 +83,7 @@ defmodule Stripe.Terminal.Reader do
               reader :: binary(),
               params :: %{
                 optional(:expand) => list(binary),
-                optional(:label) => binary,
+                optional(:label) => binary | binary,
                 optional(:metadata) => %{optional(binary) => binary} | binary
               },
               opts :: Keyword.t()

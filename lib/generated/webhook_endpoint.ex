@@ -215,7 +215,7 @@ defmodule Stripe.WebhookEndpoint do
                   | :"2022-08-01"
                   | :"2022-11-15",
                 optional(:connect) => boolean,
-                optional(:description) => binary,
+                optional(:description) => binary | binary,
                 optional(:enabled_events) =>
                   list(
                     :*
@@ -472,7 +472,7 @@ defmodule Stripe.WebhookEndpoint do
       @spec update(
               webhook_endpoint :: binary(),
               params :: %{
-                optional(:description) => binary,
+                optional(:description) => binary | binary,
                 optional(:disabled) => boolean,
                 optional(:enabled_events) =>
                   list(

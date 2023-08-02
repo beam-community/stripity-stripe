@@ -81,7 +81,7 @@ defmodule Stripe.Issuing.Cardholder do
   )
 
   (
-    @typedoc "The date of birth of this cardholder."
+    @typedoc "The date of birth of this cardholder. Cardholders must be older than 13 years old."
     @type dob :: %{
             optional(:day) => integer,
             optional(:month) => integer,
@@ -1021,7 +1021,7 @@ defmodule Stripe.Issuing.Cardholder do
     @type user_terms_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:user_agent) => binary
+            optional(:user_agent) => binary | binary
           }
   )
 

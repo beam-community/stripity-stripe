@@ -213,10 +213,10 @@ defmodule Stripe.Product do
               params :: %{
                 optional(:active) => boolean,
                 optional(:attributes) => list(binary) | binary,
-                optional(:caption) => binary,
+                optional(:caption) => binary | binary,
                 optional(:deactivate_on) => list(binary),
                 optional(:default_price) => binary,
-                optional(:description) => binary,
+                optional(:description) => binary | binary,
                 optional(:expand) => list(binary),
                 optional(:images) => list(binary) | binary,
                 optional(:metadata) => %{optional(binary) => binary} | binary,
@@ -225,7 +225,7 @@ defmodule Stripe.Product do
                 optional(:shippable) => boolean,
                 optional(:statement_descriptor) => binary,
                 optional(:tax_code) => binary | binary,
-                optional(:unit_label) => binary,
+                optional(:unit_label) => binary | binary,
                 optional(:url) => binary | binary
               },
               opts :: Keyword.t()

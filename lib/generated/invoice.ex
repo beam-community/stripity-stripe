@@ -368,7 +368,7 @@ defmodule Stripe.Invoice do
   (
     @typedoc "Configuration settings for the PaymentIntent that is generated when the invoice is finalized."
     @type payment_settings :: %{
-            optional(:default_mandate) => binary,
+            optional(:default_mandate) => binary | binary,
             optional(:payment_method_options) => payment_method_options,
             optional(:payment_method_types) =>
               list(
@@ -464,7 +464,7 @@ defmodule Stripe.Invoice do
     @type shipping_details :: %{
             optional(:address) => address,
             optional(:name) => binary,
-            optional(:phone) => binary
+            optional(:phone) => binary | binary
           }
   )
 
@@ -679,7 +679,7 @@ defmodule Stripe.Invoice do
                 optional(:custom_fields) => list(custom_fields) | binary,
                 optional(:days_until_due) => integer,
                 optional(:default_payment_method) => binary,
-                optional(:default_source) => binary,
+                optional(:default_source) => binary | binary,
                 optional(:default_tax_rates) => list(binary) | binary,
                 optional(:description) => binary,
                 optional(:discounts) => list(discounts) | binary,
@@ -739,7 +739,7 @@ defmodule Stripe.Invoice do
               params :: %{
                 optional(:expand) => list(binary),
                 optional(:forgive) => boolean,
-                optional(:mandate) => binary,
+                optional(:mandate) => binary | binary,
                 optional(:off_session) => boolean,
                 optional(:paid_out_of_band) => boolean,
                 optional(:payment_method) => binary,
