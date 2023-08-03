@@ -16,7 +16,7 @@ defmodule Stripe.Radar.ValueList do
       :object
     ]
 
-    @typedoc "The `radar.value_list` type.\n\n  * `alias` The name of the value list for use in rules.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `created_by` The name or email address of the user who created this value list.\n  * `id` Unique identifier for the object.\n  * `item_type` The type of items in the value list. One of `card_fingerprint`, `card_bin`, `email`, `ip_address`, `country`, `string`, `case_sensitive_string`, or `customer_id`.\n  * `list_items` List of items contained within this value list.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name` The name of the value list.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n"
+    @typedoc "The `radar.value_list` type.\n\n  * `alias` The name of the value list for use in rules.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `created_by` The name or email address of the user who created this value list.\n  * `id` Unique identifier for the object.\n  * `item_type` The type of items in the value list. One of `card_fingerprint`, `us_bank_account_fingerprint`, `sepa_debit_fingerprint`, `card_bin`, `email`, `ip_address`, `country`, `string`, `case_sensitive_string`, or `customer_id`.\n  * `list_items` List of items contained within this value list.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name` The name of the value list.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n"
     @type t :: %__MODULE__{
             alias: binary,
             created: integer,
@@ -134,7 +134,9 @@ defmodule Stripe.Radar.ValueList do
                   | :customer_id
                   | :email
                   | :ip_address
-                  | binary,
+                  | :sepa_debit_fingerprint
+                  | binary
+                  | :us_bank_account_fingerprint,
                 optional(:metadata) => %{optional(binary) => binary},
                 optional(:name) => binary
               },
