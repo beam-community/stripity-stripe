@@ -99,7 +99,7 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
+    @typedoc "Shipping address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -134,8 +134,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type au_becs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
+    @typedoc "If this is an `au_becs_debit` PaymentMethod, this hash contains details about the bank account."
+    @type au_becs_debit :: %{optional(:account_number) => binary, optional(:bsb_number) => binary}
   )
 
   (
@@ -147,8 +147,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type bacs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
+    @typedoc "If this is a `bacs_debit` PaymentMethod, this hash contains details about the Bacs Direct Debit bank account."
+    @type bacs_debit :: %{optional(:account_number) => binary, optional(:sort_code) => binary}
   )
 
   (
@@ -276,8 +276,38 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type eps :: %{optional(:setup_future_usage) => :none}
+    @typedoc "If this is an `eps` PaymentMethod, this hash contains details about the EPS payment method."
+    @type eps :: %{
+            optional(:bank) =>
+              :arzte_und_apotheker_bank
+              | :austrian_anadi_bank_ag
+              | :bank_austria
+              | :bankhaus_carl_spangler
+              | :bankhaus_schelhammer_und_schattera_ag
+              | :bawag_psk_ag
+              | :bks_bank_ag
+              | :brull_kallmus_bank_ag
+              | :btv_vier_lander_bank
+              | :capital_bank_grawe_gruppe_ag
+              | :deutsche_bank_ag
+              | :dolomitenbank
+              | :easybank_ag
+              | :erste_bank_und_sparkassen
+              | :hypo_alpeadriabank_international_ag
+              | :hypo_bank_burgenland_aktiengesellschaft
+              | :hypo_noe_lb_fur_niederosterreich_u_wien
+              | :hypo_oberosterreich_salzburg_steiermark
+              | :hypo_tirol_bank_ag
+              | :hypo_vorarlberg_bank_ag
+              | :marchfelder_bank
+              | :oberbank_ag
+              | :raiffeisen_bankengruppe_osterreich
+              | :schoellerbank_ag
+              | :sparda_bank_wien
+              | :volksbank_gruppe
+              | :volkskreditbank_ag
+              | :vr_bank_braunau
+          }
   )
 
   (
@@ -423,17 +453,12 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
+    @typedoc "Additional fields for Mandate creation"
     @type mandate_options :: %{
-            optional(:amount) => integer,
-            optional(:amount_type) => :fixed | :maximum,
-            optional(:description) => binary,
-            optional(:end_date) => integer,
-            optional(:interval) => :day | :month | :sporadic | :week | :year,
-            optional(:interval_count) => integer,
-            optional(:reference) => binary,
-            optional(:start_date) => integer,
-            optional(:supported_types) => list(:india)
+            optional(:custom_mandate_url) => binary | binary,
+            optional(:interval_description) => binary,
+            optional(:payment_schedule) => :combined | :interval | :sporadic,
+            optional(:transaction_type) => :business | :personal
           }
   )
 
@@ -456,34 +481,10 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `p24` PaymentMethod, this hash contains details about the P24 payment method."
+    @typedoc nil
     @type p24 :: %{
-            optional(:bank) =>
-              :alior_bank
-              | :bank_millennium
-              | :bank_nowy_bfg_sa
-              | :bank_pekao_sa
-              | :banki_spbdzielcze
-              | :blik
-              | :bnp_paribas
-              | :boz
-              | :citi_handlowy
-              | :credit_agricole
-              | :envelobank
-              | :etransfer_pocztowy24
-              | :getin_bank
-              | :ideabank
-              | :ing
-              | :inteligo
-              | :mbank_mtransfer
-              | :nest_przelew
-              | :noble_pay
-              | :pbac_z_ipko
-              | :plus_bank
-              | :santander_przelew24
-              | :tmobile_usbugi_bankowe
-              | :toyota_bank
-              | :volkswagen_bank
+            optional(:setup_future_usage) => :none,
+            optional(:tos_shown_and_accepted) => boolean
           }
   )
 
@@ -663,8 +664,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
-    @type sepa_debit :: %{optional(:iban) => binary}
+    @typedoc nil
+    @type sepa_debit :: %{
+            optional(:mandate_options) => map(),
+            optional(:setup_future_usage) => :none | :off_session | :on_session
+          }
   )
 
   (
