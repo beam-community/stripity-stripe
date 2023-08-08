@@ -1,6 +1,6 @@
 defmodule Stripe.CreditNoteLineItem do
   use Stripe.Entity
-  @moduledoc ""
+  @moduledoc "The credit note line item object"
   (
     defstruct [
       :amount,
