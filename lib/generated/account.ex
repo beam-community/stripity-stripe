@@ -66,7 +66,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The company's primary address."
+    @typedoc "The individual's primary address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -78,7 +78,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kana variation of the company's primary address (Japan only)."
+    @typedoc "The Kana variation of the the individual's primary address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -91,7 +91,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kanji variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kanji variation of the company's primary address (Japan only)."
     @type address_kanji :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -216,13 +216,18 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's use of the Card Issuing product."
-    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The card_issuing capability."
+    @type card_issuing :: %{optional(:requested) => boolean}
   )
 
   (
-    @typedoc "The card_payments capability."
-    @type card_payments :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to card charging on the account."
+    @type card_payments :: %{
+            optional(:decline_on) => decline_on,
+            optional(:statement_descriptor_prefix) => binary,
+            optional(:statement_descriptor_prefix_kana) => binary | binary,
+            optional(:statement_descriptor_prefix_kanji) => binary | binary
+          }
   )
 
   (
@@ -330,7 +335,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "A document verifying the business."
+    @typedoc "An identifying document, either a passport or local ID card."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -568,12 +573,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
+    @typedoc "Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](https://stripe.com/docs/issuing/connect/tos_acceptance)."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:service_agreement) => binary,
-            optional(:user_agent) => binary
+            optional(:user_agent) => binary | binary
           }
   )
 
@@ -583,8 +587,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's Treasury FinancialAccounts."
-    @type treasury :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The treasury capability."
+    @type treasury :: %{optional(:requested) => boolean}
   )
 
   (
@@ -593,8 +597,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
@@ -624,7 +631,7 @@ defmodule Stripe.Account do
   (
     nil
 
-    @doc "<p>Updates a <a href=\"/docs/connect/accounts\">connected account</a> by setting the values of the parameters passed. Any parameters not provided are\nleft unchanged.</p>\n\n<p>For Custom accounts, you can update any information on the account. For other accounts, you can update all information until that\naccount has started to go through Connect Onboarding. Once you create an <a href=\"/docs/api/account_links\">Account Link</a>\nfor a Standard or Express account, some parameters can no longer be changed. These are marked as <strong>Custom Only</strong> or <strong>Custom and Express</strong>\nbelow.</p>\n\n<p>To update your own account, use the <a href=\"https://dashboard.stripe.com/account\">Dashboard</a>. Refer to our\n<a href=\"/docs/connect/updating-accounts\">Connect</a> documentation to learn more about updating accounts.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}`\n"
+    @doc "<p>Updates a <a href=\"/docs/connect/accounts\">connected account</a> by setting the values of the parameters passed. Any parameters not provided are\nleft unchanged.</p>\n\n<p>For Custom accounts, you can update any information on the account. For other accounts, you can update all information until that\naccount has started to go through Connect Onboarding. Once you create an <a href=\"/docs/api/account_links\">Account Link</a>\nfor a Standard or Express account, some parameters can no longer be changed. These are marked as <strong>Custom Only</strong> or <strong>Custom and Express</strong>\nbelow.</p>\n\n<p>To update your own account, use the <a href=\"https://dashboard.stripe.com/settings/account\">Dashboard</a>. Refer to our\n<a href=\"/docs/connect/updating-accounts\">Connect</a> documentation to learn more about updating accounts.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}`\n"
     (
       @spec update(
               account :: binary(),
@@ -750,7 +757,7 @@ defmodule Stripe.Account do
   (
     nil
 
-    @doc "<p>With <a href=\"/docs/connect\">Connect</a>, you can delete accounts you manage.</p>\n\n<p>Accounts created using test-mode keys can be deleted at any time. Standard accounts created using live-mode keys cannot be deleted. Custom or Express accounts created using live-mode keys can only be deleted once all balances are zero.</p>\n\n<p>If you want to delete your own account, use the <a href=\"https://dashboard.stripe.com/account\">account information tab in your account settings</a> instead.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}`\n"
+    @doc "<p>With <a href=\"/docs/connect\">Connect</a>, you can delete accounts you manage.</p>\n\n<p>Accounts created using test-mode keys can be deleted at any time. Standard accounts created using live-mode keys cannot be deleted. Custom or Express accounts created using live-mode keys can only be deleted once all balances are zero.</p>\n\n<p>If you want to delete your own account, use the <a href=\"https://dashboard.stripe.com/settings/account\">account information tab in your account settings</a> instead.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}`\n"
     (
       @spec delete(account :: binary(), opts :: Keyword.t()) ::
               {:ok, Stripe.DeletedAccount.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
