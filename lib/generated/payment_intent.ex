@@ -190,8 +190,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method."
-    @type boleto :: %{optional(:tax_id) => binary}
+    @typedoc nil
+    @type boleto :: %{
+            optional(:expires_after_days) => integer,
+            optional(:setup_future_usage) => :none | :off_session | :on_session
+          }
   )
 
   (
@@ -276,8 +279,38 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type eps :: %{optional(:setup_future_usage) => :none}
+    @typedoc "If this is an `eps` PaymentMethod, this hash contains details about the EPS payment method."
+    @type eps :: %{
+            optional(:bank) =>
+              :arzte_und_apotheker_bank
+              | :austrian_anadi_bank_ag
+              | :bank_austria
+              | :bankhaus_carl_spangler
+              | :bankhaus_schelhammer_und_schattera_ag
+              | :bawag_psk_ag
+              | :bks_bank_ag
+              | :brull_kallmus_bank_ag
+              | :btv_vier_lander_bank
+              | :capital_bank_grawe_gruppe_ag
+              | :deutsche_bank_ag
+              | :dolomitenbank
+              | :easybank_ag
+              | :erste_bank_und_sparkassen
+              | :hypo_alpeadriabank_international_ag
+              | :hypo_bank_burgenland_aktiengesellschaft
+              | :hypo_noe_lb_fur_niederosterreich_u_wien
+              | :hypo_oberosterreich_salzburg_steiermark
+              | :hypo_tirol_bank_ag
+              | :hypo_vorarlberg_bank_ag
+              | :marchfelder_bank
+              | :oberbank_ag
+              | :raiffeisen_bankengruppe_osterreich
+              | :schoellerbank_ag
+              | :sparda_bank_wien
+              | :volksbank_gruppe
+              | :volkskreditbank_ag
+              | :vr_bank_braunau
+          }
   )
 
   (
@@ -295,33 +328,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `fpx` PaymentMethod, this hash contains details about the FPX payment method."
-    @type fpx :: %{
-            optional(:account_holder_type) => :company | :individual,
-            optional(:bank) =>
-              :affin_bank
-              | :agrobank
-              | :alliance_bank
-              | :ambank
-              | :bank_islam
-              | :bank_muamalat
-              | :bank_of_china
-              | :bank_rakyat
-              | :bsn
-              | :cimb
-              | :deutsche_bank
-              | :hong_leong_bank
-              | :hsbc
-              | :kfh
-              | :maybank2e
-              | :maybank2u
-              | :ocbc
-              | :pb_enterprise
-              | :public_bank
-              | :rhb
-              | :standard_chartered
-              | :uob
-          }
+    @typedoc nil
+    @type fpx :: %{optional(:setup_future_usage) => :none}
   )
 
   (
@@ -345,8 +353,56 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method."
-    @type klarna :: %{optional(:dob) => dob}
+    @typedoc nil
+    @type klarna :: %{
+            optional(:capture_method) => :manual,
+            optional(:preferred_locale) =>
+              :"cs-CZ"
+              | :"da-DK"
+              | :"de-AT"
+              | :"de-CH"
+              | :"de-DE"
+              | :"el-GR"
+              | :"en-AT"
+              | :"en-AU"
+              | :"en-BE"
+              | :"en-CA"
+              | :"en-CH"
+              | :"en-CZ"
+              | :"en-DE"
+              | :"en-DK"
+              | :"en-ES"
+              | :"en-FI"
+              | :"en-FR"
+              | :"en-GB"
+              | :"en-GR"
+              | :"en-IE"
+              | :"en-IT"
+              | :"en-NL"
+              | :"en-NO"
+              | :"en-NZ"
+              | :"en-PL"
+              | :"en-PT"
+              | :"en-SE"
+              | :"en-US"
+              | :"es-ES"
+              | :"es-US"
+              | :"fi-FI"
+              | :"fr-BE"
+              | :"fr-CA"
+              | :"fr-CH"
+              | :"fr-FR"
+              | :"it-CH"
+              | :"it-IT"
+              | :"nb-NO"
+              | :"nl-BE"
+              | :"nl-NL"
+              | :"pl-PL"
+              | :"pt-PT"
+              | :"sv-FI"
+              | :"sv-SE",
+            optional(:setup_future_usage) => :none
+          }
   )
 
   (
@@ -607,8 +663,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method."
-    @type sofort :: %{optional(:country) => :AT | :BE | :DE | :ES | :IT | :NL}
+    @typedoc nil
+    @type sofort :: %{
+            optional(:preferred_language) => :de | :en | :es | :fr | :it | :nl | :pl,
+            optional(:setup_future_usage) => :none | :off_session
+          }
   )
 
   (
@@ -617,13 +676,13 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `us_bank_account` PaymentMethod, this hash contains details about the US bank account payment method."
+    @typedoc nil
     @type us_bank_account :: %{
-            optional(:account_holder_type) => :company | :individual,
-            optional(:account_number) => binary,
-            optional(:account_type) => :checking | :savings,
-            optional(:financial_connections_account) => binary,
-            optional(:routing_number) => binary
+            optional(:financial_connections) => financial_connections,
+            optional(:networks) => networks,
+            optional(:preferred_settlement_speed) => :fastest | :standard,
+            optional(:setup_future_usage) => :none | :off_session | :on_session,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 

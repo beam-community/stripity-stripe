@@ -263,6 +263,7 @@ defmodule Stripe.Account do
               | :government_instrumentality
               | :governmental_unit
               | :incorporated_non_profit
+              | :incorporated_partnership
               | :limited_liability_partnership
               | :llc
               | :multi_member_llc
@@ -277,7 +278,8 @@ defmodule Stripe.Account do
               | :sole_proprietorship
               | :tax_exempt_government_instrumentality
               | :unincorporated_association
-              | :unincorporated_non_profit,
+              | :unincorporated_non_profit
+              | :unincorporated_partnership,
             optional(:tax_id) => binary,
             optional(:tax_id_registrar) => binary,
             optional(:vat_id) => binary,
@@ -573,7 +575,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](https://stripe.com/docs/issuing/connect/tos_acceptance)."
+    @typedoc "Details on the account's acceptance of the Stripe Treasury Services Agreement."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
@@ -597,11 +599,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The individual's verification document information."
-    @type verification :: %{
-            optional(:additional_document) => additional_document,
-            optional(:document) => document
-          }
+    @typedoc "Information on the verification state of the company."
+    @type verification :: %{optional(:document) => document}
   )
 
   (

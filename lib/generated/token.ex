@@ -127,6 +127,7 @@ defmodule Stripe.Token do
               | :government_instrumentality
               | :governmental_unit
               | :incorporated_non_profit
+              | :incorporated_partnership
               | :limited_liability_partnership
               | :llc
               | :multi_member_llc
@@ -141,7 +142,8 @@ defmodule Stripe.Token do
               | :sole_proprietorship
               | :tax_exempt_government_instrumentality
               | :unincorporated_association
-              | :unincorporated_non_profit,
+              | :unincorporated_non_profit
+              | :unincorporated_partnership,
             optional(:tax_id) => binary,
             optional(:tax_id_registrar) => binary,
             optional(:vat_id) => binary,
