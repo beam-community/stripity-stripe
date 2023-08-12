@@ -331,6 +331,7 @@ defmodule Stripe.Terminal.Reader do
               params :: %{
                 optional(:customer_consent_collected) => boolean,
                 optional(:expand) => list(binary),
+                optional(:process_config) => map(),
                 optional(:setup_intent) => binary
               },
               opts :: Keyword.t()
