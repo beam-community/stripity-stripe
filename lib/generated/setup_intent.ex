@@ -60,11 +60,11 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `acss_debit` SetupIntent, this sub-hash contains details about the ACSS Debit payment method options."
+    @typedoc "If this is an `acss_debit` PaymentMethod, this hash contains details about the ACSS Debit payment method."
     @type acss_debit :: %{
-            optional(:currency) => :cad | :usd,
-            optional(:mandate_options) => mandate_options,
-            optional(:verification_method) => :automatic | :instant | :microdeposits
+            optional(:account_number) => binary,
+            optional(:institution_number) => binary,
+            optional(:transit_number) => binary
           }
   )
 
@@ -441,11 +441,13 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `us_bank_account` SetupIntent, this sub-hash contains details about the US bank account payment method options."
+    @typedoc "If this is an `us_bank_account` PaymentMethod, this hash contains details about the US bank account payment method."
     @type us_bank_account :: %{
-            optional(:financial_connections) => financial_connections,
-            optional(:networks) => networks,
-            optional(:verification_method) => :automatic | :instant | :microdeposits
+            optional(:account_holder_type) => :company | :individual,
+            optional(:account_number) => binary,
+            optional(:account_type) => :checking | :savings,
+            optional(:financial_connections_account) => binary,
+            optional(:routing_number) => binary
           }
   )
 
