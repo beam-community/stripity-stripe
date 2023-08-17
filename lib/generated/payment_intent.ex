@@ -310,24 +310,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `ideal` PaymentMethod, this hash contains details about the iDEAL payment method."
-    @type ideal :: %{
-            optional(:bank) =>
-              :abn_amro
-              | :asn_bank
-              | :bunq
-              | :handelsbanken
-              | :ing
-              | :knab
-              | :moneyou
-              | :rabobank
-              | :regiobank
-              | :revolut
-              | :sns_bank
-              | :triodos_bank
-              | :van_lanschot
-              | :yoursafe
-          }
+    @typedoc nil
+    @type ideal :: %{optional(:setup_future_usage) => :none | :off_session}
   )
 
   (

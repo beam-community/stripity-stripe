@@ -274,7 +274,6 @@ defmodule Stripe.Price do
                 optional(:lookup_key) => binary,
                 optional(:metadata) => %{optional(binary) => binary} | binary,
                 optional(:nickname) => binary,
-                optional(:recurring) => recurring | binary,
                 optional(:tax_behavior) => :exclusive | :inclusive | :unspecified,
                 optional(:transfer_lookup_key) => boolean
               },

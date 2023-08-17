@@ -910,7 +910,6 @@ defmodule Stripe.Checkout.Session do
     @type subscription_data :: %{
             optional(:application_fee_percent) => number,
             optional(:billing_cycle_anchor) => integer,
-            optional(:coupon) => binary,
             optional(:default_tax_rates) => list(binary),
             optional(:description) => binary,
             optional(:metadata) => %{optional(binary) => binary},
@@ -918,7 +917,6 @@ defmodule Stripe.Checkout.Session do
             optional(:proration_behavior) => :create_prorations | :none,
             optional(:transfer_data) => transfer_data,
             optional(:trial_end) => integer,
-            optional(:trial_from_plan) => boolean,
             optional(:trial_period_days) => integer,
             optional(:trial_settings) => trial_settings
           }
@@ -1157,8 +1155,7 @@ defmodule Stripe.Checkout.Session do
                 optional(:setup_intent_data) => setup_intent_data,
                 optional(:cancel_url) => binary,
                 optional(:payment_intent_data) => payment_intent_data,
-                optional(:shipping_options) => list(shipping_options),
-                optional(:shipping_rates) => list(binary)
+                optional(:shipping_options) => list(shipping_options)
               },
               opts :: Keyword.t()
             ) ::

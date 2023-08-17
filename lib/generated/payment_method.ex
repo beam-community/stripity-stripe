@@ -452,20 +452,12 @@ defmodule Stripe.PaymentMethod do
       @spec update(
               payment_method :: binary(),
               params :: %{
-                optional(:acss_debit) => map(),
-                optional(:affirm) => map(),
-                optional(:au_becs_debit) => map(),
-                optional(:bacs_debit) => map(),
                 optional(:billing_details) => billing_details,
-                optional(:blik) => map(),
                 optional(:card) => card,
-                optional(:cashapp) => map(),
                 optional(:expand) => list(binary),
                 optional(:link) => map(),
                 optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:sepa_debit) => map(),
-                optional(:us_bank_account) => us_bank_account,
-                optional(:zip) => map()
+                optional(:us_bank_account) => us_bank_account
               },
               opts :: Keyword.t()
             ) ::
@@ -524,7 +516,6 @@ defmodule Stripe.PaymentMethod do
                   | :blik
                   | :boleto
                   | :card
-                  | :card_present
                   | :cashapp
                   | :customer_balance
                   | :eps

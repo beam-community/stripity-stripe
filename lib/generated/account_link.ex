@@ -21,11 +21,7 @@ defmodule Stripe.AccountLink do
                 optional(:expand) => list(binary),
                 optional(:refresh_url) => binary,
                 optional(:return_url) => binary,
-                optional(:type) =>
-                  :account_onboarding
-                  | :account_update
-                  | :custom_account_update
-                  | :custom_account_verification
+                optional(:type) => :account_onboarding | :account_update
               },
               opts :: Keyword.t()
             ) :: {:ok, Stripe.AccountLink.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}

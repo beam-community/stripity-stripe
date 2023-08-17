@@ -43,16 +43,6 @@ defmodule Stripe.BalanceTransaction do
 
   (
     @typedoc nil
-    @type available_on :: %{
-            optional(:gt) => integer,
-            optional(:gte) => integer,
-            optional(:lt) => integer,
-            optional(:lte) => integer
-          }
-  )
-
-  (
-    @typedoc nil
     @type created :: %{
             optional(:gt) => integer,
             optional(:gte) => integer,
@@ -68,7 +58,6 @@ defmodule Stripe.BalanceTransaction do
     (
       @spec list(
               params :: %{
-                optional(:available_on) => available_on | integer,
                 optional(:created) => created | integer,
                 optional(:currency) => binary,
                 optional(:ending_before) => binary,
