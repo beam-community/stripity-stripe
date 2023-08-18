@@ -108,6 +108,7 @@ defmodule Stripe.Tax.Transaction do
       @spec create_reversal(
               params :: %{
                 optional(:expand) => list(binary),
+                optional(:flat_amount) => integer,
                 optional(:line_items) => list(line_items),
                 optional(:metadata) => %{optional(binary) => binary},
                 optional(:mode) => :full | :partial,
