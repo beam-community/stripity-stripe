@@ -134,8 +134,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type au_becs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
+    @typedoc "If this is an `au_becs_debit` PaymentMethod, this hash contains details about the bank account."
+    @type au_becs_debit :: %{optional(:account_number) => binary, optional(:bsb_number) => binary}
   )
 
   (
@@ -451,22 +451,17 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "This hash contains details about the Mandate to create. This parameter can only be used with [`confirm=true`](https://stripe.com/docs/api/payment_intents/create#create_payment_intent-confirm)."
+    @typedoc nil
     @type mandate_data :: %{optional(:customer_acceptance) => customer_acceptance}
   )
 
   (
-    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
+    @typedoc "Additional fields for Mandate creation"
     @type mandate_options :: %{
-            optional(:amount) => integer,
-            optional(:amount_type) => :fixed | :maximum,
-            optional(:description) => binary,
-            optional(:end_date) => integer,
-            optional(:interval) => :day | :month | :sporadic | :week | :year,
-            optional(:interval_count) => integer,
-            optional(:reference) => binary,
-            optional(:start_date) => integer,
-            optional(:supported_types) => list(:india)
+            optional(:custom_mandate_url) => binary | binary,
+            optional(:interval_description) => binary,
+            optional(:payment_schedule) => :combined | :interval | :sporadic,
+            optional(:transaction_type) => :business | :personal
           }
   )
 
@@ -489,10 +484,34 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
+    @typedoc "If this is a `p24` PaymentMethod, this hash contains details about the P24 payment method."
     @type p24 :: %{
-            optional(:setup_future_usage) => :none,
-            optional(:tos_shown_and_accepted) => boolean
+            optional(:bank) =>
+              :alior_bank
+              | :bank_millennium
+              | :bank_nowy_bfg_sa
+              | :bank_pekao_sa
+              | :banki_spbdzielcze
+              | :blik
+              | :bnp_paribas
+              | :boz
+              | :citi_handlowy
+              | :credit_agricole
+              | :envelobank
+              | :etransfer_pocztowy24
+              | :getin_bank
+              | :ideabank
+              | :ing
+              | :inteligo
+              | :mbank_mtransfer
+              | :nest_przelew
+              | :noble_pay
+              | :pbac_z_ipko
+              | :plus_bank
+              | :santander_przelew24
+              | :tmobile_usbugi_bankowe
+              | :toyota_bank
+              | :volkswagen_bank
           }
   )
 
@@ -770,7 +789,7 @@ defmodule Stripe.PaymentIntent do
                 optional(:error_on_requires_action) => boolean,
                 optional(:expand) => list(binary),
                 optional(:mandate) => binary,
-                optional(:mandate_data) => mandate_data,
+                optional(:mandate_data) => mandate_data | binary,
                 optional(:metadata) => %{optional(binary) => binary},
                 optional(:off_session) => boolean | :one_off | :recurring,
                 optional(:on_behalf_of) => binary,
@@ -951,7 +970,7 @@ defmodule Stripe.PaymentIntent do
                 optional(:error_on_requires_action) => boolean,
                 optional(:expand) => list(binary),
                 optional(:mandate) => binary,
-                optional(:mandate_data) => mandate_data | mandate_data,
+                optional(:mandate_data) => mandate_data | binary | mandate_data,
                 optional(:off_session) => boolean | :one_off | :recurring,
                 optional(:payment_method) => binary,
                 optional(:payment_method_data) => payment_method_data,
