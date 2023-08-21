@@ -1,8 +1,8 @@
 defmodule Stripe.OpenApi.Phases.BuildModules do
   @method_name_overrides %{
     ["Account"] => %{
-      {"retrieve", "/v1/account"} => "retrieve",
-      {"retrieve", "/v1/accounts/{account}"} => "retrieve_by_id"
+      {"retrieve", "/v1/account"} => "show",
+      {"retrieve", "/v1/accounts/{account}"} => "retrieve"
     },
     ["BankAccount"] => %{
       {"delete", "/v1/customers/{customer}/sources/{id}"} => "delete_source",

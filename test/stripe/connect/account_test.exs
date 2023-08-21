@@ -2,12 +2,12 @@ defmodule Stripe.AccountTest do
   use Stripe.StripeCase, async: true
 
   test "is retrievable using singular endpoint" do
-    assert {:ok, %Stripe.Account{}} = Stripe.Account.retrieve()
+    assert {:ok, %Stripe.Account{}} = Stripe.Account.show()
     assert_stripe_requested(:get, "/v1/account")
   end
 
   test "is retrievable using plural endpoint" do
-    assert {:ok, %Stripe.Account{}} = Stripe.Account.retrieve_by_id("acct_123")
+    assert {:ok, %Stripe.Account{}} = Stripe.Account.retrieve("acct_123")
     assert_stripe_requested(:get, "/v1/accounts/acct_123")
   end
 
