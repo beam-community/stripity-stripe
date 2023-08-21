@@ -29,7 +29,7 @@ defmodule Stripe.ErrorTest do
       error = Error.from_stripe_error(400, error_data, "id")
       assert error.code == :invalid_request_error
       assert error.extra.http_status == 400
-      assert error.extra.param == :type
+      assert error.extra.param == "type"
       assert error.extra.raw_error == error_data
       assert error.message == "Received unknown parameter: type"
       assert error.request_id == "id"

@@ -99,7 +99,7 @@ defmodule Stripe.Error do
           extra: %{
             optional(:card_code) => card_error_code,
             optional(:decline_code) => String.t(),
-            optional(:param) => atom,
+            optional(:param) => String.t(),
             optional(:charge_id) => Stripe.id(),
             optional(:http_status) => 400..599,
             optional(:raw_error) => map,
@@ -163,7 +163,7 @@ defmodule Stripe.Error do
           %{raw_error: error_data, http_status: status}
           |> maybe_put(:card_code, error_data |> Map.get("code") |> maybe_to_atom())
           |> maybe_put(:decline_code, error_data |> Map.get("decline_code"))
-          |> maybe_put(:param, error_data |> Map.get("param") |> maybe_to_atom())
+          |> maybe_put(:param, Map.get(error_data, "param"))
           |> maybe_put(:charge_id, error_data |> Map.get("charge"))
 
         %__MODULE__{
