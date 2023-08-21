@@ -91,7 +91,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kanji variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kanji variation of the company's primary address (Japan only)."
     @type address_kanji :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -216,8 +216,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's use of the Card Issuing product."
-    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The card_issuing capability."
+    @type card_issuing :: %{optional(:requested) => boolean}
   )
 
   (
@@ -570,11 +570,12 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the Stripe Treasury Services Agreement."
+    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:user_agent) => binary | binary
+            optional(:service_agreement) => binary,
+            optional(:user_agent) => binary
           }
   )
 
@@ -584,8 +585,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The treasury capability."
-    @type treasury :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to the account's Treasury FinancialAccounts."
+    @type treasury :: %{optional(:tos_acceptance) => tos_acceptance}
   )
 
   (
@@ -611,10 +612,51 @@ defmodule Stripe.Account do
 
     @doc "<p>Retrieves the details of an account.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/account`\n"
     (
-      @spec retrieve(params :: %{optional(:expand) => list(binary)}, opts :: Keyword.t()) ::
+      @spec show(params :: %{optional(:expand) => list(binary)}, opts :: Keyword.t()) ::
               {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(params \\ %{}, opts \\ []) do
+      def show(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/account", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the details of an account.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/accounts/{account}`\n"
+    (
+      @spec retrieve(
+              account :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(account, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/accounts/{account}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "account",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "account",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [account]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
