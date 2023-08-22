@@ -287,7 +287,8 @@ defmodule Stripe.Invoice do
     @typedoc "Additional fields for Financial Connections Session creation"
     @type financial_connections :: %{
             optional(:permissions) =>
-              list(:balances | :ownership | :payment_method | :transactions)
+              list(:balances | :ownership | :payment_method | :transactions),
+            optional(:prefetch) => list(:balances)
           }
   )
 

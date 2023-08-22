@@ -12,10 +12,11 @@ defmodule Stripe.FinancialConnections.Session do
       :livemode,
       :object,
       :permissions,
+      :prefetch,
       :return_url
     ]
 
-    @typedoc "The `financial_connections.session` type.\n\n  * `account_holder` The account holder for whom accounts are collected in this session.\n  * `accounts` The accounts that were collected as part of this Session.\n  * `client_secret` A value that will be passed to the client to launch the authentication flow.\n  * `filters` \n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `permissions` Permissions requested for accounts collected during this session.\n  * `return_url` For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.\n"
+    @typedoc "The `financial_connections.session` type.\n\n  * `account_holder` The account holder for whom accounts are collected in this session.\n  * `accounts` The accounts that were collected as part of this Session.\n  * `client_secret` A value that will be passed to the client to launch the authentication flow.\n  * `filters` \n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `permissions` Permissions requested for accounts collected during this session.\n  * `prefetch` Data features requested to be retrieved upon account creation.\n  * `return_url` For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.\n"
     @type t :: %__MODULE__{
             account_holder: term | nil,
             accounts: term,
@@ -25,6 +26,7 @@ defmodule Stripe.FinancialConnections.Session do
             livemode: boolean,
             object: binary,
             permissions: term,
+            prefetch: term | nil,
             return_url: binary
           }
   )
@@ -55,6 +57,7 @@ defmodule Stripe.FinancialConnections.Session do
                 optional(:filters) => filters,
                 optional(:permissions) =>
                   list(:balances | :ownership | :payment_method | :transactions),
+                optional(:prefetch) => list(:balances | :ownership),
                 optional(:return_url) => binary
               },
               opts :: Keyword.t()

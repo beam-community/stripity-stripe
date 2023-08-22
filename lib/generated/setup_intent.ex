@@ -60,11 +60,11 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is an `acss_debit` PaymentMethod, this hash contains details about the ACSS Debit payment method."
+    @typedoc "If this is a `acss_debit` SetupIntent, this sub-hash contains details about the ACSS Debit payment method options."
     @type acss_debit :: %{
-            optional(:account_number) => binary,
-            optional(:institution_number) => binary,
-            optional(:transit_number) => binary
+            optional(:currency) => :cad | :usd,
+            optional(:mandate_options) => mandate_options,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 
@@ -203,6 +203,7 @@ defmodule Stripe.SetupIntent do
     @type financial_connections :: %{
             optional(:permissions) =>
               list(:balances | :ownership | :payment_method | :transactions),
+            optional(:prefetch) => list(:balances),
             optional(:return_url) => binary
           }
   )
@@ -269,7 +270,7 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "This hash contains details about the Mandate to create. This parameter can only be used with [`confirm=true`](https://stripe.com/docs/api/setup_intents/create#create_setup_intent-confirm)."
+    @typedoc nil
     @type mandate_data :: %{optional(:customer_acceptance) => customer_acceptance}
   )
 
@@ -425,8 +426,8 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `sepa_debit` SetupIntent, this sub-hash contains details about the SEPA Debit payment method options."
-    @type sepa_debit :: %{optional(:mandate_options) => map()}
+    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
+    @type sepa_debit :: %{optional(:iban) => binary}
   )
 
   (
@@ -464,7 +465,7 @@ defmodule Stripe.SetupIntent do
                 optional(:description) => binary,
                 optional(:expand) => list(binary),
                 optional(:flow_directions) => list(:inbound | :outbound),
-                optional(:mandate_data) => mandate_data,
+                optional(:mandate_data) => mandate_data | binary,
                 optional(:metadata) => %{optional(binary) => binary},
                 optional(:on_behalf_of) => binary,
                 optional(:payment_method) => binary,
@@ -625,7 +626,7 @@ defmodule Stripe.SetupIntent do
               intent :: binary(),
               params :: %{
                 optional(:expand) => list(binary),
-                optional(:mandate_data) => mandate_data | mandate_data,
+                optional(:mandate_data) => mandate_data | binary | mandate_data,
                 optional(:payment_method) => binary,
                 optional(:payment_method_data) => payment_method_data,
                 optional(:payment_method_options) => payment_method_options,
