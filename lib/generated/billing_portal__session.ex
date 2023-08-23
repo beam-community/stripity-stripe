@@ -43,6 +43,11 @@ defmodule Stripe.BillingPortal.Session do
   )
 
   (
+    @typedoc "Configuration when `retention.type=coupon_offer`."
+    @type coupon_offer :: %{optional(:coupon) => binary}
+  )
+
+  (
     @typedoc nil
     @type discounts :: %{optional(:coupon) => binary, optional(:promotion_code) => binary}
   )
@@ -82,8 +87,19 @@ defmodule Stripe.BillingPortal.Session do
   )
 
   (
+    @typedoc "Specify a retention strategy to be used in the cancellation flow."
+    @type retention :: %{
+            optional(:coupon_offer) => coupon_offer,
+            optional(:type) => :coupon_offer
+          }
+  )
+
+  (
     @typedoc "Configuration when `flow_data.type=subscription_cancel`."
-    @type subscription_cancel :: %{optional(:subscription) => binary}
+    @type subscription_cancel :: %{
+            optional(:retention) => retention,
+            optional(:subscription) => binary
+          }
   )
 
   (
