@@ -221,8 +221,13 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The card_payments capability."
-    @type card_payments :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to card charging on the account."
+    @type card_payments :: %{
+            optional(:decline_on) => decline_on,
+            optional(:statement_descriptor_prefix) => binary,
+            optional(:statement_descriptor_prefix_kana) => binary | binary,
+            optional(:statement_descriptor_prefix_kanji) => binary | binary
+          }
   )
 
   (
@@ -332,7 +337,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "A document verifying the business."
+    @typedoc "An identifying document, either a passport or local ID card."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -570,12 +575,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
+    @typedoc "Details on the account's acceptance of the Stripe Treasury Services Agreement."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:service_agreement) => binary,
-            optional(:user_agent) => binary
+            optional(:user_agent) => binary | binary
           }
   )
 
@@ -595,8 +599,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
