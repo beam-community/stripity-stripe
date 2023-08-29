@@ -599,11 +599,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The individual's verification document information."
-    @type verification :: %{
-            optional(:additional_document) => additional_document,
-            optional(:document) => document
-          }
+    @typedoc "Information on the verification state of the company."
+    @type verification :: %{optional(:document) => document}
   )
 
   (
