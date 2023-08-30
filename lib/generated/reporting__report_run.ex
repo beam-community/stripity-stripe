@@ -71,6 +71,7 @@ defmodule Stripe.Reporting.ReportRun do
               | :issuing_dispute
               | :issuing_transaction
               | :network_cost
+              | :obligation
               | :other_adjustment
               | :partial_capture_reversal
               | :payout
