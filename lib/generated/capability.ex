@@ -129,7 +129,7 @@ defmodule Stripe.Capability do
   (
     nil
 
-    @doc "<p>Updates an existing Account Capability.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}/capabilities/{capability}`\n"
+    @doc "<p>Updates an existing Account Capability. Request or remove a capability by updating its <code>requested</code> parameter.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}/capabilities/{capability}`\n"
     (
       @spec update(
               account :: binary(),
