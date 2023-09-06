@@ -236,6 +236,7 @@ defmodule Stripe.PaymentMethod do
               | :ing
               | :knab
               | :moneyou
+              | :n26
               | :rabobank
               | :regiobank
               | :revolut
