@@ -90,16 +90,16 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `acss_debit` PaymentMethod, this hash contains details about the ACSS Debit payment method."
+    @typedoc nil
     @type acss_debit :: %{
-            optional(:account_number) => binary,
-            optional(:institution_number) => binary,
-            optional(:transit_number) => binary
+            optional(:mandate_options) => mandate_options,
+            optional(:setup_future_usage) => :none | :off_session | :on_session,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 
   (
-    @typedoc nil
+    @typedoc "Shipping address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -134,8 +134,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type au_becs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
+    @typedoc "If this is an `au_becs_debit` PaymentMethod, this hash contains details about the bank account."
+    @type au_becs_debit :: %{optional(:account_number) => binary, optional(:bsb_number) => binary}
   )
 
   (
@@ -296,33 +296,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `fpx` PaymentMethod, this hash contains details about the FPX payment method."
-    @type fpx :: %{
-            optional(:account_holder_type) => :company | :individual,
-            optional(:bank) =>
-              :affin_bank
-              | :agrobank
-              | :alliance_bank
-              | :ambank
-              | :bank_islam
-              | :bank_muamalat
-              | :bank_of_china
-              | :bank_rakyat
-              | :bsn
-              | :cimb
-              | :deutsche_bank
-              | :hong_leong_bank
-              | :hsbc
-              | :kfh
-              | :maybank2e
-              | :maybank2u
-              | :ocbc
-              | :pb_enterprise
-              | :public_bank
-              | :rhb
-              | :standard_chartered
-              | :uob
-          }
+    @typedoc nil
+    @type fpx :: %{optional(:setup_future_usage) => :none}
   )
 
   (
@@ -346,8 +321,56 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method."
-    @type klarna :: %{optional(:dob) => dob}
+    @typedoc nil
+    @type klarna :: %{
+            optional(:capture_method) => :manual,
+            optional(:preferred_locale) =>
+              :"cs-CZ"
+              | :"da-DK"
+              | :"de-AT"
+              | :"de-CH"
+              | :"de-DE"
+              | :"el-GR"
+              | :"en-AT"
+              | :"en-AU"
+              | :"en-BE"
+              | :"en-CA"
+              | :"en-CH"
+              | :"en-CZ"
+              | :"en-DE"
+              | :"en-DK"
+              | :"en-ES"
+              | :"en-FI"
+              | :"en-FR"
+              | :"en-GB"
+              | :"en-GR"
+              | :"en-IE"
+              | :"en-IT"
+              | :"en-NL"
+              | :"en-NO"
+              | :"en-NZ"
+              | :"en-PL"
+              | :"en-PT"
+              | :"en-SE"
+              | :"en-US"
+              | :"es-ES"
+              | :"es-US"
+              | :"fi-FI"
+              | :"fr-BE"
+              | :"fr-CA"
+              | :"fr-CH"
+              | :"fr-FR"
+              | :"it-CH"
+              | :"it-IT"
+              | :"nb-NO"
+              | :"nl-BE"
+              | :"nl-NL"
+              | :"pl-PL"
+              | :"pt-PT"
+              | :"sv-FI"
+              | :"sv-SE",
+            optional(:setup_future_usage) => :none
+          }
   )
 
   (
@@ -611,8 +634,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
-    @type sepa_debit :: %{optional(:iban) => binary}
+    @typedoc nil
+    @type sepa_debit :: %{
+            optional(:mandate_options) => map(),
+            optional(:setup_future_usage) => :none | :off_session | :on_session
+          }
   )
 
   (
@@ -627,8 +653,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method."
-    @type sofort :: %{optional(:country) => :AT | :BE | :DE | :ES | :IT | :NL}
+    @typedoc nil
+    @type sofort :: %{
+            optional(:preferred_language) => :de | :en | :es | :fr | :it | :nl | :pl,
+            optional(:setup_future_usage) => :none | :off_session
+          }
   )
 
   (
@@ -777,7 +806,7 @@ defmodule Stripe.PaymentIntent do
   (
     nil
 
-    @doc "<p>Retrieves the details of a PaymentIntent that has previously been created. </p>\n\n<p>Client-side retrieval using a publishable key is allowed when the <code>client_secret</code> is provided in the query string. </p>\n\n<p>When retrieved with a publishable key, only a subset of properties will be returned. Please refer to the <a href=\"#payment_intent_object\">payment intent</a> object reference for more details.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_intents/{intent}`\n"
+    @doc "<p>Retrieves the details of a PaymentIntent that has previously been created. </p>\n\n<p>You can retrieve a PaymentIntent client-side using a publishable key when the <code>client_secret</code> is in the query string. </p>\n\n<p>If you retrieve a PaymentIntent with a publishable key, it only returns a subset of properties. Refer to the <a href=\"#payment_intent_object\">payment intent</a> object reference for more details.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_intents/{intent}`\n"
     (
       @spec retrieve(
               intent :: binary(),

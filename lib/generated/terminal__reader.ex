@@ -214,6 +214,7 @@ defmodule Stripe.Terminal.Reader do
                 optional(:expand) => list(binary),
                 optional(:limit) => integer,
                 optional(:location) => binary,
+                optional(:serial_number) => binary,
                 optional(:starting_after) => binary,
                 optional(:status) => :offline | :online
               },
