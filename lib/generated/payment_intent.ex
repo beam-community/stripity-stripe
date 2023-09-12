@@ -99,7 +99,7 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Shipping address."
+    @typedoc nil
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -190,11 +190,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type boleto :: %{
-            optional(:expires_after_days) => integer,
-            optional(:setup_future_usage) => :none | :off_session | :on_session
-          }
+    @typedoc "If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method."
+    @type boleto :: %{optional(:tax_id) => binary}
   )
 
   (
@@ -379,56 +376,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type klarna :: %{
-            optional(:capture_method) => :manual,
-            optional(:preferred_locale) =>
-              :"cs-CZ"
-              | :"da-DK"
-              | :"de-AT"
-              | :"de-CH"
-              | :"de-DE"
-              | :"el-GR"
-              | :"en-AT"
-              | :"en-AU"
-              | :"en-BE"
-              | :"en-CA"
-              | :"en-CH"
-              | :"en-CZ"
-              | :"en-DE"
-              | :"en-DK"
-              | :"en-ES"
-              | :"en-FI"
-              | :"en-FR"
-              | :"en-GB"
-              | :"en-GR"
-              | :"en-IE"
-              | :"en-IT"
-              | :"en-NL"
-              | :"en-NO"
-              | :"en-NZ"
-              | :"en-PL"
-              | :"en-PT"
-              | :"en-SE"
-              | :"en-US"
-              | :"es-ES"
-              | :"es-US"
-              | :"fi-FI"
-              | :"fr-BE"
-              | :"fr-CA"
-              | :"fr-CH"
-              | :"fr-FR"
-              | :"it-CH"
-              | :"it-IT"
-              | :"nb-NO"
-              | :"nl-BE"
-              | :"nl-NL"
-              | :"pl-PL"
-              | :"pt-PT"
-              | :"sv-FI"
-              | :"sv-SE",
-            optional(:setup_future_usage) => :none
-          }
+    @typedoc "If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method."
+    @type klarna :: %{optional(:dob) => dob}
   )
 
   (
@@ -668,8 +617,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
-    @type sepa_debit :: %{optional(:iban) => binary}
+    @typedoc nil
+    @type sepa_debit :: %{
+            optional(:mandate_options) => map(),
+            optional(:setup_future_usage) => :none | :off_session | :on_session
+          }
   )
 
   (
@@ -697,13 +649,13 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `us_bank_account` PaymentMethod, this hash contains details about the US bank account payment method."
+    @typedoc nil
     @type us_bank_account :: %{
-            optional(:account_holder_type) => :company | :individual,
-            optional(:account_number) => binary,
-            optional(:account_type) => :checking | :savings,
-            optional(:financial_connections_account) => binary,
-            optional(:routing_number) => binary
+            optional(:financial_connections) => financial_connections,
+            optional(:networks) => networks,
+            optional(:preferred_settlement_speed) => :fastest | :standard,
+            optional(:setup_future_usage) => :none | :off_session | :on_session,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 
