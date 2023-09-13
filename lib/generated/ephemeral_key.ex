@@ -25,6 +25,7 @@ defmodule Stripe.EphemeralKey do
                 optional(:customer) => binary,
                 optional(:expand) => list(binary),
                 optional(:issuing_card) => binary,
+                optional(:nonce) => binary,
                 optional(:verification_session) => binary
               },
               opts :: Keyword.t()

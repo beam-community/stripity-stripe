@@ -32,7 +32,7 @@ defmodule Stripe.TaxId do
   (
     nil
 
-    @doc "<p>Creates a new <code>TaxID</code> object for a customer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers/{customer}/tax_ids`\n"
+    @doc "<p>Creates a new <code>tax_id</code> object for a customer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers/{customer}/tax_ids`\n"
     (
       @spec create(
               customer :: binary(),
@@ -143,7 +143,7 @@ defmodule Stripe.TaxId do
   (
     nil
 
-    @doc "<p>Retrieves the <code>TaxID</code> object with the given identifier.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
+    @doc "<p>Retrieves the <code>tax_id</code> object with the given identifier.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
     (
       @spec retrieve(
               customer :: binary(),
@@ -247,7 +247,7 @@ defmodule Stripe.TaxId do
   (
     nil
 
-    @doc "<p>Deletes an existing <code>TaxID</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
+    @doc "<p>Deletes an existing <code>tax_id</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
     (
       @spec delete(customer :: binary(), id :: binary(), opts :: Keyword.t()) ::
               {:ok, Stripe.DeletedTaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
