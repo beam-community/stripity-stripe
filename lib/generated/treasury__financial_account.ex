@@ -126,7 +126,7 @@ defmodule Stripe.Treasury.FinancialAccount do
   )
 
   (
-    @typedoc "Enables US domestic wire tranfers via the OutboundPayments API."
+    @typedoc "Enables US domestic wire transfers via the OutboundPayments API."
     @type us_domestic_wire :: %{optional(:requested) => boolean}
   )
 
