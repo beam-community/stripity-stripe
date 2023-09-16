@@ -1,7 +1,7 @@
 defmodule Stripe.TaxId do
   use Stripe.Entity
 
-  @moduledoc "You can add one or multiple tax IDs to a [customer](https://stripe.com/docs/api/customers).\nA customer's tax IDs are displayed on invoices and credit notes issued for the customer.\n\nRelated guide: [Customer tax identification numbers](https://stripe.com/docs/billing/taxes/tax-ids)"
+  @moduledoc "You can add one or multiple tax IDs to a [customer](https://stripe.com/docs/api/customers) or account.\nCustomer and account tax IDs get displayed on related invoices and credit notes.\n\nRelated guides: [Customer tax identification numbers](https://stripe.com/docs/billing/taxes/tax-ids), [Account tax IDs](https://stripe.com/docs/invoicing/connect#account-tax-ids)"
   (
     defstruct [
       :country,
