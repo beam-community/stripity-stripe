@@ -1,11 +1,11 @@
 defmodule Stripe.FileLink do
   use Stripe.Entity
 
-  @moduledoc "To share the contents of a `File` object with non-Stripe users, you can\ncreate a `FileLink`. `FileLink`s contain a URL that can be used to\nretrieve the contents of the file without authentication."
+  @moduledoc "To share the contents of a `File` object with non-Stripe users, you can\ncreate a `FileLink`. `FileLink`s contain a URL that you can use to\nretrieve the contents of the file without authentication."
   (
     defstruct [:created, :expired, :expires_at, :file, :id, :livemode, :metadata, :object, :url]
 
-    @typedoc "The `file_link` type.\n\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `expired` Whether this link is already expired.\n  * `expires_at` Time at which the link expires.\n  * `file` The file object this link points to.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `url` The publicly accessible URL to download the file.\n"
+    @typedoc "The `file_link` type.\n\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `expired` Returns if the link is already expired.\n  * `expires_at` Time that the link expires.\n  * `file` The file object this link points to.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `url` The publicly accessible URL to download the file.\n"
     @type t :: %__MODULE__{
             created: integer,
             expired: boolean,

@@ -1,7 +1,7 @@
 defmodule Stripe.File do
   use Stripe.Entity
 
-  @moduledoc "This is an object representing a file hosted on Stripe's servers. The\nfile may have been uploaded by yourself using the [create file](https://stripe.com/docs/api#create_file)\nrequest (for example, when uploading dispute evidence) or it may have\nbeen created by Stripe (for example, the results of a [Sigma scheduled\nquery](#scheduled_queries)).\n\nRelated guide: [File upload guide](https://stripe.com/docs/file-upload)"
+  @moduledoc "This object represents files hosted on Stripe's servers. You can upload\nfiles with the [create file](https://stripe.com/docs/api#create_file) request\n(for example, when uploading dispute evidence). Stripe also\ncreates files independetly (for example, the results of a [Sigma scheduled\nquery](#scheduled_queries)).\n\nRelated guide: [File upload guide](https://stripe.com/docs/file-upload)"
   (
     defstruct [
       :created,
@@ -17,7 +17,7 @@ defmodule Stripe.File do
       :url
     ]
 
-    @typedoc "The `file` type.\n\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `expires_at` The time at which the file expires and is no longer available in epoch seconds.\n  * `filename` A filename for the file, suitable for saving to a filesystem.\n  * `id` Unique identifier for the object.\n  * `links` A list of [file links](https://stripe.com/docs/api#file_links) that point at this file.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `purpose` The [purpose](https://stripe.com/docs/file-upload#uploading-a-file) of the uploaded file.\n  * `size` The size in bytes of the file object.\n  * `title` A user friendly title for the document.\n  * `type` The type of the file returned (e.g., `csv`, `pdf`, `jpg`, or `png`).\n  * `url` The URL from which the file can be downloaded using your live secret API key.\n"
+    @typedoc "The `file` type.\n\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `expires_at` The file expires and isn't available at this time in epoch seconds.\n  * `filename` The suitable name for saving the file to a filesystem.\n  * `id` Unique identifier for the object.\n  * `links` A list of [file links](https://stripe.com/docs/api#file_links) that point at this file.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `purpose` The [purpose](https://stripe.com/docs/file-upload#uploading-a-file) of the uploaded file.\n  * `size` The size of the file object in bytes.\n  * `title` A suitable title for the document.\n  * `type` The returned file type (for example, `csv`, `pdf`, `jpg`, or `png`).\n  * `url` Use your live secret API key to download the file from this URL.\n"
     @type t :: %__MODULE__{
             created: integer,
             expires_at: integer | nil,
@@ -46,7 +46,7 @@ defmodule Stripe.File do
   (
     nil
 
-    @doc "<p>Returns a list of the files that your account has access to. The files are returned sorted by creation date, with the most recently created files appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/files`\n"
+    @doc "<p>Returns a list of the files that your account has access to. Stripe sorts and returns the files by their creation dates, placing the most recently created files at the top.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/files`\n"
     (
       @spec list(
               params :: %{
@@ -92,7 +92,7 @@ defmodule Stripe.File do
   (
     nil
 
-    @doc "<p>Retrieves the details of an existing file object. Supply the unique file ID from a file, and Stripe will return the corresponding file object. To access file contents, see the <a href=\"/docs/file-upload#download-file-contents\">File Upload Guide</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/files/{file}`\n"
+    @doc "<p>Retrieves the details of an existing file object. After you supply a unique file ID, Stripe returns the corresponding file object. Learn how to <a href=\"/docs/file-upload#download-file-contents\">access file contents</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/files/{file}`\n"
     (
       @spec retrieve(
               file :: binary(),
@@ -133,7 +133,7 @@ defmodule Stripe.File do
   (
     nil
 
-    @doc "<p>To upload a file to Stripe, you’ll need to send a request of type <code>multipart/form-data</code>. The request should contain the file you would like to upload, as well as the parameters for creating a file.</p>\n\n<p>All of Stripe’s officially supported Client libraries should have support for sending <code>multipart/form-data</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/files`\n"
+    @doc "<p>To upload a file to Stripe, you need to send a request of type <code>multipart/form-data</code>. Include the file you want to upload in the request, and the parameters for creating a file.</p>\n\n<p>All of Stripe’s officially supported Client libraries support sending <code>multipart/form-data</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/files`\n"
     (
       @spec create(opts :: Keyword.t()) ::
               {:ok, Stripe.File.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}

@@ -587,7 +587,7 @@ defmodule Stripe.Issuing.Authorization do
   (
     nil
 
-    @doc "<p>Approves a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href=\"/docs/issuing/controls/real-time-authorizations\">real-time authorization</a> flow. \nYou can also respond directly to the webhook request to approve an authorization (preferred). More details can be found <a href=\"/docs/issuing/controls/real-time-authorizations#authorization-handling\">here</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/authorizations/{authorization}/approve`\n"
+    @doc "<p>[Deprecated] Approves a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href=\"/docs/issuing/controls/real-time-authorizations\">real-time authorization</a> flow. \nThis method is deprecated. Instead, <a href=\"/docs/issuing/controls/real-time-authorizations#authorization-handling\">respond directly to the webhook request to approve an authorization</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/authorizations/{authorization}/approve`\n"
     (
       @spec approve(
               authorization :: binary(),
@@ -635,7 +635,7 @@ defmodule Stripe.Issuing.Authorization do
   (
     nil
 
-    @doc "<p>Declines a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href=\"/docs/issuing/controls/real-time-authorizations\">real time authorization</a> flow.\nYou can also respond directly to the webhook request to decline an authorization (preferred). More details can be found <a href=\"/docs/issuing/controls/real-time-authorizations#authorization-handling\">here</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/authorizations/{authorization}/decline`\n"
+    @doc "<p>[Deprecated] Declines a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href=\"/docs/issuing/controls/real-time-authorizations\">real time authorization</a> flow.\nThis method is deprecated. Instead, <a href=\"/docs/issuing/controls/real-time-authorizations#authorization-handling\">respond directly to the webhook request to decline an authorization</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/authorizations/{authorization}/decline`\n"
     (
       @spec decline(
               authorization :: binary(),

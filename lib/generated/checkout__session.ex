@@ -237,7 +237,8 @@ defmodule Stripe.Checkout.Session do
     @typedoc "Display additional text for your customers using custom text."
     @type custom_text :: %{
             optional(:shipping_address) => shipping_address | binary,
-            optional(:submit) => submit | binary
+            optional(:submit) => submit | binary,
+            optional(:terms_of_service_acceptance) => terms_of_service_acceptance | binary
           }
   )
 
@@ -923,13 +924,21 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
+    @typedoc nil
+    @type terms_of_service_acceptance :: %{optional(:message) => binary}
+  )
+
+  (
     @typedoc "Configuration for `type=text` fields."
     @type text :: %{optional(:maximum_length) => integer, optional(:minimum_length) => integer}
   )
 
   (
-    @typedoc "The parameters used to automatically create a Transfer when the payment succeeds.\nFor more information, see the PaymentIntents [use case for connected accounts](https://stripe.com/docs/payments/connected-accounts)."
-    @type transfer_data :: %{optional(:amount) => integer, optional(:destination) => binary}
+    @typedoc "If specified, the funds from the subscription's invoices will be transferred to the destination and the ID of the resulting transfers will be found on the resulting charges."
+    @type transfer_data :: %{
+            optional(:amount_percent) => number,
+            optional(:destination) => binary
+          }
   )
 
   (

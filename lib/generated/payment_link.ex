@@ -121,7 +121,8 @@ defmodule Stripe.PaymentLink do
     @typedoc "Display additional text for your customers using custom text."
     @type custom_text :: %{
             optional(:shipping_address) => shipping_address | binary,
-            optional(:submit) => submit | binary
+            optional(:submit) => submit | binary,
+            optional(:terms_of_service_acceptance) => terms_of_service_acceptance | binary
           }
   )
 
@@ -476,6 +477,11 @@ defmodule Stripe.PaymentLink do
   (
     @typedoc "Controls tax ID collection during checkout."
     @type tax_id_collection :: %{optional(:enabled) => boolean}
+  )
+
+  (
+    @typedoc nil
+    @type terms_of_service_acceptance :: %{optional(:message) => binary}
   )
 
   (
