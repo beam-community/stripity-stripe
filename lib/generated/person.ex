@@ -1,7 +1,7 @@
 defmodule Stripe.Person do
   use Stripe.Entity
 
-  @moduledoc "This is an object representing a person associated with a Stripe account.\n\nA platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account.\nSee the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform prefilling and account onboarding steps.\n\nRelated guide: [Handling identity verification with the API](https://stripe.com/docs/connect/identity-verification-api#person-information)"
+  @moduledoc "This is an object representing a person associated with a Stripe account.\n\nA platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account.\nSee the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform prefilling and account onboarding steps.\n\nRelated guide: [Handling identity verification with the API](https://stripe.com/docs/connect/handling-api-verification#person-information)"
   (
     defstruct [
       :account,
