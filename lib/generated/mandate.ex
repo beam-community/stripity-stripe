@@ -1,7 +1,7 @@
 defmodule Stripe.Mandate do
   use Stripe.Entity
 
-  @moduledoc "A Mandate is a record of the permission a customer has given you to debit their payment method."
+  @moduledoc "A Mandate is a record of the permission that your customer gives you to debit their payment method."
   (
     defstruct [
       :customer_acceptance,
@@ -17,7 +17,7 @@ defmodule Stripe.Mandate do
       :type
     ]
 
-    @typedoc "The `mandate` type.\n\n  * `customer_acceptance` \n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `multi_use` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account (if any) for which the mandate is intended.\n  * `payment_method` ID of the payment method associated with this mandate.\n  * `payment_method_details` \n  * `single_use` \n  * `status` The status of the mandate, which indicates whether it can be used to initiate a payment.\n  * `type` The type of the mandate.\n"
+    @typedoc "The `mandate` type.\n\n  * `customer_acceptance` \n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `multi_use` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account (if any) that the mandate is intended for.\n  * `payment_method` ID of the payment method associated with this mandate.\n  * `payment_method_details` \n  * `single_use` \n  * `status` The mandate status indicates whether or not you can use it to initiate a payment.\n  * `type` The type of the mandate.\n"
     @type t :: %__MODULE__{
             customer_acceptance: term,
             id: binary,

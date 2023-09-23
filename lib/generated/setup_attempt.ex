@@ -1,7 +1,7 @@
 defmodule Stripe.SetupAttempt do
   use Stripe.Entity
 
-  @moduledoc "A SetupAttempt describes one attempted confirmation of a SetupIntent,\nwhether that confirmation was successful or unsuccessful. You can use\nSetupAttempts to inspect details of a specific attempt at setting up a\npayment method using a SetupIntent."
+  @moduledoc "A SetupAttempt describes one attempted confirmation of a SetupIntent,\nwhether that confirmation is successful or unsuccessful. You can use\nSetupAttempts to inspect details of a specific attempt at setting up a\npayment method using a SetupIntent."
   (
     defstruct [
       :application,
@@ -54,7 +54,7 @@ defmodule Stripe.SetupAttempt do
   (
     nil
 
-    @doc "<p>Returns a list of SetupAttempts associated with a provided SetupIntent.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/setup_attempts`\n"
+    @doc "<p>Returns a list of SetupAttempts that associate with a provided SetupIntent.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/setup_attempts`\n"
     (
       @spec list(
               params :: %{
