@@ -155,7 +155,8 @@ defmodule Stripe.Refund do
 
   (
     nil
-    @doc "<p>Create a refund.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/refunds`\n"
+
+    @doc "<p>When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create it.</p>\n\n<p>Creating a new refund will refund a charge that has previously been created but not yet refunded.\nFunds will be refunded to the credit or debit card that was originally charged.</p>\n\n<p>You can optionally refund only part of a charge.\nYou can do so multiple times, until the entire charge has been refunded.</p>\n\n<p>Once entirely refunded, a charge can’t be refunded again.\nThis method will raise an error when called on an already-refunded charge,\nor when trying to refund more money than is left on a charge.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/refunds`\n"
     (
       @spec create(
               params :: %{
