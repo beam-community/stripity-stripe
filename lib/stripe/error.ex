@@ -89,6 +89,7 @@ defmodule Stripe.Error do
           | :missing
           | :processing_error
           | :bank_account_verification_failed
+          | :idempotency_key_in_use
 
   @type t :: %__MODULE__{
           source: error_source,
