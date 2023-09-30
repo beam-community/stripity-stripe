@@ -1,11 +1,11 @@
 defmodule Stripe.Token do
   use Stripe.Entity
 
-  @moduledoc "Tokenization is the process Stripe uses to collect sensitive card or bank\naccount details, or personally identifiable information (PII), directly from\nyour customers in a secure manner. A token representing this information is\nreturned to your server to use. You should use our\n[recommended payments integrations](https://stripe.com/docs/payments) to perform this process\nclient-side. This ensures that no sensitive card data touches your server,\nand allows your integration to operate in a PCI-compliant way.\n\nIf you cannot use client-side tokenization, you can also create tokens using\nthe API with either your publishable or secret API key. Keep in mind that if\nyour integration uses this method, you are responsible for any PCI compliance\nthat may be required, and you must keep your secret API key safe. Unlike with\nclient-side tokenization, your customer's information is not sent directly to\nStripe, so we cannot determine how it is handled or stored.\n\nTokens cannot be stored or used more than once. To store card or bank account\ninformation for later use, you can create [Customer](https://stripe.com/docs/api#customers)\nobjects or [Custom accounts](https://stripe.com/docs/api#external_accounts). Note that\n[Radar](https://stripe.com/docs/radar), our integrated solution for automatic fraud protection,\nperforms best with integrations that use client-side tokenization."
+  @moduledoc "Tokenization is the process Stripe uses to collect sensitive card or bank\naccount details, or personally identifiable information (PII), directly from\nyour customers in a secure manner. A token representing this information is\nreturned to your server to use. Use our\n[recommended payments integrations](https://stripe.com/docs/payments) to perform this process\non the client-side. This guarantees that no sensitive card data touches your server,\nand allows your integration to operate in a PCI-compliant way.\n\nIf you can't use client-side tokenization, you can also create tokens using\nthe API with either your publishable or secret API key. If\nyour integration uses this method, you're responsible for any PCI compliance\nthat it might require, and you must keep your secret API key safe. Unlike with\nclient-side tokenization, your customer's information isn't sent directly to\nStripe, so we can't determine how it's handled or stored.\n\nYou can't store or use tokens more than once. To store card or bank account\ninformation for later use, create [Customer](https://stripe.com/docs/api#customers)\nobjects or [Custom accounts](https://stripe.com/docs/api#external_accounts).\n[Radar](https://stripe.com/docs/radar), our integrated solution for automatic fraud protection,\nperforms best with integrations that use client-side tokenization."
   (
     defstruct [:bank_account, :card, :client_ip, :created, :id, :livemode, :object, :type, :used]
 
-    @typedoc "The `token` type.\n\n  * `bank_account` \n  * `card` \n  * `client_ip` IP address of the client that generated the token.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `type` Type of the token: `account`, `bank_account`, `card`, or `pii`.\n  * `used` Whether this token has already been used (tokens can be used only once).\n"
+    @typedoc "The `token` type.\n\n  * `bank_account` \n  * `card` \n  * `client_ip` IP address of the client that generates the token.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `type` Type of the token: `account`, `bank_account`, `card`, or `pii`.\n  * `used` Determines if you have already used this token (you can only use tokens once).\n"
     @type t :: %__MODULE__{
             bank_account: Stripe.BankAccount.t(),
             card: Stripe.Card.t(),
@@ -20,7 +20,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Information for the account this token will represent."
+    @typedoc "Information for the account this token represents."
     @type account :: %{
             optional(:business_type) => :company | :government_entity | :individual | :non_profit,
             optional(:company) => company,
@@ -157,7 +157,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The updated CVC value this token will represent."
+    @typedoc "The updated CVC value this token represents."
     @type cvc_update :: %{optional(:cvc) => binary}
   )
 
@@ -227,7 +227,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Information for the person this token will represent."
+    @typedoc "Information for the person this token represents."
     @type person :: %{
             optional(:address) => address,
             optional(:address_kana) => address_kana,
@@ -258,7 +258,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The PII this token will represent."
+    @typedoc "The PII this token represents."
     @type pii :: %{optional(:id_number) => binary}
   )
 
@@ -340,7 +340,7 @@ defmodule Stripe.Token do
   (
     nil
 
-    @doc "<p>Creates a single-use token that represents a bank account’s details.\nThis token can be used with any API method in place of a bank account dictionary. This token can be used only once, by attaching it to a <a href=\"#accounts\">Custom account</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tokens`\n"
+    @doc "<p>Creates a single-use token that represents a bank account’s details.\nYou can use this token with any API method in place of a bank account dictionary. You can only use this token once. To do so, attach it to a <a href=\"#accounts\">Custom account</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tokens`\n"
     (
       @spec create(
               params :: %{
