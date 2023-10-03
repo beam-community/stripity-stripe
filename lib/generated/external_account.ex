@@ -30,6 +30,7 @@ defmodule Stripe.ExternalAccount do
                 optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
                 optional(:limit) => integer,
+                optional(:object) => :bank_account | :card,
                 optional(:starting_after) => binary
               },
               opts :: Keyword.t()
