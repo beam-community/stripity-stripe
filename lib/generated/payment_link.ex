@@ -185,7 +185,9 @@ defmodule Stripe.PaymentLink do
     @type payment_intent_data :: %{
             optional(:capture_method) => :automatic | :automatic_async | :manual,
             optional(:metadata) => %{optional(binary) => binary},
-            optional(:setup_future_usage) => :off_session | :on_session
+            optional(:setup_future_usage) => :off_session | :on_session,
+            optional(:statement_descriptor) => binary,
+            optional(:statement_descriptor_suffix) => binary
           }
   )
 
