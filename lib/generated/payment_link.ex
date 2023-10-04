@@ -184,6 +184,7 @@ defmodule Stripe.PaymentLink do
     @typedoc "A subset of parameters to be passed to PaymentIntent creation for Checkout Sessions in `payment` mode."
     @type payment_intent_data :: %{
             optional(:capture_method) => :automatic | :automatic_async | :manual,
+            optional(:metadata) => %{optional(binary) => binary},
             optional(:setup_future_usage) => :off_session | :on_session
           }
   )
@@ -470,6 +471,7 @@ defmodule Stripe.PaymentLink do
     @typedoc "When creating a subscription, the specified configuration data will be used. There must be at least one line item with a recurring price to use `subscription_data`."
     @type subscription_data :: %{
             optional(:description) => binary,
+            optional(:metadata) => %{optional(binary) => binary},
             optional(:trial_period_days) => integer
           }
   )
@@ -712,6 +714,7 @@ defmodule Stripe.PaymentLink do
                 optional(:invoice_creation) => invoice_creation,
                 optional(:line_items) => list(line_items),
                 optional(:metadata) => %{optional(binary) => binary},
+                optional(:payment_intent_data) => payment_intent_data,
                 optional(:payment_method_collection) => :always | :if_required,
                 optional(:payment_method_types) =>
                   list(
@@ -745,7 +748,8 @@ defmodule Stripe.PaymentLink do
                     | :wechat_pay
                   )
                   | binary,
-                optional(:shipping_address_collection) => shipping_address_collection | binary
+                optional(:shipping_address_collection) => shipping_address_collection | binary,
+                optional(:subscription_data) => subscription_data
               },
               opts :: Keyword.t()
             ) :: {:ok, Stripe.PaymentLink.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}

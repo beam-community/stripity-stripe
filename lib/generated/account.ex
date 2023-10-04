@@ -66,7 +66,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The individual's primary address."
+    @typedoc "The company's primary address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -332,7 +332,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "An identifying document, either a passport or local ID card."
+    @typedoc "A document verifying the business."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -570,7 +570,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](https://stripe.com/docs/issuing/connect/tos_acceptance)."
+    @typedoc "Details on the account's acceptance of the Stripe Treasury Services Agreement."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
@@ -584,8 +584,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's Treasury FinancialAccounts."
-    @type treasury :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The treasury capability."
+    @type treasury :: %{optional(:requested) => boolean}
   )
 
   (
@@ -594,11 +594,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The individual's verification document information."
-    @type verification :: %{
-            optional(:additional_document) => additional_document,
-            optional(:document) => document
-          }
+    @typedoc "Information on the verification state of the company."
+    @type verification :: %{optional(:document) => document}
   )
 
   (
