@@ -1,7 +1,7 @@
 defmodule Stripe.SetupIntent do
   use Stripe.Entity
 
-  @moduledoc "A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.\nFor example, you could use a SetupIntent to set up and save your customer's card without immediately collecting a payment.\nLater, you can use [PaymentIntents](https://stripe.com/docs/api#payment_intents) to drive the payment flow.\n\nCreate a SetupIntent as soon as you're ready to collect your customer's payment credentials.\nDo not maintain long-lived, unconfirmed SetupIntents as they may no longer be valid.\nThe SetupIntent then transitions through multiple [statuses](https://stripe.com/docs/payments/intents#intent-statuses) as it guides\nyou through the setup process.\n\nSuccessful SetupIntents result in payment credentials that are optimized for future payments.\nFor example, cardholders in [certain regions](/guides/strong-customer-authentication) may need to be run through\n[Strong Customer Authentication](https://stripe.com/docs/strong-customer-authentication) at the time of payment method collection\nin order to streamline later [off-session payments](https://stripe.com/docs/payments/setup-intents).\nIf the SetupIntent is used with a [Customer](https://stripe.com/docs/api#setup_intent_object-customer), upon success,\nit will automatically attach the resulting payment method to that Customer.\nWe recommend using SetupIntents or [setup_future_usage](https://stripe.com/docs/api#payment_intent_object-setup_future_usage) on\nPaymentIntents to save payment methods in order to prevent saving invalid or unoptimized payment methods.\n\nBy using SetupIntents, you ensure that your customers experience the minimum set of required friction,\neven as regulations change over time.\n\nRelated guide: [Setup Intents API](https://stripe.com/docs/payments/setup-intents)"
+  @moduledoc "A SetupIntent guides you through the process of setting up and saving a customer's payment credentials for future payments.\nFor example, you can use a SetupIntent to set up and save your customer's card without immediately collecting a payment.\nLater, you can use [PaymentIntents](https://stripe.com/docs/api#payment_intents) to drive the payment flow.\n\nCreate a SetupIntent when you're ready to collect your customer's payment credentials.\nDon't maintain long-lived, unconfirmed SetupIntents because they might not be valid.\nThe SetupIntent transitions through multiple [statuses](https://stripe.com/docs/payments/intents#intent-statuses) as it guides\nyou through the setup process.\n\nSuccessful SetupIntents result in payment credentials that are optimized for future payments.\nFor example, cardholders in [certain regions](/guides/strong-customer-authentication) might need to be run through\n[Strong Customer Authentication](https://stripe.com/docs/strong-customer-authentication) during payment method collection\nto streamline later [off-session payments](https://stripe.com/docs/payments/setup-intents).\nIf you use the SetupIntent with a [Customer](https://stripe.com/docs/api#setup_intent_object-customer),\nit automatically attaches the resulting payment method to that Customer after successful setup.\nWe recommend using SetupIntents or [setup_future_usage](https://stripe.com/docs/api#payment_intent_object-setup_future_usage) on\nPaymentIntents to save payment methods to prevent saving invalid or unoptimized payment methods.\n\nBy using SetupIntents, you can reduce friction for your customers, even as regulations change over time.\n\nRelated guide: [Setup Intents API](https://stripe.com/docs/payments/setup-intents)"
   (
     defstruct [
       :application,
@@ -31,7 +31,7 @@ defmodule Stripe.SetupIntent do
       :usage
     ]
 
-    @typedoc "The `setup_intent` type.\n\n  * `application` ID of the Connect application that created the SetupIntent.\n  * `attach_to_self` If present, the SetupIntent's payment method will be attached to the in-context Stripe Account.\n\nIt can only be used for this Stripe Account’s own money movement flows like InboundTransfer and OutboundTransfers. It cannot be set to true when setting up a PaymentMethod for a Customer, and defaults to false when attaching a PaymentMethod to a Customer.\n  * `automatic_payment_methods` Settings for dynamic payment methods compatible with this Setup Intent\n  * `cancellation_reason` Reason for cancellation of this SetupIntent, one of `abandoned`, `requested_by_customer`, or `duplicate`.\n  * `client_secret` The client secret of this SetupIntent. Used for client-side retrieval using a publishable key.\n\nThe client secret can be used to complete payment setup from your frontend. It should not be stored, logged, or exposed to anyone other than the customer. Make sure that you have TLS enabled on any page that includes the client secret.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `customer` ID of the Customer this SetupIntent belongs to, if one exists.\n\nIf present, the SetupIntent's payment method will be attached to the Customer on successful setup. Payment methods attached to other Customers cannot be used with this SetupIntent.\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `flow_directions` Indicates the directions of money movement for which this payment method is intended to be used.\n\nInclude `inbound` if you intend to use the payment method as the origin to pull funds from. Include `outbound` if you intend to use the payment method as the destination to send funds to. You can include both if you intend to use the payment method for both purposes.\n  * `id` Unique identifier for the object.\n  * `last_setup_error` The error encountered in the previous SetupIntent confirmation.\n  * `latest_attempt` The most recent SetupAttempt for this SetupIntent.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `mandate` ID of the multi use Mandate generated by the SetupIntent.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `next_action` If present, this property tells you what actions you need to take in order for your customer to continue payment setup.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account (if any) for which the setup is intended.\n  * `payment_method` ID of the payment method used with this SetupIntent.\n  * `payment_method_configuration_details` Information about the payment method configuration used for this Setup Intent.\n  * `payment_method_options` Payment-method-specific configuration for this SetupIntent.\n  * `payment_method_types` The list of payment method types (e.g. card) that this SetupIntent is allowed to set up.\n  * `single_use_mandate` ID of the single_use Mandate generated by the SetupIntent.\n  * `status` [Status](https://stripe.com/docs/payments/intents#intent-statuses) of this SetupIntent, one of `requires_payment_method`, `requires_confirmation`, `requires_action`, `processing`, `canceled`, or `succeeded`.\n  * `usage` Indicates how the payment method is intended to be used in the future.\n\nUse `on_session` if you intend to only reuse the payment method when the customer is in your checkout flow. Use `off_session` if your customer may or may not be in your checkout flow. If not provided, this value defaults to `off_session`.\n"
+    @typedoc "The `setup_intent` type.\n\n  * `application` ID of the Connect application that created the SetupIntent.\n  * `attach_to_self` If present, the SetupIntent's payment method will be attached to the in-context Stripe Account.\n\nIt can only be used for this Stripe Account’s own money movement flows like InboundTransfer and OutboundTransfers. It cannot be set to true when setting up a PaymentMethod for a Customer, and defaults to false when attaching a PaymentMethod to a Customer.\n  * `automatic_payment_methods` Settings for dynamic payment methods compatible with this Setup Intent\n  * `cancellation_reason` Reason for cancellation of this SetupIntent, one of `abandoned`, `requested_by_customer`, or `duplicate`.\n  * `client_secret` The client secret of this SetupIntent. Used for client-side retrieval using a publishable key.\n\nThe client secret can be used to complete payment setup from your frontend. It should not be stored, logged, or exposed to anyone other than the customer. Make sure that you have TLS enabled on any page that includes the client secret.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `customer` ID of the Customer this SetupIntent belongs to, if one exists.\n\nIf present, the SetupIntent's payment method will be attached to the Customer on successful setup. Payment methods attached to other Customers cannot be used with this SetupIntent.\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `flow_directions` Indicates the directions of money movement for which this payment method is intended to be used.\n\nInclude `inbound` if you intend to use the payment method as the origin to pull funds from. Include `outbound` if you intend to use the payment method as the destination to send funds to. You can include both if you intend to use the payment method for both purposes.\n  * `id` Unique identifier for the object.\n  * `last_setup_error` The error encountered in the previous SetupIntent confirmation.\n  * `latest_attempt` The most recent SetupAttempt for this SetupIntent.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `mandate` ID of the multi use Mandate generated by the SetupIntent.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `next_action` If present, this property tells you what actions you need to take in order for your customer to continue payment setup.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account (if any) for which the setup is intended.\n  * `payment_method` ID of the payment method used with this SetupIntent.\n  * `payment_method_configuration_details` Information about the payment method configuration used for this Setup Intent.\n  * `payment_method_options` Payment method-specific configuration for this SetupIntent.\n  * `payment_method_types` The list of payment method types (e.g. card) that this SetupIntent is allowed to set up.\n  * `single_use_mandate` ID of the single_use Mandate generated by the SetupIntent.\n  * `status` [Status](https://stripe.com/docs/payments/intents#intent-statuses) of this SetupIntent, one of `requires_payment_method`, `requires_confirmation`, `requires_action`, `processing`, `canceled`, or `succeeded`.\n  * `usage` Indicates how the payment method is intended to be used in the future.\n\nUse `on_session` if you intend to only reuse the payment method when the customer is in your checkout flow. Use `off_session` if your customer may or may not be in your checkout flow. If not provided, this value defaults to `off_session`.\n"
     @type t :: %__MODULE__{
             application: (binary | term) | nil,
             attach_to_self: boolean,
@@ -88,7 +88,7 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "When enabled, this SetupIntent will accept payment methods that you have enabled in the Dashboard and are compatible with this SetupIntent's other parameters."
+    @typedoc "When you enable this parameter, this SetupIntent accepts payment methods that you enable in the Dashboard and that are compatible with its other parameters."
     @type automatic_payment_methods :: %{
             optional(:allow_redirects) => :always | :never,
             optional(:enabled) => boolean
@@ -278,13 +278,18 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "Additional fields for Mandate creation"
+    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
     @type mandate_options :: %{
-            optional(:custom_mandate_url) => binary | binary,
-            optional(:default_for) => list(:invoice | :subscription),
-            optional(:interval_description) => binary,
-            optional(:payment_schedule) => :combined | :interval | :sporadic,
-            optional(:transaction_type) => :business | :personal
+            optional(:amount) => integer,
+            optional(:amount_type) => :fixed | :maximum,
+            optional(:currency) => binary,
+            optional(:description) => binary,
+            optional(:end_date) => integer,
+            optional(:interval) => :day | :month | :sporadic | :week | :year,
+            optional(:interval_count) => integer,
+            optional(:reference) => binary,
+            optional(:start_date) => integer,
+            optional(:supported_types) => list(:india)
           }
   )
 
@@ -402,7 +407,7 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "Payment-method-specific configuration for this SetupIntent."
+    @typedoc "Payment method-specific configuration for this SetupIntent."
     @type payment_method_options :: %{
             optional(:acss_debit) => acss_debit,
             optional(:card) => card,
@@ -429,7 +434,7 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this hash is populated, this SetupIntent will generate a single_use Mandate on success."
+    @typedoc "If you populate this hash, this SetupIntent generates a `single_use` mandate after successful completion."
     @type single_use :: %{optional(:amount) => integer, optional(:currency) => binary}
   )
 
@@ -450,7 +455,7 @@ defmodule Stripe.SetupIntent do
   (
     nil
 
-    @doc "<p>Creates a SetupIntent object.</p>\n\n<p>After the SetupIntent is created, attach a payment method and <a href=\"/docs/api/setup_intents/confirm\">confirm</a>\nto collect any required permissions to charge the payment method later.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/setup_intents`\n"
+    @doc "<p>Creates a SetupIntent object.</p>\n\n<p>After you create the SetupIntent, attach a payment method and <a href=\"/docs/api/setup_intents/confirm\">confirm</a>\nit to collect any required permissions to charge the payment method later.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/setup_intents`\n"
     (
       @spec create(
               params :: %{
