@@ -1,0 +1,43 @@
+name: 🐞 Bug Report
+description: Tell us about something that's not working the way we (probably) intend.
+labels: ["kind:bug", "state:triage"]
+body:
+  - type: input
+    id: package-version
+    attributes:
+      label: Package Version
+      description: What is the package version used?.
+      placeholder: "3.0.0"
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Are you using the latest version?
+      description: Please upgrade the package to the latest version and check if the issue is resolved.
+      options:
+        - label: Yes, I verified the issue is still present in the latest version.
+          required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to Reproduce
+      description: How can we see what you're seeing? Specific is terrific.
+      placeholder: |-
+        1. foo
+        2. bar
+        3. baz
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Result
+      description: Logs? Screenshots? Yes, please.
+    validations:
+      required: true

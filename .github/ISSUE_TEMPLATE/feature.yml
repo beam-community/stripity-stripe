@@ -1,0 +1,22 @@
+name: 💡 Feature Request
+description: Tell us about a problem our software could solve but doesn't.
+labels: ["kind:feature", "state:triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem could the package solve that it doesn't?
+      placeholder: |-
+        I want to make whirled peas, but the package doesn't blend.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Solution Brainstorm
+      description: We know you have bright ideas to share ... share away, friend.
+      placeholder: |-
+        Add a blender.
+    validations:
+      required: false
