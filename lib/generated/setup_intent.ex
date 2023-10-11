@@ -62,11 +62,11 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `acss_debit` SetupIntent, this sub-hash contains details about the ACSS Debit payment method options."
+    @typedoc "If this is an `acss_debit` PaymentMethod, this hash contains details about the ACSS Debit payment method."
     @type acss_debit :: %{
-            optional(:currency) => :cad | :usd,
-            optional(:mandate_options) => mandate_options,
-            optional(:verification_method) => :automatic | :instant | :microdeposits
+            optional(:account_number) => binary,
+            optional(:institution_number) => binary,
+            optional(:transit_number) => binary
           }
   )
 
@@ -278,13 +278,18 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "Additional fields for Mandate creation"
+    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
     @type mandate_options :: %{
-            optional(:custom_mandate_url) => binary | binary,
-            optional(:default_for) => list(:invoice | :subscription),
-            optional(:interval_description) => binary,
-            optional(:payment_schedule) => :combined | :interval | :sporadic,
-            optional(:transaction_type) => :business | :personal
+            optional(:amount) => integer,
+            optional(:amount_type) => :fixed | :maximum,
+            optional(:currency) => binary,
+            optional(:description) => binary,
+            optional(:end_date) => integer,
+            optional(:interval) => :day | :month | :sporadic | :week | :year,
+            optional(:interval_count) => integer,
+            optional(:reference) => binary,
+            optional(:start_date) => integer,
+            optional(:supported_types) => list(:india)
           }
   )
 
@@ -439,13 +444,11 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is an `us_bank_account` PaymentMethod, this hash contains details about the US bank account payment method."
+    @typedoc "If this is a `us_bank_account` SetupIntent, this sub-hash contains details about the US bank account payment method options."
     @type us_bank_account :: %{
-            optional(:account_holder_type) => :company | :individual,
-            optional(:account_number) => binary,
-            optional(:account_type) => :checking | :savings,
-            optional(:financial_connections_account) => binary,
-            optional(:routing_number) => binary
+            optional(:financial_connections) => financial_connections,
+            optional(:networks) => networks,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 

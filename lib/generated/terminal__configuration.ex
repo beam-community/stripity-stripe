@@ -9,17 +9,19 @@ defmodule Stripe.Terminal.Configuration do
       :is_account_default,
       :livemode,
       :object,
+      :offline,
       :tipping,
       :verifone_p400
     ]
 
-    @typedoc "The `terminal.configuration` type.\n\n  * `bbpos_wisepos_e` \n  * `id` Unique identifier for the object.\n  * `is_account_default` Whether this Configuration is the default for your account\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `tipping` \n  * `verifone_p400` \n"
+    @typedoc "The `terminal.configuration` type.\n\n  * `bbpos_wisepos_e` \n  * `id` Unique identifier for the object.\n  * `is_account_default` Whether this Configuration is the default for your account\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `offline` \n  * `tipping` \n  * `verifone_p400` \n"
     @type t :: %__MODULE__{
             bbpos_wisepos_e: term,
             id: binary,
             is_account_default: boolean | nil,
             livemode: boolean,
             object: binary,
+            offline: term,
             tipping: term,
             verifone_p400: term
           }
@@ -130,6 +132,11 @@ defmodule Stripe.Terminal.Configuration do
   )
 
   (
+    @typedoc nil
+    @type offline :: %{optional(:enabled) => boolean}
+  )
+
+  (
     @typedoc "Tipping configuration for SEK"
     @type sek :: %{
             optional(:fixed_amounts) => list(integer),
@@ -190,6 +197,7 @@ defmodule Stripe.Terminal.Configuration do
               params :: %{
                 optional(:bbpos_wisepos_e) => bbpos_wisepos_e,
                 optional(:expand) => list(binary),
+                optional(:offline) => offline | binary,
                 optional(:tipping) => tipping | binary,
                 optional(:verifone_p400) => verifone_p400
               },
@@ -294,6 +302,7 @@ defmodule Stripe.Terminal.Configuration do
               params :: %{
                 optional(:bbpos_wisepos_e) => bbpos_wisepos_e | binary,
                 optional(:expand) => list(binary),
+                optional(:offline) => offline | binary,
                 optional(:tipping) => tipping | binary,
                 optional(:verifone_p400) => verifone_p400 | binary
               },
