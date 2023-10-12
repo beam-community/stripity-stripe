@@ -78,7 +78,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kana variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kana variation of the company's primary address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -91,7 +91,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kanji variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kanji variation of the company's primary address (Japan only)."
     @type address_kanji :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -575,12 +575,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
+    @typedoc "Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](https://stripe.com/docs/issuing/connect/tos_acceptance)."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:service_agreement) => binary,
-            optional(:user_agent) => binary
+            optional(:user_agent) => binary | binary
           }
   )
 
@@ -600,11 +599,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The individual's verification document information."
-    @type verification :: %{
-            optional(:additional_document) => additional_document,
-            optional(:document) => document
-          }
+    @typedoc "Information on the verification state of the company."
+    @type verification :: %{optional(:document) => document}
   )
 
   (
