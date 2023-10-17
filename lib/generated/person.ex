@@ -5,6 +5,7 @@ defmodule Stripe.Person do
   (
     defstruct [
       :account,
+      :additional_tos_acceptances,
       :address,
       :address_kana,
       :address_kanji,
@@ -36,9 +37,10 @@ defmodule Stripe.Person do
       :verification
     ]
 
-    @typedoc "The `person` type.\n\n  * `account` The account the person is associated with.\n  * `address` \n  * `address_kana` The Kana variation of the person's address (Japan only).\n  * `address_kanji` The Kanji variation of the person's address (Japan only).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `dob` \n  * `email` The person's email address.\n  * `first_name` The person's first name.\n  * `first_name_kana` The Kana variation of the person's first name (Japan only).\n  * `first_name_kanji` The Kanji variation of the person's first name (Japan only).\n  * `full_name_aliases` A list of alternate names or aliases that the person is known by.\n  * `future_requirements` Information about the [upcoming new requirements for this person](https://stripe.com/docs/connect/custom-accounts/future-requirements), including what information needs to be collected, and by when.\n  * `gender` The person's gender (International regulations require either \"male\" or \"female\").\n  * `id` Unique identifier for the object.\n  * `id_number_provided` Whether the person's `id_number` was provided. True if either the full ID number was provided or if only the required part of the ID number was provided (ex. last four of an individual's SSN for the US indicated by `ssn_last_4_provided`).\n  * `id_number_secondary_provided` Whether the person's `id_number_secondary` was provided.\n  * `last_name` The person's last name.\n  * `last_name_kana` The Kana variation of the person's last name (Japan only).\n  * `last_name_kanji` The Kanji variation of the person's last name (Japan only).\n  * `maiden_name` The person's maiden name.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `nationality` The country where the person is a national.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `phone` The person's phone number.\n  * `political_exposure` Indicates if the person or any of their representatives, family members, or other closely related persons, declares that they hold or have held an important public job or function, in any jurisdiction.\n  * `registered_address` \n  * `relationship` \n  * `requirements` Information about the requirements for this person, including what information needs to be collected, and by when.\n  * `ssn_last_4_provided` Whether the last four digits of the person's Social Security number have been provided (U.S. only).\n  * `verification` \n"
+    @typedoc "The `person` type.\n\n  * `account` The account the person is associated with.\n  * `additional_tos_acceptances` \n  * `address` \n  * `address_kana` The Kana variation of the person's address (Japan only).\n  * `address_kanji` The Kanji variation of the person's address (Japan only).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `dob` \n  * `email` The person's email address.\n  * `first_name` The person's first name.\n  * `first_name_kana` The Kana variation of the person's first name (Japan only).\n  * `first_name_kanji` The Kanji variation of the person's first name (Japan only).\n  * `full_name_aliases` A list of alternate names or aliases that the person is known by.\n  * `future_requirements` Information about the [upcoming new requirements for this person](https://stripe.com/docs/connect/custom-accounts/future-requirements), including what information needs to be collected, and by when.\n  * `gender` The person's gender (International regulations require either \"male\" or \"female\").\n  * `id` Unique identifier for the object.\n  * `id_number_provided` Whether the person's `id_number` was provided. True if either the full ID number was provided or if only the required part of the ID number was provided (ex. last four of an individual's SSN for the US indicated by `ssn_last_4_provided`).\n  * `id_number_secondary_provided` Whether the person's `id_number_secondary` was provided.\n  * `last_name` The person's last name.\n  * `last_name_kana` The Kana variation of the person's last name (Japan only).\n  * `last_name_kanji` The Kanji variation of the person's last name (Japan only).\n  * `maiden_name` The person's maiden name.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `nationality` The country where the person is a national.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `phone` The person's phone number.\n  * `political_exposure` Indicates if the person or any of their representatives, family members, or other closely related persons, declares that they hold or have held an important public job or function, in any jurisdiction.\n  * `registered_address` \n  * `relationship` \n  * `requirements` Information about the requirements for this person, including what information needs to be collected, and by when.\n  * `ssn_last_4_provided` Whether the last four digits of the person's Social Security number have been provided (U.S. only).\n  * `verification` \n"
     @type t :: %__MODULE__{
             account: binary,
+            additional_tos_acceptances: term,
             address: term,
             address_kana: term | nil,
             address_kanji: term | nil,
@@ -72,8 +74,22 @@ defmodule Stripe.Person do
   )
 
   (
+    @typedoc "Details on the legal guardian's acceptance of the main Stripe service agreement."
+    @type account :: %{
+            optional(:date) => integer,
+            optional(:ip) => binary,
+            optional(:user_agent) => binary | binary
+          }
+  )
+
+  (
     @typedoc "A document showing address, either a passport, local ID card, or utility bill from a well-known utility company."
     @type additional_document :: %{optional(:back) => binary, optional(:front) => binary}
+  )
+
+  (
+    @typedoc "Details on the legal guardian's acceptance of the required Stripe agreements."
+    @type additional_tos_acceptances :: %{optional(:account) => account}
   )
 
   (
@@ -164,6 +180,7 @@ defmodule Stripe.Person do
     @type relationship :: %{
             optional(:director) => boolean,
             optional(:executive) => boolean,
+            optional(:legal_guardian) => boolean,
             optional(:owner) => boolean,
             optional(:representative) => boolean
           }
@@ -295,6 +312,7 @@ defmodule Stripe.Person do
       @spec create(
               account :: binary(),
               params :: %{
+                optional(:additional_tos_acceptances) => additional_tos_acceptances,
                 optional(:address) => address,
                 optional(:address_kana) => address_kana,
                 optional(:address_kanji) => address_kanji,
@@ -365,6 +383,7 @@ defmodule Stripe.Person do
               account :: binary(),
               person :: binary(),
               params :: %{
+                optional(:additional_tos_acceptances) => additional_tos_acceptances,
                 optional(:address) => address,
                 optional(:address_kana) => address_kana,
                 optional(:address_kanji) => address_kanji,

@@ -214,7 +214,8 @@ defmodule Stripe.WebhookEndpoint do
                   | :"2020-08-27"
                   | :"2022-08-01"
                   | :"2022-11-15"
-                  | :"2023-08-16",
+                  | :"2023-08-16"
+                  | :"2023-10-16",
                 optional(:connect) => boolean,
                 optional(:description) => binary | binary,
                 optional(:enabled_events) =>

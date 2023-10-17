@@ -20,12 +20,11 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Information for the account this token represents."
+    @typedoc "Details on the legal guardian's acceptance of the main Stripe service agreement."
     @type account :: %{
-            optional(:business_type) => :company | :government_entity | :individual | :non_profit,
-            optional(:company) => company,
-            optional(:individual) => individual,
-            optional(:tos_shown_and_accepted) => boolean
+            optional(:date) => integer,
+            optional(:ip) => binary,
+            optional(:user_agent) => binary | binary
           }
   )
 
@@ -35,7 +34,12 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The company's primary address."
+    @typedoc "Details on the legal guardian's acceptance of the required Stripe agreements."
+    @type additional_tos_acceptances :: %{optional(:account) => account}
+  )
+
+  (
+    @typedoc "The person's address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -229,6 +233,7 @@ defmodule Stripe.Token do
   (
     @typedoc "Information for the person this token represents."
     @type person :: %{
+            optional(:additional_tos_acceptances) => additional_tos_acceptances,
             optional(:address) => address,
             optional(:address_kana) => address_kana,
             optional(:address_kanji) => address_kanji,
@@ -279,6 +284,7 @@ defmodule Stripe.Token do
     @type relationship :: %{
             optional(:director) => boolean,
             optional(:executive) => boolean,
+            optional(:legal_guardian) => boolean,
             optional(:owner) => boolean,
             optional(:percent_ownership) => number | binary,
             optional(:representative) => boolean,
@@ -287,8 +293,11 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The person's verification status."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (

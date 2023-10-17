@@ -92,11 +92,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `acss_debit` PaymentMethod, this hash contains details about the ACSS Debit payment method."
+    @typedoc nil
     @type acss_debit :: %{
-            optional(:account_number) => binary,
-            optional(:institution_number) => binary,
-            optional(:transit_number) => binary
+            optional(:mandate_options) => mandate_options,
+            optional(:setup_future_usage) => :none | :off_session | :on_session,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 
@@ -136,8 +136,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type au_becs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
+    @typedoc "If this is an `au_becs_debit` PaymentMethod, this hash contains details about the bank account."
+    @type au_becs_debit :: %{optional(:account_number) => binary, optional(:bsb_number) => binary}
   )
 
   (
@@ -192,8 +192,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method."
-    @type boleto :: %{optional(:tax_id) => binary}
+    @typedoc nil
+    @type boleto :: %{
+            optional(:expires_after_days) => integer,
+            optional(:setup_future_usage) => :none | :off_session | :on_session
+          }
   )
 
   (
@@ -343,25 +346,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `ideal` PaymentMethod, this hash contains details about the iDEAL payment method."
-    @type ideal :: %{
-            optional(:bank) =>
-              :abn_amro
-              | :asn_bank
-              | :bunq
-              | :handelsbanken
-              | :ing
-              | :knab
-              | :moneyou
-              | :n26
-              | :rabobank
-              | :regiobank
-              | :revolut
-              | :sns_bank
-              | :triodos_bank
-              | :van_lanschot
-              | :yoursafe
-          }
+    @typedoc nil
+    @type ideal :: %{optional(:setup_future_usage) => :none | :off_session}
   )
 
   (
@@ -400,12 +386,17 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Additional fields for Mandate creation"
+    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
     @type mandate_options :: %{
-            optional(:custom_mandate_url) => binary | binary,
-            optional(:interval_description) => binary,
-            optional(:payment_schedule) => :combined | :interval | :sporadic,
-            optional(:transaction_type) => :business | :personal
+            optional(:amount) => integer,
+            optional(:amount_type) => :fixed | :maximum,
+            optional(:description) => binary,
+            optional(:end_date) => integer,
+            optional(:interval) => :day | :month | :sporadic | :week | :year,
+            optional(:interval_count) => integer,
+            optional(:reference) => binary,
+            optional(:start_date) => integer,
+            optional(:supported_types) => list(:india)
           }
   )
 
@@ -664,13 +655,13 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
+    @typedoc "If this is an `us_bank_account` PaymentMethod, this hash contains details about the US bank account payment method."
     @type us_bank_account :: %{
-            optional(:financial_connections) => financial_connections,
-            optional(:networks) => networks,
-            optional(:preferred_settlement_speed) => :fastest | :standard,
-            optional(:setup_future_usage) => :none | :off_session | :on_session,
-            optional(:verification_method) => :automatic | :instant | :microdeposits
+            optional(:account_holder_type) => :company | :individual,
+            optional(:account_number) => binary,
+            optional(:account_type) => :checking | :savings,
+            optional(:financial_connections_account) => binary,
+            optional(:routing_number) => binary
           }
   )
 
