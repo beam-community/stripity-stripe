@@ -64,7 +64,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The Kanji variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kanji variation of the person's address (Japan only)."
     @type address_kanji :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -268,7 +268,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The person's registered address."
+    @typedoc "The individual's registered address."
     @type registered_address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
