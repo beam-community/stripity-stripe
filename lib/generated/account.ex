@@ -216,8 +216,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The card_issuing capability."
-    @type card_issuing :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to the account's use of the Card Issuing product."
+    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
   )
 
   (
@@ -576,11 +576,12 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the Stripe Treasury Services Agreement."
+    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:user_agent) => binary | binary
+            optional(:service_agreement) => binary,
+            optional(:user_agent) => binary
           }
   )
 
@@ -590,8 +591,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The treasury capability."
-    @type treasury :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to the account's Treasury FinancialAccounts."
+    @type treasury :: %{optional(:tos_acceptance) => tos_acceptance}
   )
 
   (
@@ -600,8 +601,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
