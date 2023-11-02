@@ -184,6 +184,7 @@ defmodule Stripe.PaymentLink do
     @typedoc "A subset of parameters to be passed to PaymentIntent creation for Checkout Sessions in `payment` mode."
     @type payment_intent_data :: %{
             optional(:capture_method) => :automatic | :automatic_async | :manual,
+            optional(:description) => binary,
             optional(:metadata) => %{optional(binary) => binary},
             optional(:setup_future_usage) => :off_session | :on_session,
             optional(:statement_descriptor) => binary,

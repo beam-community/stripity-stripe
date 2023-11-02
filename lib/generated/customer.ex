@@ -521,6 +521,7 @@ defmodule Stripe.Customer do
                   | :paypal
                   | :pix
                   | :promptpay
+                  | :revolut_pay
                   | :sepa_debit
                   | :sofort
                   | :us_bank_account

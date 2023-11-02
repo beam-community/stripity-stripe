@@ -91,7 +91,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kanji variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kanji variation of the company's primary address (Japan only)."
     @type address_kanji :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -207,6 +207,7 @@ defmodule Stripe.Account do
             optional(:giropay_payments) => giropay_payments,
             optional(:legacy_payments) => legacy_payments,
             optional(:sepa_debit_payments) => sepa_debit_payments,
+            optional(:revolut_pay_payments) => revolut_pay_payments,
             optional(:transfers) => transfers,
             optional(:eps_payments) => eps_payments,
             optional(:grabpay_payments) => grabpay_payments,
@@ -216,8 +217,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The card_issuing capability."
-    @type card_issuing :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to the account's use of the Card Issuing product."
+    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
   )
 
   (
@@ -513,6 +514,11 @@ defmodule Stripe.Account do
             optional(:owner) => boolean,
             optional(:representative) => boolean
           }
+  )
+
+  (
+    @typedoc "The revolut_pay_payments capability."
+    @type revolut_pay_payments :: %{optional(:requested) => boolean}
   )
 
   (

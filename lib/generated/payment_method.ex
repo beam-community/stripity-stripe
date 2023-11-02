@@ -37,6 +37,7 @@ defmodule Stripe.PaymentMethod do
       :metadata,
       :radar_options,
       :card,
+      :revolut_pay,
       :ideal,
       :giropay,
       :alipay,
@@ -48,7 +49,7 @@ defmodule Stripe.PaymentMethod do
       :pix
     ]
 
-    @typedoc "The `payment_method` type.\n\n  * `acss_debit` \n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `billing_details` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `card_present` \n  * `cashapp` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `customer` The ID of the Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.\n  * `customer_balance` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `interac_present` \n  * `klarna` \n  * `konbini` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `paynow` \n  * `paypal` \n  * `pix` \n  * `promptpay` \n  * `radar_options` \n  * `sepa_debit` \n  * `sofort` \n  * `type` The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.\n  * `us_bank_account` \n  * `wechat_pay` \n  * `zip` \n"
+    @typedoc "The `payment_method` type.\n\n  * `acss_debit` \n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `billing_details` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `card_present` \n  * `cashapp` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `customer` The ID of the Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.\n  * `customer_balance` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `interac_present` \n  * `klarna` \n  * `konbini` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `paynow` \n  * `paypal` \n  * `pix` \n  * `promptpay` \n  * `radar_options` \n  * `revolut_pay` \n  * `sepa_debit` \n  * `sofort` \n  * `type` The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.\n  * `us_bank_account` \n  * `wechat_pay` \n  * `zip` \n"
     @type t :: %__MODULE__{
             acss_debit: term,
             affirm: term,
@@ -86,6 +87,7 @@ defmodule Stripe.PaymentMethod do
             pix: term,
             promptpay: term,
             radar_options: term,
+            revolut_pay: term,
             sepa_debit: term,
             sofort: term,
             type: binary,
@@ -326,6 +328,7 @@ defmodule Stripe.PaymentMethod do
                 optional(:alipay) => map(),
                 optional(:giropay) => map(),
                 optional(:ideal) => ideal,
+                optional(:revolut_pay) => map(),
                 optional(:expand) => list(binary),
                 optional(:card) => card | card,
                 optional(:radar_options) => radar_options,
@@ -374,6 +377,7 @@ defmodule Stripe.PaymentMethod do
                   | :paypal
                   | :pix
                   | :promptpay
+                  | :revolut_pay
                   | :sepa_debit
                   | :sofort
                   | :us_bank_account
@@ -533,6 +537,7 @@ defmodule Stripe.PaymentMethod do
                   | :paypal
                   | :pix
                   | :promptpay
+                  | :revolut_pay
                   | :sepa_debit
                   | :sofort
                   | :us_bank_account

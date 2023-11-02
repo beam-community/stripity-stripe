@@ -136,8 +136,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `au_becs_debit` PaymentMethod, this hash contains details about the bank account."
-    @type au_becs_debit :: %{optional(:account_number) => binary, optional(:bsb_number) => binary}
+    @typedoc nil
+    @type au_becs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
   )
 
   (
@@ -192,8 +192,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method."
-    @type boleto :: %{optional(:tax_id) => binary}
+    @typedoc nil
+    @type boleto :: %{
+            optional(:expires_after_days) => integer,
+            optional(:setup_future_usage) => :none | :off_session | :on_session
+          }
   )
 
   (
@@ -282,8 +285,38 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type eps :: %{optional(:setup_future_usage) => :none}
+    @typedoc "If this is an `eps` PaymentMethod, this hash contains details about the EPS payment method."
+    @type eps :: %{
+            optional(:bank) =>
+              :arzte_und_apotheker_bank
+              | :austrian_anadi_bank_ag
+              | :bank_austria
+              | :bankhaus_carl_spangler
+              | :bankhaus_schelhammer_und_schattera_ag
+              | :bawag_psk_ag
+              | :bks_bank_ag
+              | :brull_kallmus_bank_ag
+              | :btv_vier_lander_bank
+              | :capital_bank_grawe_gruppe_ag
+              | :deutsche_bank_ag
+              | :dolomitenbank
+              | :easybank_ag
+              | :erste_bank_und_sparkassen
+              | :hypo_alpeadriabank_international_ag
+              | :hypo_bank_burgenland_aktiengesellschaft
+              | :hypo_noe_lb_fur_niederosterreich_u_wien
+              | :hypo_oberosterreich_salzburg_steiermark
+              | :hypo_tirol_bank_ag
+              | :hypo_vorarlberg_bank_ag
+              | :marchfelder_bank
+              | :oberbank_ag
+              | :raiffeisen_bankengruppe_osterreich
+              | :schoellerbank_ag
+              | :sparda_bank_wien
+              | :volksbank_gruppe
+              | :volkskreditbank_ag
+              | :vr_bank_braunau
+          }
   )
 
   (
@@ -374,17 +407,12 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
+    @typedoc "Additional fields for Mandate creation"
     @type mandate_options :: %{
-            optional(:amount) => integer,
-            optional(:amount_type) => :fixed | :maximum,
-            optional(:description) => binary,
-            optional(:end_date) => integer,
-            optional(:interval) => :day | :month | :sporadic | :week | :year,
-            optional(:interval_count) => integer,
-            optional(:reference) => binary,
-            optional(:start_date) => integer,
-            optional(:supported_types) => list(:india)
+            optional(:custom_mandate_url) => binary | binary,
+            optional(:interval_description) => binary,
+            optional(:payment_schedule) => :combined | :interval | :sporadic,
+            optional(:transaction_type) => :business | :personal
           }
   )
 
@@ -407,10 +435,34 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
+    @typedoc "If this is a `p24` PaymentMethod, this hash contains details about the P24 payment method."
     @type p24 :: %{
-            optional(:setup_future_usage) => :none,
-            optional(:tos_shown_and_accepted) => boolean
+            optional(:bank) =>
+              :alior_bank
+              | :bank_millennium
+              | :bank_nowy_bfg_sa
+              | :bank_pekao_sa
+              | :banki_spbdzielcze
+              | :blik
+              | :bnp_paribas
+              | :boz
+              | :citi_handlowy
+              | :credit_agricole
+              | :envelobank
+              | :etransfer_pocztowy24
+              | :getin_bank
+              | :ideabank
+              | :ing
+              | :inteligo
+              | :mbank_mtransfer
+              | :nest_przelew
+              | :noble_pay
+              | :pbac_z_ipko
+              | :plus_bank
+              | :santander_przelew24
+              | :tmobile_usbugi_bankowe
+              | :toyota_bank
+              | :volkswagen_bank
           }
   )
 
@@ -425,6 +477,7 @@ defmodule Stripe.PaymentIntent do
             optional(:alipay) => map(),
             optional(:giropay) => map(),
             optional(:ideal) => ideal,
+            optional(:revolut_pay) => map(),
             optional(:radar_options) => radar_options,
             optional(:metadata) => %{optional(binary) => binary},
             optional(:link) => map(),
@@ -469,6 +522,7 @@ defmodule Stripe.PaymentIntent do
               | :paypal
               | :pix
               | :promptpay
+              | :revolut_pay
               | :sepa_debit
               | :sofort
               | :us_bank_account
@@ -496,6 +550,7 @@ defmodule Stripe.PaymentIntent do
             optional(:alipay) => alipay | binary,
             optional(:giropay) => giropay | binary,
             optional(:ideal) => ideal | binary,
+            optional(:revolut_pay) => revolut_pay | binary,
             optional(:card) => card | binary,
             optional(:link) => link | binary,
             optional(:promptpay) => promptpay | binary,
@@ -590,8 +645,16 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
-    @type sepa_debit :: %{optional(:iban) => binary}
+    @typedoc nil
+    @type revolut_pay :: %{optional(:setup_future_usage) => :none | :off_session}
+  )
+
+  (
+    @typedoc nil
+    @type sepa_debit :: %{
+            optional(:mandate_options) => map(),
+            optional(:setup_future_usage) => :none | :off_session | :on_session
+          }
   )
 
   (
@@ -606,11 +669,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type sofort :: %{
-            optional(:preferred_language) => :de | :en | :es | :fr | :it | :nl | :pl,
-            optional(:setup_future_usage) => :none | :off_session
-          }
+    @typedoc "If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method."
+    @type sofort :: %{optional(:country) => :AT | :BE | :DE | :ES | :IT | :NL}
   )
 
   (

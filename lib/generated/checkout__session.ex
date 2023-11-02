@@ -238,15 +238,7 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc nil
-    @type custom_fields :: %{
-            optional(:dropdown) => dropdown,
-            optional(:key) => binary,
-            optional(:label) => label,
-            optional(:numeric) => numeric,
-            optional(:optional) => boolean,
-            optional(:text) => text,
-            optional(:type) => :dropdown | :numeric | :text
-          }
+    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
   )
 
   (
@@ -509,6 +501,7 @@ defmodule Stripe.Checkout.Session do
             optional(:paynow) => paynow,
             optional(:paypal) => paypal,
             optional(:pix) => pix,
+            optional(:revolut_pay) => revolut_pay,
             optional(:sepa_debit) => sepa_debit,
             optional(:sofort) => sofort,
             optional(:us_bank_account) => us_bank_account,
@@ -608,6 +601,11 @@ defmodule Stripe.Checkout.Session do
     @type rendering_options :: %{
             optional(:amount_tax_display) => :exclude_tax | :include_inclusive_tax
           }
+  )
+
+  (
+    @typedoc "contains details about the RevolutPay payment method options."
+    @type revolut_pay :: %{optional(:setup_future_usage) => :none | :off_session}
   )
 
   (
@@ -950,11 +948,8 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
-    @typedoc "If specified, the funds from the subscription's invoices will be transferred to the destination and the ID of the resulting transfers will be found on the resulting charges."
-    @type transfer_data :: %{
-            optional(:amount_percent) => number,
-            optional(:destination) => binary
-          }
+    @typedoc "The parameters used to automatically create a Transfer when the payment succeeds.\nFor more information, see the PaymentIntents [use case for connected accounts](https://stripe.com/docs/payments/connected-accounts)."
+    @type transfer_data :: %{optional(:amount) => integer, optional(:destination) => binary}
   )
 
   (
@@ -1101,6 +1096,7 @@ defmodule Stripe.Checkout.Session do
                     | :paypal
                     | :pix
                     | :promptpay
+                    | :revolut_pay
                     | :sepa_debit
                     | :sofort
                     | :us_bank_account
