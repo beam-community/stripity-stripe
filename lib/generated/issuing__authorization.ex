@@ -70,6 +70,14 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
+    @typedoc "The exemption applied to this authorization."
+    @type authentication_exemption :: %{
+            optional(:claimed_by) => :acquirer | :issuer,
+            optional(:type) => :low_value_transaction | :transaction_risk_analysis
+          }
+  )
+
+  (
     @typedoc nil
     @type created :: %{
             optional(:gt) => integer,
@@ -410,7 +418,8 @@ defmodule Stripe.Issuing.Authorization do
             optional(:network_id) => binary,
             optional(:postal_code) => binary,
             optional(:state) => binary,
-            optional(:terminal_id) => binary
+            optional(:terminal_id) => binary,
+            optional(:url) => binary
           }
   )
 
@@ -453,12 +462,21 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
+    @typedoc "3D Secure details."
+    @type three_d_secure :: %{
+            optional(:result) => :attempt_acknowledged | :authenticated | :failed | :required
+          }
+  )
+
+  (
     @typedoc "Verifications that Stripe performed on information that the cardholder provided to the merchant."
     @type verification_data :: %{
             optional(:address_line1_check) => :match | :mismatch | :not_provided,
             optional(:address_postal_code_check) => :match | :mismatch | :not_provided,
+            optional(:authentication_exemption) => authentication_exemption,
             optional(:cvc_check) => :match | :mismatch | :not_provided,
-            optional(:expiry_check) => :match | :mismatch | :not_provided
+            optional(:expiry_check) => :match | :mismatch | :not_provided,
+            optional(:three_d_secure) => three_d_secure
           }
   )
 

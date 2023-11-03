@@ -85,7 +85,8 @@ defmodule Stripe.Reporting.ReportRun do
               | :topup
               | :topup_reversal
               | :transfer
-              | :transfer_reversal,
+              | :transfer_reversal
+              | :unreconciled_customer_funds,
             optional(:timezone) =>
               :"Africa/Abidjan"
               | :"Africa/Accra"

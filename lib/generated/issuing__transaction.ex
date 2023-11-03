@@ -394,7 +394,8 @@ defmodule Stripe.Issuing.Transaction do
             optional(:network_id) => binary,
             optional(:postal_code) => binary,
             optional(:state) => binary,
-            optional(:terminal_id) => binary
+            optional(:terminal_id) => binary,
+            optional(:url) => binary
           }
   )
 
