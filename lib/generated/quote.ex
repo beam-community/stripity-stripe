@@ -136,6 +136,7 @@ defmodule Stripe.Quote do
     @type subscription_data :: %{
             optional(:description) => binary,
             optional(:effective_date) => :current_period_end | integer | binary,
+            optional(:metadata) => %{optional(binary) => binary},
             optional(:trial_period_days) => integer | binary
           }
   )
