@@ -132,7 +132,7 @@ if Code.ensure_loaded?(Plug) do
       secret = parse_secret!(secret)
 
       with [signature] <- get_req_header(conn, "stripe-signature"),
-           {:ok, payload, _} = Conn.read_body(conn),
+           {:ok, payload, conn} = Conn.read_body(conn),
            {:ok, %Stripe.Event{} = event} <- construct_event(payload, signature, secret, opts),
            :ok <- handle_event!(handler, event) do
         send_resp(conn, 200, "Webhook received.") |> halt()
