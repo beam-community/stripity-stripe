@@ -149,8 +149,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `bacs_debit` PaymentMethod, this hash contains details about the Bacs Direct Debit bank account."
-    @type bacs_debit :: %{optional(:account_number) => binary, optional(:sort_code) => binary}
+    @typedoc nil
+    @type bacs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
   )
 
   (
@@ -192,11 +192,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type boleto :: %{
-            optional(:expires_after_days) => integer,
-            optional(:setup_future_usage) => :none | :off_session | :on_session
-          }
+    @typedoc "If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method."
+    @type boleto :: %{optional(:tax_id) => binary}
   )
 
   (
@@ -669,7 +666,7 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Options to configure Radar. See [Radar Session](https://stripe.com/docs/radar/radar-session) for more information."
+    @typedoc "Options to configure Radar. Learn more about [Radar Sessions](https://stripe.com/docs/radar/radar-session)."
     @type radar_options :: %{optional(:session) => binary}
   )
 
