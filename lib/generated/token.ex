@@ -293,8 +293,11 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The person's verification status."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
