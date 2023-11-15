@@ -238,7 +238,15 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc nil
-    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
+    @type custom_fields :: %{
+            optional(:dropdown) => dropdown,
+            optional(:key) => binary,
+            optional(:label) => label,
+            optional(:numeric) => numeric,
+            optional(:optional) => boolean,
+            optional(:text) => text,
+            optional(:type) => :dropdown | :numeric | :text
+          }
   )
 
   (
@@ -948,8 +956,11 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
-    @typedoc "The parameters used to automatically create a Transfer when the payment succeeds.\nFor more information, see the PaymentIntents [use case for connected accounts](https://stripe.com/docs/payments/connected-accounts)."
-    @type transfer_data :: %{optional(:amount) => integer, optional(:destination) => binary}
+    @typedoc "If specified, the funds from the subscription's invoices will be transferred to the destination and the ID of the resulting transfers will be found on the resulting charges."
+    @type transfer_data :: %{
+            optional(:amount_percent) => number,
+            optional(:destination) => binary
+          }
   )
 
   (
