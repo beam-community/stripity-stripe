@@ -78,6 +78,7 @@ defmodule Stripe.CreditNote do
             optional(:description) => binary,
             optional(:invoice_line_item) => binary,
             optional(:quantity) => integer,
+            optional(:tax_amounts) => list(tax_amounts) | binary,
             optional(:tax_rates) => list(binary) | binary,
             optional(:type) => :custom_line_item | :invoice_line_item,
             optional(:unit_amount) => integer,
@@ -88,6 +89,15 @@ defmodule Stripe.CreditNote do
   (
     @typedoc "When shipping_cost contains the shipping_rate from the invoice, the shipping_cost is included in the credit note."
     @type shipping_cost :: %{optional(:shipping_rate) => binary}
+  )
+
+  (
+    @typedoc nil
+    @type tax_amounts :: %{
+            optional(:amount) => integer,
+            optional(:tax_rate) => binary,
+            optional(:taxable_amount) => integer
+          }
   )
 
   (

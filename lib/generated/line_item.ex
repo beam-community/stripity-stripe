@@ -59,6 +59,75 @@ defmodule Stripe.LineItem do
   )
 
   (
+    @typedoc nil
+    @type discounts :: %{optional(:coupon) => binary, optional(:discount) => binary}
+  )
+
+  (
+    @typedoc "The period associated with this invoice item. When set to different values, the period will be rendered on the invoice. If you have [Stripe Revenue Recognition](https://stripe.com/docs/revenue-recognition) enabled, the period will be used to recognize and defer revenue. See the [Revenue Recognition documentation](https://stripe.com/docs/revenue-recognition/methodology/subscriptions-and-invoicing) for details."
+    @type period :: %{optional(:end) => integer, optional(:start) => integer}
+  )
+
+  (
+    @typedoc "Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline."
+    @type price_data :: %{
+            optional(:currency) => binary,
+            optional(:product) => binary,
+            optional(:product_data) => product_data,
+            optional(:tax_behavior) => :exclusive | :inclusive | :unspecified,
+            optional(:unit_amount) => integer,
+            optional(:unit_amount_decimal) => binary
+          }
+  )
+
+  (
+    @typedoc "Data used to generate a new product object inline. One of `product` or `product_data` is required."
+    @type product_data :: %{
+            optional(:description) => binary,
+            optional(:images) => list(binary),
+            optional(:metadata) => %{optional(binary) => binary},
+            optional(:name) => binary,
+            optional(:tax_code) => binary
+          }
+  )
+
+  (
+    @typedoc nil
+    @type tax_amounts :: %{
+            optional(:amount) => integer,
+            optional(:tax_rate_data) => tax_rate_data,
+            optional(:taxable_amount) => integer
+          }
+  )
+
+  (
+    @typedoc "Data to find or create a TaxRate object.\n\nStripe automatically creates or reuses a TaxRate object for each tax amount. If the `tax_rate_data` exactly matches a previous value, Stripe will reuse the TaxRate object. TaxRate objects created automatically by Stripe are immediately archived, do not appear in the line item’s `tax_rates`, and cannot be directly added to invoices, payments, or line items."
+    @type tax_rate_data :: %{
+            optional(:country) => binary,
+            optional(:description) => binary,
+            optional(:display_name) => binary,
+            optional(:inclusive) => boolean,
+            optional(:jurisdiction) => binary,
+            optional(:percentage) => number,
+            optional(:state) => binary,
+            optional(:tax_type) =>
+              :amusement_tax
+              | :communications_tax
+              | :gst
+              | :hst
+              | :igst
+              | :jct
+              | :lease_tax
+              | :pst
+              | :qst
+              | :rst
+              | :sales_tax
+              | :service_tax
+              | :vat
+          }
+  )
+
+  (
     nil
 
     @doc "<p>When retrieving an invoice, you’ll get a <strong>lines</strong> property containing the total count of line items and the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/invoices/{invoice}/lines`\n"
@@ -102,6 +171,74 @@ defmodule Stripe.LineItem do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Updates an invoice’s line item. Some fields, such as <code>tax_amounts</code>, only live on the invoice line item,\nso they can only be updated through this endpoint. Other fields, such as <code>amount</code>, live on both the invoice\nitem and the invoice line item, so updates on this endpoint will propagate to the invoice item as well.\nUpdating an invoice’s line item is only possible before the invoice is finalized.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/invoices/{invoice}/lines/{line_item_id}`\n"
+    (
+      @spec update(
+              invoice :: binary(),
+              line_item_id :: binary(),
+              params :: %{
+                optional(:amount) => integer,
+                optional(:description) => binary,
+                optional(:discountable) => boolean,
+                optional(:discounts) => list(discounts) | binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:period) => period,
+                optional(:price) => binary,
+                optional(:price_data) => price_data,
+                optional(:quantity) => integer,
+                optional(:tax_amounts) => list(tax_amounts) | binary,
+                optional(:tax_rates) => list(binary) | binary
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.LineItem.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def update(invoice, line_item_id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/invoices/{invoice}/lines/{line_item_id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "invoice",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "invoice",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              },
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "line_item_id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "line_item_id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [invoice, line_item_id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
