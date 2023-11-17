@@ -238,15 +238,7 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc nil
-    @type custom_fields :: %{
-            optional(:dropdown) => dropdown,
-            optional(:key) => binary,
-            optional(:label) => label,
-            optional(:numeric) => numeric,
-            optional(:optional) => boolean,
-            optional(:text) => text,
-            optional(:type) => :dropdown | :numeric | :text
-          }
+    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
   )
 
   (
@@ -998,6 +990,7 @@ defmodule Stripe.Checkout.Session do
                 optional(:payment_intent) => binary,
                 optional(:payment_link) => binary,
                 optional(:starting_after) => binary,
+                optional(:status) => :complete | :expired | :open,
                 optional(:subscription) => binary
               },
               opts :: Keyword.t()
