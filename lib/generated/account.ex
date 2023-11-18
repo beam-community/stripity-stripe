@@ -119,8 +119,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to Bacs Direct Debit payments."
-    @type bacs_debit_payments :: %{optional(:display_name) => binary}
+    @typedoc "The bacs_debit_payments capability."
+    @type bacs_debit_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -333,7 +333,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "A document verifying the business."
+    @typedoc "An identifying document, either a passport or local ID card."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -578,11 +578,12 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the Stripe Treasury Services Agreement."
+    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:user_agent) => binary | binary
+            optional(:service_agreement) => binary,
+            optional(:user_agent) => binary
           }
   )
 
@@ -602,11 +603,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The individual's verification document information."
-    @type verification :: %{
-            optional(:additional_document) => additional_document,
-            optional(:document) => document
-          }
+    @typedoc "Information on the verification state of the company."
+    @type verification :: %{optional(:document) => document}
   )
 
   (
