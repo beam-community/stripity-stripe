@@ -16,11 +16,12 @@ defmodule Stripe.CustomerCashBalanceTransaction do
       :net_amount,
       :object,
       :refunded_from_payment,
+      :transferred_to_balance,
       :type,
       :unapplied_from_payment
     ]
 
-    @typedoc "The `customer_cash_balance_transaction` type.\n\n  * `adjusted_for_overdraft` \n  * `applied_to_payment` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `customer` The customer whose available cash balance changed as a result of this transaction.\n  * `ending_balance` The total available cash balance for the specified currency after this transaction was applied. Represented in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).\n  * `funded` \n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `net_amount` The amount by which the cash balance changed, represented in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). A positive value represents funds being added to the cash balance, a negative value represents funds being removed from the cash balance.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `refunded_from_payment` \n  * `type` The type of the cash balance transaction. New types may be added in future. See [Customer Balance](https://stripe.com/docs/payments/customer-balance#types) to learn more about these types.\n  * `unapplied_from_payment` \n"
+    @typedoc "The `customer_cash_balance_transaction` type.\n\n  * `adjusted_for_overdraft` \n  * `applied_to_payment` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `customer` The customer whose available cash balance changed as a result of this transaction.\n  * `ending_balance` The total available cash balance for the specified currency after this transaction was applied. Represented in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).\n  * `funded` \n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `net_amount` The amount by which the cash balance changed, represented in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). A positive value represents funds being added to the cash balance, a negative value represents funds being removed from the cash balance.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `refunded_from_payment` \n  * `transferred_to_balance` \n  * `type` The type of the cash balance transaction. New types may be added in future. See [Customer Balance](https://stripe.com/docs/payments/customer-balance#types) to learn more about these types.\n  * `unapplied_from_payment` \n"
     @type t :: %__MODULE__{
             adjusted_for_overdraft: term,
             applied_to_payment: term,
@@ -34,6 +35,7 @@ defmodule Stripe.CustomerCashBalanceTransaction do
             net_amount: integer,
             object: binary,
             refunded_from_payment: term,
+            transferred_to_balance: term,
             type: binary,
             unapplied_from_payment: term
           }

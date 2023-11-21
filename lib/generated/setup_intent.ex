@@ -132,7 +132,17 @@ defmodule Stripe.SetupIntent do
               | :unionpay
               | :unknown
               | :visa,
-            optional(:request_three_d_secure) => :any | :automatic
+            optional(:request_three_d_secure) => :any | :automatic,
+            optional(:three_d_secure) => three_d_secure
+          }
+  )
+
+  (
+    @typedoc "Cartes Bancaires-specific 3DS fields."
+    @type cartes_bancaires :: %{
+            optional(:cb_avalgo) => :"0" | :"1" | :"2" | :"3" | :"4" | :A,
+            optional(:cb_exemption) => binary,
+            optional(:cb_score) => integer
           }
   )
 
@@ -294,6 +304,11 @@ defmodule Stripe.SetupIntent do
   )
 
   (
+    @typedoc "Network specific 3DS fields. Network specific arguments require an\nexplicit card brand choice. The parameter `payment_method_options.card.network``\nmust be populated accordingly"
+    @type network_options :: %{optional(:cartes_bancaires) => cartes_bancaires}
+  )
+
+  (
     @typedoc "Additional fields for network related functions"
     @type networks :: %{optional(:requested) => list(:ach | :us_domestic_wire)}
   )
@@ -431,8 +446,8 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
-    @type sepa_debit :: %{optional(:iban) => binary}
+    @typedoc "If this is a `sepa_debit` SetupIntent, this sub-hash contains details about the SEPA Debit payment method options."
+    @type sepa_debit :: %{optional(:mandate_options) => map()}
   )
 
   (
@@ -443,6 +458,19 @@ defmodule Stripe.SetupIntent do
   (
     @typedoc "If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method."
     @type sofort :: %{optional(:country) => :AT | :BE | :DE | :ES | :IT | :NL}
+  )
+
+  (
+    @typedoc "If 3D Secure authentication was performed with a third-party provider,\nthe authentication details to use for this setup."
+    @type three_d_secure :: %{
+            optional(:ares_trans_status) => :A | :C | :I | :N | :R | :U | :Y,
+            optional(:cryptogram) => binary,
+            optional(:electronic_commerce_indicator) => :"01" | :"02" | :"05" | :"06" | :"07",
+            optional(:network_options) => network_options,
+            optional(:requestor_challenge_indicator) => binary,
+            optional(:transaction_id) => binary,
+            optional(:version) => :"1.0.2" | :"2.1.0" | :"2.2.0"
+          }
   )
 
   (
