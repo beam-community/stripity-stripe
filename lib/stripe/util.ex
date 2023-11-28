@@ -51,47 +51,19 @@ defmodule Stripe.Util do
   def atomize_key(k), do: k
 
   @spec object_name_to_module(String.t()) :: module
-  def object_name_to_module("billing_portal.configuration"),
-    do: Stripe.BillingPortal.Configuration
-
-  def object_name_to_module("billing_portal.session"), do: Stripe.BillingPortal.Session
-  def object_name_to_module("checkout.session"), do: Stripe.Checkout.Session
-  def object_name_to_module("radar.early_fraud_warning"), do: Stripe.Radar.EarlyFraudWarning
-  def object_name_to_module("file"), do: Stripe.File
-
-  def object_name_to_module("identity.verification_session"),
-    do: Stripe.Identity.VerificationSession
-
-  def object_name_to_module("identity.verification_report"),
-    do: Stripe.Identity.VerificationReport
-
-  def object_name_to_module("reporting.report_type"),
-    do: Stripe.Reporting.ReportType
-
-  def object_name_to_module("reporting.report_run"),
-    do: Stripe.Reporting.ReportRun
-
-  def object_name_to_module("issuing.authorization"), do: Stripe.Issuing.Authorization
-  def object_name_to_module("issuing.card"), do: Stripe.Issuing.Card
-  def object_name_to_module("issuing.cardholder"), do: Stripe.Issuing.Cardholder
-  def object_name_to_module("issuing.transaction"), do: Stripe.Issuing.Transaction
-  def object_name_to_module("tax_id"), do: Stripe.TaxId
-  def object_name_to_module("usage_record"), do: Stripe.UsageRecord
-  def object_name_to_module("terminal.connection_token"), do: Stripe.Terminal.ConnectionToken
-  def object_name_to_module("terminal.location"), do: Stripe.Terminal.Location
-  def object_name_to_module("terminal.reader"), do: Stripe.Terminal.Reader
-  def object_name_to_module("test_helpers.test_clock"), do: Stripe.TestHelpers.TestClock
-
-  def object_name_to_module("usage_record_summary"),
-    do: Stripe.UsageRecordSummary
+  def object_name_to_module("test_helpers.test_clock"), do: Stripe.TestClock
 
   def object_name_to_module(object_name) do
-    module_name =
+    module_parts =
       object_name
-      |> String.split("_")
-      |> Enum.map_join("", &String.capitalize/1)
+      |> String.split(".")
+      |> Enum.map(fn part ->
+        part
+        |> String.split("_")
+        |> Enum.map_join("", &String.capitalize/1)
+      end)
 
-    Module.concat(Stripe, module_name)
+    Module.concat([Stripe | module_parts])
   end
 
   @spec module_to_string(module) :: String.t()

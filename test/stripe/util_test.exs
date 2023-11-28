@@ -34,6 +34,24 @@ defmodule Stripe.UtilTest do
       assert object_name_to_module("transfer") == Stripe.Transfer
       assert object_name_to_module("transfer_reversal") == Stripe.TransferReversal
       assert object_name_to_module("token") == Stripe.Token
+
+      assert object_name_to_module("billing_portal.session") == Stripe.BillingPortal.Session
+      assert object_name_to_module("checkout.session") == Stripe.Checkout.Session
+      assert object_name_to_module("identity.verification_report") == Stripe.Identity.VerificationReport
+      assert object_name_to_module("identity.verification_session") == Stripe.Identity.VerificationSession
+      assert object_name_to_module("issuing.authorization") == Stripe.Issuing.Authorization
+      assert object_name_to_module("issuing.card") == Stripe.Issuing.Card
+      assert object_name_to_module("issuing.cardholder") == Stripe.Issuing.Cardholder
+      assert object_name_to_module("issuing.transaction") == Stripe.Issuing.Transaction
+      assert object_name_to_module("radar.early_fraud_warning") == Stripe.Radar.EarlyFraudWarning
+      assert object_name_to_module("reporting.report_type") == Stripe.Reporting.ReportType
+      assert object_name_to_module("reporting.report_run") == Stripe.Reporting.ReportRun
+      assert object_name_to_module("tax_id") == Stripe.TaxId
+      assert object_name_to_module("terminal.reader") == Stripe.Terminal.Reader
+      assert object_name_to_module("terminal.location") == Stripe.Terminal.Location
+      assert object_name_to_module("terminal.connection_token") == Stripe.Terminal.ConnectionToken
+      assert object_name_to_module("usage_record") == Stripe.UsageRecord
+      assert object_name_to_module("usage_record_summary") == Stripe.UsageRecordSummary
     end
   end
 
