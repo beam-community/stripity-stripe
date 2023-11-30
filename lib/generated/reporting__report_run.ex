@@ -56,6 +56,8 @@ defmodule Stripe.Reporting.ReportRun do
               | :anticipation_repayment
               | :charge
               | :charge_failure
+              | :climate_order_purchase
+              | :climate_order_refund
               | :connect_collection_transfer
               | :connect_reserved_funds
               | :contribution

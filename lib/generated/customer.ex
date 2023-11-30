@@ -153,7 +153,10 @@ defmodule Stripe.Customer do
 
   (
     @typedoc "Tax details about the customer."
-    @type tax :: %{optional(:ip_address) => binary | binary}
+    @type tax :: %{
+            optional(:ip_address) => binary | binary,
+            optional(:validate_location) => :deferred | :immediately
+          }
   )
 
   (

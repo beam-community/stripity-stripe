@@ -43,7 +43,7 @@ defmodule Stripe.Climate.Order do
             delayed_at: integer | nil,
             delivered_at: integer | nil,
             delivery_details: term,
-            expected_delivery_year: integer | nil,
+            expected_delivery_year: integer,
             id: binary,
             livemode: boolean,
             metadata: term,
