@@ -333,7 +333,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "An identifying document, either a passport or local ID card."
+    @typedoc "A document verifying the business."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -578,11 +578,12 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](https://stripe.com/docs/issuing/connect/tos_acceptance)."
+    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:user_agent) => binary | binary
+            optional(:service_agreement) => binary,
+            optional(:user_agent) => binary
           }
   )
 

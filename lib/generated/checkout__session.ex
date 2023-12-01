@@ -238,15 +238,17 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc nil
-    @type custom_fields :: %{
-            optional(:dropdown) => dropdown,
-            optional(:key) => binary,
-            optional(:label) => label,
-            optional(:numeric) => numeric,
-            optional(:optional) => boolean,
-            optional(:text) => text,
-            optional(:type) => :dropdown | :numeric | :text
+    @type created :: %{
+            optional(:gt) => integer,
+            optional(:gte) => integer,
+            optional(:lt) => integer,
+            optional(:lte) => integer
           }
+  )
+
+  (
+    @typedoc nil
+    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
   )
 
   (
@@ -990,6 +992,7 @@ defmodule Stripe.Checkout.Session do
     (
       @spec list(
               params :: %{
+                optional(:created) => created | integer,
                 optional(:customer) => binary,
                 optional(:customer_details) => customer_details,
                 optional(:ending_before) => binary,
