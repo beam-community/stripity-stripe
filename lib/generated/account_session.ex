@@ -18,12 +18,41 @@ defmodule Stripe.AccountSession do
 
   (
     @typedoc "Configuration for the account onboarding embedded component."
-    @type account_onboarding :: %{optional(:enabled) => boolean}
+    @type account_onboarding :: %{optional(:enabled) => boolean, optional(:features) => map()}
   )
 
   (
     @typedoc "Each key of the dictionary represents an embedded component, and each embedded component maps to its configuration (e.g. whether it has been enabled or not)."
-    @type components :: %{optional(:account_onboarding) => account_onboarding}
+    @type components :: %{
+            optional(:account_onboarding) => account_onboarding,
+            optional(:payment_details) => payment_details,
+            optional(:payments) => payments,
+            optional(:payouts) => payouts
+          }
+  )
+
+  (
+    @typedoc "The list of features enabled in the embedded component."
+    @type features :: %{
+            optional(:capture_payments) => boolean,
+            optional(:dispute_management) => boolean,
+            optional(:refund_management) => boolean
+          }
+  )
+
+  (
+    @typedoc "Configuration for the payment details embedded component."
+    @type payment_details :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the payments embedded component."
+    @type payments :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the payouts embedded component."
+    @type payouts :: %{optional(:enabled) => boolean, optional(:features) => map()}
   )
 
   (

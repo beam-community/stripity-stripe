@@ -51,7 +51,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The Kana variation of the company's primary address (Japan only)."
+    @typedoc "The Kana variation of the the individual's primary address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -64,7 +64,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The Kanji variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kanji variation of the company's primary address (Japan only)."
     @type address_kanji :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -175,7 +175,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "A document verifying the business."
+    @typedoc "An identifying document, either a passport or local ID card."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
