@@ -204,7 +204,8 @@ defmodule Stripe.PaymentLink do
             optional(:metadata) => %{optional(binary) => binary},
             optional(:setup_future_usage) => :off_session | :on_session,
             optional(:statement_descriptor) => binary,
-            optional(:statement_descriptor_suffix) => binary
+            optional(:statement_descriptor_suffix) => binary,
+            optional(:transfer_group) => binary
           }
   )
 
