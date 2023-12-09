@@ -21,7 +21,6 @@ defmodule Stripe.PaymentMethodConfiguration do
       :sofort,
       :wechat_pay,
       :blik,
-      :netbanking,
       :konbini,
       :object,
       :jcb,
@@ -29,17 +28,13 @@ defmodule Stripe.PaymentMethodConfiguration do
       :paypal,
       :application,
       :us_bank_account,
-      :pay_by_bank,
       :oxxo,
       :cashapp,
       :promptpay,
       :link,
       :active,
-      :multibanco,
       :card,
-      :upi,
       :ideal,
-      :id_bank_transfer,
       :giropay,
       :alipay,
       :is_default,
@@ -51,7 +46,7 @@ defmodule Stripe.PaymentMethodConfiguration do
       :fpx
     ]
 
-    @typedoc "The `payment_method_configuration` type.\n\n  * `acss_debit` \n  * `active` Whether the configuration can be used for new payments.\n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `apple_pay` \n  * `application` For child configs, the Connect application associated with the configuration.\n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `cartes_bancaires` \n  * `cashapp` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `google_pay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `id_bank_transfer` \n  * `ideal` \n  * `is_default` The default configuration is used whenever a payment method configuration is not specified.\n  * `jcb` \n  * `klarna` \n  * `konbini` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `multibanco` \n  * `name` The configuration's name.\n  * `netbanking` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `parent` For child configs, the configuration's parent configuration.\n  * `pay_by_bank` \n  * `paynow` \n  * `paypal` \n  * `promptpay` \n  * `sepa_debit` \n  * `sofort` \n  * `upi` \n  * `us_bank_account` \n  * `wechat_pay` \n"
+    @typedoc "The `payment_method_configuration` type.\n\n  * `acss_debit` \n  * `active` Whether the configuration can be used for new payments.\n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `apple_pay` \n  * `application` For child configs, the Connect application associated with the configuration.\n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `cartes_bancaires` \n  * `cashapp` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `google_pay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `is_default` The default configuration is used whenever a payment method configuration is not specified.\n  * `jcb` \n  * `klarna` \n  * `konbini` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `name` The configuration's name.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `parent` For child configs, the configuration's parent configuration.\n  * `paynow` \n  * `paypal` \n  * `promptpay` \n  * `sepa_debit` \n  * `sofort` \n  * `us_bank_account` \n  * `wechat_pay` \n"
     @type t :: %__MODULE__{
             acss_debit: term,
             active: boolean,
@@ -74,7 +69,6 @@ defmodule Stripe.PaymentMethodConfiguration do
             google_pay: term,
             grabpay: term,
             id: binary,
-            id_bank_transfer: term,
             ideal: term,
             is_default: boolean,
             jcb: term,
@@ -82,20 +76,16 @@ defmodule Stripe.PaymentMethodConfiguration do
             konbini: term,
             link: term,
             livemode: boolean,
-            multibanco: term,
             name: binary,
-            netbanking: term,
             object: binary,
             oxxo: term,
             p24: term,
             parent: binary | nil,
-            pay_by_bank: term,
             paynow: term,
             paypal: term,
             promptpay: term,
             sepa_debit: term,
             sofort: term,
-            upi: term,
             us_bank_account: term,
             wechat_pay: term
           }

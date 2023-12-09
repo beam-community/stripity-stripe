@@ -161,6 +161,11 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
+    @typedoc nil
+    @type after_submit :: %{optional(:message) => binary}
+  )
+
+  (
     @typedoc "contains details about the Afterpay Clearpay payment method options."
     @type afterpay_clearpay :: %{optional(:setup_future_usage) => :none}
   )
@@ -231,6 +236,7 @@ defmodule Stripe.Checkout.Session do
   (
     @typedoc "Configure fields for the Checkout Session to gather active consent from customers."
     @type consent_collection :: %{
+            optional(:payment_method_reuse_agreement) => payment_method_reuse_agreement,
             optional(:promotions) => :auto | :none,
             optional(:terms_of_service) => :none | :required
           }
@@ -248,20 +254,13 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc nil
-    @type custom_fields :: %{
-            optional(:dropdown) => dropdown,
-            optional(:key) => binary,
-            optional(:label) => label,
-            optional(:numeric) => numeric,
-            optional(:optional) => boolean,
-            optional(:text) => text,
-            optional(:type) => :dropdown | :numeric | :text
-          }
+    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
   )
 
   (
     @typedoc "Display additional text for your customers using custom text."
     @type custom_text :: %{
+            optional(:after_submit) => after_submit | binary,
             optional(:shipping_address) => shipping_address | binary,
             optional(:submit) => submit | binary,
             optional(:terms_of_service_acceptance) => terms_of_service_acceptance | binary
@@ -525,6 +524,11 @@ defmodule Stripe.Checkout.Session do
             optional(:us_bank_account) => us_bank_account,
             optional(:wechat_pay) => wechat_pay
           }
+  )
+
+  (
+    @typedoc "Determines the display of payment method reuse agreement text in the UI. If set to `hidden`, it will hide legal text related to the reuse of a payment method."
+    @type payment_method_reuse_agreement :: %{optional(:position) => :auto | :hidden}
   )
 
   (
@@ -966,8 +970,11 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
-    @typedoc "The parameters used to automatically create a Transfer when the payment succeeds.\nFor more information, see the PaymentIntents [use case for connected accounts](https://stripe.com/docs/payments/connected-accounts)."
-    @type transfer_data :: %{optional(:amount) => integer, optional(:destination) => binary}
+    @typedoc "If specified, the funds from the subscription's invoices will be transferred to the destination and the ID of the resulting transfers will be found on the resulting charges."
+    @type transfer_data :: %{
+            optional(:amount_percent) => number,
+            optional(:destination) => binary
+          }
   )
 
   (

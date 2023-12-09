@@ -96,6 +96,11 @@ defmodule Stripe.PaymentLink do
   )
 
   (
+    @typedoc nil
+    @type after_submit :: %{optional(:message) => binary}
+  )
+
+  (
     @typedoc "Configuration for automatic tax collection."
     @type automatic_tax :: %{optional(:enabled) => boolean}
   )
@@ -108,6 +113,7 @@ defmodule Stripe.PaymentLink do
   (
     @typedoc "Configure fields to gather active consent from customers."
     @type consent_collection :: %{
+            optional(:payment_method_reuse_agreement) => payment_method_reuse_agreement,
             optional(:promotions) => :auto | :none,
             optional(:terms_of_service) => :none | :required
           }
@@ -115,20 +121,13 @@ defmodule Stripe.PaymentLink do
 
   (
     @typedoc nil
-    @type custom_fields :: %{
-            optional(:dropdown) => dropdown,
-            optional(:key) => binary,
-            optional(:label) => label,
-            optional(:numeric) => numeric,
-            optional(:optional) => boolean,
-            optional(:text) => text,
-            optional(:type) => :dropdown | :numeric | :text
-          }
+    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
   )
 
   (
     @typedoc "Display additional text for your customers using custom text."
     @type custom_text :: %{
+            optional(:after_submit) => after_submit | binary,
             optional(:shipping_address) => shipping_address | binary,
             optional(:submit) => submit | binary,
             optional(:terms_of_service_acceptance) => terms_of_service_acceptance | binary
@@ -207,6 +206,11 @@ defmodule Stripe.PaymentLink do
             optional(:statement_descriptor_suffix) => binary,
             optional(:transfer_group) => binary
           }
+  )
+
+  (
+    @typedoc "Determines the display of payment method reuse agreement text in the UI. If set to `hidden`, it will hide legal text related to the reuse of a payment method."
+    @type payment_method_reuse_agreement :: %{optional(:position) => :auto | :hidden}
   )
 
   (
