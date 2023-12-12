@@ -2,6 +2,13 @@ name: 🐞 Bug Report
 description: Tell us about something that's not working the way we (probably) intend.
 labels: ["kind:bug", "state:triage"]
 body:
+  - type: checkboxes
+    attributes:
+      label: Existing Issue or Pull Request Verification
+      description: Confirm that there are no duplicate Issues or Pull Requests currently open related to your submission.
+      options:
+        - label: "Confirmed. No existing Issues or Pull Requests found related to my submission."
+          required: true
   - type: input
     id: package-version
     attributes:
