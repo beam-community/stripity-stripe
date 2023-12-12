@@ -7,7 +7,7 @@ body:
       label: Existing Issue or Pull Request Verification
       description: Confirm that there are no duplicate Issues or Pull Requests currently open related to your submission.
       options:
-        - label: "Confirmed. No existing Issues or Pull Requests found related to my submission."
+        - label: "Confirmed, no existing Issues or Pull Requests found related to my submission."
           required: true
   - type: input
     id: package-version
