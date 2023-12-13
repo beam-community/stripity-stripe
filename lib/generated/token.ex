@@ -40,7 +40,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The person's address."
+    @typedoc "The individual's primary address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -52,7 +52,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The Kana variation of the company's primary address (Japan only)."
+    @typedoc "The Kana variation of the person's address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -269,7 +269,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The person's registered address."
+    @typedoc "The individual's registered address."
     @type registered_address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -294,8 +294,11 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (

@@ -66,7 +66,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The company's primary address."
+    @typedoc "The individual's primary address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -217,8 +217,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's use of the Card Issuing product."
-    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The card_issuing capability."
+    @type card_issuing :: %{optional(:requested) => boolean}
   )
 
   (
@@ -602,8 +602,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
