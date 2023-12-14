@@ -176,7 +176,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "An identifying document, either a passport or local ID card."
+    @typedoc "A document verifying the business."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -294,7 +294,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The individual's verification document information."
+    @typedoc "The person's verification status."
     @type verification :: %{
             optional(:additional_document) => additional_document,
             optional(:document) => document

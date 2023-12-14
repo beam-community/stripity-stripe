@@ -136,8 +136,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type au_becs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
+    @typedoc "If this is an `au_becs_debit` PaymentMethod, this hash contains details about the bank account."
+    @type au_becs_debit :: %{optional(:account_number) => binary, optional(:bsb_number) => binary}
   )
 
   (
@@ -192,11 +192,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type boleto :: %{
-            optional(:expires_after_days) => integer,
-            optional(:setup_future_usage) => :none | :off_session | :on_session
-          }
+    @typedoc "If this is a `boleto` PaymentMethod, this hash contains details about the Boleto payment method."
+    @type boleto :: %{optional(:tax_id) => binary}
   )
 
   (
@@ -315,8 +312,33 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type fpx :: %{optional(:setup_future_usage) => :none}
+    @typedoc "If this is an `fpx` PaymentMethod, this hash contains details about the FPX payment method."
+    @type fpx :: %{
+            optional(:account_holder_type) => :company | :individual,
+            optional(:bank) =>
+              :affin_bank
+              | :agrobank
+              | :alliance_bank
+              | :ambank
+              | :bank_islam
+              | :bank_muamalat
+              | :bank_of_china
+              | :bank_rakyat
+              | :bsn
+              | :cimb
+              | :deutsche_bank
+              | :hong_leong_bank
+              | :hsbc
+              | :kfh
+              | :maybank2e
+              | :maybank2u
+              | :ocbc
+              | :pb_enterprise
+              | :public_bank
+              | :rhb
+              | :standard_chartered
+              | :uob
+          }
   )
 
   (

@@ -28,6 +28,16 @@ defmodule Stripe.Radar.EarlyFraudWarning do
   )
 
   (
+    @typedoc nil
+    @type created :: %{
+            optional(:gt) => integer,
+            optional(:gte) => integer,
+            optional(:lt) => integer,
+            optional(:lte) => integer
+          }
+  )
+
+  (
     nil
 
     @doc "<p>Returns a list of early fraud warnings.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/radar/early_fraud_warnings`\n"
@@ -35,6 +45,7 @@ defmodule Stripe.Radar.EarlyFraudWarning do
       @spec list(
               params :: %{
                 optional(:charge) => binary,
+                optional(:created) => created | integer,
                 optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
                 optional(:limit) => integer,
