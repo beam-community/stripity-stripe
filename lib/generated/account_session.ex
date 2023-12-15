@@ -52,7 +52,7 @@ defmodule Stripe.AccountSession do
 
   (
     @typedoc "Configuration for the payouts embedded component."
-    @type payouts :: %{optional(:enabled) => boolean, optional(:features) => map()}
+    @type payouts :: %{optional(:enabled) => boolean}
   )
 
   (
