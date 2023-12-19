@@ -34,6 +34,7 @@ defmodule Stripe.PaymentMethodConfiguration do
       :link,
       :active,
       :card,
+      :revolut_pay,
       :ideal,
       :giropay,
       :alipay,
@@ -46,7 +47,7 @@ defmodule Stripe.PaymentMethodConfiguration do
       :fpx
     ]
 
-    @typedoc "The `payment_method_configuration` type.\n\n  * `acss_debit` \n  * `active` Whether the configuration can be used for new payments.\n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `apple_pay` \n  * `application` For child configs, the Connect application associated with the configuration.\n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `cartes_bancaires` \n  * `cashapp` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `google_pay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `is_default` The default configuration is used whenever a payment method configuration is not specified.\n  * `jcb` \n  * `klarna` \n  * `konbini` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `name` The configuration's name.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `parent` For child configs, the configuration's parent configuration.\n  * `paynow` \n  * `paypal` \n  * `promptpay` \n  * `sepa_debit` \n  * `sofort` \n  * `us_bank_account` \n  * `wechat_pay` \n"
+    @typedoc "The `payment_method_configuration` type.\n\n  * `acss_debit` \n  * `active` Whether the configuration can be used for new payments.\n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `apple_pay` \n  * `application` For child configs, the Connect application associated with the configuration.\n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `cartes_bancaires` \n  * `cashapp` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `google_pay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `is_default` The default configuration is used whenever a payment method configuration is not specified.\n  * `jcb` \n  * `klarna` \n  * `konbini` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `name` The configuration's name.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `parent` For child configs, the configuration's parent configuration.\n  * `paynow` \n  * `paypal` \n  * `promptpay` \n  * `revolut_pay` \n  * `sepa_debit` \n  * `sofort` \n  * `us_bank_account` \n  * `wechat_pay` \n"
     @type t :: %__MODULE__{
             acss_debit: term,
             active: boolean,
@@ -84,6 +85,7 @@ defmodule Stripe.PaymentMethodConfiguration do
             paynow: term,
             paypal: term,
             promptpay: term,
+            revolut_pay: term,
             sepa_debit: term,
             sofort: term,
             us_bank_account: term,
@@ -242,6 +244,11 @@ defmodule Stripe.PaymentMethodConfiguration do
   )
 
   (
+    @typedoc "Revolut Pay, developed by Revolut, a global finance app, is a digital wallet payment method. Revolut Pay uses the customer’s stored balance or cards to fund the payment, and offers the option for non-Revolut customers to save their details after their first purchase."
+    @type revolut_pay :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
     @typedoc "The [Single Euro Payments Area (SEPA)](https://en.wikipedia.org/wiki/Single_Euro_Payments_Area) is an initiative of the European Union to simplify payments within and across member countries. SEPA established and enforced banking standards to allow for the direct debiting of every EUR-denominated bank account within the SEPA region, check this [page](https://stripe.com/docs/payments/sepa-debit) for more details."
     @type sepa_debit :: %{optional(:display_preference) => display_preference}
   )
@@ -349,6 +356,7 @@ defmodule Stripe.PaymentMethodConfiguration do
                 optional(:alipay) => alipay,
                 optional(:giropay) => giropay,
                 optional(:ideal) => ideal,
+                optional(:revolut_pay) => revolut_pay,
                 optional(:expand) => list(binary),
                 optional(:card) => card,
                 optional(:active) => boolean,
@@ -429,6 +437,7 @@ defmodule Stripe.PaymentMethodConfiguration do
                 optional(:alipay) => alipay,
                 optional(:giropay) => giropay,
                 optional(:ideal) => ideal,
+                optional(:revolut_pay) => revolut_pay,
                 optional(:expand) => list(binary),
                 optional(:card) => card,
                 optional(:link) => link,
