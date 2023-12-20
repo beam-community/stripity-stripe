@@ -1,7 +1,7 @@
 defmodule Stripe.File do
   use Stripe.Entity
 
-  @moduledoc "This object represents files hosted on Stripe's servers. You can upload\nfiles with the [create file](https://stripe.com/docs/api#create_file) request\n(for example, when uploading dispute evidence). Stripe also\ncreates files independetly (for example, the results of a [Sigma scheduled\nquery](#scheduled_queries)).\n\nRelated guide: [File upload guide](https://stripe.com/docs/file-upload)"
+  @moduledoc "This object represents files hosted on Stripe's servers. You can upload\nfiles with the [create file](https://stripe.com/docs/api#create_file) request\n(for example, when uploading dispute evidence). Stripe also\ncreates files independently (for example, the results of a [Sigma scheduled\nquery](#scheduled_queries)).\n\nRelated guide: [File upload guide](https://stripe.com/docs/file-upload)"
   (
     defstruct [
       :created,

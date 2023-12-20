@@ -20,11 +20,12 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Details on the legal guardian's acceptance of the main Stripe service agreement."
+    @typedoc "Information for the account this token represents."
     @type account :: %{
-            optional(:date) => integer,
-            optional(:ip) => binary,
-            optional(:user_agent) => binary | binary
+            optional(:business_type) => :company | :government_entity | :individual | :non_profit,
+            optional(:company) => company,
+            optional(:individual) => individual,
+            optional(:tos_shown_and_accepted) => boolean
           }
   )
 
@@ -293,8 +294,11 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (

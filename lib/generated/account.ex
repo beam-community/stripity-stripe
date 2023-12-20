@@ -119,8 +119,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to Bacs Direct Debit payments."
-    @type bacs_debit_payments :: %{optional(:display_name) => binary}
+    @typedoc "The bacs_debit_payments capability."
+    @type bacs_debit_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -217,8 +217,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's use of the Card Issuing product."
-    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The card_issuing capability."
+    @type card_issuing :: %{optional(:requested) => boolean}
   )
 
   (
@@ -597,8 +597,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's Treasury FinancialAccounts."
-    @type treasury :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The treasury capability."
+    @type treasury :: %{optional(:requested) => boolean}
   )
 
   (
@@ -607,8 +607,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
