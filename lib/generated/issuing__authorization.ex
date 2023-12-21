@@ -73,7 +73,7 @@ defmodule Stripe.Issuing.Authorization do
     @typedoc "The exemption applied to this authorization."
     @type authentication_exemption :: %{
             optional(:claimed_by) => :acquirer | :issuer,
-            optional(:type) => :low_value_transaction | :transaction_risk_analysis
+            optional(:type) => :low_value_transaction | :transaction_risk_analysis | :unknown
           }
   )
 

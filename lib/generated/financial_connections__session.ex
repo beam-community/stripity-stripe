@@ -57,7 +57,7 @@ defmodule Stripe.FinancialConnections.Session do
                 optional(:filters) => filters,
                 optional(:permissions) =>
                   list(:balances | :ownership | :payment_method | :transactions),
-                optional(:prefetch) => list(:balances | :ownership),
+                optional(:prefetch) => list(:balances | :ownership | :transactions),
                 optional(:return_url) => binary
               },
               opts :: Keyword.t()

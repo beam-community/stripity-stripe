@@ -20,10 +20,12 @@ defmodule Stripe.FinancialConnections.Account do
       :permissions,
       :status,
       :subcategory,
-      :supported_payment_method_types
+      :subscriptions,
+      :supported_payment_method_types,
+      :transaction_refresh
     ]
 
-    @typedoc "The `financial_connections.account` type.\n\n  * `account_holder` The account holder that this account belongs to.\n  * `balance` The most recent information about the account's balance.\n  * `balance_refresh` The state of the most recent attempt to refresh the account balance.\n  * `category` The type of the account. Account category is further divided in `subcategory`.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `display_name` A human-readable name that has been assigned to this account, either by the account holder or by the institution.\n  * `id` Unique identifier for the object.\n  * `institution_name` The name of the institution that holds this account.\n  * `last4` The last 4 digits of the account number. If present, this will be 4 numeric characters.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `ownership` The most recent information about the account's owners.\n  * `ownership_refresh` The state of the most recent attempt to refresh the account owners.\n  * `permissions` The list of permissions granted by this account.\n  * `status` The status of the link to the account.\n  * `subcategory` If `category` is `cash`, one of:\n\n - `checking`\n - `savings`\n - `other`\n\nIf `category` is `credit`, one of:\n\n - `mortgage`\n - `line_of_credit`\n - `credit_card`\n - `other`\n\nIf `category` is `investment` or `other`, this will be `other`.\n  * `supported_payment_method_types` The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this account.\n"
+    @typedoc "The `financial_connections.account` type.\n\n  * `account_holder` The account holder that this account belongs to.\n  * `balance` The most recent information about the account's balance.\n  * `balance_refresh` The state of the most recent attempt to refresh the account balance.\n  * `category` The type of the account. Account category is further divided in `subcategory`.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `display_name` A human-readable name that has been assigned to this account, either by the account holder or by the institution.\n  * `id` Unique identifier for the object.\n  * `institution_name` The name of the institution that holds this account.\n  * `last4` The last 4 digits of the account number. If present, this will be 4 numeric characters.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `ownership` The most recent information about the account's owners.\n  * `ownership_refresh` The state of the most recent attempt to refresh the account owners.\n  * `permissions` The list of permissions granted by this account.\n  * `status` The status of the link to the account.\n  * `subcategory` If `category` is `cash`, one of:\n\n - `checking`\n - `savings`\n - `other`\n\nIf `category` is `credit`, one of:\n\n - `mortgage`\n - `line_of_credit`\n - `credit_card`\n - `other`\n\nIf `category` is `investment` or `other`, this will be `other`.\n  * `subscriptions` The list of data refresh subscriptions requested on this account.\n  * `supported_payment_method_types` The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this account.\n  * `transaction_refresh` The state of the most recent attempt to refresh the account transactions.\n"
     @type t :: %__MODULE__{
             account_holder: term | nil,
             balance: term | nil,
@@ -41,7 +43,9 @@ defmodule Stripe.FinancialConnections.Account do
             permissions: term | nil,
             status: binary,
             subcategory: binary,
-            supported_payment_method_types: term
+            subscriptions: term | nil,
+            supported_payment_method_types: term,
+            transaction_refresh: term | nil
           }
   )
 
@@ -185,7 +189,7 @@ defmodule Stripe.FinancialConnections.Account do
               account :: binary(),
               params :: %{
                 optional(:expand) => list(binary),
-                optional(:features) => list(:balance | :ownership)
+                optional(:features) => list(:balance | :ownership | :transactions)
               },
               opts :: Keyword.t()
             ) ::
@@ -240,6 +244,100 @@ defmodule Stripe.FinancialConnections.Account do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/financial_connections/accounts/{account}/disconnect",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "account",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "account",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [account]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Subscribes to periodic refreshes of data associated with a Financial Connections <code>Account</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/financial_connections/accounts/{account}/subscribe`\n"
+    (
+      @spec subscribe(
+              account :: binary(),
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:features) => list(:transactions)
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.FinancialConnections.Account.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def subscribe(account, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/financial_connections/accounts/{account}/subscribe",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "account",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "account",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [account]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Unsubscribes from periodic refreshes of data associated with a Financial Connections <code>Account</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/financial_connections/accounts/{account}/unsubscribe`\n"
+    (
+      @spec unsubscribe(
+              account :: binary(),
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:features) => list(:transactions)
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.FinancialConnections.Account.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def unsubscribe(account, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/financial_connections/accounts/{account}/unsubscribe",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

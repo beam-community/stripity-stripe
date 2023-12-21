@@ -132,7 +132,7 @@ defmodule Stripe.SetupIntent do
               | :unionpay
               | :unknown
               | :visa,
-            optional(:request_three_d_secure) => :any | :automatic,
+            optional(:request_three_d_secure) => :any | :automatic | :challenge,
             optional(:three_d_secure) => three_d_secure
           }
   )
@@ -215,7 +215,7 @@ defmodule Stripe.SetupIntent do
     @type financial_connections :: %{
             optional(:permissions) =>
               list(:balances | :ownership | :payment_method | :transactions),
-            optional(:prefetch) => list(:balances),
+            optional(:prefetch) => list(:balances | :transactions),
             optional(:return_url) => binary
           }
   )
@@ -446,8 +446,8 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `sepa_debit` SetupIntent, this sub-hash contains details about the SEPA Debit payment method options."
-    @type sepa_debit :: %{optional(:mandate_options) => map()}
+    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
+    @type sepa_debit :: %{optional(:iban) => binary}
   )
 
   (

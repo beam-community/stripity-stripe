@@ -232,7 +232,7 @@ defmodule Stripe.Subscription do
     @type financial_connections :: %{
             optional(:permissions) =>
               list(:balances | :ownership | :payment_method | :transactions),
-            optional(:prefetch) => list(:balances)
+            optional(:prefetch) => list(:balances | :transactions)
           }
   )
 
