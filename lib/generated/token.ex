@@ -20,11 +20,12 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Details on the legal guardian's acceptance of the main Stripe service agreement."
+    @typedoc "Information for the account this token represents."
     @type account :: %{
-            optional(:date) => integer,
-            optional(:ip) => binary,
-            optional(:user_agent) => binary | binary
+            optional(:business_type) => :company | :government_entity | :individual | :non_profit,
+            optional(:company) => company,
+            optional(:individual) => individual,
+            optional(:tos_shown_and_accepted) => boolean
           }
   )
 
@@ -39,7 +40,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The person's address."
+    @typedoc "The company's primary address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -51,7 +52,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The Kana variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kana variation of the company's primary address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -175,7 +176,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "An identifying document, either a passport or local ID card."
+    @typedoc "A document verifying the business."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -268,7 +269,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The individual's registered address."
+    @typedoc "The person's registered address."
     @type registered_address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -293,11 +294,8 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The individual's verification document information."
-    @type verification :: %{
-            optional(:additional_document) => additional_document,
-            optional(:document) => document
-          }
+    @typedoc "Information on the verification state of the company."
+    @type verification :: %{optional(:document) => document}
   )
 
   (
