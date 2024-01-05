@@ -289,7 +289,13 @@ defmodule Stripe.SetupIntent do
 
   (
     @typedoc "Additional fields for Mandate creation"
-    @type mandate_options :: %{optional(:collection_method) => :paper}
+    @type mandate_options :: %{
+            optional(:custom_mandate_url) => binary | binary,
+            optional(:default_for) => list(:invoice | :subscription),
+            optional(:interval_description) => binary,
+            optional(:payment_schedule) => :combined | :interval | :sporadic,
+            optional(:transaction_type) => :business | :personal
+          }
   )
 
   (

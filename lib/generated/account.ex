@@ -119,8 +119,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The bacs_debit_payments capability."
-    @type bacs_debit_payments :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to Bacs Direct Debit payments."
+    @type bacs_debit_payments :: %{optional(:display_name) => binary}
   )
 
   (
