@@ -385,12 +385,14 @@ defmodule Stripe.Invoice do
                 | :card
                 | :cashapp
                 | :customer_balance
+                | :eps
                 | :fpx
                 | :giropay
                 | :grabpay
                 | :ideal
                 | :konbini
                 | :link
+                | :p24
                 | :paynow
                 | :paypal
                 | :promptpay

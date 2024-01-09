@@ -1017,7 +1017,7 @@ defmodule Stripe.Issuing.Cardholder do
   )
 
   (
-    @typedoc "Information about cardholder acceptance of [Authorized User Terms](https://stripe.com/docs/issuing/cards)."
+    @typedoc "Information about cardholder acceptance of Celtic [Authorized User Terms](https://stripe.com/docs/issuing/cards#accept-authorized-user-terms). Required for cards backed by a Celtic program."
     @type user_terms_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
