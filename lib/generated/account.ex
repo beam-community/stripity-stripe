@@ -217,8 +217,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's use of the Card Issuing product."
-    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The card_issuing capability."
+    @type card_issuing :: %{optional(:requested) => boolean}
   )
 
   (
@@ -578,12 +578,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
+    @typedoc "Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](https://stripe.com/docs/issuing/connect/tos_acceptance)."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:service_agreement) => binary,
-            optional(:user_agent) => binary
+            optional(:user_agent) => binary | binary
           }
   )
 
