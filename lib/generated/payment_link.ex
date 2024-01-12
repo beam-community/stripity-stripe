@@ -121,15 +121,7 @@ defmodule Stripe.PaymentLink do
 
   (
     @typedoc nil
-    @type custom_fields :: %{
-            optional(:dropdown) => dropdown,
-            optional(:key) => binary,
-            optional(:label) => label,
-            optional(:numeric) => numeric,
-            optional(:optional) => boolean,
-            optional(:text) => text,
-            optional(:type) => :dropdown | :numeric | :text
-          }
+    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
   )
 
   (

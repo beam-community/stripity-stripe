@@ -101,7 +101,7 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
+    @typedoc "Shipping address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -136,8 +136,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `au_becs_debit` PaymentMethod, this hash contains details about the bank account."
-    @type au_becs_debit :: %{optional(:account_number) => binary, optional(:bsb_number) => binary}
+    @typedoc nil
+    @type au_becs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
   )
 
   (
@@ -315,33 +315,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `fpx` PaymentMethod, this hash contains details about the FPX payment method."
-    @type fpx :: %{
-            optional(:account_holder_type) => :company | :individual,
-            optional(:bank) =>
-              :affin_bank
-              | :agrobank
-              | :alliance_bank
-              | :ambank
-              | :bank_islam
-              | :bank_muamalat
-              | :bank_of_china
-              | :bank_rakyat
-              | :bsn
-              | :cimb
-              | :deutsche_bank
-              | :hong_leong_bank
-              | :hsbc
-              | :kfh
-              | :maybank2e
-              | :maybank2u
-              | :ocbc
-              | :pb_enterprise
-              | :public_bank
-              | :rhb
-              | :standard_chartered
-              | :uob
-          }
+    @typedoc nil
+    @type fpx :: %{optional(:setup_future_usage) => :none}
   )
 
   (
@@ -355,8 +330,25 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type ideal :: %{optional(:setup_future_usage) => :none | :off_session}
+    @typedoc "If this is an `ideal` PaymentMethod, this hash contains details about the iDEAL payment method."
+    @type ideal :: %{
+            optional(:bank) =>
+              :abn_amro
+              | :asn_bank
+              | :bunq
+              | :handelsbanken
+              | :ing
+              | :knab
+              | :moneyou
+              | :n26
+              | :rabobank
+              | :regiobank
+              | :revolut
+              | :sns_bank
+              | :triodos_bank
+              | :van_lanschot
+              | :yoursafe
+          }
   )
 
   (
@@ -365,8 +357,56 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method."
-    @type klarna :: %{optional(:dob) => dob}
+    @typedoc nil
+    @type klarna :: %{
+            optional(:capture_method) => :manual,
+            optional(:preferred_locale) =>
+              :"cs-CZ"
+              | :"da-DK"
+              | :"de-AT"
+              | :"de-CH"
+              | :"de-DE"
+              | :"el-GR"
+              | :"en-AT"
+              | :"en-AU"
+              | :"en-BE"
+              | :"en-CA"
+              | :"en-CH"
+              | :"en-CZ"
+              | :"en-DE"
+              | :"en-DK"
+              | :"en-ES"
+              | :"en-FI"
+              | :"en-FR"
+              | :"en-GB"
+              | :"en-GR"
+              | :"en-IE"
+              | :"en-IT"
+              | :"en-NL"
+              | :"en-NO"
+              | :"en-NZ"
+              | :"en-PL"
+              | :"en-PT"
+              | :"en-SE"
+              | :"en-US"
+              | :"es-ES"
+              | :"es-US"
+              | :"fi-FI"
+              | :"fr-BE"
+              | :"fr-CA"
+              | :"fr-CH"
+              | :"fr-FR"
+              | :"it-CH"
+              | :"it-IT"
+              | :"nb-NO"
+              | :"nl-BE"
+              | :"nl-NL"
+              | :"pl-PL"
+              | :"pt-PT"
+              | :"sv-FI"
+              | :"sv-SE",
+            optional(:setup_future_usage) => :none
+          }
   )
 
   (
@@ -395,12 +435,17 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Additional fields for Mandate creation"
+    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
     @type mandate_options :: %{
-            optional(:custom_mandate_url) => binary | binary,
-            optional(:interval_description) => binary,
-            optional(:payment_schedule) => :combined | :interval | :sporadic,
-            optional(:transaction_type) => :business | :personal
+            optional(:amount) => integer,
+            optional(:amount_type) => :fixed | :maximum,
+            optional(:description) => binary,
+            optional(:end_date) => integer,
+            optional(:interval) => :day | :month | :sporadic | :week | :year,
+            optional(:interval_count) => integer,
+            optional(:reference) => binary,
+            optional(:start_date) => integer,
+            optional(:supported_types) => list(:india)
           }
   )
 
@@ -428,34 +473,10 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `p24` PaymentMethod, this hash contains details about the P24 payment method."
+    @typedoc nil
     @type p24 :: %{
-            optional(:bank) =>
-              :alior_bank
-              | :bank_millennium
-              | :bank_nowy_bfg_sa
-              | :bank_pekao_sa
-              | :banki_spbdzielcze
-              | :blik
-              | :bnp_paribas
-              | :boz
-              | :citi_handlowy
-              | :credit_agricole
-              | :envelobank
-              | :etransfer_pocztowy24
-              | :getin_bank
-              | :ideabank
-              | :ing
-              | :inteligo
-              | :mbank_mtransfer
-              | :nest_przelew
-              | :noble_pay
-              | :pbac_z_ipko
-              | :plus_bank
-              | :santander_przelew24
-              | :tmobile_usbugi_bankowe
-              | :toyota_bank
-              | :volkswagen_bank
+            optional(:setup_future_usage) => :none,
+            optional(:tos_shown_and_accepted) => boolean
           }
   )
 
@@ -633,7 +654,7 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Options to configure Radar. Learn more about [Radar Sessions](https://stripe.com/docs/radar/radar-session)."
+    @typedoc "Options to configure Radar. See [Radar Session](https://stripe.com/docs/radar/radar-session) for more information."
     @type radar_options :: %{optional(:session) => binary}
   )
 
@@ -662,8 +683,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method."
-    @type sofort :: %{optional(:country) => :AT | :BE | :DE | :ES | :IT | :NL}
+    @typedoc nil
+    @type sofort :: %{
+            optional(:preferred_language) => :de | :en | :es | :fr | :it | :nl | :pl,
+            optional(:setup_future_usage) => :none | :off_session
+          }
   )
 
   (
