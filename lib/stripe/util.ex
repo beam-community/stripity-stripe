@@ -51,7 +51,7 @@ defmodule Stripe.Util do
   def atomize_key(k), do: k
 
   @spec object_name_to_module(String.t()) :: module
-  def object_name_to_module("test_helpers.test_clock"), do: Stripe.TestClock
+  def object_name_to_module("test_helpers.test_clock"), do: Stripe.TestHelpers.TestClock
 
   def object_name_to_module(object_name) do
     module_parts =
