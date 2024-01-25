@@ -85,7 +85,7 @@ defmodule Stripe.Util do
 
       quote bind_quoted: [mod: mod, fun: fun, arity: arity, msg: msg] do
         require Logger
-        Logger.warn("[DEPRECATION] The function #{mod}.#{fun}/#{arity} is deprecated. #{msg}")
+        Logger.warning("[DEPRECATION] The function #{mod}.#{fun}/#{arity} is deprecated. #{msg}")
       end
     end
   end
