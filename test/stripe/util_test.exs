@@ -50,6 +50,7 @@ defmodule Stripe.UtilTest do
       assert object_name_to_module("terminal.reader") == Stripe.Terminal.Reader
       assert object_name_to_module("terminal.location") == Stripe.Terminal.Location
       assert object_name_to_module("terminal.connection_token") == Stripe.Terminal.ConnectionToken
+      assert object_name_to_module("test_helpers.test_clock") == Stripe.TestHelpers.TestClock
       assert object_name_to_module("usage_record") == Stripe.UsageRecord
       assert object_name_to_module("usage_record_summary") == Stripe.UsageRecordSummary
     end
