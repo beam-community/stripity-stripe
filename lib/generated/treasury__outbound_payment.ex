@@ -123,36 +123,30 @@ defmodule Stripe.Treasury.OutboundPayment do
   (
     nil
 
-    @doc "<p>Creates an OutboundPayment.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/outbound_payments`\n"
+    @doc "<p>Returns a list of OutboundPayments sent from the specified FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/outbound_payments`\n"
     (
-      @spec create(
+      @spec list(
               params :: %{
-                optional(:amount) => integer,
-                optional(:currency) => binary,
                 optional(:customer) => binary,
-                optional(:description) => binary,
-                optional(:destination_payment_method) => binary,
-                optional(:destination_payment_method_data) => destination_payment_method_data,
-                optional(:destination_payment_method_options) =>
-                  destination_payment_method_options,
-                optional(:end_user_details) => end_user_details,
+                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
                 optional(:financial_account) => binary,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:statement_descriptor) => binary
+                optional(:limit) => integer,
+                optional(:starting_after) => binary,
+                optional(:status) => :canceled | :failed | :posted | :processing | :returned
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.Treasury.OutboundPayment.t()}
+              {:ok, Stripe.List.t(Stripe.Treasury.OutboundPayment.t())}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
+      def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/outbound_payments", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -197,82 +191,6 @@ defmodule Stripe.Treasury.OutboundPayment do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of OutboundPayments sent from the specified FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/outbound_payments`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:customer) => binary,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:financial_account) => binary,
-                optional(:limit) => integer,
-                optional(:starting_after) => binary,
-                optional(:status) => :canceled | :failed | :posted | :processing | :returned
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Treasury.OutboundPayment.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/outbound_payments", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Cancel an OutboundPayment.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/outbound_payments/{id}/cancel`\n"
-    (
-      @spec cancel(
-              id :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Treasury.OutboundPayment.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def cancel(id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/treasury/outbound_payments/{id}/cancel",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -386,6 +304,88 @@ defmodule Stripe.Treasury.OutboundPayment do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/test_helpers/treasury/outbound_payments/{id}/return",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates an OutboundPayment.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/outbound_payments`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:amount) => integer,
+                optional(:currency) => binary,
+                optional(:customer) => binary,
+                optional(:description) => binary,
+                optional(:destination_payment_method) => binary,
+                optional(:destination_payment_method_data) => destination_payment_method_data,
+                optional(:destination_payment_method_options) =>
+                  destination_payment_method_options,
+                optional(:end_user_details) => end_user_details,
+                optional(:expand) => list(binary),
+                optional(:financial_account) => binary,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:statement_descriptor) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.OutboundPayment.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/outbound_payments", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Cancel an OutboundPayment.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/outbound_payments/{id}/cancel`\n"
+    (
+      @spec cancel(
+              id :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.OutboundPayment.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def cancel(id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/treasury/outbound_payments/{id}/cancel",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

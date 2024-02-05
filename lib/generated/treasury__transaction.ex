@@ -69,6 +69,40 @@ defmodule Stripe.Treasury.Transaction do
   (
     nil
 
+    @doc "<p>Retrieves a list of Transaction objects.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/transactions`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:created) => created | integer,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:financial_account) => binary,
+                optional(:limit) => integer,
+                optional(:order_by) => :created | :posted_at,
+                optional(:starting_after) => binary,
+                optional(:status) => :open | :posted | :void,
+                optional(:status_transitions) => status_transitions
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Treasury.Transaction.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/transactions", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Retrieves the details of an existing Transaction.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/transactions/{id}`\n"
     (
       @spec retrieve(
@@ -100,40 +134,6 @@ defmodule Stripe.Treasury.Transaction do
             ],
             [id]
           )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves a list of Transaction objects.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/transactions`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:created) => created | integer,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:financial_account) => binary,
-                optional(:limit) => integer,
-                optional(:order_by) => :created | :posted_at,
-                optional(:starting_after) => binary,
-                optional(:status) => :open | :posted | :void,
-                optional(:status_transitions) => status_transitions
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Treasury.Transaction.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/transactions", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)

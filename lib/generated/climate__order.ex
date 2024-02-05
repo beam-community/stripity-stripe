@@ -63,6 +63,35 @@ defmodule Stripe.Climate.Order do
   (
     nil
 
+    @doc "<p>Lists all Climate order objects. The orders are returned sorted by creation date, with the\nmost recently created orders appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/climate/orders`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Climate.Order.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/climate/orders", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Retrieves the details of a Climate order object with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/climate/orders/{order}`\n"
     (
       @spec retrieve(
@@ -92,35 +121,6 @@ defmodule Stripe.Climate.Order do
             ],
             [order]
           )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Lists all Climate order objects. The orders are returned sorted by creation date, with the\nmost recently created orders appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/climate/orders`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Climate.Order.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/climate/orders", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)

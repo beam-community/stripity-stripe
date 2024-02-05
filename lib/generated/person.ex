@@ -202,6 +202,56 @@ defmodule Stripe.Person do
   (
     nil
 
+    @doc "<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}/persons/{person}`\n"
+    (
+      @spec delete(account :: binary(), person :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedPerson.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(account, person, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/accounts/{account}/persons/{person}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "account",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "account",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              },
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "person",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "person",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [account, person]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of people associated with the account’s legal entity. The people are returned sorted by creation date, with the most recent people appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/accounts/{account}/persons`\n"
     (
       @spec list(
@@ -453,56 +503,6 @@ defmodule Stripe.Person do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}/persons/{person}`\n"
-    (
-      @spec delete(account :: binary(), person :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedPerson.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(account, person, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/accounts/{account}/persons/{person}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "account",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              },
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "person",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "person",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [account, person]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

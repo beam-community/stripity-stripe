@@ -186,6 +186,50 @@ defmodule Stripe.Issuing.Dispute do
   (
     nil
 
+    @doc "<p>Retrieves an Issuing <code>Dispute</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/issuing/disputes/{dispute}`\n"
+    (
+      @spec retrieve(
+              dispute :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Dispute.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(dispute, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/issuing/disputes/{dispute}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "dispute",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "dispute",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [dispute]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Creates an Issuing <code>Dispute</code> object. Individual pieces of evidence within the <code>evidence</code> object are optional at this point. Stripe only validates that required evidence is present during submission. Refer to <a href=\"/docs/issuing/purchases/disputes#dispute-reasons-and-evidence\">Dispute reasons and evidence</a> for more details about evidence requirements.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/disputes`\n"
     (
       @spec create(
@@ -258,50 +302,6 @@ defmodule Stripe.Issuing.Dispute do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves an Issuing <code>Dispute</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/issuing/disputes/{dispute}`\n"
-    (
-      @spec retrieve(
-              dispute :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Dispute.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(dispute, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/issuing/disputes/{dispute}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "dispute",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "dispute",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [dispute]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

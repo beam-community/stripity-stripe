@@ -237,39 +237,6 @@ defmodule Stripe.SubscriptionSchedule do
   (
     nil
 
-    @doc "<p>Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscription_schedules`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:customer) => binary,
-                optional(:default_settings) => default_settings,
-                optional(:end_behavior) => :cancel | :none | :release | :renew,
-                optional(:expand) => list(binary),
-                optional(:from_subscription) => binary,
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:phases) => list(phases),
-                optional(:start_date) => integer | :now
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.SubscriptionSchedule.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscription_schedules", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Retrieves the details of an existing subscription schedule. You only need to supply the unique subscription schedule identifier that was returned upon subscription schedule creation.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscription_schedules/{schedule}`\n"
     (
       @spec retrieve(
@@ -306,6 +273,39 @@ defmodule Stripe.SubscriptionSchedule do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscription_schedules`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:customer) => binary,
+                optional(:default_settings) => default_settings,
+                optional(:end_behavior) => :cancel | :none | :release | :renew,
+                optional(:expand) => list(binary),
+                optional(:from_subscription) => binary,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:phases) => list(phases),
+                optional(:start_date) => integer | :now
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.SubscriptionSchedule.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscription_schedules", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

@@ -744,68 +744,25 @@ defmodule Stripe.Issuing.Authorization do
   (
     nil
 
-    @doc "<p>Increment a test-mode Authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/increment`\n"
+    @doc "<p>Capture a test-mode authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/capture`\n"
     (
-      @spec increment(
+      @spec capture(
               authorization :: binary(),
               params :: %{
+                optional(:capture_amount) => integer,
+                optional(:close_authorization) => boolean,
                 optional(:expand) => list(binary),
-                optional(:increment_amount) => integer,
-                optional(:is_amount_controllable) => boolean
+                optional(:purchase_details) => purchase_details
               },
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.Issuing.Authorization.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def increment(authorization, params \\ %{}, opts \\ []) do
+      def capture(authorization, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/authorizations/{authorization}/increment",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "authorization",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "authorization",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [authorization]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Reverse a test-mode Authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/reverse`\n"
-    (
-      @spec reverse(
-              authorization :: binary(),
-              params :: %{optional(:expand) => list(binary), optional(:reverse_amount) => integer},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Authorization.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def reverse(authorization, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/authorizations/{authorization}/reverse",
+            "/v1/test_helpers/issuing/authorizations/{authorization}/capture",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -880,25 +837,68 @@ defmodule Stripe.Issuing.Authorization do
   (
     nil
 
-    @doc "<p>Capture a test-mode authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/capture`\n"
+    @doc "<p>Increment a test-mode Authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/increment`\n"
     (
-      @spec capture(
+      @spec increment(
               authorization :: binary(),
               params :: %{
-                optional(:capture_amount) => integer,
-                optional(:close_authorization) => boolean,
                 optional(:expand) => list(binary),
-                optional(:purchase_details) => purchase_details
+                optional(:increment_amount) => integer,
+                optional(:is_amount_controllable) => boolean
               },
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.Issuing.Authorization.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def capture(authorization, params \\ %{}, opts \\ []) do
+      def increment(authorization, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/authorizations/{authorization}/capture",
+            "/v1/test_helpers/issuing/authorizations/{authorization}/increment",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "authorization",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "authorization",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [authorization]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Reverse a test-mode Authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/reverse`\n"
+    (
+      @spec reverse(
+              authorization :: binary(),
+              params :: %{optional(:expand) => list(binary), optional(:reverse_amount) => integer},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Authorization.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def reverse(authorization, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/issuing/authorizations/{authorization}/reverse",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

@@ -63,6 +63,43 @@ defmodule Stripe.Coupon do
   (
     nil
 
+    @doc "<p>You can delete coupons via the <a href=\"https://dashboard.stripe.com/coupons\">coupon management</a> page of the Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means that new customers can’t redeem the coupon. You can also delete coupons via the API.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/coupons/{coupon}`\n"
+    (
+      @spec delete(coupon :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedCoupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(coupon, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/coupons/{coupon}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "coupon",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "coupon",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [coupon]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of your coupons.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/coupons`\n"
     (
       @spec list(
@@ -85,41 +122,6 @@ defmodule Stripe.Coupon do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>You can create coupons easily via the <a href=\"https://dashboard.stripe.com/coupons\">coupon management</a> page of the Stripe dashboard. Coupon creation is also accessible via the API if you need to create coupons on the fly.</p>\n\n<p>A coupon has either a <code>percent_off</code> or an <code>amount_off</code> and <code>currency</code>. If you set an <code>amount_off</code>, that amount will be subtracted from any invoice’s subtotal. For example, an invoice with a subtotal of <currency>100</currency> will have a final total of <currency>0</currency> if a coupon with an <code>amount_off</code> of <amount>200</amount> is applied to it and an invoice with a subtotal of <currency>300</currency> will have a final total of <currency>100</currency> if a coupon with an <code>amount_off</code> of <amount>200</amount> is applied to it.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/coupons`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:amount_off) => integer,
-                optional(:applies_to) => applies_to,
-                optional(:currency) => binary,
-                optional(:currency_options) => map(),
-                optional(:duration) => :forever | :once | :repeating,
-                optional(:duration_in_months) => integer,
-                optional(:expand) => list(binary),
-                optional(:id) => binary,
-                optional(:max_redemptions) => integer,
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:name) => binary,
-                optional(:percent_off) => number,
-                optional(:redeem_by) => integer
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Coupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/coupons", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -169,6 +171,41 @@ defmodule Stripe.Coupon do
   (
     nil
 
+    @doc "<p>You can create coupons easily via the <a href=\"https://dashboard.stripe.com/coupons\">coupon management</a> page of the Stripe dashboard. Coupon creation is also accessible via the API if you need to create coupons on the fly.</p>\n\n<p>A coupon has either a <code>percent_off</code> or an <code>amount_off</code> and <code>currency</code>. If you set an <code>amount_off</code>, that amount will be subtracted from any invoice’s subtotal. For example, an invoice with a subtotal of <currency>100</currency> will have a final total of <currency>0</currency> if a coupon with an <code>amount_off</code> of <amount>200</amount> is applied to it and an invoice with a subtotal of <currency>300</currency> will have a final total of <currency>100</currency> if a coupon with an <code>amount_off</code> of <amount>200</amount> is applied to it.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/coupons`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:amount_off) => integer,
+                optional(:applies_to) => applies_to,
+                optional(:currency) => binary,
+                optional(:currency_options) => map(),
+                optional(:duration) => :forever | :once | :repeating,
+                optional(:duration_in_months) => integer,
+                optional(:expand) => list(binary),
+                optional(:id) => binary,
+                optional(:max_redemptions) => integer,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:name) => binary,
+                optional(:percent_off) => number,
+                optional(:redeem_by) => integer
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Coupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/coupons", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Updates the metadata of a coupon. Other coupon details (currency, duration, amount_off) are, by design, not editable.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/coupons/{coupon}`\n"
     (
       @spec update(
@@ -207,43 +244,6 @@ defmodule Stripe.Coupon do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>You can delete coupons via the <a href=\"https://dashboard.stripe.com/coupons\">coupon management</a> page of the Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means that new customers can’t redeem the coupon. You can also delete coupons via the API.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/coupons/{coupon}`\n"
-    (
-      @spec delete(coupon :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedCoupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(coupon, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/coupons/{coupon}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "coupon",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "coupon",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [coupon]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

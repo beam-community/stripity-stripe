@@ -67,29 +67,30 @@ defmodule Stripe.Identity.VerificationSession do
   (
     nil
 
-    @doc "<p>Creates a VerificationSession object.</p>\n\n<p>After the VerificationSession is created, display a verification modal using the session <code>client_secret</code> or send your users to the session’s <code>url</code>.</p>\n\n<p>If your API key is in test mode, verification checks won’t actually process, though everything else will occur as if in live mode.</p>\n\n<p>Related guide: <a href=\"/docs/identity/verify-identity-documents\">Verify your users’ identity documents</a></p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/identity/verification_sessions`\n"
+    @doc "<p>Returns a list of VerificationSessions</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/identity/verification_sessions`\n"
     (
-      @spec create(
+      @spec list(
               params :: %{
+                optional(:created) => created | integer,
+                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:options) => options,
-                optional(:return_url) => binary,
-                optional(:type) => :document | :id_number
+                optional(:limit) => integer,
+                optional(:starting_after) => binary,
+                optional(:status) => :canceled | :processing | :requires_input | :verified
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.Identity.VerificationSession.t()}
+              {:ok, Stripe.List.t(Stripe.Identity.VerificationSession.t())}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
+      def list(params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params("/v1/identity/verification_sessions", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -142,30 +143,78 @@ defmodule Stripe.Identity.VerificationSession do
   (
     nil
 
-    @doc "<p>Returns a list of VerificationSessions</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/identity/verification_sessions`\n"
+    @doc "<p>Creates a VerificationSession object.</p>\n\n<p>After the VerificationSession is created, display a verification modal using the session <code>client_secret</code> or send your users to the session’s <code>url</code>.</p>\n\n<p>If your API key is in test mode, verification checks won’t actually process, though everything else will occur as if in live mode.</p>\n\n<p>Related guide: <a href=\"/docs/identity/verify-identity-documents\">Verify your users’ identity documents</a></p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/identity/verification_sessions`\n"
     (
-      @spec list(
+      @spec create(
               params :: %{
-                optional(:created) => created | integer,
-                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary,
-                optional(:status) => :canceled | :processing | :requires_input | :verified
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:options) => options,
+                optional(:return_url) => binary,
+                optional(:type) => :document | :id_number
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.List.t(Stripe.Identity.VerificationSession.t())}
+              {:ok, Stripe.Identity.VerificationSession.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
+      def create(params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params("/v1/identity/verification_sessions", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Updates a VerificationSession object.</p>\n\n<p>When the session status is <code>requires_input</code>, you can use this method to update the\nverification check and options.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/identity/verification_sessions/{session}`\n"
+    (
+      @spec update(
+              session :: binary(),
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:options) => options,
+                optional(:type) => :document | :id_number
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Identity.VerificationSession.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def update(session, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/identity/verification_sessions/{session}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "session",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "session",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [session]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -232,55 +281,6 @@ defmodule Stripe.Identity.VerificationSession do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/identity/verification_sessions/{session}/redact",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "session",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "session",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [session]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Updates a VerificationSession object.</p>\n\n<p>When the session status is <code>requires_input</code>, you can use this method to update the\nverification check and options.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/identity/verification_sessions/{session}`\n"
-    (
-      @spec update(
-              session :: binary(),
-              params :: %{
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:options) => options,
-                optional(:type) => :document | :id_number
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Identity.VerificationSession.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def update(session, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/identity/verification_sessions/{session}",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

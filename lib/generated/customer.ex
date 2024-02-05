@@ -236,27 +236,76 @@ defmodule Stripe.Customer do
   (
     nil
 
-    @doc "<p>Search for customers you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/search`\n"
+    @doc "<p>Permanently deletes a customer. It cannot be undone. Also immediately cancels any active subscriptions on the customer.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}`\n"
     (
-      @spec search(
-              params :: %{
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:page) => binary,
-                optional(:query) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.SearchResult.t(Stripe.Customer.t())}
+      @spec delete(customer :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedCustomer.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def search(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/customers/search", [], [])
+      def delete(customer, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/customers/{customer}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "customer",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "customer",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [customer]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Removes the currently applied discount on a customer.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}/discount`\n"
+    (
+      @spec delete_discount(customer :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedDiscount.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete_discount(customer, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/customers/{customer}/discount",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "customer",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "customer",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [customer]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
@@ -289,51 +338,6 @@ defmodule Stripe.Customer do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Creates a new customer object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:address) => address | binary,
-                optional(:balance) => integer,
-                optional(:cash_balance) => cash_balance,
-                optional(:coupon) => binary,
-                optional(:description) => binary,
-                optional(:email) => binary,
-                optional(:expand) => list(binary),
-                optional(:invoice_prefix) => binary,
-                optional(:invoice_settings) => invoice_settings,
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:name) => binary,
-                optional(:next_invoice_sequence) => integer,
-                optional(:payment_method) => binary,
-                optional(:phone) => binary,
-                optional(:preferred_locales) => list(binary),
-                optional(:promotion_code) => binary,
-                optional(:shipping) => shipping | binary,
-                optional(:source) => binary,
-                optional(:tax) => tax,
-                optional(:tax_exempt) => :exempt | :none | :reverse,
-                optional(:tax_id_data) => list(tax_id_data),
-                optional(:test_clock) => binary,
-                optional(:validate) => boolean
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Customer.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/customers", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -386,39 +390,25 @@ defmodule Stripe.Customer do
   (
     nil
 
-    @doc "<p>Updates the specified customer by setting the values of the parameters passed. Any parameters not provided will be left unchanged. For example, if you pass the <strong>source</strong> parameter, that becomes the customer’s active source (e.g., a card) to be used for all charges in the future. When you update a customer to a new valid card source by passing the <strong>source</strong> parameter: for each of the customer’s current subscriptions, if the subscription bills automatically and is in the <code>past_due</code> state, then the latest open invoice for the subscription with automatic collection enabled will be retried. This retry will not count as an automatic retry, and will not affect the next regularly scheduled payment for the invoice. Changing the <strong>default_source</strong> for a customer will not trigger this behavior.</p>\n\n<p>This request accepts mostly the same arguments as the customer creation call.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers/{customer}`\n"
+    @doc "<p>Returns a list of transactions that updated the customer’s <a href=\"/docs/billing/customer/balance\">balances</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/balance_transactions`\n"
     (
-      @spec update(
+      @spec balance_transactions(
               customer :: binary(),
               params :: %{
-                optional(:address) => address | binary,
-                optional(:balance) => integer,
-                optional(:cash_balance) => cash_balance,
-                optional(:coupon) => binary,
-                optional(:default_source) => binary,
-                optional(:description) => binary,
-                optional(:email) => binary,
+                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
-                optional(:invoice_prefix) => binary,
-                optional(:invoice_settings) => invoice_settings,
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:name) => binary,
-                optional(:next_invoice_sequence) => integer,
-                optional(:phone) => binary,
-                optional(:preferred_locales) => list(binary),
-                optional(:promotion_code) => binary,
-                optional(:shipping) => shipping | binary,
-                optional(:source) => binary,
-                optional(:tax) => tax,
-                optional(:tax_exempt) => :exempt | :none | :reverse,
-                optional(:validate) => boolean
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
               },
               opts :: Keyword.t()
-            ) :: {:ok, Stripe.Customer.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def update(customer, params \\ %{}, opts \\ []) do
+            ) ::
+              {:ok, Stripe.List.t(Stripe.CustomerBalanceTransaction.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def balance_transactions(customer, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}",
+            "/v1/customers/{customer}/balance_transactions",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -440,46 +430,7 @@ defmodule Stripe.Customer do
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Permanently deletes a customer. It cannot be undone. Also immediately cancels any active subscriptions on the customer.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}`\n"
-    (
-      @spec delete(customer :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedCustomer.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(customer, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "customer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [customer]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -626,42 +577,22 @@ defmodule Stripe.Customer do
   (
     nil
 
-    @doc "<p>Returns a list of transactions that updated the customer’s <a href=\"/docs/billing/customer/balance\">balances</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/balance_transactions`\n"
+    @doc "<p>Search for customers you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/search`\n"
     (
-      @spec balance_transactions(
-              customer :: binary(),
+      @spec search(
               params :: %{
-                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
                 optional(:limit) => integer,
-                optional(:starting_after) => binary
+                optional(:page) => binary,
+                optional(:query) => binary
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.List.t(Stripe.CustomerBalanceTransaction.t())}
+              {:ok, Stripe.SearchResult.t(Stripe.Customer.t())}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def balance_transactions(customer, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/balance_transactions",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "customer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [customer]
-          )
+      def search(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/customers/search", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -675,25 +606,84 @@ defmodule Stripe.Customer do
   (
     nil
 
-    @doc "<p>Create an incoming testmode bank transfer</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/customers/{customer}/fund_cash_balance`\n"
+    @doc "<p>Creates a new customer object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers`\n"
     (
-      @spec fund_cash_balance(
-              customer :: binary(),
+      @spec create(
               params :: %{
-                optional(:amount) => integer,
-                optional(:currency) => binary,
+                optional(:address) => address | binary,
+                optional(:balance) => integer,
+                optional(:cash_balance) => cash_balance,
+                optional(:coupon) => binary,
+                optional(:description) => binary,
+                optional(:email) => binary,
                 optional(:expand) => list(binary),
-                optional(:reference) => binary
+                optional(:invoice_prefix) => binary,
+                optional(:invoice_settings) => invoice_settings,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:name) => binary,
+                optional(:next_invoice_sequence) => integer,
+                optional(:payment_method) => binary,
+                optional(:phone) => binary,
+                optional(:preferred_locales) => list(binary),
+                optional(:promotion_code) => binary,
+                optional(:shipping) => shipping | binary,
+                optional(:source) => binary,
+                optional(:tax) => tax,
+                optional(:tax_exempt) => :exempt | :none | :reverse,
+                optional(:tax_id_data) => list(tax_id_data),
+                optional(:test_clock) => binary,
+                optional(:validate) => boolean
               },
               opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.CustomerCashBalanceTransaction.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def fund_cash_balance(customer, params \\ %{}, opts \\ []) do
+            ) :: {:ok, Stripe.Customer.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/customers", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Updates the specified customer by setting the values of the parameters passed. Any parameters not provided will be left unchanged. For example, if you pass the <strong>source</strong> parameter, that becomes the customer’s active source (e.g., a card) to be used for all charges in the future. When you update a customer to a new valid card source by passing the <strong>source</strong> parameter: for each of the customer’s current subscriptions, if the subscription bills automatically and is in the <code>past_due</code> state, then the latest open invoice for the subscription with automatic collection enabled will be retried. This retry will not count as an automatic retry, and will not affect the next regularly scheduled payment for the invoice. Changing the <strong>default_source</strong> for a customer will not trigger this behavior.</p>\n\n<p>This request accepts mostly the same arguments as the customer creation call.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers/{customer}`\n"
+    (
+      @spec update(
+              customer :: binary(),
+              params :: %{
+                optional(:address) => address | binary,
+                optional(:balance) => integer,
+                optional(:cash_balance) => cash_balance,
+                optional(:coupon) => binary,
+                optional(:default_source) => binary,
+                optional(:description) => binary,
+                optional(:email) => binary,
+                optional(:expand) => list(binary),
+                optional(:invoice_prefix) => binary,
+                optional(:invoice_settings) => invoice_settings,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:name) => binary,
+                optional(:next_invoice_sequence) => integer,
+                optional(:phone) => binary,
+                optional(:preferred_locales) => list(binary),
+                optional(:promotion_code) => binary,
+                optional(:shipping) => shipping | binary,
+                optional(:source) => binary,
+                optional(:tax) => tax,
+                optional(:tax_exempt) => :exempt | :none | :reverse,
+                optional(:validate) => boolean
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Customer.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def update(customer, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/customers/{customer}/fund_cash_balance",
+            "/v1/customers/{customer}",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -773,16 +763,25 @@ defmodule Stripe.Customer do
   (
     nil
 
-    @doc "<p>Removes the currently applied discount on a customer.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}/discount`\n"
+    @doc "<p>Create an incoming testmode bank transfer</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/customers/{customer}/fund_cash_balance`\n"
     (
-      @spec delete_discount(customer :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedDiscount.t()}
+      @spec fund_cash_balance(
+              customer :: binary(),
+              params :: %{
+                optional(:amount) => integer,
+                optional(:currency) => binary,
+                optional(:expand) => list(binary),
+                optional(:reference) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.CustomerCashBalanceTransaction.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def delete_discount(customer, opts \\ []) do
+      def fund_cash_balance(customer, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/discount",
+            "/v1/test_helpers/customers/{customer}/fund_cash_balance",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -803,7 +802,8 @@ defmodule Stripe.Customer do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

@@ -97,6 +97,119 @@ defmodule Stripe.Product do
   (
     nil
 
+    @doc "<p>Delete a product. Deleting a product is only possible if it has no prices associated with it. Additionally, deleting a product with <code>type=good</code> is only possible if it has no SKUs associated with it.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/products/{id}`\n"
+    (
+      @spec delete(id :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedProduct.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(id, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/products/{id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Returns a list of your products. The products are returned sorted by creation date, with the most recently created products appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/products`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:active) => boolean,
+                optional(:created) => created | integer,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:ids) => list(binary),
+                optional(:limit) => integer,
+                optional(:shippable) => boolean,
+                optional(:starting_after) => binary,
+                optional(:type) => :good | :service,
+                optional(:url) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Product.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/products", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the details of an existing product. Supply the unique product ID from either a product creation request or the product list, and Stripe will return the corresponding product information.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/products/{id}`\n"
+    (
+      @spec retrieve(
+              id :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Product.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/products/{id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Search for products you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/products/search`\n"
     (
       @spec search(
@@ -164,47 +277,6 @@ defmodule Stripe.Product do
   (
     nil
 
-    @doc "<p>Retrieves the details of an existing product. Supply the unique product ID from either a product creation request or the product list, and Stripe will return the corresponding product information.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/products/{id}`\n"
-    (
-      @spec retrieve(
-              id :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Product.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/products/{id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Updates the specific product by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/products/{id}`\n"
     (
       @spec update(
@@ -253,78 +325,6 @@ defmodule Stripe.Product do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of your products. The products are returned sorted by creation date, with the most recently created products appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/products`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:active) => boolean,
-                optional(:created) => created | integer,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:ids) => list(binary),
-                optional(:limit) => integer,
-                optional(:shippable) => boolean,
-                optional(:starting_after) => binary,
-                optional(:type) => :good | :service,
-                optional(:url) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Product.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/products", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Delete a product. Deleting a product is only possible if it has no prices associated with it. Additionally, deleting a product with <code>type=good</code> is only possible if it has no SKUs associated with it.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/products/{id}`\n"
-    (
-      @spec delete(id :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedProduct.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(id, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/products/{id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

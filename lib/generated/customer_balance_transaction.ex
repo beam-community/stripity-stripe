@@ -40,6 +40,55 @@ defmodule Stripe.CustomerBalanceTransaction do
   (
     nil
 
+    @doc "<p>Returns a list of transactions that updated the customer’s <a href=\"/docs/billing/customer/balance\">balances</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/balance_transactions`\n"
+    (
+      @spec list(
+              customer :: binary(),
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.CustomerBalanceTransaction.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(customer, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/customers/{customer}/balance_transactions",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "customer",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "customer",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [customer]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Retrieves a specific customer balance transaction that updated the customer’s <a href=\"/docs/billing/customer/balance\">balances</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/balance_transactions/{transaction}`\n"
     (
       @spec retrieve(
@@ -84,55 +133,6 @@ defmodule Stripe.CustomerBalanceTransaction do
               }
             ],
             [customer, transaction]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of transactions that updated the customer’s <a href=\"/docs/billing/customer/balance\">balances</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/balance_transactions`\n"
-    (
-      @spec list(
-              customer :: binary(),
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.CustomerBalanceTransaction.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(customer, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/balance_transactions",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "customer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [customer]
           )
 
         Stripe.Request.new_request(opts)

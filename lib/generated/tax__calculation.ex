@@ -161,38 +161,6 @@ defmodule Stripe.Tax.Calculation do
   (
     nil
 
-    @doc "<p>Calculates tax based on input and returns a Tax <code>Calculation</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/calculations`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:currency) => binary,
-                optional(:customer) => binary,
-                optional(:customer_details) => customer_details,
-                optional(:expand) => list(binary),
-                optional(:line_items) => list(line_items),
-                optional(:shipping_cost) => shipping_cost,
-                optional(:tax_date) => integer
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Tax.Calculation.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/tax/calculations", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Retrieves the line items of a persisted tax calculation as a collection.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/calculations/{calculation}/line_items`\n"
     (
       @spec list_line_items(
@@ -234,6 +202,38 @@ defmodule Stripe.Tax.Calculation do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Calculates tax based on input and returns a Tax <code>Calculation</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/calculations`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:currency) => binary,
+                optional(:customer) => binary,
+                optional(:customer_details) => customer_details,
+                optional(:expand) => list(binary),
+                optional(:line_items) => list(line_items),
+                optional(:shipping_cost) => shipping_cost,
+                optional(:tax_date) => integer
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Tax.Calculation.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/tax/calculations", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

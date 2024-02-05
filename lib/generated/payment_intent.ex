@@ -92,11 +92,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `acss_debit` PaymentMethod, this hash contains details about the ACSS Debit payment method."
+    @typedoc nil
     @type acss_debit :: %{
-            optional(:account_number) => binary,
-            optional(:institution_number) => binary,
-            optional(:transit_number) => binary
+            optional(:mandate_options) => mandate_options,
+            optional(:setup_future_usage) => :none | :off_session | :on_session,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 
@@ -149,8 +149,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type bacs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
+    @typedoc "If this is a `bacs_debit` PaymentMethod, this hash contains details about the Bacs Direct Debit bank account."
+    @type bacs_debit :: %{optional(:account_number) => binary, optional(:sort_code) => binary}
   )
 
   (
@@ -295,8 +295,38 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type eps :: %{optional(:setup_future_usage) => :none}
+    @typedoc "If this is an `eps` PaymentMethod, this hash contains details about the EPS payment method."
+    @type eps :: %{
+            optional(:bank) =>
+              :arzte_und_apotheker_bank
+              | :austrian_anadi_bank_ag
+              | :bank_austria
+              | :bankhaus_carl_spangler
+              | :bankhaus_schelhammer_und_schattera_ag
+              | :bawag_psk_ag
+              | :bks_bank_ag
+              | :brull_kallmus_bank_ag
+              | :btv_vier_lander_bank
+              | :capital_bank_grawe_gruppe_ag
+              | :deutsche_bank_ag
+              | :dolomitenbank
+              | :easybank_ag
+              | :erste_bank_und_sparkassen
+              | :hypo_alpeadriabank_international_ag
+              | :hypo_bank_burgenland_aktiengesellschaft
+              | :hypo_noe_lb_fur_niederosterreich_u_wien
+              | :hypo_oberosterreich_salzburg_steiermark
+              | :hypo_tirol_bank_ag
+              | :hypo_vorarlberg_bank_ag
+              | :marchfelder_bank
+              | :oberbank_ag
+              | :raiffeisen_bankengruppe_osterreich
+              | :schoellerbank_ag
+              | :sparda_bank_wien
+              | :volksbank_gruppe
+              | :volkskreditbank_ag
+              | :vr_bank_braunau
+          }
   )
 
   (
@@ -330,25 +360,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `ideal` PaymentMethod, this hash contains details about the iDEAL payment method."
-    @type ideal :: %{
-            optional(:bank) =>
-              :abn_amro
-              | :asn_bank
-              | :bunq
-              | :handelsbanken
-              | :ing
-              | :knab
-              | :moneyou
-              | :n26
-              | :rabobank
-              | :regiobank
-              | :revolut
-              | :sns_bank
-              | :triodos_bank
-              | :van_lanschot
-              | :yoursafe
-          }
+    @typedoc nil
+    @type ideal :: %{optional(:setup_future_usage) => :none | :off_session}
   )
 
   (
@@ -435,17 +448,12 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
+    @typedoc "Additional fields for Mandate creation"
     @type mandate_options :: %{
-            optional(:amount) => integer,
-            optional(:amount_type) => :fixed | :maximum,
-            optional(:description) => binary,
-            optional(:end_date) => integer,
-            optional(:interval) => :day | :month | :sporadic | :week | :year,
-            optional(:interval_count) => integer,
-            optional(:reference) => binary,
-            optional(:start_date) => integer,
-            optional(:supported_types) => list(:india)
+            optional(:custom_mandate_url) => binary | binary,
+            optional(:interval_description) => binary,
+            optional(:payment_schedule) => :combined | :interval | :sporadic,
+            optional(:transaction_type) => :business | :personal
           }
   )
 
@@ -473,10 +481,34 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
+    @typedoc "If this is a `p24` PaymentMethod, this hash contains details about the P24 payment method."
     @type p24 :: %{
-            optional(:setup_future_usage) => :none,
-            optional(:tos_shown_and_accepted) => boolean
+            optional(:bank) =>
+              :alior_bank
+              | :bank_millennium
+              | :bank_nowy_bfg_sa
+              | :bank_pekao_sa
+              | :banki_spbdzielcze
+              | :blik
+              | :bnp_paribas
+              | :boz
+              | :citi_handlowy
+              | :credit_agricole
+              | :envelobank
+              | :etransfer_pocztowy24
+              | :getin_bank
+              | :ideabank
+              | :ing
+              | :inteligo
+              | :mbank_mtransfer
+              | :nest_przelew
+              | :noble_pay
+              | :pbac_z_ipko
+              | :plus_bank
+              | :santander_przelew24
+              | :tmobile_usbugi_bankowe
+              | :toyota_bank
+              | :volkswagen_bank
           }
   )
 
@@ -654,7 +686,7 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Options to configure Radar. See [Radar Session](https://stripe.com/docs/radar/radar-session) for more information."
+    @typedoc "Options to configure Radar. Learn more about [Radar Sessions](https://stripe.com/docs/radar/radar-session)."
     @type radar_options :: %{optional(:session) => binary}
   )
 
@@ -732,6 +764,79 @@ defmodule Stripe.PaymentIntent do
   (
     @typedoc nil
     @type zip :: %{optional(:setup_future_usage) => :none}
+  )
+
+  (
+    nil
+
+    @doc "<p>Returns a list of PaymentIntents.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_intents`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:created) => created | integer,
+                optional(:customer) => binary,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.PaymentIntent.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/payment_intents", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the details of a PaymentIntent that has previously been created. </p>\n\n<p>You can retrieve a PaymentIntent client-side using a publishable key when the <code>client_secret</code> is in the query string. </p>\n\n<p>If you retrieve a PaymentIntent with a publishable key, it only returns a subset of properties. Refer to the <a href=\"#payment_intent_object\">payment intent</a> object reference for more details.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_intents/{intent}`\n"
+    (
+      @spec retrieve(
+              intent :: binary(),
+              params :: %{optional(:client_secret) => binary, optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.PaymentIntent.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(intent, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/payment_intents/{intent}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "intent",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "intent",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [intent]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
   )
 
   (
@@ -820,79 +925,6 @@ defmodule Stripe.PaymentIntent do
   (
     nil
 
-    @doc "<p>Returns a list of PaymentIntents.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_intents`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:created) => created | integer,
-                optional(:customer) => binary,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.PaymentIntent.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/payment_intents", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the details of a PaymentIntent that has previously been created. </p>\n\n<p>You can retrieve a PaymentIntent client-side using a publishable key when the <code>client_secret</code> is in the query string. </p>\n\n<p>If you retrieve a PaymentIntent with a publishable key, it only returns a subset of properties. Refer to the <a href=\"#payment_intent_object\">payment intent</a> object reference for more details.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_intents/{intent}`\n"
-    (
-      @spec retrieve(
-              intent :: binary(),
-              params :: %{optional(:client_secret) => binary, optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.PaymentIntent.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(intent, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/payment_intents/{intent}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "intent",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [intent]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Updates properties on a PaymentIntent object without confirming.</p>\n\n<p>Depending on which properties you update, you might need to confirm the\nPaymentIntent again. For example, updating the <code>payment_method</code>\nalways requires you to confirm the PaymentIntent again. If you prefer to\nupdate and confirm at the same time, we recommend updating properties through\nthe <a href=\"/docs/api/payment_intents/confirm\">confirm API</a> instead.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_intents/{intent}`\n"
     (
       @spec update(
@@ -956,34 +988,22 @@ defmodule Stripe.PaymentIntent do
   (
     nil
 
-    @doc "<p>Confirm that your customer intends to pay with current or provided\npayment method. Upon confirmation, the PaymentIntent will attempt to initiate\na payment.\nIf the selected payment method requires additional authentication steps, the\nPaymentIntent will transition to the <code>requires_action</code> status and\nsuggest additional actions via <code>next_action</code>. If payment fails,\nthe PaymentIntent transitions to the <code>requires_payment_method</code> status or the\n<code>canceled</code> status if the confirmation limit is reached. If\npayment succeeds, the PaymentIntent will transition to the <code>succeeded</code>\nstatus (or <code>requires_capture</code>, if <code>capture_method</code> is set to <code>manual</code>).\nIf the <code>confirmation_method</code> is <code>automatic</code>, payment may be attempted\nusing our <a href=\"/docs/stripe-js/reference#stripe-handle-card-payment\">client SDKs</a>\nand the PaymentIntent’s <a href=\"#payment_intent_object-client_secret\">client_secret</a>.\nAfter <code>next_action</code>s are handled by the client, no additional\nconfirmation is required to complete the payment.\nIf the <code>confirmation_method</code> is <code>manual</code>, all payment attempts must be\ninitiated using a secret key.\nIf any actions are required for the payment, the PaymentIntent will\nreturn to the <code>requires_confirmation</code> state\nafter those actions are completed. Your server needs to then\nexplicitly re-confirm the PaymentIntent to initiate the next payment\nattempt. Read the <a href=\"/docs/payments/payment-intents/web-manual\">expanded documentation</a>\nto learn more about manual confirmation.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_intents/{intent}/confirm`\n"
+    @doc "<p>Manually reconcile the remaining amount for a <code>customer_balance</code> PaymentIntent.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_intents/{intent}/apply_customer_balance`\n"
     (
-      @spec confirm(
+      @spec apply_customer_balance(
               intent :: binary(),
               params :: %{
-                optional(:capture_method) => :automatic | :automatic_async | :manual,
-                optional(:error_on_requires_action) => boolean,
-                optional(:expand) => list(binary),
-                optional(:mandate) => binary,
-                optional(:mandate_data) => mandate_data | binary | mandate_data,
-                optional(:off_session) => boolean | :one_off | :recurring,
-                optional(:payment_method) => binary,
-                optional(:payment_method_data) => payment_method_data,
-                optional(:payment_method_options) => payment_method_options,
-                optional(:radar_options) => radar_options,
-                optional(:receipt_email) => binary | binary,
-                optional(:return_url) => binary,
-                optional(:setup_future_usage) => :off_session | :on_session,
-                optional(:shipping) => shipping | binary,
-                optional(:use_stripe_sdk) => boolean
+                optional(:amount) => integer,
+                optional(:currency) => binary,
+                optional(:expand) => list(binary)
               },
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.PaymentIntent.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def confirm(intent, params \\ %{}, opts \\ []) do
+      def apply_customer_balance(intent, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/payment_intents/{intent}/confirm",
+            "/v1/payment_intents/{intent}/apply_customer_balance",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -1111,6 +1131,64 @@ defmodule Stripe.PaymentIntent do
   (
     nil
 
+    @doc "<p>Confirm that your customer intends to pay with current or provided\npayment method. Upon confirmation, the PaymentIntent will attempt to initiate\na payment.\nIf the selected payment method requires additional authentication steps, the\nPaymentIntent will transition to the <code>requires_action</code> status and\nsuggest additional actions via <code>next_action</code>. If payment fails,\nthe PaymentIntent transitions to the <code>requires_payment_method</code> status or the\n<code>canceled</code> status if the confirmation limit is reached. If\npayment succeeds, the PaymentIntent will transition to the <code>succeeded</code>\nstatus (or <code>requires_capture</code>, if <code>capture_method</code> is set to <code>manual</code>).\nIf the <code>confirmation_method</code> is <code>automatic</code>, payment may be attempted\nusing our <a href=\"/docs/stripe-js/reference#stripe-handle-card-payment\">client SDKs</a>\nand the PaymentIntent’s <a href=\"#payment_intent_object-client_secret\">client_secret</a>.\nAfter <code>next_action</code>s are handled by the client, no additional\nconfirmation is required to complete the payment.\nIf the <code>confirmation_method</code> is <code>manual</code>, all payment attempts must be\ninitiated using a secret key.\nIf any actions are required for the payment, the PaymentIntent will\nreturn to the <code>requires_confirmation</code> state\nafter those actions are completed. Your server needs to then\nexplicitly re-confirm the PaymentIntent to initiate the next payment\nattempt. Read the <a href=\"/docs/payments/payment-intents/web-manual\">expanded documentation</a>\nto learn more about manual confirmation.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_intents/{intent}/confirm`\n"
+    (
+      @spec confirm(
+              intent :: binary(),
+              params :: %{
+                optional(:capture_method) => :automatic | :automatic_async | :manual,
+                optional(:error_on_requires_action) => boolean,
+                optional(:expand) => list(binary),
+                optional(:mandate) => binary,
+                optional(:mandate_data) => mandate_data | binary | mandate_data,
+                optional(:off_session) => boolean | :one_off | :recurring,
+                optional(:payment_method) => binary,
+                optional(:payment_method_data) => payment_method_data,
+                optional(:payment_method_options) => payment_method_options,
+                optional(:radar_options) => radar_options,
+                optional(:receipt_email) => binary | binary,
+                optional(:return_url) => binary,
+                optional(:setup_future_usage) => :off_session | :on_session,
+                optional(:shipping) => shipping | binary,
+                optional(:use_stripe_sdk) => boolean
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.PaymentIntent.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def confirm(intent, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/payment_intents/{intent}/confirm",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "intent",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "intent",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [intent]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Perform an incremental authorization on an eligible\n<a href=\"/docs/api/payment_intents/object\">PaymentIntent</a>. To be eligible, the\nPaymentIntent’s status must be <code>requires_capture</code> and\n<a href=\"/docs/api/charges/object#charge_object-payment_method_details-card_present-incremental_authorization_supported\">incremental_authorization_supported</a>\nmust be <code>true</code>.</p>\n\n<p>Incremental authorizations attempt to increase the authorized amount on\nyour customer’s card to the new, higher <code>amount</code> provided. Similar to the\ninitial authorization, incremental authorizations can be declined. A\nsingle PaymentIntent can call this endpoint multiple times to further\nincrease the authorized amount.</p>\n\n<p>If the incremental authorization succeeds, the PaymentIntent object\nreturns with the updated\n<a href=\"/docs/api/payment_intents/object#payment_intent_object-amount\">amount</a>.\nIf the incremental authorization fails, a\n<a href=\"/docs/error-codes#card-declined\">card_declined</a> error returns, and no other\nfields on the PaymentIntent or Charge update. The PaymentIntent\nobject remains capturable for the previously authorized amount.</p>\n\n<p>Each PaymentIntent can have a maximum of 10 incremental authorization attempts, including declines.\nAfter it’s captured, a PaymentIntent can no longer be incremented.</p>\n\n<p>Learn more about <a href=\"/docs/terminal/features/incremental-authorizations\">incremental authorizations</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_intents/{intent}/increment_authorization`\n"
     (
       @spec increment_authorization(
@@ -1177,52 +1255,6 @@ defmodule Stripe.PaymentIntent do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_intents/{intent}/verify_microdeposits",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "intent",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [intent]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Manually reconcile the remaining amount for a <code>customer_balance</code> PaymentIntent.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_intents/{intent}/apply_customer_balance`\n"
-    (
-      @spec apply_customer_balance(
-              intent :: binary(),
-              params :: %{
-                optional(:amount) => integer,
-                optional(:currency) => binary,
-                optional(:expand) => list(binary)
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.PaymentIntent.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def apply_customer_balance(intent, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/payment_intents/{intent}/apply_customer_balance",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

@@ -19,6 +19,35 @@ defmodule Stripe.Climate.Supplier do
   (
     nil
 
+    @doc "<p>Lists all available Climate supplier objects.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/climate/suppliers`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Climate.Supplier.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/climate/suppliers", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Retrieves a Climate supplier object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/climate/suppliers/{supplier}`\n"
     (
       @spec retrieve(
@@ -50,35 +79,6 @@ defmodule Stripe.Climate.Supplier do
             ],
             [supplier]
           )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Lists all available Climate supplier objects.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/climate/suppliers`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Climate.Supplier.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/climate/suppliers", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)

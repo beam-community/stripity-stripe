@@ -21,6 +21,74 @@ defmodule Stripe.TestHelpers.TestClock do
   (
     nil
 
+    @doc "<p>Deletes a test clock.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/test_helpers/test_clocks/{test_clock}`\n"
+    (
+      @spec delete(test_clock :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedTestHelpers.TestClock.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(test_clock, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/test_clocks/{test_clock}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "test_clock",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "test_clock",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [test_clock]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Returns a list of your test clocks.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/test_helpers/test_clocks`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.TestHelpers.TestClock.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/test_helpers/test_clocks", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Retrieves a test clock.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/test_helpers/test_clocks/{test_clock}`\n"
     (
       @spec retrieve(
@@ -93,45 +161,6 @@ defmodule Stripe.TestHelpers.TestClock do
   (
     nil
 
-    @doc "<p>Deletes a test clock.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/test_helpers/test_clocks/{test_clock}`\n"
-    (
-      @spec delete(test_clock :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedTestHelpers.TestClock.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(test_clock, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/test_clocks/{test_clock}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "test_clock",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "test_clock",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [test_clock]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Starts advancing a test clock to a specified time in the future. Advancement is done when status changes to <code>Ready</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/test_clocks/{test_clock}/advance`\n"
     (
       @spec advance(
@@ -168,35 +197,6 @@ defmodule Stripe.TestHelpers.TestClock do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of your test clocks.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/test_helpers/test_clocks`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.TestHelpers.TestClock.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/test_helpers/test_clocks", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

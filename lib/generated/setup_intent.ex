@@ -62,11 +62,11 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is an `acss_debit` PaymentMethod, this hash contains details about the ACSS Debit payment method."
+    @typedoc "If this is a `acss_debit` SetupIntent, this sub-hash contains details about the ACSS Debit payment method options."
     @type acss_debit :: %{
-            optional(:account_number) => binary,
-            optional(:institution_number) => binary,
-            optional(:transit_number) => binary
+            optional(:currency) => :cad | :usd,
+            optional(:mandate_options) => mandate_options,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 
@@ -288,13 +288,18 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "Additional fields for Mandate creation"
+    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
     @type mandate_options :: %{
-            optional(:custom_mandate_url) => binary | binary,
-            optional(:default_for) => list(:invoice | :subscription),
-            optional(:interval_description) => binary,
-            optional(:payment_schedule) => :combined | :interval | :sporadic,
-            optional(:transaction_type) => :business | :personal
+            optional(:amount) => integer,
+            optional(:amount_type) => :fixed | :maximum,
+            optional(:currency) => binary,
+            optional(:description) => binary,
+            optional(:end_date) => integer,
+            optional(:interval) => :day | :month | :sporadic | :week | :year,
+            optional(:interval_count) => integer,
+            optional(:reference) => binary,
+            optional(:start_date) => integer,
+            optional(:supported_types) => list(:india)
           }
   )
 
@@ -441,8 +446,8 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `sepa_debit` SetupIntent, this sub-hash contains details about the SEPA Debit payment method options."
-    @type sepa_debit :: %{optional(:mandate_options) => map()}
+    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
+    @type sepa_debit :: %{optional(:iban) => binary}
   )
 
   (
@@ -477,47 +482,6 @@ defmodule Stripe.SetupIntent do
             optional(:financial_connections_account) => binary,
             optional(:routing_number) => binary
           }
-  )
-
-  (
-    nil
-
-    @doc "<p>Creates a SetupIntent object.</p>\n\n<p>After you create the SetupIntent, attach a payment method and <a href=\"/docs/api/setup_intents/confirm\">confirm</a>\nit to collect any required permissions to charge the payment method later.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/setup_intents`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:attach_to_self) => boolean,
-                optional(:automatic_payment_methods) => automatic_payment_methods,
-                optional(:confirm) => boolean,
-                optional(:customer) => binary,
-                optional(:description) => binary,
-                optional(:expand) => list(binary),
-                optional(:flow_directions) => list(:inbound | :outbound),
-                optional(:mandate_data) => mandate_data | binary,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:on_behalf_of) => binary,
-                optional(:payment_method) => binary,
-                optional(:payment_method_configuration) => binary,
-                optional(:payment_method_data) => payment_method_data,
-                optional(:payment_method_options) => payment_method_options,
-                optional(:payment_method_types) => list(binary),
-                optional(:return_url) => binary,
-                optional(:single_use) => single_use,
-                optional(:usage) => :off_session | :on_session,
-                optional(:use_stripe_sdk) => boolean
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.SetupIntent.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/setup_intents", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
   )
 
   (
@@ -597,6 +561,47 @@ defmodule Stripe.SetupIntent do
   (
     nil
 
+    @doc "<p>Creates a SetupIntent object.</p>\n\n<p>After you create the SetupIntent, attach a payment method and <a href=\"/docs/api/setup_intents/confirm\">confirm</a>\nit to collect any required permissions to charge the payment method later.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/setup_intents`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:attach_to_self) => boolean,
+                optional(:automatic_payment_methods) => automatic_payment_methods,
+                optional(:confirm) => boolean,
+                optional(:customer) => binary,
+                optional(:description) => binary,
+                optional(:expand) => list(binary),
+                optional(:flow_directions) => list(:inbound | :outbound),
+                optional(:mandate_data) => mandate_data | binary,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:on_behalf_of) => binary,
+                optional(:payment_method) => binary,
+                optional(:payment_method_configuration) => binary,
+                optional(:payment_method_data) => payment_method_data,
+                optional(:payment_method_options) => payment_method_options,
+                optional(:payment_method_types) => list(binary),
+                optional(:return_url) => binary,
+                optional(:single_use) => single_use,
+                optional(:usage) => :off_session | :on_session,
+                optional(:use_stripe_sdk) => boolean
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.SetupIntent.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/setup_intents", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Updates a SetupIntent object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/setup_intents/{intent}`\n"
     (
       @spec update(
@@ -650,25 +655,21 @@ defmodule Stripe.SetupIntent do
   (
     nil
 
-    @doc "<p>Confirm that your customer intends to set up the current or\nprovided payment method. For example, you would confirm a SetupIntent\nwhen a customer hits the “Save” button on a payment method management\npage on your website.</p>\n\n<p>If the selected payment method does not require any additional\nsteps from the customer, the SetupIntent will transition to the\n<code>succeeded</code> status.</p>\n\n<p>Otherwise, it will transition to the <code>requires_action</code> status and\nsuggest additional actions via <code>next_action</code>. If setup fails,\nthe SetupIntent will transition to the\n<code>requires_payment_method</code> status or the <code>canceled</code> status if the\nconfirmation limit is reached.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/setup_intents/{intent}/confirm`\n"
+    @doc "<p>You can cancel a SetupIntent object when it’s in one of these statuses: <code>requires_payment_method</code>, <code>requires_confirmation</code>, or <code>requires_action</code>. </p>\n\n<p>After you cancel it, setup is abandoned and any operations on the SetupIntent fail with an error.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/setup_intents/{intent}/cancel`\n"
     (
-      @spec confirm(
+      @spec cancel(
               intent :: binary(),
               params :: %{
-                optional(:expand) => list(binary),
-                optional(:mandate_data) => mandate_data | binary | mandate_data,
-                optional(:payment_method) => binary,
-                optional(:payment_method_data) => payment_method_data,
-                optional(:payment_method_options) => payment_method_options,
-                optional(:return_url) => binary,
-                optional(:use_stripe_sdk) => boolean
+                optional(:cancellation_reason) =>
+                  :abandoned | :duplicate | :requested_by_customer,
+                optional(:expand) => list(binary)
               },
               opts :: Keyword.t()
             ) :: {:ok, Stripe.SetupIntent.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def confirm(intent, params \\ %{}, opts \\ []) do
+      def cancel(intent, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/setup_intents/{intent}/confirm",
+            "/v1/setup_intents/{intent}/cancel",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -699,21 +700,25 @@ defmodule Stripe.SetupIntent do
   (
     nil
 
-    @doc "<p>You can cancel a SetupIntent object when it’s in one of these statuses: <code>requires_payment_method</code>, <code>requires_confirmation</code>, or <code>requires_action</code>. </p>\n\n<p>After you cancel it, setup is abandoned and any operations on the SetupIntent fail with an error.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/setup_intents/{intent}/cancel`\n"
+    @doc "<p>Confirm that your customer intends to set up the current or\nprovided payment method. For example, you would confirm a SetupIntent\nwhen a customer hits the “Save” button on a payment method management\npage on your website.</p>\n\n<p>If the selected payment method does not require any additional\nsteps from the customer, the SetupIntent will transition to the\n<code>succeeded</code> status.</p>\n\n<p>Otherwise, it will transition to the <code>requires_action</code> status and\nsuggest additional actions via <code>next_action</code>. If setup fails,\nthe SetupIntent will transition to the\n<code>requires_payment_method</code> status or the <code>canceled</code> status if the\nconfirmation limit is reached.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/setup_intents/{intent}/confirm`\n"
     (
-      @spec cancel(
+      @spec confirm(
               intent :: binary(),
               params :: %{
-                optional(:cancellation_reason) =>
-                  :abandoned | :duplicate | :requested_by_customer,
-                optional(:expand) => list(binary)
+                optional(:expand) => list(binary),
+                optional(:mandate_data) => mandate_data | binary | mandate_data,
+                optional(:payment_method) => binary,
+                optional(:payment_method_data) => payment_method_data,
+                optional(:payment_method_options) => payment_method_options,
+                optional(:return_url) => binary,
+                optional(:use_stripe_sdk) => boolean
               },
               opts :: Keyword.t()
             ) :: {:ok, Stripe.SetupIntent.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def cancel(intent, params \\ %{}, opts \\ []) do
+      def confirm(intent, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/setup_intents/{intent}/cancel",
+            "/v1/setup_intents/{intent}/confirm",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

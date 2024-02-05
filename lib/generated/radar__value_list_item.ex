@@ -30,6 +30,45 @@ defmodule Stripe.Radar.ValueListItem do
   (
     nil
 
+    @doc "<p>Deletes a <code>ValueListItem</code> object, removing it from its parent value list.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/radar/value_list_items/{item}`\n"
+    (
+      @spec delete(item :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedRadar.ValueListItem.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(item, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/radar/value_list_items/{item}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "item",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "item",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [item]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of <code>ValueListItem</code> objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/radar/value_list_items`\n"
     (
       @spec list(
@@ -126,45 +165,6 @@ defmodule Stripe.Radar.ValueListItem do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes a <code>ValueListItem</code> object, removing it from its parent value list.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/radar/value_list_items/{item}`\n"
-    (
-      @spec delete(item :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedRadar.ValueListItem.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(item, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/radar/value_list_items/{item}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "item",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "item",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [item]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

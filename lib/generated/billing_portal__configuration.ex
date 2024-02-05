@@ -167,6 +167,50 @@ defmodule Stripe.BillingPortal.Configuration do
   (
     nil
 
+    @doc "<p>Retrieves a configuration that describes the functionality of the customer portal.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/billing_portal/configurations/{configuration}`\n"
+    (
+      @spec retrieve(
+              configuration :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.BillingPortal.Configuration.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(configuration, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/billing_portal/configurations/{configuration}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "configuration",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "configuration",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [configuration]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Creates a configuration that describes the functionality and behavior of a PortalSession</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/billing_portal/configurations`\n"
     (
       @spec create(
@@ -243,50 +287,6 @@ defmodule Stripe.BillingPortal.Configuration do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves a configuration that describes the functionality of the customer portal.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/billing_portal/configurations/{configuration}`\n"
-    (
-      @spec retrieve(
-              configuration :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.BillingPortal.Configuration.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(configuration, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/billing_portal/configurations/{configuration}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "configuration",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "configuration",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [configuration]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

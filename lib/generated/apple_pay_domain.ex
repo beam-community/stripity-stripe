@@ -17,6 +17,45 @@ defmodule Stripe.ApplePayDomain do
   (
     nil
 
+    @doc "<p>Delete an apple pay domain.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/apple_pay/domains/{domain}`\n"
+    (
+      @spec delete(domain :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedApplePayDomain.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(domain, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/apple_pay/domains/{domain}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "domain",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "domain",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [domain]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>List apple pay domains.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/apple_pay/domains`\n"
     (
       @spec list(
@@ -39,28 +78,6 @@ defmodule Stripe.ApplePayDomain do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Create an apple pay domain.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/apple_pay/domains`\n"
-    (
-      @spec create(
-              params :: %{optional(:domain_name) => binary, optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.ApplePayDomain.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/apple_pay/domains", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -111,37 +128,20 @@ defmodule Stripe.ApplePayDomain do
   (
     nil
 
-    @doc "<p>Delete an apple pay domain.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/apple_pay/domains/{domain}`\n"
+    @doc "<p>Create an apple pay domain.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/apple_pay/domains`\n"
     (
-      @spec delete(domain :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedApplePayDomain.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(domain, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/apple_pay/domains/{domain}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "domain",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "domain",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [domain]
-          )
+      @spec create(
+              params :: %{optional(:domain_name) => binary, optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.ApplePayDomain.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/apple_pay/domains", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

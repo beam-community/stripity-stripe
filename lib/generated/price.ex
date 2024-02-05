@@ -116,35 +116,6 @@ defmodule Stripe.Price do
   (
     nil
 
-    @doc "<p>Search for prices you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/prices/search`\n"
-    (
-      @spec search(
-              params :: %{
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:page) => binary,
-                optional(:query) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.SearchResult.t(Stripe.Price.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def search(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/prices/search", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Returns a list of your active prices, excluding <a href=\"/docs/products-prices/pricing-models#inline-pricing\">inline prices</a>. For the list of inactive prices, set <code>active</code> to false.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/prices`\n"
     (
       @spec list(
@@ -168,6 +139,76 @@ defmodule Stripe.Price do
               | {:error, term()}
       def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/prices", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the price with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/prices/{price}`\n"
+    (
+      @spec retrieve(
+              price :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Price.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(price, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/prices/{price}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "price",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "price",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [price]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Search for prices you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/prices/search`\n"
+    (
+      @spec search(
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:page) => binary,
+                optional(:query) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.SearchResult.t(Stripe.Price.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def search(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/prices/search", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -214,47 +255,6 @@ defmodule Stripe.Price do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the price with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/prices/{price}`\n"
-    (
-      @spec retrieve(
-              price :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Price.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(price, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/prices/{price}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "price",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "price",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [price]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
