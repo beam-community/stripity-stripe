@@ -13,8 +13,8 @@ defmodule Stripe.StripeCase do
     assert_received({method, url, headers, body, _})
 
     assert expected_method == method
-    assert expected_url == url
 
+    assert_stripe_request_url(expected_url, url)
     assert_stripe_request_body(expected_body, body)
     assert_stripe_request_headers(expected_headers, headers)
   end
@@ -27,6 +27,21 @@ defmodule Stripe.StripeCase do
 
   def stripe_base_url() do
     Application.get_env(:stripity_stripe, :api_base_url)
+  end
+
+  defp assert_stripe_request_url(expected_url, url) do
+    expected_uri = URI.parse(expected_url)
+    uri = URI.parse(url)
+    assert expected_uri.path == uri.path
+    assert expected_uri.host == uri.host
+
+    assert_stripe_request_url_query(expected_uri.query, uri.query)
+  end
+
+  defp assert_stripe_request_url_query(nil, _), do: nil
+
+  defp assert_stripe_request_url_query(expected_query, query) do
+    URI.decode_query(expected_query) == URI.decode_query(query)
   end
 
   defp assert_stripe_request_headers(nil, _), do: nil
