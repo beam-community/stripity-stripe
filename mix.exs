@@ -8,7 +8,7 @@ defmodule Stripe.Mixfile do
     [
       app: :stripity_stripe,
       version: @version,
-      elixir: "~> 1.10",
+      elixir: "~> 1.11",
       deps: deps(),
       docs: docs(),
       package: package(),
