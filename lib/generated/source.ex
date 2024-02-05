@@ -288,6 +288,55 @@ defmodule Stripe.Source do
   (
     nil
 
+    @doc "<p>List source transactions for a given source.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/sources/{source}/source_transactions`\n"
+    (
+      @spec source_transactions(
+              source :: binary(),
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.SourceTransaction.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def source_transactions(source, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/sources/{source}/source_transactions",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "source",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "source",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [source]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Creates a new source object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/sources`\n"
     (
       @spec create(
@@ -407,55 +456,6 @@ defmodule Stripe.Source do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>List source transactions for a given source.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/sources/{source}/source_transactions`\n"
-    (
-      @spec source_transactions(
-              source :: binary(),
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.SourceTransaction.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def source_transactions(source, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/sources/{source}/source_transactions",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "source",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "source",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [source]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

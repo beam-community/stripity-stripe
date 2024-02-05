@@ -315,6 +315,111 @@ defmodule Stripe.PaymentMethod do
   (
     nil
 
+    @doc "<p>Returns a list of PaymentMethods for Treasury flows. If you want to list the PaymentMethods attached to a Customer for payments, you should use the <a href=\"/docs/api/payment_methods/customer_list\">List a Customer’s PaymentMethods</a> API instead.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_methods`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:customer) => binary,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary,
+                optional(:type) =>
+                  :acss_debit
+                  | :affirm
+                  | :afterpay_clearpay
+                  | :alipay
+                  | :au_becs_debit
+                  | :bacs_debit
+                  | :bancontact
+                  | :blik
+                  | :boleto
+                  | :card
+                  | :cashapp
+                  | :customer_balance
+                  | :eps
+                  | :fpx
+                  | :giropay
+                  | :grabpay
+                  | :ideal
+                  | :klarna
+                  | :konbini
+                  | :link
+                  | :oxxo
+                  | :p24
+                  | :paynow
+                  | :paypal
+                  | :pix
+                  | :promptpay
+                  | :revolut_pay
+                  | :sepa_debit
+                  | :sofort
+                  | :us_bank_account
+                  | :wechat_pay
+                  | :zip
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.PaymentMethod.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/payment_methods", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves a PaymentMethod object attached to the StripeAccount. To retrieve a payment method attached to a Customer, you should use <a href=\"/docs/api/payment_methods/customer\">Retrieve a Customer’s PaymentMethods</a></p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_methods/{payment_method}`\n"
+    (
+      @spec retrieve(
+              payment_method :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.PaymentMethod.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(payment_method, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/payment_methods/{payment_method}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "payment_method",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "payment_method",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [payment_method]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Creates a PaymentMethod object. Read the <a href=\"/docs/stripe-js/reference#stripe-create-payment-method\">Stripe.js reference</a> to learn how to create PaymentMethods via Stripe.js.</p>\n\n<p>Instead of creating a PaymentMethod directly, we recommend using the <a href=\"/docs/payments/accept-a-payment\">PaymentIntents</a> API to accept a payment immediately or the <a href=\"/docs/payments/save-and-reuse\">SetupIntent</a> API to collect payment method details ahead of a future payment.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_methods`\n"
     (
       @spec create(
@@ -410,48 +515,6 @@ defmodule Stripe.PaymentMethod do
   (
     nil
 
-    @doc "<p>Retrieves a PaymentMethod object attached to the StripeAccount. To retrieve a payment method attached to a Customer, you should use <a href=\"/docs/api/payment_methods/customer\">Retrieve a Customer’s PaymentMethods</a></p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_methods/{payment_method}`\n"
-    (
-      @spec retrieve(
-              payment_method :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.PaymentMethod.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(payment_method, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/payment_methods/{payment_method}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "payment_method",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_method",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [payment_method]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Updates a PaymentMethod object. A PaymentMethod must be attached a customer to be updated.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_methods/{payment_method}`\n"
     (
       @spec update(
@@ -493,69 +556,6 @@ defmodule Stripe.PaymentMethod do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of PaymentMethods for Treasury flows. If you want to list the PaymentMethods attached to a Customer for payments, you should use the <a href=\"/docs/api/payment_methods/customer_list\">List a Customer’s PaymentMethods</a> API instead.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_methods`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:customer) => binary,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary,
-                optional(:type) =>
-                  :acss_debit
-                  | :affirm
-                  | :afterpay_clearpay
-                  | :alipay
-                  | :au_becs_debit
-                  | :bacs_debit
-                  | :bancontact
-                  | :blik
-                  | :boleto
-                  | :card
-                  | :cashapp
-                  | :customer_balance
-                  | :eps
-                  | :fpx
-                  | :giropay
-                  | :grabpay
-                  | :ideal
-                  | :klarna
-                  | :konbini
-                  | :link
-                  | :oxxo
-                  | :p24
-                  | :paynow
-                  | :paypal
-                  | :pix
-                  | :promptpay
-                  | :revolut_pay
-                  | :sepa_debit
-                  | :sofort
-                  | :us_bank_account
-                  | :wechat_pay
-                  | :zip
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.PaymentMethod.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/payment_methods", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

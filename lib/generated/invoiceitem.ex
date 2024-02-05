@@ -91,6 +91,45 @@ defmodule Stripe.Invoiceitem do
   (
     nil
 
+    @doc "<p>Deletes an invoice item, removing it from an invoice. Deleting invoice items is only possible when they’re not attached to invoices, or if it’s attached to a draft invoice.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/invoiceitems/{invoiceitem}`\n"
+    (
+      @spec delete(invoiceitem :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedInvoiceitem.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(invoiceitem, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/invoiceitems/{invoiceitem}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "invoiceitem",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "invoiceitem",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [invoiceitem]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of your invoice items. Invoice items are returned sorted by creation date, with the most recently created invoice items appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/invoiceitems`\n"
     (
       @spec list(
@@ -111,6 +150,47 @@ defmodule Stripe.Invoiceitem do
               | {:error, term()}
       def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/invoiceitems", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the invoice item with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/invoiceitems/{invoiceitem}`\n"
+    (
+      @spec retrieve(
+              invoiceitem :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Invoiceitem.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(invoiceitem, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/invoiceitems/{invoiceitem}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "invoiceitem",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "invoiceitem",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [invoiceitem]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -157,47 +237,6 @@ defmodule Stripe.Invoiceitem do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the invoice item with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/invoiceitems/{invoiceitem}`\n"
-    (
-      @spec retrieve(
-              invoiceitem :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Invoiceitem.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(invoiceitem, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/invoiceitems/{invoiceitem}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "invoiceitem",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "invoiceitem",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [invoiceitem]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -255,45 +294,6 @@ defmodule Stripe.Invoiceitem do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes an invoice item, removing it from an invoice. Deleting invoice items is only possible when they’re not attached to invoices, or if it’s attached to a draft invoice.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/invoiceitems/{invoiceitem}`\n"
-    (
-      @spec delete(invoiceitem :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedInvoiceitem.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(invoiceitem, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/invoiceitems/{invoiceitem}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "invoiceitem",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "invoiceitem",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [invoiceitem]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

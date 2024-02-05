@@ -561,6 +561,50 @@ defmodule Stripe.Issuing.Transaction do
   (
     nil
 
+    @doc "<p>Refund a test-mode Transaction.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/transactions/{transaction}/refund`\n"
+    (
+      @spec refund(
+              transaction :: binary(),
+              params :: %{optional(:expand) => list(binary), optional(:refund_amount) => integer},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Transaction.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def refund(transaction, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/issuing/transactions/{transaction}/refund",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "transaction",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "transaction",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [transaction]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Allows the user to capture an arbitrary amount, also known as a forced capture.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/transactions/create_force_capture`\n"
     (
       @spec create_force_capture(
@@ -619,50 +663,6 @@ defmodule Stripe.Issuing.Transaction do
             "/v1/test_helpers/issuing/transactions/create_unlinked_refund",
             [],
             []
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Refund a test-mode Transaction.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/transactions/{transaction}/refund`\n"
-    (
-      @spec refund(
-              transaction :: binary(),
-              params :: %{optional(:expand) => list(binary), optional(:refund_amount) => integer},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Transaction.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def refund(transaction, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/transactions/{transaction}/refund",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "transaction",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "transaction",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [transaction]
           )
 
         Stripe.Request.new_request(opts)

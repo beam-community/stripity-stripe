@@ -44,6 +44,39 @@ defmodule Stripe.Identity.VerificationReport do
   (
     nil
 
+    @doc "<p>List all verification reports.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/identity/verification_reports`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:created) => created | integer,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary,
+                optional(:type) => :document | :id_number,
+                optional(:verification_session) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Identity.VerificationReport.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params("/v1/identity/verification_reports", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Retrieves an existing VerificationReport</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/identity/verification_reports/{report}`\n"
     (
       @spec retrieve(
@@ -75,39 +108,6 @@ defmodule Stripe.Identity.VerificationReport do
             ],
             [report]
           )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>List all verification reports.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/identity/verification_reports`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:created) => created | integer,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary,
-                optional(:type) => :document | :id_number,
-                optional(:verification_session) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Identity.VerificationReport.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params("/v1/identity/verification_reports", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)

@@ -87,7 +87,7 @@ defmodule Stripe.CreditNote do
   )
 
   (
-    @typedoc "When shipping_cost contains the shipping_rate from the invoice, the shipping_cost is included in the credit note."
+    @typedoc nil
     @type shipping_cost :: %{optional(:shipping_rate) => binary}
   )
 
@@ -103,65 +103,24 @@ defmodule Stripe.CreditNote do
   (
     nil
 
-    @doc "<p>Issue a credit note to adjust the amount of a finalized invoice. For a <code>status=open</code> invoice, a credit note reduces\nits <code>amount_due</code>. For a <code>status=paid</code> invoice, a credit note does not affect its <code>amount_due</code>. Instead, it can result\nin any combination of the following:</p>\n\n<ul>\n<li>Refund: create a new refund (using <code>refund_amount</code>) or link an existing refund (using <code>refund</code>).</li>\n<li>Customer balance credit: credit the customer’s balance (using <code>credit_amount</code>) which will be automatically applied to their next invoice when it’s finalized.</li>\n<li>Outside of Stripe credit: record the amount that is or will be credited outside of Stripe (using <code>out_of_band_amount</code>).</li>\n</ul>\n\n<p>For post-payment credit notes the sum of the refund, credit and outside of Stripe amounts must equal the credit note total.</p>\n\n<p>You may issue multiple credit notes for an invoice. Each credit note will increment the invoice’s <code>pre_payment_credit_notes_amount</code>\nor <code>post_payment_credit_notes_amount</code> depending on its <code>status</code> at the time of credit note creation.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/credit_notes`\n"
+    @doc "<p>Returns a list of credit notes.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/credit_notes`\n"
     (
-      @spec create(
+      @spec list(
               params :: %{
-                optional(:amount) => integer,
-                optional(:credit_amount) => integer,
-                optional(:effective_at) => integer,
+                optional(:customer) => binary,
+                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
                 optional(:invoice) => binary,
-                optional(:lines) => list(lines),
-                optional(:memo) => binary,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:out_of_band_amount) => integer,
-                optional(:reason) =>
-                  :duplicate | :fraudulent | :order_change | :product_unsatisfactory,
-                optional(:refund) => binary,
-                optional(:refund_amount) => integer,
-                optional(:shipping_cost) => shipping_cost
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
               },
               opts :: Keyword.t()
-            ) :: {:ok, Stripe.CreditNote.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
+            ) ::
+              {:ok, Stripe.List.t(Stripe.CreditNote.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/credit_notes", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Get a preview of a credit note without creating it.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/credit_notes/preview`\n"
-    (
-      @spec preview(
-              params :: %{
-                optional(:amount) => integer,
-                optional(:credit_amount) => integer,
-                optional(:effective_at) => integer,
-                optional(:expand) => list(binary),
-                optional(:invoice) => binary,
-                optional(:lines) => list(lines),
-                optional(:memo) => binary,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:out_of_band_amount) => integer,
-                optional(:reason) =>
-                  :duplicate | :fraudulent | :order_change | :product_unsatisfactory,
-                optional(:refund) => binary,
-                optional(:refund_amount) => integer,
-                optional(:shipping_cost) => shipping_cost
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.CreditNote.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def preview(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/credit_notes/preview", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -216,29 +175,112 @@ defmodule Stripe.CreditNote do
   (
     nil
 
-    @doc "<p>Returns a list of credit notes.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/credit_notes`\n"
+    @doc "<p>Get a preview of a credit note without creating it.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/credit_notes/preview`\n"
     (
-      @spec list(
+      @spec preview(
               params :: %{
-                optional(:customer) => binary,
-                optional(:ending_before) => binary,
+                optional(:amount) => integer,
+                optional(:credit_amount) => integer,
+                optional(:effective_at) => integer,
                 optional(:expand) => list(binary),
                 optional(:invoice) => binary,
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
+                optional(:lines) => list(lines),
+                optional(:memo) => binary,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:out_of_band_amount) => integer,
+                optional(:reason) =>
+                  :duplicate | :fraudulent | :order_change | :product_unsatisfactory,
+                optional(:refund) => binary,
+                optional(:refund_amount) => integer,
+                optional(:shipping_cost) => shipping_cost
               },
               opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.CreditNote.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/credit_notes", [], [])
+            ) :: {:ok, Stripe.CreditNote.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def preview(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/credit_notes/preview", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>When retrieving a credit note preview, you’ll get a <strong>lines</strong> property containing the first handful of those items. This URL you can retrieve the full (paginated) list of line items.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/credit_notes/preview/lines`\n"
+    (
+      @spec preview_lines(
+              params :: %{
+                optional(:amount) => integer,
+                optional(:credit_amount) => integer,
+                optional(:effective_at) => integer,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:invoice) => binary,
+                optional(:limit) => integer,
+                optional(:lines) => list(lines),
+                optional(:memo) => binary,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:out_of_band_amount) => integer,
+                optional(:reason) =>
+                  :duplicate | :fraudulent | :order_change | :product_unsatisfactory,
+                optional(:refund) => binary,
+                optional(:refund_amount) => integer,
+                optional(:shipping_cost) => shipping_cost,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.CreditNoteLineItem.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def preview_lines(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/credit_notes/preview/lines", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Issue a credit note to adjust the amount of a finalized invoice. For a <code>status=open</code> invoice, a credit note reduces\nits <code>amount_due</code>. For a <code>status=paid</code> invoice, a credit note does not affect its <code>amount_due</code>. Instead, it can result\nin any combination of the following:</p>\n\n<ul>\n<li>Refund: create a new refund (using <code>refund_amount</code>) or link an existing refund (using <code>refund</code>).</li>\n<li>Customer balance credit: credit the customer’s balance (using <code>credit_amount</code>) which will be automatically applied to their next invoice when it’s finalized.</li>\n<li>Outside of Stripe credit: record the amount that is or will be credited outside of Stripe (using <code>out_of_band_amount</code>).</li>\n</ul>\n\n<p>For post-payment credit notes the sum of the refund, credit and outside of Stripe amounts must equal the credit note total.</p>\n\n<p>You may issue multiple credit notes for an invoice. Each credit note will increment the invoice’s <code>pre_payment_credit_notes_amount</code>\nor <code>post_payment_credit_notes_amount</code> depending on its <code>status</code> at the time of credit note creation.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/credit_notes`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:amount) => integer,
+                optional(:credit_amount) => integer,
+                optional(:effective_at) => integer,
+                optional(:expand) => list(binary),
+                optional(:invoice) => binary,
+                optional(:lines) => list(lines),
+                optional(:memo) => binary,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:out_of_band_amount) => integer,
+                optional(:reason) =>
+                  :duplicate | :fraudulent | :order_change | :product_unsatisfactory,
+                optional(:refund) => binary,
+                optional(:refund_amount) => integer,
+                optional(:shipping_cost) => shipping_cost
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.CreditNote.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/credit_notes", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -325,48 +367,6 @@ defmodule Stripe.CreditNote do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>When retrieving a credit note preview, you’ll get a <strong>lines</strong> property containing the first handful of those items. This URL you can retrieve the full (paginated) list of line items.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/credit_notes/preview/lines`\n"
-    (
-      @spec preview_lines(
-              params :: %{
-                optional(:amount) => integer,
-                optional(:credit_amount) => integer,
-                optional(:effective_at) => integer,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:invoice) => binary,
-                optional(:limit) => integer,
-                optional(:lines) => list(lines),
-                optional(:memo) => binary,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:out_of_band_amount) => integer,
-                optional(:reason) =>
-                  :duplicate | :fraudulent | :order_change | :product_unsatisfactory,
-                optional(:refund) => binary,
-                optional(:refund_amount) => integer,
-                optional(:shipping_cost) => shipping_cost,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.CreditNoteLineItem.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def preview_lines(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/credit_notes/preview/lines", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

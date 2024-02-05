@@ -1051,40 +1051,6 @@ defmodule Stripe.Issuing.Card do
   (
     nil
 
-    @doc "<p>Creates an Issuing <code>Card</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/cards`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:cardholder) => binary,
-                optional(:currency) => binary,
-                optional(:expand) => list(binary),
-                optional(:financial_account) => binary,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:replacement_for) => binary,
-                optional(:replacement_reason) => :damaged | :expired | :lost | :stolen,
-                optional(:shipping) => shipping,
-                optional(:spending_controls) => spending_controls,
-                optional(:status) => :active | :inactive,
-                optional(:type) => :physical | :virtual
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Card.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/issuing/cards", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Retrieves an Issuing <code>Card</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/issuing/cards/{card}`\n"
     (
       @spec retrieve(
@@ -1119,6 +1085,40 @@ defmodule Stripe.Issuing.Card do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates an Issuing <code>Card</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/cards`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:cardholder) => binary,
+                optional(:currency) => binary,
+                optional(:expand) => list(binary),
+                optional(:financial_account) => binary,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:replacement_for) => binary,
+                optional(:replacement_reason) => :damaged | :expired | :lost | :stolen,
+                optional(:shipping) => shipping,
+                optional(:spending_controls) => spending_controls,
+                optional(:status) => :active | :inactive,
+                optional(:type) => :physical | :virtual
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Card.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/issuing/cards", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -1218,18 +1218,18 @@ defmodule Stripe.Issuing.Card do
   (
     nil
 
-    @doc "<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>shipped</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/cards/{card}/shipping/ship`\n"
+    @doc "<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>failure</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/cards/{card}/shipping/fail`\n"
     (
-      @spec ship_card(
+      @spec fail_card(
               card :: binary(),
               params :: %{optional(:expand) => list(binary)},
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.Issuing.Card.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def ship_card(card, params \\ %{}, opts \\ []) do
+      def fail_card(card, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/cards/{card}/shipping/ship",
+            "/v1/test_helpers/issuing/cards/{card}/shipping/fail",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -1302,18 +1302,18 @@ defmodule Stripe.Issuing.Card do
   (
     nil
 
-    @doc "<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>failure</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/cards/{card}/shipping/fail`\n"
+    @doc "<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>shipped</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/cards/{card}/shipping/ship`\n"
     (
-      @spec fail_card(
+      @spec ship_card(
               card :: binary(),
               params :: %{optional(:expand) => list(binary)},
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.Issuing.Card.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def fail_card(card, params \\ %{}, opts \\ []) do
+      def ship_card(card, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/cards/{card}/shipping/fail",
+            "/v1/test_helpers/issuing/cards/{card}/shipping/ship",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

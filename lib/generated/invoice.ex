@@ -470,7 +470,7 @@ defmodule Stripe.Invoice do
   )
 
   (
-    @typedoc nil
+    @typedoc "Settings for the cost of shipping for this invoice."
     @type shipping_cost :: %{
             optional(:shipping_rate) => binary,
             optional(:shipping_rate_data) => shipping_rate_data
@@ -478,7 +478,7 @@ defmodule Stripe.Invoice do
   )
 
   (
-    @typedoc nil
+    @typedoc "Shipping details for the invoice. The Invoice PDF will use the `shipping_details` value if it is set, otherwise the PDF will render the shipping address from the customer."
     @type shipping_details :: %{
             optional(:address) => address,
             optional(:name) => binary,
@@ -595,7 +595,7 @@ defmodule Stripe.Invoice do
   )
 
   (
-    @typedoc nil
+    @typedoc "If specified, the funds from the invoice will be transferred to the destination and the ID of the resulting transfer will be found on the invoice's charge."
     @type transfer_data :: %{optional(:amount) => integer, optional(:destination) => binary}
   )
 
@@ -605,6 +605,119 @@ defmodule Stripe.Invoice do
             optional(:financial_connections) => financial_connections,
             optional(:verification_method) => :automatic | :instant | :microdeposits
           }
+  )
+
+  (
+    nil
+
+    @doc "<p>Permanently deletes a one-off invoice draft. This cannot be undone. Attempts to delete invoices that are no longer in a draft state will fail; once an invoice has been finalized or if an invoice is for a subscription, it must be <a href=\"#void_invoice\">voided</a>.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/invoices/{invoice}`\n"
+    (
+      @spec delete(invoice :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedInvoice.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(invoice, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/invoices/{invoice}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "invoice",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "invoice",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [invoice]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>You can list all invoices, or list the invoices for a specific customer. The invoices are returned sorted by creation date, with the most recently created invoices appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/invoices`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:collection_method) => :charge_automatically | :send_invoice,
+                optional(:created) => created | integer,
+                optional(:customer) => binary,
+                optional(:due_date) => due_date | integer,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary,
+                optional(:status) => :draft | :open | :paid | :uncollectible | :void,
+                optional(:subscription) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Invoice.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/invoices", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the invoice with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/invoices/{invoice}`\n"
+    (
+      @spec retrieve(
+              invoice :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Invoice.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(invoice, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/invoices/{invoice}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "invoice",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "invoice",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [invoice]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
   )
 
   (
@@ -676,122 +789,6 @@ defmodule Stripe.Invoice do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Draft invoices are fully editable. Once an invoice is <a href=\"/docs/billing/invoices/workflow#finalized\">finalized</a>,\nmonetary values, as well as <code>collection_method</code>, become uneditable.</p>\n\n<p>If you would like to stop the Stripe Billing engine from automatically finalizing, reattempting payments on,\nsending reminders for, or <a href=\"/docs/billing/invoices/reconciliation\">automatically reconciling</a> invoices, pass\n<code>auto_advance=false</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/invoices/{invoice}`\n"
-    (
-      @spec update(
-              invoice :: binary(),
-              params :: %{
-                optional(:account_tax_ids) => list(binary) | binary,
-                optional(:application_fee_amount) => integer,
-                optional(:auto_advance) => boolean,
-                optional(:automatic_tax) => automatic_tax,
-                optional(:collection_method) => :charge_automatically | :send_invoice,
-                optional(:custom_fields) => list(custom_fields) | binary,
-                optional(:days_until_due) => integer,
-                optional(:default_payment_method) => binary,
-                optional(:default_source) => binary | binary,
-                optional(:default_tax_rates) => list(binary) | binary,
-                optional(:description) => binary,
-                optional(:discounts) => list(discounts) | binary,
-                optional(:due_date) => integer,
-                optional(:effective_at) => integer | binary,
-                optional(:expand) => list(binary),
-                optional(:footer) => binary,
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:on_behalf_of) => binary | binary,
-                optional(:payment_settings) => payment_settings,
-                optional(:rendering) => rendering,
-                optional(:rendering_options) => rendering_options | binary,
-                optional(:shipping_cost) => shipping_cost | binary,
-                optional(:shipping_details) => shipping_details | binary,
-                optional(:statement_descriptor) => binary,
-                optional(:transfer_data) => transfer_data | binary
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Invoice.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def update(invoice, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/invoices/{invoice}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "invoice",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "invoice",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [invoice]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Stripe automatically creates and then attempts to collect payment on invoices for customers on subscriptions according to your <a href=\"https://dashboard.stripe.com/account/billing/automatic\">subscriptions settings</a>. However, if you’d like to attempt payment on an invoice out of the normal collection schedule or for some other reason, you can do so.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/invoices/{invoice}/pay`\n"
-    (
-      @spec pay(
-              invoice :: binary(),
-              params :: %{
-                optional(:expand) => list(binary),
-                optional(:forgive) => boolean,
-                optional(:mandate) => binary | binary,
-                optional(:off_session) => boolean,
-                optional(:paid_out_of_band) => boolean,
-                optional(:payment_method) => binary,
-                optional(:source) => binary
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Invoice.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def pay(invoice, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/invoices/{invoice}/pay",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "invoice",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "invoice",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [invoice]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -904,49 +901,40 @@ defmodule Stripe.Invoice do
   (
     nil
 
-    @doc "<p>You can list all invoices, or list the invoices for a specific customer. The invoices are returned sorted by creation date, with the most recently created invoices appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/invoices`\n"
+    @doc "<p>Draft invoices are fully editable. Once an invoice is <a href=\"/docs/billing/invoices/workflow#finalized\">finalized</a>,\nmonetary values, as well as <code>collection_method</code>, become uneditable.</p>\n\n<p>If you would like to stop the Stripe Billing engine from automatically finalizing, reattempting payments on,\nsending reminders for, or <a href=\"/docs/billing/invoices/reconciliation\">automatically reconciling</a> invoices, pass\n<code>auto_advance=false</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/invoices/{invoice}`\n"
     (
-      @spec list(
+      @spec update(
+              invoice :: binary(),
               params :: %{
+                optional(:account_tax_ids) => list(binary) | binary,
+                optional(:application_fee_amount) => integer,
+                optional(:auto_advance) => boolean,
+                optional(:automatic_tax) => automatic_tax,
                 optional(:collection_method) => :charge_automatically | :send_invoice,
-                optional(:created) => created | integer,
-                optional(:customer) => binary,
-                optional(:due_date) => due_date | integer,
-                optional(:ending_before) => binary,
+                optional(:custom_fields) => list(custom_fields) | binary,
+                optional(:days_until_due) => integer,
+                optional(:default_payment_method) => binary,
+                optional(:default_source) => binary | binary,
+                optional(:default_tax_rates) => list(binary) | binary,
+                optional(:description) => binary,
+                optional(:discounts) => list(discounts) | binary,
+                optional(:due_date) => integer,
+                optional(:effective_at) => integer | binary,
                 optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary,
-                optional(:status) => :draft | :open | :paid | :uncollectible | :void,
-                optional(:subscription) => binary
+                optional(:footer) => binary,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:on_behalf_of) => binary | binary,
+                optional(:payment_settings) => payment_settings,
+                optional(:rendering) => rendering,
+                optional(:rendering_options) => rendering_options | binary,
+                optional(:shipping_cost) => shipping_cost | binary,
+                optional(:shipping_details) => shipping_details | binary,
+                optional(:statement_descriptor) => binary,
+                optional(:transfer_data) => transfer_data | binary
               },
               opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Invoice.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/invoices", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the invoice with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/invoices/{invoice}`\n"
-    (
-      @spec retrieve(
-              invoice :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
             ) :: {:ok, Stripe.Invoice.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(invoice, params \\ %{}, opts \\ []) do
+      def update(invoice, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/invoices/{invoice}",
@@ -971,44 +959,7 @@ defmodule Stripe.Invoice do
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Permanently deletes a one-off invoice draft. This cannot be undone. Attempts to delete invoices that are no longer in a draft state will fail; once an invoice has been finalized or if an invoice is for a subscription, it must be <a href=\"#void_invoice\">voided</a>.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/invoices/{invoice}`\n"
-    (
-      @spec delete(invoice :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedInvoice.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(invoice, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/invoices/{invoice}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "invoice",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "invoice",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [invoice]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -1058,17 +1009,17 @@ defmodule Stripe.Invoice do
   (
     nil
 
-    @doc "<p>Stripe will automatically send invoices to customers according to your <a href=\"https://dashboard.stripe.com/account/billing/automatic\">subscriptions settings</a>. However, if you’d like to manually send an invoice to your customer out of the normal schedule, you can do so. When sending invoices that have already been paid, there will be no reference to the payment in the email.</p>\n\n<p>Requests made in test-mode result in no emails being sent, despite sending an <code>invoice.sent</code> event.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/invoices/{invoice}/send`\n"
+    @doc "<p>Marking an invoice as uncollectible is useful for keeping track of bad debts that can be written off for accounting purposes.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/invoices/{invoice}/mark_uncollectible`\n"
     (
-      @spec send_invoice(
+      @spec mark_uncollectible(
               invoice :: binary(),
               params :: %{optional(:expand) => list(binary)},
               opts :: Keyword.t()
             ) :: {:ok, Stripe.Invoice.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def send_invoice(invoice, params \\ %{}, opts \\ []) do
+      def mark_uncollectible(invoice, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/invoices/{invoice}/send",
+            "/v1/invoices/{invoice}/mark_uncollectible",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -1099,17 +1050,66 @@ defmodule Stripe.Invoice do
   (
     nil
 
-    @doc "<p>Marking an invoice as uncollectible is useful for keeping track of bad debts that can be written off for accounting purposes.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/invoices/{invoice}/mark_uncollectible`\n"
+    @doc "<p>Stripe automatically creates and then attempts to collect payment on invoices for customers on subscriptions according to your <a href=\"https://dashboard.stripe.com/account/billing/automatic\">subscriptions settings</a>. However, if you’d like to attempt payment on an invoice out of the normal collection schedule or for some other reason, you can do so.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/invoices/{invoice}/pay`\n"
     (
-      @spec mark_uncollectible(
+      @spec pay(
+              invoice :: binary(),
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:forgive) => boolean,
+                optional(:mandate) => binary | binary,
+                optional(:off_session) => boolean,
+                optional(:paid_out_of_band) => boolean,
+                optional(:payment_method) => binary,
+                optional(:source) => binary
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Invoice.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def pay(invoice, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/invoices/{invoice}/pay",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "invoice",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "invoice",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [invoice]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Stripe will automatically send invoices to customers according to your <a href=\"https://dashboard.stripe.com/account/billing/automatic\">subscriptions settings</a>. However, if you’d like to manually send an invoice to your customer out of the normal schedule, you can do so. When sending invoices that have already been paid, there will be no reference to the payment in the email.</p>\n\n<p>Requests made in test-mode result in no emails being sent, despite sending an <code>invoice.sent</code> event.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/invoices/{invoice}/send`\n"
+    (
+      @spec send_invoice(
               invoice :: binary(),
               params :: %{optional(:expand) => list(binary)},
               opts :: Keyword.t()
             ) :: {:ok, Stripe.Invoice.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def mark_uncollectible(invoice, params \\ %{}, opts \\ []) do
+      def send_invoice(invoice, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/invoices/{invoice}/mark_uncollectible",
+            "/v1/invoices/{invoice}/send",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

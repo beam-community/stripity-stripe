@@ -77,21 +77,13 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Updates a <code>Reader</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}`\n"
+    @doc "<p>Deletes a <code>Reader</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/readers/{reader}`\n"
     (
-      @spec update(
-              reader :: binary(),
-              params :: %{
-                optional(:expand) => list(binary),
-                optional(:label) => binary | binary,
-                optional(:metadata) => %{optional(binary) => binary} | binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Terminal.Reader.t() | Stripe.DeletedTerminal.Reader.t()}
+      @spec delete(reader :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedTerminal.Reader.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def update(reader, params \\ %{}, opts \\ []) do
+      def delete(reader, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/readers/{reader}",
@@ -115,8 +107,46 @@ defmodule Stripe.Terminal.Reader do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Returns a list of <code>Reader</code> objects.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/terminal/readers`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:device_type) =>
+                  :bbpos_chipper2x
+                  | :bbpos_wisepad3
+                  | :bbpos_wisepos_e
+                  | :simulated_wisepos_e
+                  | :stripe_m2
+                  | :verifone_P400,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:location) => binary,
+                optional(:serial_number) => binary,
+                optional(:starting_after) => binary,
+                optional(:status) => :offline | :online
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Terminal.Reader.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/readers", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -199,52 +229,21 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Returns a list of <code>Reader</code> objects.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/terminal/readers`\n"
+    @doc "<p>Updates a <code>Reader</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}`\n"
     (
-      @spec list(
+      @spec update(
+              reader :: binary(),
               params :: %{
-                optional(:device_type) =>
-                  :bbpos_chipper2x
-                  | :bbpos_wisepad3
-                  | :bbpos_wisepos_e
-                  | :simulated_wisepos_e
-                  | :stripe_m2
-                  | :verifone_P400,
-                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:location) => binary,
-                optional(:serial_number) => binary,
-                optional(:starting_after) => binary,
-                optional(:status) => :offline | :online
+                optional(:label) => binary | binary,
+                optional(:metadata) => %{optional(binary) => binary} | binary
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.List.t(Stripe.Terminal.Reader.t())}
+              {:ok, Stripe.Terminal.Reader.t() | Stripe.DeletedTerminal.Reader.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/readers", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes a <code>Reader</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/readers/{reader}`\n"
-    (
-      @spec delete(reader :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedTerminal.Reader.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(reader, opts \\ []) do
+      def update(reader, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/readers/{reader}",
@@ -268,7 +267,52 @@ defmodule Stripe.Terminal.Reader do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Cancels the current reader action.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/cancel_action`\n"
+    (
+      @spec cancel_action(
+              reader :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Reader.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def cancel_action(reader, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/terminal/readers/{reader}/cancel_action",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "reader",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "reader",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [reader]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -374,20 +418,28 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Cancels the current reader action.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/cancel_action`\n"
+    @doc "<p>Initiates a refund on a Reader</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/refund_payment`\n"
     (
-      @spec cancel_action(
+      @spec refund_payment(
               reader :: binary(),
-              params :: %{optional(:expand) => list(binary)},
+              params :: %{
+                optional(:amount) => integer,
+                optional(:charge) => binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:payment_intent) => binary,
+                optional(:refund_application_fee) => boolean,
+                optional(:reverse_transfer) => boolean
+              },
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.Terminal.Reader.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def cancel_action(reader, params \\ %{}, opts \\ []) do
+      def refund_payment(reader, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/terminal/readers/{reader}/cancel_action",
+            "/v1/terminal/readers/{reader}/refund_payment",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -436,58 +488,6 @@ defmodule Stripe.Terminal.Reader do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/readers/{reader}/set_reader_display",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "reader",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "reader",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [reader]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Initiates a refund on a Reader</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/refund_payment`\n"
-    (
-      @spec refund_payment(
-              reader :: binary(),
-              params :: %{
-                optional(:amount) => integer,
-                optional(:charge) => binary,
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:payment_intent) => binary,
-                optional(:refund_application_fee) => boolean,
-                optional(:reverse_transfer) => boolean
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Terminal.Reader.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def refund_payment(reader, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/terminal/readers/{reader}/refund_payment",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

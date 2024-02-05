@@ -377,27 +377,84 @@ defmodule Stripe.Subscription do
   (
     nil
 
-    @doc "<p>Search for subscriptions you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscriptions/search`\n"
+    @doc "<p>Cancels a customer’s subscription immediately. The customer will not be charged again for the subscription.</p>\n\n<p>Note, however, that any pending invoice items that you’ve created will still be charged for at the end of the period, unless manually <a href=\"#delete_invoiceitem\">deleted</a>. If you’ve set the subscription to cancel at the end of the period, any pending prorations will also be left in place and collected at the end of the period. But if the subscription is set to cancel immediately, pending prorations will be removed.</p>\n\n<p>By default, upon subscription cancellation, Stripe will stop automatic collection of all finalized invoices for the customer. This is intended to prevent unexpected payment attempts after the customer has canceled a subscription. However, you can resume automatic collection of the invoices manually after subscription cancellation to have us proceed. Or, you could check for unpaid invoices before allowing the customer to cancel the subscription at all.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscriptions/{subscription_exposed_id}`\n"
     (
-      @spec search(
+      @spec cancel(
+              subscription_exposed_id :: binary(),
               params :: %{
+                optional(:cancellation_details) => cancellation_details,
                 optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:page) => binary,
-                optional(:query) => binary
+                optional(:invoice_now) => boolean,
+                optional(:prorate) => boolean
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.SearchResult.t(Stripe.Subscription.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def search(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscriptions/search", [], [])
+              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def cancel(subscription_exposed_id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/subscriptions/{subscription_exposed_id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "subscription_exposed_id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "subscription_exposed_id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [subscription_exposed_id]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Removes the currently applied discount on a subscription.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscriptions/{subscription_exposed_id}/discount`\n"
+    (
+      @spec delete_discount(subscription_exposed_id :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedDiscount.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete_discount(subscription_exposed_id, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/subscriptions/{subscription_exposed_id}/discount",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "subscription_exposed_id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "subscription_exposed_id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [subscription_exposed_id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
@@ -442,6 +499,77 @@ defmodule Stripe.Subscription do
               | {:error, term()}
       def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/subscriptions", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the subscription with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscriptions/{subscription_exposed_id}`\n"
+    (
+      @spec retrieve(
+              subscription_exposed_id :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(subscription_exposed_id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/subscriptions/{subscription_exposed_id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "subscription_exposed_id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "subscription_exposed_id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [subscription_exposed_id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Search for subscriptions you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscriptions/search`\n"
+    (
+      @spec search(
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:page) => binary,
+                optional(:query) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.SearchResult.t(Stripe.Subscription.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def search(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscriptions/search", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -503,6 +631,53 @@ defmodule Stripe.Subscription do
               {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
       def create(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/subscriptions", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Initiates resumption of a paused subscription, optionally resetting the billing cycle anchor and creating prorations. If a resumption invoice is generated, it must be paid or marked uncollectible before the subscription will be unpaused. If payment succeeds the subscription will become <code>active</code>, and if payment fails the subscription will be <code>past_due</code>. The resumption invoice will void automatically if not paid by the expiration date.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscriptions/{subscription}/resume`\n"
+    (
+      @spec resume(
+              subscription :: binary(),
+              params :: %{
+                optional(:billing_cycle_anchor) => :now | :unchanged,
+                optional(:expand) => list(binary),
+                optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
+                optional(:proration_date) => integer
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def resume(subscription, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/subscriptions/{subscription}/resume",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "subscription",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "subscription",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [subscription]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -587,181 +762,6 @@ defmodule Stripe.Subscription do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the subscription with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscriptions/{subscription_exposed_id}`\n"
-    (
-      @spec retrieve(
-              subscription_exposed_id :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(subscription_exposed_id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscriptions/{subscription_exposed_id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "subscription_exposed_id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_exposed_id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [subscription_exposed_id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Cancels a customer’s subscription immediately. The customer will not be charged again for the subscription.</p>\n\n<p>Note, however, that any pending invoice items that you’ve created will still be charged for at the end of the period, unless manually <a href=\"#delete_invoiceitem\">deleted</a>. If you’ve set the subscription to cancel at the end of the period, any pending prorations will also be left in place and collected at the end of the period. But if the subscription is set to cancel immediately, pending prorations will be removed.</p>\n\n<p>By default, upon subscription cancellation, Stripe will stop automatic collection of all finalized invoices for the customer. This is intended to prevent unexpected payment attempts after the customer has canceled a subscription. However, you can resume automatic collection of the invoices manually after subscription cancellation to have us proceed. Or, you could check for unpaid invoices before allowing the customer to cancel the subscription at all.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscriptions/{subscription_exposed_id}`\n"
-    (
-      @spec cancel(
-              subscription_exposed_id :: binary(),
-              params :: %{
-                optional(:cancellation_details) => cancellation_details,
-                optional(:expand) => list(binary),
-                optional(:invoice_now) => boolean,
-                optional(:prorate) => boolean
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def cancel(subscription_exposed_id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscriptions/{subscription_exposed_id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "subscription_exposed_id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_exposed_id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [subscription_exposed_id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:delete)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Initiates resumption of a paused subscription, optionally resetting the billing cycle anchor and creating prorations. If a resumption invoice is generated, it must be paid or marked uncollectible before the subscription will be unpaused. If payment succeeds the subscription will become <code>active</code>, and if payment fails the subscription will be <code>past_due</code>. The resumption invoice will void automatically if not paid by the expiration date.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscriptions/{subscription}/resume`\n"
-    (
-      @spec resume(
-              subscription :: binary(),
-              params :: %{
-                optional(:billing_cycle_anchor) => :now | :unchanged,
-                optional(:expand) => list(binary),
-                optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
-                optional(:proration_date) => integer
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def resume(subscription, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscriptions/{subscription}/resume",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "subscription",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [subscription]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Removes the currently applied discount on a subscription.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscriptions/{subscription_exposed_id}/discount`\n"
-    (
-      @spec delete_discount(subscription_exposed_id :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedDiscount.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete_discount(subscription_exposed_id, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscriptions/{subscription_exposed_id}/discount",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "subscription_exposed_id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_exposed_id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [subscription_exposed_id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

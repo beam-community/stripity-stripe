@@ -10,7 +10,7 @@ defmodule Stripe.StripeMockTest do
 
   defp assert_port_open(port) do
     delay()
-    assert {:ok, socket} = :gen_tcp.connect(~c'localhost', port, [])
+    assert {:ok, socket} = :gen_tcp.connect(~c"localhost", port, [])
     :gen_tcp.close(socket)
   end
 

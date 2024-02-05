@@ -475,36 +475,6 @@ defmodule Stripe.Tax.Registration do
   (
     nil
 
-    @doc "<p>Creates a new Tax <code>Registration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/registrations`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:active_from) => :now | integer,
-                optional(:country) => binary,
-                optional(:country_options) => country_options,
-                optional(:expand) => list(binary),
-                optional(:expires_at) => integer
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Tax.Registration.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/tax/registrations", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Returns a Tax <code>Registration</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/registrations/{id}`\n"
     (
       @spec retrieve(
@@ -541,6 +511,36 @@ defmodule Stripe.Tax.Registration do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new Tax <code>Registration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/registrations`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:active_from) => :now | integer,
+                optional(:country) => binary,
+                optional(:country_options) => country_options,
+                optional(:expand) => list(binary),
+                optional(:expires_at) => integer
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Tax.Registration.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/tax/registrations", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

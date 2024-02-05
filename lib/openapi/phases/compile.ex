@@ -48,7 +48,12 @@ defmodule Stripe.OpenApi.Phases.Compile do
                 end
             end)
 
-          function_name = String.to_atom(operation["method_name"])
+          function_name =
+            if Application.get_env(:stripity_stripe, :breaking_changes, false) do
+              String.to_atom(Macro.underscore(operation_definition.id))
+            else
+              String.to_atom(operation["method_name"])
+            end
 
           success_response_spec = return_spec(operation_definition.success_response)
 

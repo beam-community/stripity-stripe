@@ -38,6 +38,45 @@ defmodule Stripe.WebhookEndpoint do
   (
     nil
 
+    @doc "<p>You can also delete webhook endpoints via the <a href=\"https://dashboard.stripe.com/account/webhooks\">webhook endpoint management</a> page of the Stripe dashboard.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/webhook_endpoints/{webhook_endpoint}`\n"
+    (
+      @spec delete(webhook_endpoint :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedWebhookEndpoint.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(webhook_endpoint, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/webhook_endpoints/{webhook_endpoint}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "webhook_endpoint",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "webhook_endpoint",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [webhook_endpoint]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of your webhook endpoints.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/webhook_endpoints`\n"
     (
       @spec list(
@@ -742,45 +781,6 @@ defmodule Stripe.WebhookEndpoint do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>You can also delete webhook endpoints via the <a href=\"https://dashboard.stripe.com/account/webhooks\">webhook endpoint management</a> page of the Stripe dashboard.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/webhook_endpoints/{webhook_endpoint}`\n"
-    (
-      @spec delete(webhook_endpoint :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedWebhookEndpoint.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(webhook_endpoint, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/webhook_endpoints/{webhook_endpoint}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "webhook_endpoint",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "webhook_endpoint",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [webhook_endpoint]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

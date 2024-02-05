@@ -191,28 +191,37 @@ defmodule Stripe.Terminal.Configuration do
   (
     nil
 
-    @doc "<p>Creates a new <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/configurations`\n"
+    @doc "<p>Deletes a <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/configurations/{configuration}`\n"
     (
-      @spec create(
-              params :: %{
-                optional(:bbpos_wisepos_e) => bbpos_wisepos_e,
-                optional(:expand) => list(binary),
-                optional(:offline) => offline | binary,
-                optional(:tipping) => tipping | binary,
-                optional(:verifone_p400) => verifone_p400
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Terminal.Configuration.t()}
+      @spec delete(configuration :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedTerminal.Configuration.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/configurations", [], [])
+      def delete(configuration, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/terminal/configurations/{configuration}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "configuration",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "configuration",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [configuration]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
@@ -295,6 +304,36 @@ defmodule Stripe.Terminal.Configuration do
   (
     nil
 
+    @doc "<p>Creates a new <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/configurations`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:bbpos_wisepos_e) => bbpos_wisepos_e,
+                optional(:expand) => list(binary),
+                optional(:offline) => offline | binary,
+                optional(:tipping) => tipping | binary,
+                optional(:verifone_p400) => verifone_p400
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Configuration.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/configurations", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Updates a new <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/configurations/{configuration}`\n"
     (
       @spec update(
@@ -337,45 +376,6 @@ defmodule Stripe.Terminal.Configuration do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes a <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/configurations/{configuration}`\n"
-    (
-      @spec delete(configuration :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedTerminal.Configuration.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(configuration, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/terminal/configurations/{configuration}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "configuration",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "configuration",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [configuration]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

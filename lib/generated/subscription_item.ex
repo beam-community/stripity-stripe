@@ -59,6 +59,54 @@ defmodule Stripe.SubscriptionItem do
   (
     nil
 
+    @doc "<p>Deletes an item from the subscription. Removing a subscription item from a subscription will not cancel the subscription.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscription_items/{item}`\n"
+    (
+      @spec delete(
+              item :: binary(),
+              params :: %{
+                optional(:clear_usage) => boolean,
+                optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
+                optional(:proration_date) => integer
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.DeletedSubscriptionItem.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(item, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/subscription_items/{item}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "item",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "item",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [item]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of your subscription items for a given subscription.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscription_items`\n"
     (
       @spec list(
@@ -119,6 +167,55 @@ defmodule Stripe.SubscriptionItem do
               }
             ],
             [item]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>For the specified subscription item, returns a list of summary objects. Each object in the list provides usage information that’s been summarized from multiple usage records and over a subscription billing period (e.g., 15 usage records in the month of September).</p>\n\n<p>The list is sorted in reverse-chronological order (newest first). The first list item represents the most current usage period that hasn’t ended yet. Since new usage records can still be added, the returned summary information for the subscription item’s ID should be seen as unstable until the subscription billing period ends.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscription_items/{subscription_item}/usage_record_summaries`\n"
+    (
+      @spec usage_record_summaries(
+              subscription_item :: binary(),
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.UsageRecordSummary.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def usage_record_summaries(subscription_item, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/subscription_items/{subscription_item}/usage_record_summaries",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "subscription_item",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "subscription_item",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [subscription_item]
           )
 
         Stripe.Request.new_request(opts)
@@ -227,103 +324,6 @@ defmodule Stripe.SubscriptionItem do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes an item from the subscription. Removing a subscription item from a subscription will not cancel the subscription.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscription_items/{item}`\n"
-    (
-      @spec delete(
-              item :: binary(),
-              params :: %{
-                optional(:clear_usage) => boolean,
-                optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
-                optional(:proration_date) => integer
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.DeletedSubscriptionItem.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(item, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscription_items/{item}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "item",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "item",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [item]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:delete)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>For the specified subscription item, returns a list of summary objects. Each object in the list provides usage information that’s been summarized from multiple usage records and over a subscription billing period (e.g., 15 usage records in the month of September).</p>\n\n<p>The list is sorted in reverse-chronological order (newest first). The first list item represents the most current usage period that hasn’t ended yet. Since new usage records can still be added, the returned summary information for the subscription item’s ID should be seen as unstable until the subscription billing period ends.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscription_items/{subscription_item}/usage_record_summaries`\n"
-    (
-      @spec usage_record_summaries(
-              subscription_item :: binary(),
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.UsageRecordSummary.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def usage_record_summaries(subscription_item, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscription_items/{subscription_item}/usage_record_summaries",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "subscription_item",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_item",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [subscription_item]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

@@ -58,37 +58,6 @@ defmodule Stripe.Transfer do
   (
     nil
 
-    @doc "<p>To send funds from your Stripe account to a connected account, you create a new transfer object. Your <a href=\"#balance\">Stripe balance</a> must be able to cover the transfer amount, or you’ll receive an “Insufficient Funds” error.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/transfers`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:amount) => integer,
-                optional(:currency) => binary,
-                optional(:description) => binary,
-                optional(:destination) => binary,
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:source_transaction) => binary,
-                optional(:source_type) => :bank_account | :card | :fpx,
-                optional(:transfer_group) => binary
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Transfer.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/transfers", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Returns a list of existing transfers sent to connected accounts. The transfers are returned in sorted order, with the most recently created transfers appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/transfers`\n"
     (
       @spec list(
@@ -154,6 +123,37 @@ defmodule Stripe.Transfer do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>To send funds from your Stripe account to a connected account, you create a new transfer object. Your <a href=\"#balance\">Stripe balance</a> must be able to cover the transfer amount, or you’ll receive an “Insufficient Funds” error.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/transfers`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:amount) => integer,
+                optional(:currency) => binary,
+                optional(:description) => binary,
+                optional(:destination) => binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:source_transaction) => binary,
+                optional(:source_type) => :bank_account | :card | :fpx,
+                optional(:transfer_group) => binary
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Transfer.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/transfers", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

@@ -32,6 +32,160 @@ defmodule Stripe.TaxId do
   (
     nil
 
+    @doc "<p>Deletes an existing <code>tax_id</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
+    (
+      @spec delete(customer :: binary(), id :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedTaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(customer, id, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/customers/{customer}/tax_ids/{id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "customer",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "customer",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              },
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [customer, id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Returns a list of tax IDs for a customer.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/tax_ids`\n"
+    (
+      @spec list(
+              customer :: binary(),
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.TaxId.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(customer, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/customers/{customer}/tax_ids",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "customer",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "customer",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [customer]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the <code>tax_id</code> object with the given identifier.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
+    (
+      @spec retrieve(
+              customer :: binary(),
+              id :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.TaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(customer, id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/customers/{customer}/tax_ids/{id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "customer",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "customer",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              },
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [customer, id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Creates a new <code>tax_id</code> object for a customer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers/{customer}/tax_ids`\n"
     (
       @spec create(
@@ -135,160 +289,6 @@ defmodule Stripe.TaxId do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the <code>tax_id</code> object with the given identifier.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
-    (
-      @spec retrieve(
-              customer :: binary(),
-              id :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.TaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(customer, id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/tax_ids/{id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "customer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              },
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [customer, id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of tax IDs for a customer.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/tax_ids`\n"
-    (
-      @spec list(
-              customer :: binary(),
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.TaxId.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(customer, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/tax_ids",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "customer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [customer]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes an existing <code>tax_id</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
-    (
-      @spec delete(customer :: binary(), id :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedTaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(customer, id, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/tax_ids/{id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "customer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              },
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [customer, id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

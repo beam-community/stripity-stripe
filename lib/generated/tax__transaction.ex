@@ -103,32 +103,47 @@ defmodule Stripe.Tax.Transaction do
   (
     nil
 
-    @doc "<p>Partially or fully reverses a previously created <code>Transaction</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/transactions/create_reversal`\n"
+    @doc "<p>Retrieves the line items of a committed standalone transaction as a collection.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/transactions/{transaction}/line_items`\n"
     (
-      @spec create_reversal(
+      @spec list_line_items(
+              transaction :: binary(),
               params :: %{
+                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
-                optional(:flat_amount) => integer,
-                optional(:line_items) => list(line_items),
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:mode) => :full | :partial,
-                optional(:original_transaction) => binary,
-                optional(:reference) => binary,
-                optional(:shipping_cost) => shipping_cost
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.Tax.Transaction.t()}
+              {:ok, Stripe.List.t(Stripe.Tax.TransactionLineItem.t())}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def create_reversal(params \\ %{}, opts \\ []) do
+      def list_line_items(transaction, params \\ %{}, opts \\ []) do
         path =
-          Stripe.OpenApi.Path.replace_path_params("/v1/tax/transactions/create_reversal", [], [])
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/tax/transactions/{transaction}/line_items",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "transaction",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "transaction",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [transaction]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -171,47 +186,32 @@ defmodule Stripe.Tax.Transaction do
   (
     nil
 
-    @doc "<p>Retrieves the line items of a committed standalone transaction as a collection.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/transactions/{transaction}/line_items`\n"
+    @doc "<p>Partially or fully reverses a previously created <code>Transaction</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/transactions/create_reversal`\n"
     (
-      @spec list_line_items(
-              transaction :: binary(),
+      @spec create_reversal(
               params :: %{
-                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
+                optional(:flat_amount) => integer,
+                optional(:line_items) => list(line_items),
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:mode) => :full | :partial,
+                optional(:original_transaction) => binary,
+                optional(:reference) => binary,
+                optional(:shipping_cost) => shipping_cost
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.List.t(Stripe.Tax.TransactionLineItem.t())}
+              {:ok, Stripe.Tax.Transaction.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def list_line_items(transaction, params \\ %{}, opts \\ []) do
+      def create_reversal(params \\ %{}, opts \\ []) do
         path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/tax/transactions/{transaction}/line_items",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "transaction",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "transaction",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [transaction]
-          )
+          Stripe.OpenApi.Path.replace_path_params("/v1/tax/transactions/create_reversal", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

@@ -93,6 +93,43 @@ defmodule Stripe.Plan do
   (
     nil
 
+    @doc "<p>Deleting plans means new subscribers can’t be added. Existing subscribers aren’t affected.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/plans/{plan}`\n"
+    (
+      @spec delete(plan :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedPlan.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(plan, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/plans/{plan}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "plan",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "plan",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [plan]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of your plans.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/plans`\n"
     (
       @spec list(
@@ -112,6 +149,47 @@ defmodule Stripe.Plan do
               | {:error, term()}
       def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/plans", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the plan with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/plans/{plan}`\n"
+    (
+      @spec retrieve(
+              plan :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Plan.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(plan, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/plans/{plan}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "plan",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "plan",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [plan]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -165,47 +243,6 @@ defmodule Stripe.Plan do
   (
     nil
 
-    @doc "<p>Retrieves the plan with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/plans/{plan}`\n"
-    (
-      @spec retrieve(
-              plan :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Plan.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(plan, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/plans/{plan}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "plan",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "plan",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [plan]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Updates the specified plan by setting the values of the parameters passed. Any parameters not provided are left unchanged. By design, you cannot change a plan’s ID, amount, currency, or billing cycle.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/plans/{plan}`\n"
     (
       @spec update(
@@ -246,43 +283,6 @@ defmodule Stripe.Plan do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deleting plans means new subscribers can’t be added. Existing subscribers aren’t affected.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/plans/{plan}`\n"
-    (
-      @spec delete(plan :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedPlan.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(plan, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/plans/{plan}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "plan",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "plan",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [plan]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

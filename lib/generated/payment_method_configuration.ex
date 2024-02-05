@@ -343,6 +343,69 @@ defmodule Stripe.PaymentMethodConfiguration do
   (
     nil
 
+    @doc "<p>Creates a payment method configuration</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_method_configurations`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:fpx) => fpx,
+                optional(:name) => binary,
+                optional(:affirm) => affirm,
+                optional(:acss_debit) => acss_debit,
+                optional(:bacs_debit) => bacs_debit,
+                optional(:alipay) => alipay,
+                optional(:giropay) => giropay,
+                optional(:ideal) => ideal,
+                optional(:revolut_pay) => revolut_pay,
+                optional(:expand) => list(binary),
+                optional(:card) => card,
+                optional(:link) => link,
+                optional(:promptpay) => promptpay,
+                optional(:cashapp) => cashapp,
+                optional(:oxxo) => oxxo,
+                optional(:us_bank_account) => us_bank_account,
+                optional(:paypal) => paypal,
+                optional(:boleto) => boleto,
+                optional(:jcb) => jcb,
+                optional(:konbini) => konbini,
+                optional(:blik) => blik,
+                optional(:wechat_pay) => wechat_pay,
+                optional(:sofort) => sofort,
+                optional(:apple_pay) => apple_pay,
+                optional(:p24) => p24,
+                optional(:google_pay) => google_pay,
+                optional(:afterpay_clearpay) => afterpay_clearpay,
+                optional(:cartes_bancaires) => cartes_bancaires,
+                optional(:grabpay) => grabpay,
+                optional(:apple_pay_later) => apple_pay_later,
+                optional(:parent) => binary,
+                optional(:bancontact) => bancontact,
+                optional(:au_becs_debit) => au_becs_debit,
+                optional(:sepa_debit) => sepa_debit,
+                optional(:klarna) => klarna,
+                optional(:paynow) => paynow,
+                optional(:eps) => eps
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.PaymentMethodConfiguration.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params("/v1/payment_method_configurations", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Update payment method configuration</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_method_configurations/{configuration}`\n"
     (
       @spec update(
@@ -412,69 +475,6 @@ defmodule Stripe.PaymentMethodConfiguration do
             ],
             [configuration]
           )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Creates a payment method configuration</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_method_configurations`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:fpx) => fpx,
-                optional(:name) => binary,
-                optional(:affirm) => affirm,
-                optional(:acss_debit) => acss_debit,
-                optional(:bacs_debit) => bacs_debit,
-                optional(:alipay) => alipay,
-                optional(:giropay) => giropay,
-                optional(:ideal) => ideal,
-                optional(:revolut_pay) => revolut_pay,
-                optional(:expand) => list(binary),
-                optional(:card) => card,
-                optional(:link) => link,
-                optional(:promptpay) => promptpay,
-                optional(:cashapp) => cashapp,
-                optional(:oxxo) => oxxo,
-                optional(:us_bank_account) => us_bank_account,
-                optional(:paypal) => paypal,
-                optional(:boleto) => boleto,
-                optional(:jcb) => jcb,
-                optional(:konbini) => konbini,
-                optional(:blik) => blik,
-                optional(:wechat_pay) => wechat_pay,
-                optional(:sofort) => sofort,
-                optional(:apple_pay) => apple_pay,
-                optional(:p24) => p24,
-                optional(:google_pay) => google_pay,
-                optional(:afterpay_clearpay) => afterpay_clearpay,
-                optional(:cartes_bancaires) => cartes_bancaires,
-                optional(:grabpay) => grabpay,
-                optional(:apple_pay_later) => apple_pay_later,
-                optional(:parent) => binary,
-                optional(:bancontact) => bancontact,
-                optional(:au_becs_debit) => au_becs_debit,
-                optional(:sepa_debit) => sepa_debit,
-                optional(:klarna) => klarna,
-                optional(:paynow) => paynow,
-                optional(:eps) => eps
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.PaymentMethodConfiguration.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params("/v1/payment_method_configurations", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)

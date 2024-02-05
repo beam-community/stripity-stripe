@@ -74,75 +74,29 @@ defmodule Stripe.Treasury.InboundTransfer do
   (
     nil
 
-    @doc "<p>Cancels an InboundTransfer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/inbound_transfers/{inbound_transfer}/cancel`\n"
+    @doc "<p>Returns a list of InboundTransfers sent from the specified FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/inbound_transfers`\n"
     (
-      @spec cancel(
-              inbound_transfer :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Treasury.InboundTransfer.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def cancel(inbound_transfer, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/treasury/inbound_transfers/{inbound_transfer}/cancel",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "inbound_transfer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "inbound_transfer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [inbound_transfer]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Creates an InboundTransfer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/inbound_transfers`\n"
-    (
-      @spec create(
+      @spec list(
               params :: %{
-                optional(:amount) => integer,
-                optional(:currency) => binary,
-                optional(:description) => binary,
+                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
                 optional(:financial_account) => binary,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:origin_payment_method) => binary,
-                optional(:statement_descriptor) => binary
+                optional(:limit) => integer,
+                optional(:starting_after) => binary,
+                optional(:status) => :canceled | :failed | :processing | :succeeded
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.Treasury.InboundTransfer.t()}
+              {:ok, Stripe.List.t(Stripe.Treasury.InboundTransfer.t())}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
+      def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/inbound_transfers", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -187,81 +141,6 @@ defmodule Stripe.Treasury.InboundTransfer do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of InboundTransfers sent from the specified FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/inbound_transfers`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:financial_account) => binary,
-                optional(:limit) => integer,
-                optional(:starting_after) => binary,
-                optional(:status) => :canceled | :failed | :processing | :succeeded
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Treasury.InboundTransfer.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/inbound_transfers", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Transitions a test mode created InboundTransfer to the <code>succeeded</code> status. The InboundTransfer must already be in the <code>processing</code> state.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/treasury/inbound_transfers/{id}/succeed`\n"
-    (
-      @spec succeed(
-              id :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Treasury.InboundTransfer.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def succeed(id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/treasury/inbound_transfers/{id}/succeed",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -347,6 +226,127 @@ defmodule Stripe.Treasury.InboundTransfer do
               }
             ],
             [id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Transitions a test mode created InboundTransfer to the <code>succeeded</code> status. The InboundTransfer must already be in the <code>processing</code> state.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/treasury/inbound_transfers/{id}/succeed`\n"
+    (
+      @spec succeed(
+              id :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.InboundTransfer.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def succeed(id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/treasury/inbound_transfers/{id}/succeed",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates an InboundTransfer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/inbound_transfers`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:amount) => integer,
+                optional(:currency) => binary,
+                optional(:description) => binary,
+                optional(:expand) => list(binary),
+                optional(:financial_account) => binary,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:origin_payment_method) => binary,
+                optional(:statement_descriptor) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.InboundTransfer.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/inbound_transfers", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Cancels an InboundTransfer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/inbound_transfers/{inbound_transfer}/cancel`\n"
+    (
+      @spec cancel(
+              inbound_transfer :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.InboundTransfer.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def cancel(inbound_transfer, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/treasury/inbound_transfers/{inbound_transfer}/cancel",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "inbound_transfer",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "inbound_transfer",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [inbound_transfer]
           )
 
         Stripe.Request.new_request(opts)

@@ -183,23 +183,20 @@ defmodule Stripe.FinancialConnections.Account do
   (
     nil
 
-    @doc "<p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/financial_connections/accounts/{account}/refresh`\n"
+    @doc "<p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data associated with the account (e.g. balances, transactions).</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/financial_connections/accounts/{account}/disconnect`\n"
     (
-      @spec refresh(
+      @spec disconnect(
               account :: binary(),
-              params :: %{
-                optional(:expand) => list(binary),
-                optional(:features) => list(:balance | :ownership | :transactions)
-              },
+              params :: %{optional(:expand) => list(binary)},
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.FinancialConnections.Account.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def refresh(account, params \\ %{}, opts \\ []) do
+      def disconnect(account, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/financial_connections/accounts/{account}/refresh",
+            "/v1/financial_connections/accounts/{account}/disconnect",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -230,20 +227,23 @@ defmodule Stripe.FinancialConnections.Account do
   (
     nil
 
-    @doc "<p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data associated with the account (e.g. balances, transactions).</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/financial_connections/accounts/{account}/disconnect`\n"
+    @doc "<p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/financial_connections/accounts/{account}/refresh`\n"
     (
-      @spec disconnect(
+      @spec refresh(
               account :: binary(),
-              params :: %{optional(:expand) => list(binary)},
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:features) => list(:balance | :ownership | :transactions)
+              },
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.FinancialConnections.Account.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def disconnect(account, params \\ %{}, opts \\ []) do
+      def refresh(account, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/financial_connections/accounts/{account}/disconnect",
+            "/v1/financial_connections/accounts/{account}/refresh",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

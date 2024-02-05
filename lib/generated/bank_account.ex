@@ -50,67 +50,37 @@ defmodule Stripe.BankAccount do
   )
 
   (
-    @typedoc "Owner's address."
-    @type address :: %{
-            optional(:city) => binary,
-            optional(:country) => binary,
-            optional(:line1) => binary,
-            optional(:line2) => binary,
-            optional(:postal_code) => binary,
-            optional(:state) => binary
-          }
+    @typedoc "One or more documents that support the [Bank account ownership verification](https://support.stripe.com/questions/bank-account-ownership-verification) requirement. Must be a document associated with the bank account that displays the last 4 digits of the account number, either a statement or a voided check."
+    @type bank_account_ownership_verification :: %{optional(:files) => list(binary)}
   )
 
   (
-    @typedoc nil
-    @type owner :: %{
-            optional(:address) => address,
-            optional(:email) => binary,
-            optional(:name) => binary,
-            optional(:phone) => binary
+    @typedoc "Documents that may be submitted to satisfy various informational requests."
+    @type documents :: %{
+            optional(:bank_account_ownership_verification) => bank_account_ownership_verification
           }
   )
 
   (
     nil
 
-    @doc "<p>Update a specified source for a given customer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers/{customer}/sources/{id}`\n"
+    @doc "<p>Delete a specified external account for a given account.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}/external_accounts/{id}`\n"
     (
-      @spec update(
-              customer :: binary(),
-              id :: binary(),
-              params :: %{
-                optional(:account_holder_name) => binary,
-                optional(:account_holder_type) => :company | :individual,
-                optional(:address_city) => binary,
-                optional(:address_country) => binary,
-                optional(:address_line1) => binary,
-                optional(:address_line2) => binary,
-                optional(:address_state) => binary,
-                optional(:address_zip) => binary,
-                optional(:exp_month) => binary,
-                optional(:exp_year) => binary,
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:name) => binary,
-                optional(:owner) => owner
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Card.t() | Stripe.BankAccount.t() | Stripe.Source.t()}
+      @spec delete(account :: binary(), id :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedExternalAccount.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def update(customer, id, params \\ %{}, opts \\ []) do
+      def delete(account, id, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/sources/{id}",
+            "/v1/accounts/{account}/external_accounts/{id}",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
-                name: "customer",
+                name: "account",
                 required: true,
                 schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
+                  name: "account",
                   title: nil,
                   type: "string",
                   items: [],
@@ -132,13 +102,12 @@ defmodule Stripe.BankAccount do
                 }
               }
             ],
-            [customer, id]
+            [account, id]
           )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
@@ -147,28 +116,45 @@ defmodule Stripe.BankAccount do
   (
     nil
 
-    @doc "<p>Delete a specified source for a given customer.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}/sources/{id}`\n"
+    @doc "<p>Updates the metadata, account holder name, account holder type of a bank account belonging to a <a href=\"/docs/connect/custom-accounts\">Custom account</a>, and optionally sets it as the default for its currency. Other bank account details are not editable by design.</p>\n\n<p>You can re-enable a disabled bank account by performing an update call without providing any arguments or changes.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}/external_accounts/{id}`\n"
     (
-      @spec delete(
-              customer :: binary(),
+      @spec update(
+              account :: binary(),
               id :: binary(),
-              params :: %{optional(:expand) => list(binary)},
+              params :: %{
+                optional(:account_holder_name) => binary,
+                optional(:account_holder_type) => :company | :individual,
+                optional(:account_type) => :checking | :futsu | :savings | :toza,
+                optional(:address_city) => binary,
+                optional(:address_country) => binary,
+                optional(:address_line1) => binary,
+                optional(:address_line2) => binary,
+                optional(:address_state) => binary,
+                optional(:address_zip) => binary,
+                optional(:default_for_currency) => boolean,
+                optional(:documents) => documents,
+                optional(:exp_month) => binary,
+                optional(:exp_year) => binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:name) => binary
+              },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.PaymentSource.t() | Stripe.DeletedPaymentSource.t()}
+              {:ok, Stripe.ExternalAccount.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def delete(customer, id, params \\ %{}, opts \\ []) do
+      def update(account, id, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/sources/{id}",
+            "/v1/accounts/{account}/external_accounts/{id}",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
-                name: "customer",
+                name: "account",
                 required: true,
                 schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
+                  name: "account",
                   title: nil,
                   type: "string",
                   items: [],
@@ -190,13 +176,13 @@ defmodule Stripe.BankAccount do
                 }
               }
             ],
-            [customer, id]
+            [account, id]
           )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

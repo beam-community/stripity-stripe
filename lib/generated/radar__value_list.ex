@@ -44,6 +44,45 @@ defmodule Stripe.Radar.ValueList do
   (
     nil
 
+    @doc "<p>Deletes a <code>ValueList</code> object, also deleting any items contained within the value list. To be deleted, a value list must not be referenced in any rules.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/radar/value_lists/{value_list}`\n"
+    (
+      @spec delete(value_list :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedRadar.ValueList.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(value_list, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/radar/value_lists/{value_list}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "value_list",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "value_list",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [value_list]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of <code>ValueList</code> objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/radar/value_lists`\n"
     (
       @spec list(
@@ -201,45 +240,6 @@ defmodule Stripe.Radar.ValueList do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes a <code>ValueList</code> object, also deleting any items contained within the value list. To be deleted, a value list must not be referenced in any rules.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/radar/value_lists/{value_list}`\n"
-    (
-      @spec delete(value_list :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedRadar.ValueList.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(value_list, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/radar/value_lists/{value_list}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "value_list",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "value_list",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [value_list]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

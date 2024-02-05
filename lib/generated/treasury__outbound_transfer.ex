@@ -81,33 +81,29 @@ defmodule Stripe.Treasury.OutboundTransfer do
   (
     nil
 
-    @doc "<p>Creates an OutboundTransfer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/outbound_transfers`\n"
+    @doc "<p>Returns a list of OutboundTransfers sent from the specified FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/outbound_transfers`\n"
     (
-      @spec create(
+      @spec list(
               params :: %{
-                optional(:amount) => integer,
-                optional(:currency) => binary,
-                optional(:description) => binary,
-                optional(:destination_payment_method) => binary,
-                optional(:destination_payment_method_options) =>
-                  destination_payment_method_options,
+                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
                 optional(:financial_account) => binary,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:statement_descriptor) => binary
+                optional(:limit) => integer,
+                optional(:starting_after) => binary,
+                optional(:status) => :canceled | :failed | :posted | :processing | :returned
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.Treasury.OutboundTransfer.t()}
+              {:ok, Stripe.List.t(Stripe.Treasury.OutboundTransfer.t())}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
+      def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/outbound_transfers", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -152,81 +148,6 @@ defmodule Stripe.Treasury.OutboundTransfer do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of OutboundTransfers sent from the specified FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/outbound_transfers`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:financial_account) => binary,
-                optional(:limit) => integer,
-                optional(:starting_after) => binary,
-                optional(:status) => :canceled | :failed | :posted | :processing | :returned
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Treasury.OutboundTransfer.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/outbound_transfers", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>An OutboundTransfer can be canceled if the funds have not yet been paid out.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/outbound_transfers/{outbound_transfer}/cancel`\n"
-    (
-      @spec cancel(
-              outbound_transfer :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Treasury.OutboundTransfer.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def cancel(outbound_transfer, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/treasury/outbound_transfers/{outbound_transfer}/cancel",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "outbound_transfer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "outbound_transfer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [outbound_transfer]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -340,6 +261,85 @@ defmodule Stripe.Treasury.OutboundTransfer do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/return",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "outbound_transfer",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "outbound_transfer",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [outbound_transfer]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates an OutboundTransfer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/outbound_transfers`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:amount) => integer,
+                optional(:currency) => binary,
+                optional(:description) => binary,
+                optional(:destination_payment_method) => binary,
+                optional(:destination_payment_method_options) =>
+                  destination_payment_method_options,
+                optional(:expand) => list(binary),
+                optional(:financial_account) => binary,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:statement_descriptor) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.OutboundTransfer.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/outbound_transfers", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>An OutboundTransfer can be canceled if the funds have not yet been paid out.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/outbound_transfers/{outbound_transfer}/cancel`\n"
+    (
+      @spec cancel(
+              outbound_transfer :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.OutboundTransfer.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def cancel(outbound_transfer, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/treasury/outbound_transfers/{outbound_transfer}/cancel",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
