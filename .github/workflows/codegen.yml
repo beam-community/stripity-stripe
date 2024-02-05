@@ -1,6 +1,7 @@
 name: stripe-codegen
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
