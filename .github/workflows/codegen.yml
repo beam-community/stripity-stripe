@@ -42,8 +42,6 @@ jobs:
 
     env:
       LATEST_STRIPE_SDK_TAG: ${{ needs.check.outputs.latest_tag }}
-      OTP_VERSION: "25.0"
-      ELIXIR_VERSION: "1.14.0"
       SKIP_STRIPE_MOCK_RUN: true
 
     strategy:
@@ -59,8 +57,8 @@ jobs:
 
       - uses: erlef/setup-beam@v1
         with:
-          otp-version: ${{ env.OTP_VERSION }}
-          elixir-version: ${{ env.ELIXIR_VERSION }}
+          otp-version: "26"
+          elixir-version: "1.16"
 
       - name: Checkout stripe/openapi (official OpenApi definitions)
         uses: actions/checkout@v2

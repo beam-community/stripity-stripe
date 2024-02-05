@@ -13,8 +13,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: erlef/setup-beam@v1
         with:
-          otp-version: 25
-          elixir-version: 1.14
+          otp-version: "26"
+          elixir-version: "1.16"
       - run: mix deps.get
       - run: mix compile --docs
       - run: mix hex.publish --yes
