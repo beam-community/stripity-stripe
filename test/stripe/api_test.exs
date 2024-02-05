@@ -105,7 +105,7 @@ defmodule Stripe.APITest do
   end
 
   test "oauth_request sets authorization header for deauthorize request" do
-    defmodule HackneyMock do
+    defmodule HackneyMock1 do
       def request(_, _, headers, _, _) do
         kv_headers =
           headers
@@ -115,7 +115,7 @@ defmodule Stripe.APITest do
       end
     end
 
-    Application.put_env(:stripity_stripe, :http_module, HackneyMock)
+    Application.put_env(:stripity_stripe, :http_module, HackneyMock1)
 
     {:ok, body} = Stripe.API.oauth_request(:post, "deauthorize", %{})
     assert body["Authorization"] == "Bearer sk_test_123"
@@ -129,7 +129,7 @@ defmodule Stripe.APITest do
 
   test "reads hackney timeout opts from config" do
     # Return request opts as response body
-    defmodule HackneyMock do
+    defmodule HackneyMock2 do
       def request(_, _, headers, _, opts) do
         kv_opts =
           opts
@@ -147,7 +147,7 @@ defmodule Stripe.APITest do
       end
     end
 
-    Application.put_env(:stripity_stripe, :http_module, HackneyMock)
+    Application.put_env(:stripity_stripe, :http_module, HackneyMock2)
 
     {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
     refute Map.has_key?(request_opts, "connect_timeout")

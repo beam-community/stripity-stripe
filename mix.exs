@@ -30,7 +30,6 @@ defmodule Stripe.Mixfile do
   # Configuration for the OTP application
   def application do
     [
-      applications: apps(Mix.env()),
       extra_applications: [:plug],
       env: env(),
       mod: {Stripe, []}
@@ -52,10 +51,6 @@ defmodule Stripe.Mixfile do
       use_connection_pool: true
     ]
   end
-
-  defp apps(:test), do: apps()
-  defp apps(_), do: apps()
-  defp apps, do: [:hackney, :logger, :jason, :uri_query]
 
   defp deps do
     [
