@@ -14,8 +14,7 @@ defmodule Stripe.SessionTest do
 
   describe "retrieve/2" do
     test "retrieves a session" do
-      assert {:ok, session = %Stripe.Checkout.Session{}} =
-               Stripe.Checkout.Session.retrieve("cs_123")
+      assert {:ok, %Stripe.Checkout.Session{}} = Stripe.Checkout.Session.retrieve("cs_123")
 
       assert_stripe_requested(:get, "/v1/checkout/sessions/cs_123")
     end
@@ -23,8 +22,7 @@ defmodule Stripe.SessionTest do
 
   describe "expire/2" do
     test "expires a session" do
-      assert {:ok, session = %Stripe.Checkout.Session{}} =
-               Stripe.Checkout.Session.expire("cs_123")
+      assert {:ok, %Stripe.Checkout.Session{}} = Stripe.Checkout.Session.expire("cs_123")
 
       assert_stripe_requested(:post, "/v1/checkout/sessions/cs_123/expire")
     end

@@ -49,8 +49,7 @@ defmodule Stripe.SubscriptionScheduleTest do
     end
 
     test "fails with missing plans in phases" do
-      assert {:error, %Stripe.Error{} = error} =
-               Stripe.SubscriptionSchedule.create(@invalid_params)
+      assert {:error, %Stripe.Error{}} = Stripe.SubscriptionSchedule.create(@invalid_params)
 
       assert_stripe_requested(:post, "/v1/subscription_schedules")
     end

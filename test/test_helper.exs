@@ -1,4 +1,4 @@
-ExUnit.start()
+ExUnit.start(exclude: [:skip])
 # Stripe.start
 Application.ensure_all_started(:erlexec)
 Application.ensure_all_started(:exexec)

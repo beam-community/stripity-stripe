@@ -13,13 +13,14 @@ defmodule Stripe.RefundTest do
     assert_stripe_requested(:get, "/v1/charges/ch123/refunds/re_123")
   end
 
-  @tag :skip
-  test "refund is retrievable" do
-    # /v1/refunds/{refund}" && /v1/charges/{charge}/refunds/{refund}"
-    # IO.inspect Stripe.Refund.__info__(:functions)
-    assert {:ok, %Stripe.Refund{}} = Stripe.Refund.retrieve_refund("re_123")
-    assert_stripe_requested(:get, "/v1/refunds/re_123")
-  end
+  # @tag :skip
+  # test "refund is retrievable" do
+  #   # /v1/refunds/{refund}" && /v1/charges/{charge}/refunds/{refund}"
+  #   # IO.inspect Stripe.Refund.__info__(:functions)
+  #  TODO: retrieve_refund doesn't exist
+  #   assert {:ok, %Stripe.Refund{}} = Stripe.Refund.retrieve_refund("re_123")
+  #   assert_stripe_requested(:get, "/v1/refunds/re_123")
+  # end
 
   test "is creatable" do
     assert {:ok, %Stripe.Refund{}} = Stripe.Refund.create(%{charge: "ch_123"})

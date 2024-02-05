@@ -20,7 +20,7 @@ defmodule Stripe.ChargeTest do
   end
 
   test "is listable does not include idempotency key" do
-    assert {:ok, %Stripe.List{data: charges}} = Stripe.Charge.list()
+    assert {:ok, %Stripe.List{}} = Stripe.Charge.list()
 
     refute Map.has_key?(get_stripe_request_headers(), "Idempotency-Key")
   end
