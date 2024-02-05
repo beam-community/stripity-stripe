@@ -26,5 +26,5 @@
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.7", "354c321cf377240c7b8716899e182ce4890c5938111a1296add3ec74cf1715df", [:make, :mix, :rebar3], [], "hexpm", "fe4c190e8f37401d30167c8c405eda19469f34577987c76dde613e838bbc67f8"},
   "telemetry": {:hex, :telemetry, "1.2.1", "68fdfe8d8f05a8428483a97d7aab2f268aaff24b49e0f599faa091f1d4e7f61c", [:rebar3], [], "hexpm", "dad9ce9d8effc621708f99eac538ef1cbe05d6a874dd741de2e689c47feafed5"},
   "unicode_util_compat": {:hex, :unicode_util_compat, "0.7.0", "bc84380c9ab48177092f43ac89e4dfa2c6d62b40b8bd132b1059ecc7232f9a78", [:rebar3], [], "hexpm", "25eee6d67df61960cf6a794239566599b09e17e668d3700247bc498638152521"},
-  "uri_query": {:hex, :uri_query, "0.1.2", "ae35b83b472f3568c2c159eee3f3ccf585375d8a94fb5382db1ea3589e75c3b4", [:mix], [], "hexpm", "e3bc81816c98502c36498b9b2f239b89c71ce5eadfff7ceb2d6c0a2e6ae2ea0c"},
+  "uri_query": {:hex, :uri_query, "0.2.0", "0f5e0f7ea6d9e6a7fb4929a81df9ecd756e3c71bdee5c9bc14e57d90069a82f7", [:mix], [], "hexpm", "e99f50a6af7c6643dff948db152a6a420bfe446aaec7f0924cfcdb710c175e63"},
 }
