@@ -159,30 +159,38 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp handle_event!(handler, %Stripe.Event{} = event) do
-      case handler.handle_event(event) do
-        {:ok, _} ->
-          :ok
+      telemetry_meta = %{event: event.type, handler_status: nil}
 
-        :ok ->
-          :ok
+      :telemetry.span(~w[stripe webhook]a, telemetry_meta, fn ->
+        case handler.handle_event(event) do
+          {:ok, _} ->
+            :ok
 
-        {:error, reason} when is_binary(reason) ->
-          {:handle_error, reason}
+          :ok ->
+            :ok
 
-        {:error, reason} when is_atom(reason) ->
-          {:handle_error, Atom.to_string(reason)}
+          {:error, reason} when is_binary(reason) ->
+            {:handle_error, reason}
 
-        :error ->
-          {:handle_error, ""}
+          {:error, reason} when is_atom(reason) ->
+            {:handle_error, Atom.to_string(reason)}
 
-        resp ->
-          raise """
-          #{inspect(handler)}.handle_event/1 returned an invalid response. Expected {:ok, term}, :ok, {:error, reason} or :error
-          Got: #{inspect(resp)}
+          :error ->
+            {:handle_error, ""}
 
-          Event data: #{inspect(event)}
-          """
-      end
+          resp ->
+            raise """
+            #{inspect(handler)}.handle_event/1 returned an invalid response. Expected {:ok, term}, :ok, {:error, reason} or :error
+            Got: #{inspect(resp)}
+
+            Event data: #{inspect(event)}
+            """
+        end
+        |> then(fn
+          :ok -> {:ok, %{telemetry_meta | handler_status: :ok}}
+          result -> {result, %{telemetry_meta | handler_status: :error}}
+        end)
+      end)
     end
 
     defp parse_secret!({m, f, a}), do: apply(m, f, a)

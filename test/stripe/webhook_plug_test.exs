@@ -3,7 +3,7 @@ defmodule Stripe.WebhookPlugTest do
   use Plug.Test
   alias Stripe.WebhookPlug
 
-  @valid_payload ~S({"object": "event"})
+  @valid_payload ~S({"object": "event", "type": "customer.updated"})
   @secret "secret"
 
   @opts WebhookPlug.init(
@@ -45,6 +45,10 @@ defmodule Stripe.WebhookPlugTest do
   end
 
   def get_value(:secret), do: @secret
+
+  def telemetry_handler_fn(name, measurements, metadata, _config) do
+    send(self(), {:telemetry_event, name, measurements, metadata})
+  end
 
   defp generate_signature_header(payload) do
     timestamp = System.system_time(:second)
@@ -184,6 +188,97 @@ defmodule Stripe.WebhookPlugTest do
       assert_raise RuntimeError, fn ->
         WebhookPlug.call(conn, opts)
       end
+    end
+
+    test "emits :start, :exception telemetry events on exception", %{conn: conn, test: test} do
+      :telemetry.attach_many(
+        "#{test}",
+        [[:stripe, :webhook, :start], [:stripe, :webhook, :exception]],
+        &__MODULE__.telemetry_handler_fn/4,
+        nil
+      )
+
+      opts =
+        WebhookPlug.init(
+          at: "/webhook/stripe",
+          handler: __MODULE__.BadHandler,
+          secret: @secret
+        )
+
+      assert_raise RuntimeError, fn ->
+        WebhookPlug.call(conn, opts)
+      end
+
+      assert_received({
+        :telemetry_event,
+        [:stripe, :webhook, :start],
+        %{monotonic_time: _},
+        %{telemetry_span_context: _}
+      })
+
+      assert_received({
+        :telemetry_event,
+        [:stripe, :webhook, :exception],
+        %{monotonic_time: _, duration: _},
+        %{kind: _, reason: _, stacktrace: _, telemetry_span_context: _, event: "customer.updated"}
+      })
+    end
+
+    test "emits :start, :stop telemetry events on soft failure", %{conn: conn, test: test} do
+      :telemetry.attach_many(
+        "#{test}",
+        [[:stripe, :webhook, :start], [:stripe, :webhook, :stop]],
+        &__MODULE__.telemetry_handler_fn/4,
+        nil
+      )
+
+      opts =
+        WebhookPlug.init(
+          at: "/webhook/stripe",
+          handler: __MODULE__.ErrorTupleAtomHandler,
+          secret: @secret
+        )
+
+      WebhookPlug.call(conn, opts)
+
+      assert_received({
+        :telemetry_event,
+        [:stripe, :webhook, :start],
+        %{monotonic_time: _},
+        %{telemetry_span_context: _}
+      })
+
+      assert_received({
+        :telemetry_event,
+        [:stripe, :webhook, :stop],
+        %{monotonic_time: _, duration: _},
+        %{handler_status: :error, telemetry_span_context: _}
+      })
+    end
+
+    test "emits :start, :stop telemetry events on success", %{conn: conn, test: test} do
+      :telemetry.attach_many(
+        "#{test}",
+        [[:stripe, :webhook, :start], [:stripe, :webhook, :stop]],
+        &__MODULE__.telemetry_handler_fn/4,
+        nil
+      )
+
+      WebhookPlug.call(conn, @opts)
+
+      assert_received({
+        :telemetry_event,
+        [:stripe, :webhook, :start],
+        %{monotonic_time: _},
+        %{telemetry_span_context: _}
+      })
+
+      assert_received({
+        :telemetry_event,
+        [:stripe, :webhook, :stop],
+        %{monotonic_time: _, duration: _},
+        %{handler_status: :ok, event: "customer.updated", telemetry_span_context: _}
+      })
     end
   end
 end

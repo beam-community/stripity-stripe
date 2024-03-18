@@ -376,14 +376,22 @@ defmodule Stripe.API do
   end
 
   defp do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, attempts}) do
+    telemetry_meta = %{
+      endpoint: URI.parse(url).path,
+      method: method,
+      attempt: attempts,
+      stripe_api_version: headers["Stripe-Version"],
+      status: nil
+    }
+
     response =
-      :telemetry.span(~w[stripe request]a, %{url: url, method: method}, fn ->
+      :telemetry.span(~w[stripe request]a, telemetry_meta, fn ->
         case http_module().request(method, url, Map.to_list(headers), body, opts) do
           {:ok, status, _, _} = resp ->
-            {resp, %{status: status}}
+            {resp, %{telemetry_meta | status: status}}
 
           error ->
-            {error, %{}}
+            {error, telemetry_meta}
         end
       end)
 

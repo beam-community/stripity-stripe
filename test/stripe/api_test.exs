@@ -2,6 +2,10 @@ defmodule Stripe.APITest do
   import Mox
   use Stripe.StripeCase
 
+  def telemetry_handler_fn(name, measurements, metadata, _config) do
+    send(self(), {:telemetry_event, name, measurements, metadata})
+  end
+
   test "works with non existent responses without issue" do
     {:error, %Stripe.Error{extra: %{http_status: 404}}} =
       Stripe.API.request(%{}, :get, "/", %{}, [])
@@ -84,6 +88,41 @@ defmodule Stripe.APITest do
     test "given attempts = 2" do
       backoff = Stripe.API.backoff(2, base_backoff: 10, max_backoff: 100)
       assert backoff in 20..40
+    end
+  end
+
+  describe "telemetry" do
+    test "requests emit :start, :stop telemetry events", %{test: test} do
+      :telemetry.attach_many(
+        "#{test}",
+        [[:stripe, :request, :start], [:stripe, :request, :stop]],
+        &__MODULE__.telemetry_handler_fn/4,
+        nil
+      )
+
+      %{query: ~s|email: "test@example.com"|}
+      |> Stripe.API.request(:get, "/v1/customers/search", %{}, [])
+
+      assert_received({
+        :telemetry_event,
+        [:stripe, :request, :start],
+        %{monotonic_time: _},
+        %{telemetry_span_context: _}
+      })
+
+      assert_received({
+        :telemetry_event,
+        [:stripe, :request, :stop],
+        %{monotonic_time: _, duration: _},
+        %{
+          telemetry_span_context: _,
+          endpoint: "/v1/customers/search",
+          attempt: 0,
+          method: :get,
+          status: 200,
+          stripe_api_version: _
+        }
+      })
     end
   end
 
