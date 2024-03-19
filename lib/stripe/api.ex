@@ -217,6 +217,22 @@ defmodule Stripe.API do
     end
   end
 
+  @spec add_telemetry_metadata(list, map) :: list
+  defp add_telemetry_metadata(opts, args) do
+    parsed_uri = URI.parse(args.req_url)
+    api_version = args.req_headers["Stripe-Version"]
+
+    opts
+    |> Keyword.put(:telemetry_metadata, %{
+      stripe_api_endpoint: parsed_uri.path,
+      stripe_api_version: api_version,
+      http_method: args.method,
+      http_retry_count: 0,
+      http_status_code: nil,
+      http_url: %{parsed_uri | query: nil} |> URI.to_string()
+    })
+  end
+
   @doc """
   A low level utility function to make a direct request to the Stripe API
 
@@ -329,6 +345,11 @@ defmodule Stripe.API do
       |> add_default_options()
       |> add_pool_option()
       |> add_options_from_config()
+      |> add_telemetry_metadata(%{
+        method: method,
+        req_headers: req_headers,
+        req_url: req_url
+      })
 
     do_perform_request(method, req_url, req_headers, req_body, req_opts)
   end
@@ -353,6 +374,11 @@ defmodule Stripe.API do
       |> add_default_options()
       |> add_pool_option()
       |> add_options_from_config()
+      |> add_telemetry_metadata(%{
+        method: method,
+        req_headers: req_headers,
+        req_url: req_url
+      })
 
     do_perform_request(method, req_url, req_headers, body, req_opts)
   end
@@ -376,19 +402,13 @@ defmodule Stripe.API do
   end
 
   defp do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, attempts}) do
-    telemetry_meta = %{
-      endpoint: URI.parse(url).path,
-      method: method,
-      attempt: attempts,
-      stripe_api_version: headers["Stripe-Version"],
-      status: nil
-    }
+    telemetry_meta = Keyword.get(opts, :telemetry_metadata)
 
     response =
       :telemetry.span(~w[stripe request]a, telemetry_meta, fn ->
         case http_module().request(method, url, Map.to_list(headers), body, opts) do
           {:ok, status, _, _} = resp ->
-            {resp, %{telemetry_meta | status: status}}
+            {resp, %{telemetry_meta | http_status_code: status, http_retry_count: attempts}}
 
           error ->
             {error, telemetry_meta}

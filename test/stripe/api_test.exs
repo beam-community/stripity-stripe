@@ -115,14 +115,18 @@ defmodule Stripe.APITest do
         [:stripe, :request, :stop],
         %{monotonic_time: _, duration: _},
         %{
-          telemetry_span_context: _,
-          endpoint: "/v1/customers/search",
-          attempt: 0,
-          method: :get,
-          status: 200,
-          stripe_api_version: _
+          http_method: :get,
+          http_retry_count: 0,
+          http_status_code: 200,
+          http_url: http_url,
+          stripe_api_version: _,
+          stripe_api_endpoint: "/v1/customers/search",
+          telemetry_span_context: _
         }
       })
+
+      assert String.ends_with?(http_url, "/v1/customers/search")
+      assert not String.contains?(http_url, "test@example.com")
     end
   end
 
