@@ -6,14 +6,27 @@ defmodule Stripe.StripeCase do
   use ExUnit.CaseTemplate
 
   def assert_stripe_requested(expected_method, path, extra \\ []) do
-    expected_url = build_url(path, Keyword.get(extra, :query))
+    expected_params = Keyword.get(extra, :query, %{})
+    expected_path = URI.parse(path).path
     expected_body = Keyword.get(extra, :body)
     expected_headers = Keyword.get(extra, :headers)
 
     assert_received({method, url, headers, body, _})
 
+    actual_uri = URI.parse(url)
+
+    actual_query_params =
+      to_string(actual_uri.query)
+      |> URI.query_decoder()
+      |> Enum.into(%{})
+
+    Enum.each(expected_params, fn {key, value} ->
+      actual_val = Map.get(actual_query_params, to_string(key))
+      assert actual_val == to_string(value)
+    end)
+
     assert expected_method == method
-    assert expected_url == url
+    assert expected_path == actual_uri.path
 
     assert_stripe_request_body(expected_body, body)
     assert_stripe_request_headers(expected_headers, headers)
@@ -49,14 +62,6 @@ defmodule Stripe.StripeCase do
 
   defp assert_stripe_request_body(expected_body, body) do
     assert body == Stripe.URI.encode_query(expected_body)
-  end
-
-  defp build_url(path, nil) do
-    stripe_base_url() <> path
-  end
-
-  defp build_url(path, query_params) do
-    stripe_base_url() <> path <> "?" <> URI.encode_query(query_params)
   end
 
   defmodule HackneyMock do

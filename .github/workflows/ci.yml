@@ -18,6 +18,7 @@ jobs:
       STRIPE_MOCK_VERSION: 0.144.0
       STRIPE_SECRET_KEY: non_empty_string
       SKIP_STRIPE_MOCK_RUN: true
+      SHELL: bash
     runs-on: ubuntu-20.04
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
@@ -38,10 +39,9 @@ jobs:
       with:
           otp-version: ${{ matrix.otp }}
           elixir-version: ${{ matrix.elixir }}
-    - name: Mix Dependencies
-      run: mix deps.get
-    - name: Test
-      run: mix test
+    - run: mix deps.get
+    - run: mix compile
+    - run: mix test --trace
 
   lint:
     runs-on: ubuntu-20.04
@@ -76,3 +76,4 @@ jobs:
       - run: mix compile --warnings-as-errors
       - run: mix dialyzer --halt-exit-status
       - run: mix deps.unlock --check-unused
+      - run: mix format --check-formatted
