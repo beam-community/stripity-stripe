@@ -490,11 +490,9 @@ defmodule Stripe.API do
   end
 
   defp decompress_body(body, headers) do
-    headers_dict = :hackney_headers.new(headers)
-
-    case :hackney_headers.get_value("Content-Encoding", headers_dict) do
-      "gzip" -> :zlib.gunzip(body)
-      "deflate" -> :zlib.unzip(body)
+    case List.keyfind(headers, "content-encoding", 0) do
+      {"content-encoding", "gzip"} -> :zlib.gunzip(body)
+      {"content-encoding", "deflate"} -> :zlib.unzip(body)
       _ -> body
     end
   end
