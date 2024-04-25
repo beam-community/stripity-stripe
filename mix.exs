@@ -30,11 +30,14 @@ defmodule Stripe.Mixfile do
   # Configuration for the OTP application
   def application do
     [
-      extra_applications: [:plug],
+      extra_applications: extra_applications(Mix.env()),
       env: env(),
       mod: {Stripe, []}
     ]
   end
+
+  defp extra_applications(:test), do: [:plug, :hackney]
+  defp extra_applications(_), do: []
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
@@ -54,7 +57,7 @@ defmodule Stripe.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.18"},
+      {:hackney, "~> 1.18", optional: true},
       {:jason, "~> 1.1"},
       {:telemetry, "~> 1.1"},
       {:uri_query, "~> 0.2.0"},

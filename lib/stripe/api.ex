@@ -34,17 +34,23 @@ defmodule Stripe.API do
     Config.resolve(:json_library, Jason)
   end
 
-  def supervisor_children do
-    if use_pool?() do
-      [:hackney_pool.child_spec(@pool_name, get_pool_options())]
-    else
+  if Code.loaded?(:hackney_pool) do
+    @spec get_pool_options() :: Keyword.t()
+    defp get_pool_options() do
+      Config.resolve(:pool_options)
+    end
+
+    def supervisor_children do
+      if use_pool?() do
+        [:hackney_pool.child_spec(@pool_name, get_pool_options())]
+      else
+        []
+      end
+    end
+  else
+    def supervisor_children do
       []
     end
-  end
-
-  @spec get_pool_options() :: Keyword.t()
-  defp get_pool_options() do
-    Config.resolve(:pool_options)
   end
 
   @spec get_base_url() :: String.t()
