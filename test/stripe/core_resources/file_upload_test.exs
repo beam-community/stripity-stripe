@@ -1,12 +1,11 @@
 defmodule Stripe.FileTest do
   use Stripe.StripeCase, async: true
 
-  @tag :skip
   describe "create/2" do
     test "creates a file" do
       assert {:ok, %Stripe.File{}} =
                Stripe.File.create(%{
-                 file: "@/path/to/a/file.jpg",
+                 file: Path.join(__DIR__, "../../fixtures/upload.txt"),
                  purpose: "dispute_evidence"
                })
 
