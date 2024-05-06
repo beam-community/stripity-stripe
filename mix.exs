@@ -62,7 +62,7 @@ defmodule Stripe.Mixfile do
       # Non-production dependencies
       {:inch_ex, ">= 0.0.0", only: [:dev, :test]},
       {:mox, ">= 0.0.0", only: :test},
-      {:exexec, "~> 0.2.0", only: :test},
+      {:erlexec, "~> 2.0", only: :test},
       {:dialyxir, ">= 0.0.0", only: [:dev, :test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :test}

@@ -3,10 +3,10 @@ defmodule Stripe.PaymentMethodTest do
 
   describe "list/2" do
     test "lists all cards" do
-      assert {:ok, %Stripe.List{data: cards}} =
-               Stripe.PaymentMethod.list(%{customer: "cus_123", type: "card"})
+      params = %{customer: "cus_123", type: "card"}
+      assert {:ok, %Stripe.List{data: cards}} = Stripe.PaymentMethod.list(params)
 
-      assert_stripe_requested(:get, "/v1/payment_methods?type=card&customer=cus_123")
+      assert_stripe_requested(:get, "/v1/payment_methods", query: params)
       assert is_list(cards)
     end
   end
