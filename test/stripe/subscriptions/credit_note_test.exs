@@ -11,10 +11,7 @@ defmodule Stripe.CreditNoteTest do
 
       assert {:ok, %Stripe.CreditNote{}} = Stripe.CreditNote.preview(params)
 
-      assert_stripe_requested(
-        :get,
-        "/v1/credit_notes/preview?amount=500&invoice=in_173uNd4Wq104wst7Gf4dgq1Y"
-      )
+      assert_stripe_requested(:get, "/v1/credit_notes/preview", query: params)
     end
   end
 

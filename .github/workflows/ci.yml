@@ -18,6 +18,7 @@ jobs:
       STRIPE_MOCK_VERSION: 0.144.0
       STRIPE_SECRET_KEY: non_empty_string
       SKIP_STRIPE_MOCK_RUN: true
+      SHELL: /bin/bash # erlexec needs this
     runs-on: ubuntu-20.04
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
