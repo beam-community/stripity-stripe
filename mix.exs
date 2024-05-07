@@ -43,7 +43,7 @@ defmodule Stripe.Mixfile do
   defp env do
     [
       api_base_url: "https://api.stripe.com",
-      api_upload_url: "https://files.stripe.com/v1/",
+      api_upload_url: "https://files.stripe.com",
       pool_options: [
         timeout: 5_000,
         max_connections: 10
