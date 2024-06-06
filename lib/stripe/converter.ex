@@ -38,7 +38,7 @@ defmodule Stripe.Converter do
   @spec convert_stripe_object(%{String.t() => any}) :: struct
   defp convert_stripe_object(%{"object" => object_name} = value) do
     module = Stripe.Util.object_name_to_module(object_name)
-    struct_keys = Map.keys(module.__struct__) |> List.delete(:__struct__)
+    struct_keys = Map.keys(module.__struct__()) |> List.delete(:__struct__)
     check_for_extra_keys(struct_keys, value)
 
     processed_map =
