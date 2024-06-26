@@ -48,7 +48,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
                 end
             end)
 
-          function_name = String.to_atom(operation["method_name"])
+          function_name = String.to_atom(Macro.underscore(operation_definition.id))
 
           success_response_spec = return_spec(operation_definition.success_response)
 
