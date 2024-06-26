@@ -278,4 +278,103 @@ defmodule Stripe.ConverterTest do
 
     assert result == expected_result
   end
+
+  test "convering a tax settings object" do
+    object = %{
+      "id" => "evt_some_id",
+      "object" => "event",
+      "api_version" => "2020-08-27",
+      "created" => 1_718_902_010,
+      "data" => %{
+        "object" => %{
+          "object" => "tax.settings",
+          "defaults" => %{
+            "tax_behavior" => "inferred_by_currency",
+            "tax_code" => "txcd_123456789"
+          },
+          "head_office" => %{
+            "address" => %{
+              "city" => "test",
+              "country" => "PT",
+              "line1" => "my test address",
+              "line2" => nil,
+              "postal_code" => "3000-100",
+              "state" => nil
+            }
+          },
+          "livemode" => true,
+          "status" => "active",
+          "status_details" => %{
+            "active" => %{}
+          }
+        },
+        "previous_attributes" => %{
+          "defaults" => %{
+            "tax_behavior" => nil,
+            "tax_code" => nil
+          },
+          "head_office" => nil,
+          "status" => "pending",
+          "status_details" => %{
+            "active" => nil,
+            "pending" => %{
+              "missing_fields" => [
+                "head_office"
+              ]
+            }
+          }
+        }
+      },
+      "livemode" => true,
+      "pending_webhooks" => 2,
+      "request" => %{
+        "id" => nil,
+        "idempotency_key" => nil
+      },
+      "type" => "tax.settings.updated"
+    }
+
+    assert %Stripe.Event{
+             account: nil,
+             api_version: "2020-08-27",
+             created: 1_718_902_010,
+             data: %{
+               object: %Stripe.Tax.Settings{
+                 defaults: %{
+                   tax_behavior: "inferred_by_currency",
+                   tax_code: "txcd_123456789"
+                 },
+                 head_office: %{
+                   address: %{
+                     state: nil,
+                     line1: "my test address",
+                     city: "test",
+                     country: "PT",
+                     line2: nil,
+                     postal_code: "3000-100"
+                   }
+                 },
+                 livemode: true,
+                 object: "tax.settings",
+                 status: "active",
+                 status_details: %{active: %{}}
+               },
+               previous_attributes: %{
+                 status: "pending",
+                 defaults: %{tax_behavior: nil, tax_code: nil},
+                 head_office: nil,
+                 status_details: %{
+                   active: nil,
+                   pending: %{missing_fields: ["head_office"]}
+                 }
+               }
+             },
+             id: "evt_some_id",
+             livemode: true,
+             object: "event",
+             pending_webhooks: 2,
+             request: %{id: nil, idempotency_key: nil},
+             type: "tax.settings.updated"
+           } = Converter.convert_result(object)
+  end
 end
