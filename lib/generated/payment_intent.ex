@@ -92,16 +92,16 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `acss_debit` PaymentMethod, this hash contains details about the ACSS Debit payment method."
+    @typedoc nil
     @type acss_debit :: %{
-            optional(:account_number) => binary,
-            optional(:institution_number) => binary,
-            optional(:transit_number) => binary
+            optional(:mandate_options) => mandate_options,
+            optional(:setup_future_usage) => :none | :off_session | :on_session,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 
   (
-    @typedoc "Shipping address."
+    @typedoc nil
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -149,8 +149,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type bacs_debit :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
+    @typedoc "If this is a `bacs_debit` PaymentMethod, this hash contains details about the Bacs Direct Debit bank account."
+    @type bacs_debit :: %{optional(:account_number) => binary, optional(:sort_code) => binary}
   )
 
   (
@@ -664,11 +664,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type sepa_debit :: %{
-            optional(:mandate_options) => map(),
-            optional(:setup_future_usage) => :none | :off_session | :on_session
-          }
+    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
+    @type sepa_debit :: %{optional(:iban) => binary}
   )
 
   (
@@ -683,11 +680,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type sofort :: %{
-            optional(:preferred_language) => :de | :en | :es | :fr | :it | :nl | :pl,
-            optional(:setup_future_usage) => :none | :off_session
-          }
+    @typedoc "If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method."
+    @type sofort :: %{optional(:country) => :AT | :BE | :DE | :ES | :IT | :NL}
   )
 
   (

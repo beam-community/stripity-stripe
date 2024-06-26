@@ -289,13 +289,7 @@ defmodule Stripe.SetupIntent do
 
   (
     @typedoc "Additional fields for Mandate creation"
-    @type mandate_options :: %{
-            optional(:custom_mandate_url) => binary | binary,
-            optional(:default_for) => list(:invoice | :subscription),
-            optional(:interval_description) => binary,
-            optional(:payment_schedule) => :combined | :interval | :sporadic,
-            optional(:transaction_type) => :business | :personal
-          }
+    @type mandate_options :: %{optional(:collection_method) => :paper}
   )
 
   (
@@ -441,8 +435,8 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `sepa_debit` SetupIntent, this sub-hash contains details about the SEPA Debit payment method options."
-    @type sepa_debit :: %{optional(:mandate_options) => map()}
+    @typedoc "If this is a `sepa_debit` PaymentMethod, this hash contains details about the SEPA debit bank account."
+    @type sepa_debit :: %{optional(:iban) => binary}
   )
 
   (
@@ -469,13 +463,12 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is an `us_bank_account` PaymentMethod, this hash contains details about the US bank account payment method."
+    @typedoc "If this is a `us_bank_account` SetupIntent, this sub-hash contains details about the US bank account payment method options."
     @type us_bank_account :: %{
-            optional(:account_holder_type) => :company | :individual,
-            optional(:account_number) => binary,
-            optional(:account_type) => :checking | :savings,
-            optional(:financial_connections_account) => binary,
-            optional(:routing_number) => binary
+            optional(:financial_connections) => financial_connections,
+            optional(:mandate_options) => mandate_options,
+            optional(:networks) => networks,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 

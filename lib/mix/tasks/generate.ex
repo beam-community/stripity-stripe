@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.Stripe.Generate do
-  @moduledoc "The hello mix task: `mix help hello`"
+  @moduledoc "The hello mix task: `mix stripe.generate`"
   use Mix.Task
 
   def run(_) do
