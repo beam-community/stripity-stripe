@@ -8,7 +8,7 @@ on:
       - synchronize
   push:
     branches:
-      - master
+      - main
   merge_group:
 
 jobs:
@@ -19,60 +19,60 @@ jobs:
       STRIPE_SECRET_KEY: non_empty_string
       SKIP_STRIPE_MOCK_RUN: true
       SHELL: /bin/bash # erlexec needs this
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
-       matrix:
-         elixir: ['1.14', '1.15', '1.16']
-         otp: [24, 25, 26]
+      matrix:
+        elixir: ["1.14", "1.15", "1.16"]
+        otp: [24, 25, 26]
     services:
-       stripe-mock:
-         image: stripe/stripe-mock:v0.144.0
-         ports:
-           - 12111:12111
-           - 12112:12112
+      stripe-mock:
+        image: stripe/stripe-mock:v0.144.0
+        ports:
+          - 12111:12111
+          - 12112:12112
     steps:
-    - name: Clone code
-      uses: actions/checkout@v2
-    - name: Setup Elixir and Erlang
-      uses: erlef/setup-beam@v1
-      with:
+      - name: Clone code
+        uses: actions/checkout@v4
+      - name: Setup Elixir and Erlang
+        uses: erlef/setup-beam@v1
+        with:
           otp-version: ${{ matrix.otp }}
           elixir-version: ${{ matrix.elixir }}
-    - name: Mix Dependencies
-      run: mix deps.get
-    - name: Test
-      run: mix test
+      - name: Mix Dependencies
+        run: mix deps.get
+      - name: Test
+        run: mix test
 
   lint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Linting
     strategy:
-       matrix:
-         elixir: ['1.16']
-         otp: ["26"]
+      matrix:
+        elixir: ["1.17"]
+        otp: ["27"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         env:
           cache-name: mix
         with:
           path: ~/.mix
           key: cache-${{ runner.os }}-${{ env.cache-name }}-${{ matrix.otp }}-${{ matrix.elixir }}
           restore-keys: |
-             cache-${{ runner.os }}-${{ env.cache-name }}-
-      - uses: actions/cache@v1
+            cache-${{ runner.os }}-${{ env.cache-name }}-
+      - uses: actions/cache@v4
         env:
           cache-name: build
         with:
           path: _build
           key: cache-${{ runner.os }}-${{ env.cache-name }}-${{ matrix.otp }}-${{ matrix.elixir }}
           restore-keys: |
-             cache-${{ runner.os }}-${{ env.cache-name }}-
+            cache-${{ runner.os }}-${{ env.cache-name }}-
       - run: mix deps.get
       - run: mix compile --warnings-as-errors
       - run: mix dialyzer --halt-exit-status

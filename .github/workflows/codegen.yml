@@ -7,61 +7,57 @@ on:
       - main
   schedule:
     ## Scheduled nightly at 00:23
-    - cron: '23 0 * * *'
+    - cron: "23 0 * * *"
 
 jobs:
   check:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Check if changed
     strategy:
       fail-fast: false
 
-    outputs:
-      current_tag: ${{ steps.current-tag.outputs.CURRENT_TAG }}
-      latest_tag: ${{ steps.latest-tag.outputs.LATEST_TAG }}
-
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Get tag used for generated files
         id: current-tag
         run: |
           # check if the file exist before
           [[ -f .latest-tag-stripe-openapi-sdk ]] && CURRENT_TAG=$(<.latest-tag-stripe-openapi-sdk) || CURRENT_TAG=''
-          echo "::set-output name=CURRENT_TAG::${CURRENT_TAG}"
+          echo "current_tag::${CURRENT_TAG}" >> $GITHUB_OUTPUT
       - name: Get latest Stripe SDK tag
         id: latest-tag
         run: |
           wget https://api.github.com/repos/stripe/openapi/releases/latest
           tag_name=$(cat latest | jq -r '.tag_name')
-          echo "::set-output name=LATEST_TAG::${tag_name}"
+          echo "latest_tag::${tag_name}" >> $GITHUB_OUTPUT
   generate:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Update services
     needs: check
-    if: ${{ needs.check.outputs.current_tag != needs.check.outputs.latest_tag }}
+    if: ${{ steps.current-tag.outputs.current_tag != steps.latest-tags.outputs.latest_tag }}
 
     env:
-      LATEST_STRIPE_SDK_TAG: ${{ needs.check.outputs.latest_tag }}
+      LATEST_STRIPE_SDK_TAG: ${{ steps.latest-tag.outputs.latest_tag }}
       SKIP_STRIPE_MOCK_RUN: true
 
     strategy:
       fail-fast: false
     services:
-       stripe-mock:
-         image: stripe/stripe-mock:v0.144.0
-         ports:
-           - 12111:12111
-           - 12112:12112
+      stripe-mock:
+        image: stripe/stripe-mock:v0.144.0
+        ports:
+          - 12111:12111
+          - 12112:12112
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: erlef/setup-beam@v1
         with:
-          otp-version: "26"
-          elixir-version: "1.16"
+          otp-version: "27"
+          elixir-version: "1.17"
 
       - name: Checkout stripe/openapi (official OpenApi definitions)
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: stripe/openapi
           path: tmp/openapi
