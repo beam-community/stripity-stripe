@@ -376,7 +376,8 @@ defmodule Stripe.API do
   end
 
   defp do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, attempts}) do
-    start_metadata = %{url: url, method: method, attempts: attempts}
+    api_version = headers["Stripe-Version"]
+    start_metadata = %{url: url, method: method, attempts: attempts, api_version: api_version}
 
     response =
       :telemetry.span(~w[stripe request]a, start_metadata, fn ->
