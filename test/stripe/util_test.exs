@@ -37,8 +37,13 @@ defmodule Stripe.UtilTest do
 
       assert object_name_to_module("billing_portal.session") == Stripe.BillingPortal.Session
       assert object_name_to_module("checkout.session") == Stripe.Checkout.Session
-      assert object_name_to_module("identity.verification_report") == Stripe.Identity.VerificationReport
-      assert object_name_to_module("identity.verification_session") == Stripe.Identity.VerificationSession
+
+      assert object_name_to_module("identity.verification_report") ==
+               Stripe.Identity.VerificationReport
+
+      assert object_name_to_module("identity.verification_session") ==
+               Stripe.Identity.VerificationSession
+
       assert object_name_to_module("issuing.authorization") == Stripe.Issuing.Authorization
       assert object_name_to_module("issuing.card") == Stripe.Issuing.Card
       assert object_name_to_module("issuing.cardholder") == Stripe.Issuing.Cardholder
