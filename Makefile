@@ -1,3 +1,14 @@
+CURRENT_VERSION := $(shell cat .latest-tag-stripe-openapi-sdk)
+
+download-openapi-current:
+	@echo "Tag: $(CURRENT_VERSION)"
+	@echo "Downloading https://raw.githubusercontent.com/stripe/openapi/$(CURRENT_VERSION)/openapi/spec3.sdk.json to ./priv/openapi/spec3.sdk.json"
+	@curl -o ./priv/openapi/spec3.sdk.json https://raw.githubusercontent.com/stripe/openapi/$(CURRENT_VERSION)/openapi/spec3.sdk.json
+
+generate:
+	mix stripe.generate
+	mix format
+
 gen-changelog:
 	npx auto-changelog --unreleased
 
