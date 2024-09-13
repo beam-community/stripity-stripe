@@ -1,7 +1,7 @@
 defmodule Stripe.Account do
   use Stripe.Entity
 
-  @moduledoc "This is an object representing a Stripe account. You can retrieve it to see\nproperties on the account like its current requirements or if the account is\nenabled to make live charges or receive payouts.\n\nFor Custom accounts, the properties below are always returned. For other accounts, some properties are returned until that\naccount has started to go through Connect Onboarding. Once you create an [Account Link](https://stripe.com/docs/api/account_links)\nfor a Standard or Express account, some parameters are no longer returned. These are marked as **Custom Only** or **Custom and Express**\nbelow. Learn about the differences [between accounts](https://stripe.com/docs/connect/accounts)."
+  @moduledoc "This is an object representing a Stripe account. You can retrieve it to see\nproperties on the account like its current requirements or if the account is\nenabled to make live charges or receive payouts.\n\nFor accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection)\nis `application`, which includes Custom accounts, the properties below are always\nreturned.\n\nFor accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection)\nis `stripe`, which includes Standard and Express accounts, some properties are only returned\nuntil you create an [Account Link](/api/account_links) or [Account Session](/api/account_sessions)\nto start Connect Onboarding. Learn about the [differences between accounts](/connect/accounts)."
   (
     defstruct [
       :business_profile,
@@ -28,7 +28,7 @@ defmodule Stripe.Account do
       :type
     ]
 
-    @typedoc "The `account` type.\n\n  * `business_profile` Business information about the account.\n  * `business_type` The business type.\n  * `capabilities` \n  * `charges_enabled` Whether the account can create live charges.\n  * `company` \n  * `controller` \n  * `country` The account's country.\n  * `created` Time at which the account was connected. Measured in seconds since the Unix epoch.\n  * `default_currency` Three-letter ISO currency code representing the default currency for the account. This must be a currency that [Stripe supports in the account's country](https://stripe.com/docs/payouts).\n  * `details_submitted` Whether account details have been submitted. Standard accounts cannot receive payouts before this is true.\n  * `email` An email address associated with the account. It's not used for authentication and Stripe doesn't market to this field without explicit approval from the platform.\n  * `external_accounts` External accounts (bank accounts and debit cards) currently attached to this account\n  * `future_requirements` \n  * `id` Unique identifier for the object.\n  * `individual` \n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `payouts_enabled` Whether Stripe can send payouts to this account.\n  * `requirements` \n  * `settings` Options for customizing how the account functions within Stripe.\n  * `tos_acceptance` \n  * `type` The Stripe account type. Can be `standard`, `express`, or `custom`.\n"
+    @typedoc "The `account` type.\n\n  * `business_profile` Business information about the account.\n  * `business_type` The business type. After you create an [Account Link](/api/account_links) or [Account Session](/api/account_sessions), this property is only returned for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts.\n  * `capabilities` \n  * `charges_enabled` Whether the account can create live charges.\n  * `company` \n  * `controller` \n  * `country` The account's country.\n  * `created` Time at which the account was connected. Measured in seconds since the Unix epoch.\n  * `default_currency` Three-letter ISO currency code representing the default currency for the account. This must be a currency that [Stripe supports in the account's country](https://stripe.com/docs/payouts).\n  * `details_submitted` Whether account details have been submitted. Accounts with Stripe Dashboard access, which includes Standard accounts, cannot receive payouts before this is true. Accounts where this is false should be directed to [an onboarding flow](/connect/onboarding) to finish submitting account details.\n  * `email` An email address associated with the account. It's not used for authentication and Stripe doesn't market to this field without explicit approval from the platform.\n  * `external_accounts` External accounts (bank accounts and debit cards) currently attached to this account. External accounts are only returned for requests where `controller[is_controller]` is true.\n  * `future_requirements` \n  * `id` Unique identifier for the object.\n  * `individual` \n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `payouts_enabled` Whether Stripe can send payouts to this account.\n  * `requirements` \n  * `settings` Options for customizing how the account functions within Stripe.\n  * `tos_acceptance` \n  * `type` The Stripe account type. Can be `standard`, `express`, `custom`, or `none`.\n"
     @type t :: %__MODULE__{
             business_profile: term | nil,
             business_type: binary | nil,
@@ -78,7 +78,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kana variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kana variation of the individual's primary address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -91,7 +91,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kanji variation of the company's primary address (Japan only)."
+    @typedoc "The Kanji variation of the individual's primary address (Japan only)."
     @type address_kanji :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -114,13 +114,27 @@ defmodule Stripe.Account do
   )
 
   (
+    @typedoc "The amazon_pay_payments capability."
+    @type amazon_pay_payments :: %{optional(:requested) => boolean}
+  )
+
+  (
+    @typedoc "The applicant's gross annual revenue for its preceding fiscal year."
+    @type annual_revenue :: %{
+            optional(:amount) => integer,
+            optional(:currency) => binary,
+            optional(:fiscal_year_end) => binary
+          }
+  )
+
+  (
     @typedoc "The au_becs_debit_payments capability."
     @type au_becs_debit_payments :: %{optional(:requested) => boolean}
   )
 
   (
-    @typedoc "Settings specific to Bacs Direct Debit payments."
-    @type bacs_debit_payments :: %{optional(:display_name) => binary}
+    @typedoc "The bacs_debit_payments capability."
+    @type bacs_debit_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -129,7 +143,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "One or more documents that support the [Bank account ownership verification](https://support.stripe.com/questions/bank-account-ownership-verification) requirement. Must be a document associated with the account’s primary active bank account that displays the last 4 digits of the account number, either a statement or a voided check."
+    @typedoc "One or more documents that support the [Bank account ownership verification](https://support.stripe.com/questions/bank-account-ownership-verification) requirement. Must be a document associated with the account’s primary active bank account that displays the last 4 digits of the account number, either a statement or a check."
     @type bank_account_ownership_verification :: %{optional(:files) => list(binary)}
   )
 
@@ -161,6 +175,8 @@ defmodule Stripe.Account do
   (
     @typedoc "Business information about the account."
     @type business_profile :: %{
+            optional(:annual_revenue) => annual_revenue,
+            optional(:estimated_worker_count) => integer,
             optional(:mcc) => binary,
             optional(:monthly_estimated_revenue) => monthly_estimated_revenue,
             optional(:name) => binary,
@@ -174,45 +190,55 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Each key of the dictionary represents a capability, and each capability maps to its settings (e.g. whether it has been requested or not). Each capability will be inactive until you have provided its specific requirements and Stripe has verified them. An account may have some of its requested capabilities be active and some be inactive."
+    @typedoc "Each key of the dictionary represents a capability, and each capability\nmaps to its settings (for example, whether it has been requested or not). Each\ncapability is inactive until you have provided its specific\nrequirements and Stripe has verified them. An account might have some\nof its requested capabilities be active and some be inactive.\n\nRequired when [account.controller.stripe_dashboard.type](/api/accounts/create#create_account-controller-dashboard-type)\nis `none`, which includes Custom accounts."
     @type capabilities :: %{
+            optional(:boleto_payments) => boleto_payments,
+            optional(:gb_bank_transfer_payments) => gb_bank_transfer_payments,
+            optional(:mobilepay_payments) => mobilepay_payments,
+            optional(:revolut_pay_payments) => revolut_pay_payments,
+            optional(:bank_transfer_payments) => bank_transfer_payments,
+            optional(:acss_debit_payments) => acss_debit_payments,
+            optional(:tax_reporting_us_1099_k) => tax_reporting_us_1099_k,
+            optional(:us_bank_transfer_payments) => us_bank_transfer_payments,
+            optional(:swish_payments) => swish_payments,
+            optional(:cartes_bancaires_payments) => cartes_bancaires_payments,
+            optional(:ideal_payments) => ideal_payments,
+            optional(:bacs_debit_payments) => bacs_debit_payments,
+            optional(:paynow_payments) => paynow_payments,
+            optional(:giropay_payments) => giropay_payments,
+            optional(:amazon_pay_payments) => amazon_pay_payments,
+            optional(:grabpay_payments) => grabpay_payments,
+            optional(:multibanco_payments) => multibanco_payments,
+            optional(:fpx_payments) => fpx_payments,
+            optional(:sepa_debit_payments) => sepa_debit_payments,
+            optional(:legacy_payments) => legacy_payments,
+            optional(:eps_payments) => eps_payments,
+            optional(:sofort_payments) => sofort_payments,
+            optional(:tax_reporting_us_1099_misc) => tax_reporting_us_1099_misc,
+            optional(:us_bank_account_ach_payments) => us_bank_account_ach_payments,
+            optional(:au_becs_debit_payments) => au_becs_debit_payments,
             optional(:link_payments) => link_payments,
-            optional(:card_issuing) => card_issuing,
+            optional(:p24_payments) => p24_payments,
+            optional(:jcb_payments) => jcb_payments,
             optional(:treasury) => treasury,
             optional(:oxxo_payments) => oxxo_payments,
-            optional(:affirm_payments) => affirm_payments,
-            optional(:promptpay_payments) => promptpay_payments,
-            optional(:bank_transfer_payments) => bank_transfer_payments,
-            optional(:sofort_payments) => sofort_payments,
-            optional(:acss_debit_payments) => acss_debit_payments,
-            optional(:cashapp_payments) => cashapp_payments,
-            optional(:cartes_bancaires_payments) => cartes_bancaires_payments,
             optional(:india_international_payments) => india_international_payments,
-            optional(:bacs_debit_payments) => bacs_debit_payments,
-            optional(:tax_reporting_us_1099_misc) => tax_reporting_us_1099_misc,
-            optional(:paynow_payments) => paynow_payments,
-            optional(:klarna_payments) => klarna_payments,
-            optional(:us_bank_account_ach_payments) => us_bank_account_ach_payments,
-            optional(:card_payments) => card_payments,
-            optional(:p24_payments) => p24_payments,
-            optional(:boleto_payments) => boleto_payments,
-            optional(:fpx_payments) => fpx_payments,
-            optional(:au_becs_debit_payments) => au_becs_debit_payments,
-            optional(:konbini_payments) => konbini_payments,
-            optional(:ideal_payments) => ideal_payments,
-            optional(:afterpay_clearpay_payments) => afterpay_clearpay_payments,
-            optional(:blik_payments) => blik_payments,
-            optional(:zip_payments) => zip_payments,
+            optional(:mx_bank_transfer_payments) => mx_bank_transfer_payments,
+            optional(:cashapp_payments) => cashapp_payments,
             optional(:bancontact_payments) => bancontact_payments,
-            optional(:giropay_payments) => giropay_payments,
-            optional(:legacy_payments) => legacy_payments,
-            optional(:sepa_debit_payments) => sepa_debit_payments,
-            optional(:revolut_pay_payments) => revolut_pay_payments,
+            optional(:sepa_bank_transfer_payments) => sepa_bank_transfer_payments,
+            optional(:klarna_payments) => klarna_payments,
+            optional(:blik_payments) => blik_payments,
+            optional(:promptpay_payments) => promptpay_payments,
+            optional(:konbini_payments) => konbini_payments,
+            optional(:zip_payments) => zip_payments,
+            optional(:afterpay_clearpay_payments) => afterpay_clearpay_payments,
+            optional(:card_payments) => card_payments,
+            optional(:jp_bank_transfer_payments) => jp_bank_transfer_payments,
             optional(:transfers) => transfers,
-            optional(:eps_payments) => eps_payments,
-            optional(:grabpay_payments) => grabpay_payments,
-            optional(:tax_reporting_us_1099_k) => tax_reporting_us_1099_k,
-            optional(:jcb_payments) => jcb_payments
+            optional(:card_issuing) => card_issuing,
+            optional(:affirm_payments) => affirm_payments,
+            optional(:twint_payments) => twint_payments
           }
   )
 
@@ -242,7 +268,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Information about the company or business. This field is available for any `business_type`."
+    @typedoc "Information about the company or business. This field is available for any `business_type`. Once you create an [Account Link](/api/account_links) or [Account Session](/api/account_sessions), this property can only be updated for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts."
     @type company :: %{
             optional(:address) => address,
             optional(:address_kana) => address_kana,
@@ -274,6 +300,7 @@ defmodule Stripe.Account do
               | :public_company
               | :public_corporation
               | :public_partnership
+              | :registered_charity
               | :single_member_llc
               | :sole_establishment
               | :sole_proprietorship
@@ -314,6 +341,16 @@ defmodule Stripe.Account do
   )
 
   (
+    @typedoc "A hash of configuration describing the account controller's attributes."
+    @type controller :: %{
+            optional(:fees) => fees,
+            optional(:losses) => losses,
+            optional(:requirement_collection) => :application | :stripe,
+            optional(:stripe_dashboard) => stripe_dashboard
+          }
+  )
+
+  (
     @typedoc nil
     @type created :: %{
             optional(:gt) => integer,
@@ -338,7 +375,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "A document verifying the business."
+    @typedoc "An identifying document, either a passport or local ID card."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -361,8 +398,18 @@ defmodule Stripe.Account do
   )
 
   (
+    @typedoc "A hash of configuration for who pays Stripe fees for product usage on this account."
+    @type fees :: %{optional(:payer) => :account | :application}
+  )
+
+  (
     @typedoc "The fpx_payments capability."
     @type fpx_payments :: %{optional(:requested) => boolean}
+  )
+
+  (
+    @typedoc "The gb_bank_transfer_payments capability."
+    @type gb_bank_transfer_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -386,7 +433,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Information about the person represented by the account. This field is null unless `business_type` is set to `individual`."
+    @typedoc "Information about the person represented by the account. This field is null unless `business_type` is set to `individual`. Once you create an [Account Link](/api/account_links) or [Account Session](/api/account_sessions), this property can only be updated for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts."
     @type individual :: %{
             optional(:address) => address,
             optional(:address_kana) => address_kana,
@@ -408,14 +455,25 @@ defmodule Stripe.Account do
             optional(:phone) => binary,
             optional(:political_exposure) => :existing | :none,
             optional(:registered_address) => registered_address,
+            optional(:relationship) => relationship,
             optional(:ssn_last_4) => binary,
             optional(:verification) => verification
           }
   )
 
   (
+    @typedoc "Settings specific to the account's use of Invoices."
+    @type invoices :: %{optional(:default_account_tax_ids) => list(binary) | binary}
+  )
+
+  (
     @typedoc "The jcb_payments capability."
     @type jcb_payments :: %{optional(:requested) => boolean}
+  )
+
+  (
+    @typedoc "The jp_bank_transfer_payments capability."
+    @type jp_bank_transfer_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -439,11 +497,31 @@ defmodule Stripe.Account do
   )
 
   (
+    @typedoc "A hash of configuration for products that have negative balance liability, and whether Stripe or a Connect application is responsible for them."
+    @type losses :: %{optional(:payments) => :application | :stripe}
+  )
+
+  (
+    @typedoc "The mobilepay_payments capability."
+    @type mobilepay_payments :: %{optional(:requested) => boolean}
+  )
+
+  (
     @typedoc "An estimate of the monthly revenue of the business. Only accepted for accounts in Brazil and India."
     @type monthly_estimated_revenue :: %{
             optional(:amount) => integer,
             optional(:currency) => binary
           }
+  )
+
+  (
+    @typedoc "The multibanco_payments capability."
+    @type multibanco_payments :: %{optional(:requested) => boolean}
+  )
+
+  (
+    @typedoc "The mx_bank_transfer_payments capability."
+    @type mx_bank_transfer_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -527,7 +605,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on when funds from charges are available, and when they are paid out to an external account. For details, see our [Setting Bank and Debit Card Payouts](https://stripe.com/docs/connect/bank-transfers#payout-information) documentation."
+    @typedoc "Details on when funds from charges are available, and when they are paid out to an external account. For details, see our [Setting Bank and Debit Card Payouts](/connect/bank-transfers#payout-information) documentation."
     @type schedule :: %{
             optional(:delay_days) => :minimum | integer,
             optional(:interval) => :daily | :manual | :monthly | :weekly,
@@ -535,6 +613,11 @@ defmodule Stripe.Account do
             optional(:weekly_anchor) =>
               :friday | :monday | :saturday | :sunday | :thursday | :tuesday | :wednesday
           }
+  )
+
+  (
+    @typedoc "The sepa_bank_transfer_payments capability."
+    @type sepa_bank_transfer_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -561,6 +644,11 @@ defmodule Stripe.Account do
   )
 
   (
+    @typedoc "A hash of configuration for Stripe-hosted dashboards."
+    @type stripe_dashboard :: %{optional(:type) => :express | :full | :none}
+  )
+
+  (
     @typedoc "A publicly available mailing address for sending support issues to."
     @type support_address :: %{
             optional(:city) => binary,
@@ -570,6 +658,11 @@ defmodule Stripe.Account do
             optional(:postal_code) => binary,
             optional(:state) => binary
           }
+  )
+
+  (
+    @typedoc "The swish_payments capability."
+    @type swish_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -583,12 +676,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](https://stripe.com/docs/connect/updating-accounts#tos-acceptance)."
+    @typedoc "Details on the account's acceptance of the Stripe Treasury Services Agreement."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:service_agreement) => binary,
-            optional(:user_agent) => binary
+            optional(:user_agent) => binary | binary
           }
   )
 
@@ -598,13 +690,23 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The treasury capability."
-    @type treasury :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to the account's Treasury FinancialAccounts."
+    @type treasury :: %{optional(:tos_acceptance) => tos_acceptance}
+  )
+
+  (
+    @typedoc "The twint_payments capability."
+    @type twint_payments :: %{optional(:requested) => boolean}
   )
 
   (
     @typedoc "The us_bank_account_ach_payments capability."
     @type us_bank_account_ach_payments :: %{optional(:requested) => boolean}
+  )
+
+  (
+    @typedoc "The us_bank_transfer_payments capability."
+    @type us_bank_transfer_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -620,49 +722,11 @@ defmodule Stripe.Account do
   (
     nil
 
-    @doc "<p>Retrieves the details of an account.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/account`\n"
+    @doc "<p>With <a href=\"/connect\">Connect</a>, you can delete accounts you manage.</p>\n\n<p>Test-mode accounts can be deleted at any time.</p>\n\n<p>Live-mode accounts where Stripe is responsible for negative account balances cannot be deleted, which includes Standard accounts. Live-mode accounts where your platform is liable for negative account balances, which includes Custom and Express accounts, can be deleted when all <a href=\"/api/balance/balance_object\">balances</a> are zero.</p>\n\n<p>If you want to delete your own account, use the <a href=\"https://dashboard.stripe.com/settings/account\">account information tab in your account settings</a> instead.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}`\n"
     (
-      @spec retrieve(params :: %{optional(:expand) => list(binary)}, opts :: Keyword.t()) ::
-              {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/account", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Updates a <a href=\"/docs/connect/accounts\">connected account</a> by setting the values of the parameters passed. Any parameters not provided are\nleft unchanged.</p>\n\n<p>For Custom accounts, you can update any information on the account. For other accounts, you can update all information until that\naccount has started to go through Connect Onboarding. Once you create an <a href=\"/docs/api/account_links\">Account Link</a>\nfor a Standard or Express account, some parameters can no longer be changed. These are marked as <strong>Custom Only</strong> or <strong>Custom and Express</strong>\nbelow.</p>\n\n<p>To update your own account, use the <a href=\"https://dashboard.stripe.com/settings/account\">Dashboard</a>. Refer to our\n<a href=\"/docs/connect/updating-accounts\">Connect</a> documentation to learn more about updating accounts.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}`\n"
-    (
-      @spec update(
-              account :: binary(),
-              params :: %{
-                optional(:account_token) => binary,
-                optional(:business_profile) => business_profile,
-                optional(:business_type) =>
-                  :company | :government_entity | :individual | :non_profit,
-                optional(:capabilities) => capabilities,
-                optional(:company) => company,
-                optional(:default_currency) => binary,
-                optional(:documents) => documents,
-                optional(:email) => binary,
-                optional(:expand) => list(binary),
-                optional(:external_account) => binary,
-                optional(:individual) => individual,
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:settings) => settings,
-                optional(:tos_acceptance) => tos_acceptance
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def update(account, params \\ %{}, opts \\ []) do
+      @spec delete(account :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedAccount.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(account, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}",
@@ -686,8 +750,26 @@ defmodule Stripe.Account do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the details of an account.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/account`\n"
+    (
+      @spec retrieve(params :: %{optional(:expand) => list(binary)}, opts :: Keyword.t()) ::
+              {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/account", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -726,93 +808,20 @@ defmodule Stripe.Account do
   (
     nil
 
-    @doc "<p>With <a href=\"/docs/connect\">Connect</a>, you can create Stripe accounts for your users.\nTo do this, you’ll first need to <a href=\"https://dashboard.stripe.com/account/applications/settings\">register your platform</a>.</p>\n\n<p>If you’ve already collected information for your connected accounts, you <a href=\"/docs/connect/best-practices#onboarding\">can prefill that information</a> when\ncreating the account. Connect Onboarding won’t ask for the prefilled information during account onboarding.\nYou can prefill any information on the account.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts`\n"
+    @doc "<p>Returns a list of capabilities associated with the account. The capabilities are returned sorted by creation date, with the most recent capability appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/accounts/{account}/capabilities`\n"
     (
-      @spec create(
-              params :: %{
-                optional(:account_token) => binary,
-                optional(:business_profile) => business_profile,
-                optional(:business_type) =>
-                  :company | :government_entity | :individual | :non_profit,
-                optional(:capabilities) => capabilities,
-                optional(:company) => company,
-                optional(:country) => binary,
-                optional(:default_currency) => binary,
-                optional(:documents) => documents,
-                optional(:email) => binary,
-                optional(:expand) => list(binary),
-                optional(:external_account) => binary,
-                optional(:individual) => individual,
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:settings) => settings,
-                optional(:tos_acceptance) => tos_acceptance,
-                optional(:type) => :custom | :express | :standard
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/accounts", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>With <a href=\"/docs/connect\">Connect</a>, you can delete accounts you manage.</p>\n\n<p>Accounts created using test-mode keys can be deleted at any time. Standard accounts created using live-mode keys cannot be deleted. Custom or Express accounts created using live-mode keys can only be deleted once all balances are zero.</p>\n\n<p>If you want to delete your own account, use the <a href=\"https://dashboard.stripe.com/settings/account\">account information tab in your account settings</a> instead.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}`\n"
-    (
-      @spec delete(account :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedAccount.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(account, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/accounts/{account}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "account",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [account]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>With <a href=\"/docs/connect\">Connect</a>, you may flag accounts as suspicious.</p>\n\n<p>Test-mode Custom and Express accounts can be rejected at any time. Accounts created using live-mode keys may only be rejected once all balances are zero.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}/reject`\n"
-    (
-      @spec reject(
+      @spec capabilities(
               account :: binary(),
-              params :: %{optional(:expand) => list(binary), optional(:reason) => binary},
+              params :: %{optional(:expand) => list(binary)},
               opts :: Keyword.t()
-            ) :: {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def reject(account, params \\ %{}, opts \\ []) do
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Capability.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def capabilities(account, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/accounts/{account}/reject",
+            "/v1/accounts/{account}/capabilities",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -834,7 +843,7 @@ defmodule Stripe.Account do
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -893,20 +902,73 @@ defmodule Stripe.Account do
   (
     nil
 
-    @doc "<p>Returns a list of capabilities associated with the account. The capabilities are returned sorted by creation date, with the most recent capability appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/accounts/{account}/capabilities`\n"
+    @doc "<p>With <a href=\"/docs/connect\">Connect</a>, you can create Stripe accounts for your users.\nTo do this, you’ll first need to <a href=\"https://dashboard.stripe.com/account/applications/settings\">register your platform</a>.</p>\n\n<p>If you’ve already collected information for your connected accounts, you <a href=\"/docs/connect/best-practices#onboarding\">can prefill that information</a> when\ncreating the account. Connect Onboarding won’t ask for the prefilled information during account onboarding.\nYou can prefill any information on the account.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts`\n"
     (
-      @spec capabilities(
-              account :: binary(),
-              params :: %{optional(:expand) => list(binary)},
+      @spec create(
+              params :: %{
+                optional(:account_token) => binary,
+                optional(:business_profile) => business_profile,
+                optional(:business_type) =>
+                  :company | :government_entity | :individual | :non_profit,
+                optional(:capabilities) => capabilities,
+                optional(:company) => company,
+                optional(:controller) => controller,
+                optional(:country) => binary,
+                optional(:default_currency) => binary,
+                optional(:documents) => documents,
+                optional(:email) => binary,
+                optional(:expand) => list(binary),
+                optional(:external_account) => binary,
+                optional(:individual) => individual,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:settings) => settings,
+                optional(:tos_acceptance) => tos_acceptance,
+                optional(:type) => :custom | :express | :standard
+              },
               opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Capability.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def capabilities(account, params \\ %{}, opts \\ []) do
+            ) :: {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/accounts", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Updates a <a href=\"/connect/accounts\">connected account</a> by setting the values of the parameters passed. Any parameters not provided are\nleft unchanged.</p>\n\n<p>For accounts where <a href=\"/api/accounts/object#account_object-controller-requirement_collection\">controller.requirement_collection</a>\nis <code>application</code>, which includes Custom accounts, you can update any information on the account.</p>\n\n<p>For accounts where <a href=\"/api/accounts/object#account_object-controller-requirement_collection\">controller.requirement_collection</a>\nis <code>stripe</code>, which includes Standard and Express accounts, you can update all information until you create\nan <a href=\"/api/account_links\">Account Link</a> or <a href=\"/api/account_sessions\">Account Session</a> to start Connect onboarding,\nafter which some properties can no longer be updated.</p>\n\n<p>To update your own account, use the <a href=\"https://dashboard.stripe.com/settings/account\">Dashboard</a>. Refer to our\n<a href=\"/docs/connect/updating-accounts\">Connect</a> documentation to learn more about updating accounts.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}`\n"
+    (
+      @spec update(
+              account :: binary(),
+              params :: %{
+                optional(:account_token) => binary,
+                optional(:business_profile) => business_profile,
+                optional(:business_type) =>
+                  :company | :government_entity | :individual | :non_profit,
+                optional(:capabilities) => capabilities,
+                optional(:company) => company,
+                optional(:default_currency) => binary,
+                optional(:documents) => documents,
+                optional(:email) => binary,
+                optional(:expand) => list(binary),
+                optional(:external_account) => binary,
+                optional(:individual) => individual,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:settings) => settings,
+                optional(:tos_acceptance) => tos_acceptance
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def update(account, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/accounts/{account}/capabilities",
+            "/v1/accounts/{account}",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -928,7 +990,48 @@ defmodule Stripe.Account do
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>With <a href=\"/connect\">Connect</a>, you can reject accounts that you have flagged as suspicious.</p>\n\n<p>Only accounts where your platform is liable for negative account balances, which includes Custom and Express accounts, can be rejected. Test-mode accounts can be rejected at any time. Live-mode accounts can only be rejected after all balances are zero.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}/reject`\n"
+    (
+      @spec reject(
+              account :: binary(),
+              params :: %{optional(:expand) => list(binary), optional(:reason) => binary},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Account.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def reject(account, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/accounts/{account}/reject",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "account",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "account",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [account]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

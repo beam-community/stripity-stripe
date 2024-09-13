@@ -4,53 +4,55 @@ defmodule Stripe.Subscription do
   @moduledoc "Subscriptions allow you to charge a customer on a recurring basis.\n\nRelated guide: [Creating subscriptions](https://stripe.com/docs/billing/subscriptions/creating)"
   (
     defstruct [
-      :default_tax_rates,
-      :pending_update,
-      :id,
-      :transfer_data,
-      :items,
-      :status,
-      :current_period_start,
-      :trial_start,
-      :trial_settings,
-      :cancel_at,
-      :trial_end,
-      :created,
-      :currency,
-      :latest_invoice,
-      :current_period_end,
-      :canceled_at,
       :schedule,
-      :automatic_tax,
-      :test_clock,
-      :billing_cycle_anchor,
-      :billing_cycle_anchor_config,
-      :object,
-      :cancel_at_period_end,
-      :default_source,
       :next_pending_invoice_item_invoice,
-      :billing_thresholds,
-      :pending_invoice_item_interval,
-      :application,
-      :payment_settings,
-      :days_until_due,
-      :ended_at,
-      :customer,
-      :pause_collection,
-      :on_behalf_of,
+      :canceled_at,
       :start_date,
-      :discount,
-      :pending_setup_intent,
       :cancellation_details,
-      :description,
-      :metadata,
-      :default_payment_method,
-      :collection_method,
       :livemode,
+      :customer,
+      :collection_method,
+      :discount,
+      :latest_invoice,
+      :items,
+      :created,
+      :transfer_data,
+      :application,
+      :billing_thresholds,
+      :cancel_at,
+      :trial_start,
+      :status,
+      :description,
+      :id,
+      :current_period_end,
+      :pause_collection,
+      :default_tax_rates,
+      :automatic_tax,
+      :invoice_settings,
+      :currency,
+      :default_source,
+      :pending_update,
+      :object,
+      :pending_setup_intent,
+      :on_behalf_of,
+      :discounts,
+      :billing_cycle_anchor,
+      :pending_invoice_item_interval,
+      :trial_end,
+      :current_period_start,
+      :billing_cycle_anchor_config,
+      :cancel_at_period_end,
+      :test_clock,
+      :default_payment_method,
+      :days_until_due,
+      :payment_settings,
+      :metadata,
+      :ended_at,
+      :trial_settings,
       :application_fee_percent
     ]
 
-    @typedoc "The `subscription` type.\n\n  * `application` ID of the Connect Application that created the subscription.\n  * `application_fee_percent` A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account.\n  * `automatic_tax` \n  * `billing_cycle_anchor` The reference point that aligns future [billing cycle](https://stripe.com/docs/subscriptions/billing-cycle) dates. It sets the day of week for `week` intervals, the day of month for `month` and `year` intervals, and the month of year for `year` intervals. The timestamp is in UTC format.\n  * `billing_cycle_anchor_config` The fixed values used to calculate the `billing_cycle_anchor`.\n  * `billing_thresholds` Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period\n  * `cancel_at` A date in the future at which the subscription will automatically get canceled\n  * `cancel_at_period_end` If the subscription has been canceled with the `at_period_end` flag set to `true`, `cancel_at_period_end` on the subscription will be true. You can use this attribute to determine whether a subscription that has a status of active is scheduled to be canceled at the end of the current period.\n  * `canceled_at` If the subscription has been canceled, the date of that cancellation. If the subscription was canceled with `cancel_at_period_end`, `canceled_at` will reflect the time of the most recent update request, not the end of the subscription period when the subscription is automatically moved to a canceled state.\n  * `cancellation_details` Details about why this subscription was cancelled\n  * `collection_method` Either `charge_automatically`, or `send_invoice`. When charging automatically, Stripe will attempt to pay this subscription at the end of the cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions and mark the subscription as `active`.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `current_period_end` End of the current period that the subscription has been invoiced for. At the end of this period, a new invoice will be created.\n  * `current_period_start` Start of the current period that the subscription has been invoiced for.\n  * `customer` ID of the customer who owns the subscription.\n  * `days_until_due` Number of days a customer has to pay invoices generated by this subscription. This value will be `null` for subscriptions where `collection_method=charge_automatically`.\n  * `default_payment_method` ID of the default payment method for the subscription. It must belong to the customer associated with the subscription. This takes precedence over `default_source`. If neither are set, invoices will use the customer's [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) or [default_source](https://stripe.com/docs/api/customers/object#customer_object-default_source).\n  * `default_source` ID of the default payment source for the subscription. It must belong to the customer associated with the subscription and be in a chargeable state. If `default_payment_method` is also set, `default_payment_method` will take precedence. If neither are set, invoices will use the customer's [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) or [default_source](https://stripe.com/docs/api/customers/object#customer_object-default_source).\n  * `default_tax_rates` The tax rates that will apply to any subscription item that does not have `tax_rates` set. Invoices created will have their `default_tax_rates` populated from the subscription.\n  * `description` The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.\n  * `discount` Describes the current discount applied to this subscription, if there is one. When billing, a discount applied to a subscription overrides a discount applied on a customer-wide basis.\n  * `ended_at` If the subscription has ended, the date the subscription ended.\n  * `id` Unique identifier for the object.\n  * `items` List of subscription items, each with an attached price.\n  * `latest_invoice` The most recent invoice this subscription has generated.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `next_pending_invoice_item_invoice` Specifies the approximate timestamp on which any pending invoice items will be billed according to the schedule provided at `pending_invoice_item_interval`.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account (if any) the charge was made on behalf of for charges associated with this subscription. See the Connect documentation for details.\n  * `pause_collection` If specified, payment collection for this subscription will be paused.\n  * `payment_settings` Payment settings passed on to invoices created by the subscription.\n  * `pending_invoice_item_interval` Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://stripe.com/docs/api#create_invoice) for the given subscription at the specified interval.\n  * `pending_setup_intent` You can use this [SetupIntent](https://stripe.com/docs/api/setup_intents) to collect user authentication when creating a subscription without immediate payment or updating a subscription's payment method, allowing you to optimize for off-session payments. Learn more in the [SCA Migration Guide](https://stripe.com/docs/billing/migration/strong-customer-authentication#scenario-2).\n  * `pending_update` If specified, [pending updates](https://stripe.com/docs/billing/subscriptions/pending-updates) that will be applied to the subscription once the `latest_invoice` has been paid.\n  * `schedule` The schedule attached to the subscription\n  * `start_date` Date when the subscription was first created. The date might differ from the `created` date due to backdating.\n  * `status` Possible values are `incomplete`, `incomplete_expired`, `trialing`, `active`, `past_due`, `canceled`, or `unpaid`. \n\nFor `collection_method=charge_automatically` a subscription moves into `incomplete` if the initial payment attempt fails. A subscription in this state can only have metadata and default_source updated. Once the first invoice is paid, the subscription moves into an `active` state. If the first invoice is not paid within 23 hours, the subscription transitions to `incomplete_expired`. This is a terminal state, the open invoice will be voided and no further invoices will be generated. \n\nA subscription that is currently in a trial period is `trialing` and moves to `active` when the trial period is over. \n\nIf subscription `collection_method=charge_automatically`, it becomes `past_due` when payment is required but cannot be paid (due to failed payment or awaiting additional user actions). Once Stripe has exhausted all payment retry attempts, the subscription will become `canceled` or `unpaid` (depending on your subscriptions settings). \n\nIf subscription `collection_method=send_invoice` it becomes `past_due` when its invoice is not paid by the due date, and `canceled` or `unpaid` if it is still not paid by an additional deadline after that. Note that when a subscription has a status of `unpaid`, no subsequent invoices will be attempted (invoices will be created, but then immediately automatically closed). After receiving updated payment information from a customer, you may choose to reopen and pay their closed invoices.\n  * `test_clock` ID of the test clock this subscription belongs to.\n  * `transfer_data` The account (if any) the subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.\n  * `trial_end` If the subscription has a trial, the end of that trial.\n  * `trial_settings` Settings related to subscription trials.\n  * `trial_start` If the subscription has a trial, the beginning of that trial.\n"
+    @typedoc "The `subscription` type.\n\n  * `application` ID of the Connect Application that created the subscription.\n  * `application_fee_percent` A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account.\n  * `automatic_tax` \n  * `billing_cycle_anchor` The reference point that aligns future [billing cycle](https://stripe.com/docs/subscriptions/billing-cycle) dates. It sets the day of week for `week` intervals, the day of month for `month` and `year` intervals, and the month of year for `year` intervals. The timestamp is in UTC format.\n  * `billing_cycle_anchor_config` The fixed values used to calculate the `billing_cycle_anchor`.\n  * `billing_thresholds` Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period\n  * `cancel_at` A date in the future at which the subscription will automatically get canceled\n  * `cancel_at_period_end` Whether this subscription will (if `status=active`) or did (if `status=canceled`) cancel at the end of the current billing period.\n  * `canceled_at` If the subscription has been canceled, the date of that cancellation. If the subscription was canceled with `cancel_at_period_end`, `canceled_at` will reflect the time of the most recent update request, not the end of the subscription period when the subscription is automatically moved to a canceled state.\n  * `cancellation_details` Details about why this subscription was cancelled\n  * `collection_method` Either `charge_automatically`, or `send_invoice`. When charging automatically, Stripe will attempt to pay this subscription at the end of the cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions and mark the subscription as `active`.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `current_period_end` End of the current period that the subscription has been invoiced for. At the end of this period, a new invoice will be created.\n  * `current_period_start` Start of the current period that the subscription has been invoiced for.\n  * `customer` ID of the customer who owns the subscription.\n  * `days_until_due` Number of days a customer has to pay invoices generated by this subscription. This value will be `null` for subscriptions where `collection_method=charge_automatically`.\n  * `default_payment_method` ID of the default payment method for the subscription. It must belong to the customer associated with the subscription. This takes precedence over `default_source`. If neither are set, invoices will use the customer's [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) or [default_source](https://stripe.com/docs/api/customers/object#customer_object-default_source).\n  * `default_source` ID of the default payment source for the subscription. It must belong to the customer associated with the subscription and be in a chargeable state. If `default_payment_method` is also set, `default_payment_method` will take precedence. If neither are set, invoices will use the customer's [invoice_settings.default_payment_method](https://stripe.com/docs/api/customers/object#customer_object-invoice_settings-default_payment_method) or [default_source](https://stripe.com/docs/api/customers/object#customer_object-default_source).\n  * `default_tax_rates` The tax rates that will apply to any subscription item that does not have `tax_rates` set. Invoices created will have their `default_tax_rates` populated from the subscription.\n  * `description` The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription for rendering in Stripe surfaces and certain local payment methods UIs.\n  * `discount` Describes the current discount applied to this subscription, if there is one. When billing, a discount applied to a subscription overrides a discount applied on a customer-wide basis. This field has been deprecated and will be removed in a future API version. Use `discounts` instead.\n  * `discounts` The discounts applied to the subscription. Subscription item discounts are applied before subscription discounts. Use `expand[]=discounts` to expand each discount.\n  * `ended_at` If the subscription has ended, the date the subscription ended.\n  * `id` Unique identifier for the object.\n  * `invoice_settings` \n  * `items` List of subscription items, each with an attached price.\n  * `latest_invoice` The most recent invoice this subscription has generated.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `next_pending_invoice_item_invoice` Specifies the approximate timestamp on which any pending invoice items will be billed according to the schedule provided at `pending_invoice_item_interval`.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account (if any) the charge was made on behalf of for charges associated with this subscription. See the Connect documentation for details.\n  * `pause_collection` If specified, payment collection for this subscription will be paused. Note that the subscription status will be unchanged and will not be updated to `paused`. Learn more about [pausing collection](/billing/subscriptions/pause-payment).\n  * `payment_settings` Payment settings passed on to invoices created by the subscription.\n  * `pending_invoice_item_interval` Specifies an interval for how often to bill for any pending invoice items. It is analogous to calling [Create an invoice](https://stripe.com/docs/api#create_invoice) for the given subscription at the specified interval.\n  * `pending_setup_intent` You can use this [SetupIntent](https://stripe.com/docs/api/setup_intents) to collect user authentication when creating a subscription without immediate payment or updating a subscription's payment method, allowing you to optimize for off-session payments. Learn more in the [SCA Migration Guide](https://stripe.com/docs/billing/migration/strong-customer-authentication#scenario-2).\n  * `pending_update` If specified, [pending updates](https://stripe.com/docs/billing/subscriptions/pending-updates) that will be applied to the subscription once the `latest_invoice` has been paid.\n  * `schedule` The schedule attached to the subscription\n  * `start_date` Date when the subscription was first created. The date might differ from the `created` date due to backdating.\n  * `status` Possible values are `incomplete`, `incomplete_expired`, `trialing`, `active`, `past_due`, `canceled`, `unpaid`, or `paused`. \n\nFor `collection_method=charge_automatically` a subscription moves into `incomplete` if the initial payment attempt fails. A subscription in this status can only have metadata and default_source updated. Once the first invoice is paid, the subscription moves into an `active` status. If the first invoice is not paid within 23 hours, the subscription transitions to `incomplete_expired`. This is a terminal status, the open invoice will be voided and no further invoices will be generated. \n\nA subscription that is currently in a trial period is `trialing` and moves to `active` when the trial period is over. \n\nA subscription can only enter a `paused` status [when a trial ends without a payment method](/billing/subscriptions/trials#create-free-trials-without-payment). A `paused` subscription doesn't generate invoices and can be resumed after your customer adds their payment method. The `paused` status is different from [pausing collection](/billing/subscriptions/pause-payment), which still generates invoices and leaves the subscription's status unchanged. \n\nIf subscription `collection_method=charge_automatically`, it becomes `past_due` when payment is required but cannot be paid (due to failed payment or awaiting additional user actions). Once Stripe has exhausted all payment retry attempts, the subscription will become `canceled` or `unpaid` (depending on your subscriptions settings). \n\nIf subscription `collection_method=send_invoice` it becomes `past_due` when its invoice is not paid by the due date, and `canceled` or `unpaid` if it is still not paid by an additional deadline after that. Note that when a subscription has a status of `unpaid`, no subsequent invoices will be attempted (invoices will be created, but then immediately automatically closed). After receiving updated payment information from a customer, you may choose to reopen and pay their closed invoices.\n  * `test_clock` ID of the test clock this subscription belongs to.\n  * `transfer_data` The account (if any) the subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.\n  * `trial_end` If the subscription has a trial, the end of that trial.\n  * `trial_settings` Settings related to subscription trials.\n  * `trial_start` If the subscription has a trial, the beginning of that trial.\n"
     @type t :: %__MODULE__{
             application: (binary | term | term) | nil,
             application_fee_percent: term | nil,
@@ -74,8 +76,10 @@ defmodule Stripe.Subscription do
             default_tax_rates: term | nil,
             description: binary | nil,
             discount: term | nil,
+            discounts: term,
             ended_at: integer | nil,
             id: binary,
+            invoice_settings: term,
             items: term,
             latest_invoice: (binary | Stripe.Invoice.t()) | nil,
             livemode: boolean,
@@ -110,6 +114,7 @@ defmodule Stripe.Subscription do
   (
     @typedoc nil
     @type add_invoice_items :: %{
+            optional(:discounts) => list(discounts),
             optional(:price) => binary,
             optional(:price_data) => price_data,
             optional(:quantity) => integer,
@@ -180,13 +185,14 @@ defmodule Stripe.Subscription do
               | :diners
               | :discover
               | :eftpos_au
+              | :girocard
               | :interac
               | :jcb
               | :mastercard
               | :unionpay
               | :unknown
               | :visa,
-            optional(:request_three_d_secure) => :any | :automatic
+            optional(:request_three_d_secure) => :any | :automatic | :challenge
           }
   )
 
@@ -229,6 +235,15 @@ defmodule Stripe.Subscription do
   )
 
   (
+    @typedoc nil
+    @type discounts :: %{
+            optional(:coupon) => binary,
+            optional(:discount) => binary,
+            optional(:promotion_code) => binary
+          }
+  )
+
+  (
     @typedoc "Defines how the subscription should behave when the user's free trial ends."
     @type end_behavior :: %{
             optional(:missing_payment_method) => :cancel | :create_invoice | :pause
@@ -241,18 +256,38 @@ defmodule Stripe.Subscription do
   )
 
   (
+    @typedoc "Provide filters for the linked accounts that the customer can select for the payment method."
+    @type filters :: %{optional(:account_subcategories) => list(:checking | :savings)}
+  )
+
+  (
     @typedoc "Additional fields for Financial Connections Session creation"
     @type financial_connections :: %{
+            optional(:filters) => filters,
             optional(:permissions) =>
               list(:balances | :ownership | :payment_method | :transactions),
-            optional(:prefetch) => list(:balances | :transactions)
+            optional(:prefetch) => list(:balances | :ownership | :transactions)
           }
+  )
+
+  (
+    @typedoc "All invoices will be billed using the specified settings."
+    @type invoice_settings :: %{
+            optional(:account_tax_ids) => list(binary) | binary,
+            optional(:issuer) => issuer
+          }
+  )
+
+  (
+    @typedoc "The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account."
+    @type issuer :: %{optional(:account) => binary, optional(:type) => :account | :self}
   )
 
   (
     @typedoc nil
     @type items :: %{
             optional(:billing_thresholds) => billing_thresholds | binary,
+            optional(:discounts) => list(discounts) | binary,
             optional(:metadata) => %{optional(binary) => binary},
             optional(:plan) => binary,
             optional(:price) => binary,
@@ -260,6 +295,11 @@ defmodule Stripe.Subscription do
             optional(:quantity) => integer,
             optional(:tax_rates) => list(binary) | binary
           }
+  )
+
+  (
+    @typedoc "The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account."
+    @type liability :: %{optional(:account) => binary, optional(:type) => :account | :self}
   )
 
   (
@@ -283,6 +323,7 @@ defmodule Stripe.Subscription do
             optional(:card) => card | binary,
             optional(:customer_balance) => customer_balance | binary,
             optional(:konbini) => map() | binary,
+            optional(:sepa_debit) => map() | binary,
             optional(:us_bank_account) => us_bank_account | binary
           }
   )
@@ -296,6 +337,7 @@ defmodule Stripe.Subscription do
                 :ach_credit_transfer
                 | :ach_debit
                 | :acss_debit
+                | :amazon_pay
                 | :au_becs_debit
                 | :bacs_debit
                 | :bancontact
@@ -310,13 +352,16 @@ defmodule Stripe.Subscription do
                 | :ideal
                 | :konbini
                 | :link
+                | :multibanco
                 | :p24
                 | :paynow
                 | :paypal
                 | :promptpay
+                | :revolut_pay
                 | :sepa_credit_transfer
                 | :sepa_debit
                 | :sofort
+                | :swish
                 | :us_bank_account
                 | :wechat_pay
               )
@@ -377,27 +422,84 @@ defmodule Stripe.Subscription do
   (
     nil
 
-    @doc "<p>Search for subscriptions you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscriptions/search`\n"
+    @doc "<p>Cancels a customer’s subscription immediately. The customer will not be charged again for the subscription.</p>\n\n<p>Note, however, that any pending invoice items that you’ve created will still be charged for at the end of the period, unless manually <a href=\"#delete_invoiceitem\">deleted</a>. If you’ve set the subscription to cancel at the end of the period, any pending prorations will also be left in place and collected at the end of the period. But if the subscription is set to cancel immediately, pending prorations will be removed.</p>\n\n<p>By default, upon subscription cancellation, Stripe will stop automatic collection of all finalized invoices for the customer. This is intended to prevent unexpected payment attempts after the customer has canceled a subscription. However, you can resume automatic collection of the invoices manually after subscription cancellation to have us proceed. Or, you could check for unpaid invoices before allowing the customer to cancel the subscription at all.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscriptions/{subscription_exposed_id}`\n"
     (
-      @spec search(
+      @spec cancel(
+              subscription_exposed_id :: binary(),
               params :: %{
+                optional(:cancellation_details) => cancellation_details,
                 optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:page) => binary,
-                optional(:query) => binary
+                optional(:invoice_now) => boolean,
+                optional(:prorate) => boolean
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.SearchResult.t(Stripe.Subscription.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def search(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscriptions/search", [], [])
+              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def cancel(subscription_exposed_id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/subscriptions/{subscription_exposed_id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "subscription_exposed_id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "subscription_exposed_id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [subscription_exposed_id]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Removes the currently applied discount on a subscription.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscriptions/{subscription_exposed_id}/discount`\n"
+    (
+      @spec delete_discount(subscription_exposed_id :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedDiscount.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete_discount(subscription_exposed_id, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/subscriptions/{subscription_exposed_id}/discount",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "subscription_exposed_id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "subscription_exposed_id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [subscription_exposed_id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
@@ -455,146 +557,6 @@ defmodule Stripe.Subscription do
   (
     nil
 
-    @doc "<p>Creates a new subscription on an existing customer. Each customer can have up to 500 active or scheduled subscriptions.</p>\n\n<p>When you create a subscription with <code>collection_method=charge_automatically</code>, the first invoice is finalized as part of the request.\nThe <code>payment_behavior</code> parameter determines the exact behavior of the initial payment.</p>\n\n<p>To start subscriptions where the first invoice always begins in a <code>draft</code> status, use <a href=\"/docs/billing/subscriptions/subscription-schedules#managing\">subscription schedules</a> instead.\nSchedules provide the flexibility to model more complex billing configurations that change over time.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscriptions`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:application_fee_percent) => number,
-                optional(:add_invoice_items) => list(add_invoice_items),
-                optional(:collection_method) => :charge_automatically | :send_invoice,
-                optional(:default_payment_method) => binary,
-                optional(:expand) => list(binary),
-                optional(:coupon) => binary,
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:description) => binary,
-                optional(:on_behalf_of) => binary | binary,
-                optional(:customer) => binary,
-                optional(:days_until_due) => integer,
-                optional(:promotion_code) => binary,
-                optional(:payment_settings) => payment_settings,
-                optional(:pending_invoice_item_interval) =>
-                  pending_invoice_item_interval | binary,
-                optional(:billing_thresholds) => billing_thresholds | binary,
-                optional(:default_source) => binary,
-                optional(:cancel_at_period_end) => boolean,
-                optional(:trial_from_plan) => boolean,
-                optional(:billing_cycle_anchor_config) => billing_cycle_anchor_config,
-                optional(:billing_cycle_anchor) => integer,
-                optional(:trial_period_days) => integer,
-                optional(:automatic_tax) => automatic_tax,
-                optional(:currency) => binary,
-                optional(:trial_end) => :now | integer,
-                optional(:cancel_at) => integer,
-                optional(:trial_settings) => trial_settings,
-                optional(:payment_behavior) =>
-                  :allow_incomplete
-                  | :default_incomplete
-                  | :error_if_incomplete
-                  | :pending_if_incomplete,
-                optional(:items) => list(items),
-                optional(:transfer_data) => transfer_data,
-                optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
-                optional(:off_session) => boolean,
-                optional(:default_tax_rates) => list(binary) | binary,
-                optional(:backdate_start_date) => integer
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscriptions", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Updates an existing subscription to match the specified parameters.\nWhen changing prices or quantities, we optionally prorate the price we charge next month to make up for any price changes.\nTo preview how the proration is calculated, use the <a href=\"/docs/api/invoices/upcoming\">upcoming invoice</a> endpoint.</p>\n\n<p>By default, we prorate subscription changes. For example, if a customer signs up on May 1 for a <currency>100</currency> price, they’ll be billed <currency>100</currency> immediately. If on May 15 they switch to a <currency>200</currency> price, then on June 1 they’ll be billed <currency>250</currency> (<currency>200</currency> for a renewal of her subscription, plus a <currency>50</currency> prorating adjustment for half of the previous month’s <currency>100</currency> difference). Similarly, a downgrade generates a credit that is applied to the next invoice. We also prorate when you make quantity changes.</p>\n\n<p>Switching prices does not normally change the billing date or generate an immediate charge unless:</p>\n\n<ul>\n<li>The billing interval is changed (for example, from monthly to yearly).</li>\n<li>The subscription moves from free to paid, or paid to free.</li>\n<li>A trial starts or ends.</li>\n</ul>\n\n<p>In these cases, we apply a credit for the unused time on the previous price, immediately charge the customer using the new price, and reset the billing date.</p>\n\n<p>If you want to charge for an upgrade immediately, pass <code>proration_behavior</code> as <code>always_invoice</code> to create prorations, automatically invoice the customer for those proration adjustments, and attempt to collect payment. If you pass <code>create_prorations</code>, the prorations are created but not automatically invoiced. If you want to bill the customer for the prorations before the subscription’s renewal date, you need to manually <a href=\"/docs/api/invoices/create\">invoice the customer</a>.</p>\n\n<p>If you don’t want to prorate, set the <code>proration_behavior</code> option to <code>none</code>. With this option, the customer is billed <currency>100</currency> on May 1 and <currency>200</currency> on June 1. Similarly, if you set <code>proration_behavior</code> to <code>none</code> when switching between different billing intervals (for example, from monthly to yearly), we don’t generate any credits for the old subscription’s unused time. We still reset the billing date and bill immediately for the new subscription.</p>\n\n<p>Updating the quantity on a subscription many times in an hour may result in <a href=\"/docs/rate-limits\">rate limiting</a>. If you need to bill for a frequently changing quantity, consider integrating <a href=\"/docs/billing/subscriptions/usage-based\">usage-based billing</a> instead.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscriptions/{subscription_exposed_id}`\n"
-    (
-      @spec update(
-              subscription_exposed_id :: binary(),
-              params :: %{
-                optional(:add_invoice_items) => list(add_invoice_items),
-                optional(:application_fee_percent) => number,
-                optional(:automatic_tax) => automatic_tax,
-                optional(:billing_cycle_anchor) => :now | :unchanged,
-                optional(:billing_thresholds) => billing_thresholds | binary,
-                optional(:cancel_at) => integer | binary,
-                optional(:cancel_at_period_end) => boolean,
-                optional(:cancellation_details) => cancellation_details,
-                optional(:collection_method) => :charge_automatically | :send_invoice,
-                optional(:coupon) => binary,
-                optional(:days_until_due) => integer,
-                optional(:default_payment_method) => binary,
-                optional(:default_source) => binary | binary,
-                optional(:default_tax_rates) => list(binary) | binary,
-                optional(:description) => binary | binary,
-                optional(:expand) => list(binary),
-                optional(:items) => list(items),
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:off_session) => boolean,
-                optional(:on_behalf_of) => binary | binary,
-                optional(:pause_collection) => pause_collection | binary,
-                optional(:payment_behavior) =>
-                  :allow_incomplete
-                  | :default_incomplete
-                  | :error_if_incomplete
-                  | :pending_if_incomplete,
-                optional(:payment_settings) => payment_settings,
-                optional(:pending_invoice_item_interval) =>
-                  pending_invoice_item_interval | binary,
-                optional(:promotion_code) => binary,
-                optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
-                optional(:proration_date) => integer,
-                optional(:transfer_data) => transfer_data | binary,
-                optional(:trial_end) => :now | integer,
-                optional(:trial_from_plan) => boolean,
-                optional(:trial_settings) => trial_settings
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def update(subscription_exposed_id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscriptions/{subscription_exposed_id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "subscription_exposed_id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_exposed_id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [subscription_exposed_id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Retrieves the subscription with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscriptions/{subscription_exposed_id}`\n"
     (
       @spec retrieve(
@@ -637,45 +599,90 @@ defmodule Stripe.Subscription do
   (
     nil
 
-    @doc "<p>Cancels a customer’s subscription immediately. The customer will not be charged again for the subscription.</p>\n\n<p>Note, however, that any pending invoice items that you’ve created will still be charged for at the end of the period, unless manually <a href=\"#delete_invoiceitem\">deleted</a>. If you’ve set the subscription to cancel at the end of the period, any pending prorations will also be left in place and collected at the end of the period. But if the subscription is set to cancel immediately, pending prorations will be removed.</p>\n\n<p>By default, upon subscription cancellation, Stripe will stop automatic collection of all finalized invoices for the customer. This is intended to prevent unexpected payment attempts after the customer has canceled a subscription. However, you can resume automatic collection of the invoices manually after subscription cancellation to have us proceed. Or, you could check for unpaid invoices before allowing the customer to cancel the subscription at all.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscriptions/{subscription_exposed_id}`\n"
+    @doc "<p>Search for subscriptions you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscriptions/search`\n"
     (
-      @spec cancel(
-              subscription_exposed_id :: binary(),
+      @spec search(
               params :: %{
-                optional(:cancellation_details) => cancellation_details,
                 optional(:expand) => list(binary),
-                optional(:invoice_now) => boolean,
-                optional(:prorate) => boolean
+                optional(:limit) => integer,
+                optional(:page) => binary,
+                optional(:query) => binary
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def cancel(subscription_exposed_id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscriptions/{subscription_exposed_id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "subscription_exposed_id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_exposed_id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [subscription_exposed_id]
-          )
+              {:ok, Stripe.SearchResult.t(Stripe.Subscription.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def search(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscriptions/search", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new subscription on an existing customer. Each customer can have up to 500 active or scheduled subscriptions.</p>\n\n<p>When you create a subscription with <code>collection_method=charge_automatically</code>, the first invoice is finalized as part of the request.\nThe <code>payment_behavior</code> parameter determines the exact behavior of the initial payment.</p>\n\n<p>To start subscriptions where the first invoice always begins in a <code>draft</code> status, use <a href=\"/docs/billing/subscriptions/subscription-schedules#managing\">subscription schedules</a> instead.\nSchedules provide the flexibility to model more complex billing configurations that change over time.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscriptions`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:application_fee_percent) => number | binary,
+                optional(:trial_settings) => trial_settings,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:payment_settings) => payment_settings,
+                optional(:days_until_due) => integer,
+                optional(:default_payment_method) => binary,
+                optional(:cancel_at_period_end) => boolean,
+                optional(:billing_cycle_anchor_config) => billing_cycle_anchor_config,
+                optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
+                optional(:add_invoice_items) => list(add_invoice_items),
+                optional(:trial_end) => :now | integer,
+                optional(:pending_invoice_item_interval) =>
+                  pending_invoice_item_interval | binary,
+                optional(:billing_cycle_anchor) => integer,
+                optional(:payment_behavior) =>
+                  :allow_incomplete
+                  | :default_incomplete
+                  | :error_if_incomplete
+                  | :pending_if_incomplete,
+                optional(:discounts) => list(discounts) | binary,
+                optional(:on_behalf_of) => binary | binary,
+                optional(:default_source) => binary,
+                optional(:currency) => binary,
+                optional(:invoice_settings) => invoice_settings,
+                optional(:coupon) => binary,
+                optional(:trial_from_plan) => boolean,
+                optional(:automatic_tax) => automatic_tax,
+                optional(:default_tax_rates) => list(binary) | binary,
+                optional(:description) => binary,
+                optional(:trial_period_days) => integer,
+                optional(:cancel_at) => integer,
+                optional(:billing_thresholds) => billing_thresholds | binary,
+                optional(:transfer_data) => transfer_data,
+                optional(:promotion_code) => binary,
+                optional(:items) => list(items),
+                optional(:backdate_start_date) => integer,
+                optional(:collection_method) => :charge_automatically | :send_invoice,
+                optional(:customer) => binary,
+                optional(:expand) => list(binary),
+                optional(:off_session) => boolean
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscriptions", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -731,16 +738,57 @@ defmodule Stripe.Subscription do
   (
     nil
 
-    @doc "<p>Removes the currently applied discount on a subscription.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/subscriptions/{subscription_exposed_id}/discount`\n"
+    @doc "<p>Updates an existing subscription to match the specified parameters.\nWhen changing prices or quantities, we optionally prorate the price we charge next month to make up for any price changes.\nTo preview how the proration is calculated, use the <a href=\"/docs/api/invoices/create_preview\">create preview</a> endpoint.</p>\n\n<p>By default, we prorate subscription changes. For example, if a customer signs up on May 1 for a <currency>100</currency> price, they’ll be billed <currency>100</currency> immediately. If on May 15 they switch to a <currency>200</currency> price, then on June 1 they’ll be billed <currency>250</currency> (<currency>200</currency> for a renewal of her subscription, plus a <currency>50</currency> prorating adjustment for half of the previous month’s <currency>100</currency> difference). Similarly, a downgrade generates a credit that is applied to the next invoice. We also prorate when you make quantity changes.</p>\n\n<p>Switching prices does not normally change the billing date or generate an immediate charge unless:</p>\n\n<ul>\n<li>The billing interval is changed (for example, from monthly to yearly).</li>\n<li>The subscription moves from free to paid.</li>\n<li>A trial starts or ends.</li>\n</ul>\n\n<p>In these cases, we apply a credit for the unused time on the previous price, immediately charge the customer using the new price, and reset the billing date. Learn about how <a href=\"/billing/subscriptions/upgrade-downgrade#immediate-payment\">Stripe immediately attempts payment for subscription changes</a>.</p>\n\n<p>If you want to charge for an upgrade immediately, pass <code>proration_behavior</code> as <code>always_invoice</code> to create prorations, automatically invoice the customer for those proration adjustments, and attempt to collect payment. If you pass <code>create_prorations</code>, the prorations are created but not automatically invoiced. If you want to bill the customer for the prorations before the subscription’s renewal date, you need to manually <a href=\"/docs/api/invoices/create\">invoice the customer</a>.</p>\n\n<p>If you don’t want to prorate, set the <code>proration_behavior</code> option to <code>none</code>. With this option, the customer is billed <currency>100</currency> on May 1 and <currency>200</currency> on June 1. Similarly, if you set <code>proration_behavior</code> to <code>none</code> when switching between different billing intervals (for example, from monthly to yearly), we don’t generate any credits for the old subscription’s unused time. We still reset the billing date and bill immediately for the new subscription.</p>\n\n<p>Updating the quantity on a subscription many times in an hour may result in <a href=\"/docs/rate-limits\">rate limiting</a>. If you need to bill for a frequently changing quantity, consider integrating <a href=\"/docs/billing/subscriptions/usage-based\">usage-based billing</a> instead.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscriptions/{subscription_exposed_id}`\n"
     (
-      @spec delete_discount(subscription_exposed_id :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedDiscount.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete_discount(subscription_exposed_id, opts \\ []) do
+      @spec update(
+              subscription_exposed_id :: binary(),
+              params :: %{
+                optional(:application_fee_percent) => number | binary,
+                optional(:trial_settings) => trial_settings,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:payment_settings) => payment_settings,
+                optional(:days_until_due) => integer,
+                optional(:default_payment_method) => binary,
+                optional(:cancel_at_period_end) => boolean,
+                optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
+                optional(:add_invoice_items) => list(add_invoice_items),
+                optional(:trial_end) => :now | integer,
+                optional(:pending_invoice_item_interval) =>
+                  pending_invoice_item_interval | binary,
+                optional(:billing_cycle_anchor) => :now | :unchanged,
+                optional(:payment_behavior) =>
+                  :allow_incomplete
+                  | :default_incomplete
+                  | :error_if_incomplete
+                  | :pending_if_incomplete,
+                optional(:discounts) => list(discounts) | binary,
+                optional(:on_behalf_of) => binary | binary,
+                optional(:default_source) => binary | binary,
+                optional(:invoice_settings) => invoice_settings,
+                optional(:coupon) => binary,
+                optional(:trial_from_plan) => boolean,
+                optional(:automatic_tax) => automatic_tax,
+                optional(:default_tax_rates) => list(binary) | binary,
+                optional(:pause_collection) => pause_collection | binary,
+                optional(:description) => binary | binary,
+                optional(:cancel_at) => integer | binary,
+                optional(:billing_thresholds) => billing_thresholds | binary,
+                optional(:transfer_data) => transfer_data | binary,
+                optional(:promotion_code) => binary,
+                optional(:items) => list(items),
+                optional(:collection_method) => :charge_automatically | :send_invoice,
+                optional(:cancellation_details) => cancellation_details,
+                optional(:proration_date) => integer,
+                optional(:expand) => list(binary),
+                optional(:off_session) => boolean
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Subscription.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def update(subscription_exposed_id, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscriptions/{subscription_exposed_id}/discount",
+            "/v1/subscriptions/{subscription_exposed_id}",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -761,7 +809,8 @@ defmodule Stripe.Subscription do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

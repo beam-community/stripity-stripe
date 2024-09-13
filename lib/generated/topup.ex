@@ -66,36 +66,6 @@ defmodule Stripe.Topup do
   (
     nil
 
-    @doc "<p>Top up the balance of an account</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/topups`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:amount) => integer,
-                optional(:currency) => binary,
-                optional(:description) => binary,
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:source) => binary,
-                optional(:statement_descriptor) => binary,
-                optional(:transfer_group) => binary
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Topup.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/topups", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Returns a list of top-ups.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/topups`\n"
     (
       @spec list(
@@ -161,6 +131,36 @@ defmodule Stripe.Topup do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Top up the balance of an account</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/topups`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:amount) => integer,
+                optional(:currency) => binary,
+                optional(:description) => binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:source) => binary,
+                optional(:statement_descriptor) => binary,
+                optional(:transfer_group) => binary
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Topup.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/topups", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

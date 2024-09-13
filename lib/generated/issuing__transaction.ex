@@ -56,12 +56,34 @@ defmodule Stripe.Issuing.Transaction do
   )
 
   (
+    @typedoc "Answers to prompts presented to the cardholder at the point of sale. Prompted fields vary depending on the configuration of your physical fleet cards. Typical points of sale support only numeric entry."
+    @type cardholder_prompt_data :: %{
+            optional(:driver_id) => binary,
+            optional(:odometer) => integer,
+            optional(:unspecified_id) => binary,
+            optional(:user_id) => binary,
+            optional(:vehicle_number) => binary
+          }
+  )
+
+  (
     @typedoc nil
     @type created :: %{
             optional(:gt) => integer,
             optional(:gte) => integer,
             optional(:lt) => integer,
             optional(:lte) => integer
+          }
+  )
+
+  (
+    @typedoc "Fleet-specific information for transactions using Fleet cards."
+    @type fleet :: %{
+            optional(:cardholder_prompt_data) => cardholder_prompt_data,
+            optional(:purchase_type) =>
+              :fuel_and_non_fuel_purchase | :fuel_purchase | :non_fuel_purchase,
+            optional(:reported_breakdown) => reported_breakdown,
+            optional(:service_type) => :full_service | :non_fuel_transaction | :self_service
           }
   )
 
@@ -77,14 +99,8 @@ defmodule Stripe.Issuing.Transaction do
   )
 
   (
-    @typedoc "Information about fuel that was purchased with this transaction."
-    @type fuel :: %{
-            optional(:type) =>
-              :diesel | :other | :unleaded_plus | :unleaded_regular | :unleaded_super,
-            optional(:unit) => :liter | :us_gallon,
-            optional(:unit_cost_decimal) => binary,
-            optional(:volume_decimal) => binary
-          }
+    @typedoc "Breakdown of fuel portion of the purchase."
+    @type fuel :: %{optional(:gross_amount_decimal) => binary}
   )
 
   (
@@ -402,8 +418,14 @@ defmodule Stripe.Issuing.Transaction do
   )
 
   (
+    @typedoc "Breakdown of non-fuel portion of the purchase."
+    @type non_fuel :: %{optional(:gross_amount_decimal) => binary}
+  )
+
+  (
     @typedoc "Additional purchase information that is optionally provided by the merchant."
     @type purchase_details :: %{
+            optional(:fleet) => fleet,
             optional(:flight) => flight,
             optional(:fuel) => fuel,
             optional(:lodging) => lodging,
@@ -423,6 +445,15 @@ defmodule Stripe.Issuing.Transaction do
   )
 
   (
+    @typedoc "More information about the total amount. This information is not guaranteed to be accurate as some merchants may provide unreliable data."
+    @type reported_breakdown :: %{
+            optional(:fuel) => fuel,
+            optional(:non_fuel) => non_fuel,
+            optional(:tax) => tax
+          }
+  )
+
+  (
     @typedoc nil
     @type segments :: %{
             optional(:arrival_airport_code) => binary,
@@ -431,6 +462,14 @@ defmodule Stripe.Issuing.Transaction do
             optional(:flight_number) => binary,
             optional(:service_class) => binary,
             optional(:stopover_allowed) => boolean
+          }
+  )
+
+  (
+    @typedoc "Information about tax included in this transaction."
+    @type tax :: %{
+            optional(:local_amount_decimal) => binary,
+            optional(:national_amount_decimal) => binary
           }
   )
 
@@ -561,6 +600,50 @@ defmodule Stripe.Issuing.Transaction do
   (
     nil
 
+    @doc "<p>Refund a test-mode Transaction.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/transactions/{transaction}/refund`\n"
+    (
+      @spec refund(
+              transaction :: binary(),
+              params :: %{optional(:expand) => list(binary), optional(:refund_amount) => integer},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Transaction.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def refund(transaction, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/issuing/transactions/{transaction}/refund",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "transaction",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "transaction",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [transaction]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Allows the user to capture an arbitrary amount, also known as a forced capture.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/transactions/create_force_capture`\n"
     (
       @spec create_force_capture(
@@ -619,50 +702,6 @@ defmodule Stripe.Issuing.Transaction do
             "/v1/test_helpers/issuing/transactions/create_unlinked_refund",
             [],
             []
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Refund a test-mode Transaction.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/transactions/{transaction}/refund`\n"
-    (
-      @spec refund(
-              transaction :: binary(),
-              params :: %{optional(:expand) => list(binary), optional(:refund_amount) => integer},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Transaction.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def refund(transaction, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/transactions/{transaction}/refund",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "transaction",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "transaction",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [transaction]
           )
 
         Stripe.Request.new_request(opts)

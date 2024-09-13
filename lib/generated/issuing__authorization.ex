@@ -13,6 +13,8 @@ defmodule Stripe.Issuing.Authorization do
       :cardholder,
       :created,
       :currency,
+      :fleet,
+      :fuel,
       :id,
       :livemode,
       :merchant_amount,
@@ -31,7 +33,7 @@ defmodule Stripe.Issuing.Authorization do
       :wallet
     ]
 
-    @typedoc "The `issuing.authorization` type.\n\n  * `amount` The total amount that was authorized or rejected. This amount is in `currency` and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). `amount` should be the same as `merchant_amount`, unless `currency` and `merchant_currency` are different.\n  * `amount_details` Detailed breakdown of amount components. These amounts are denominated in `currency` and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).\n  * `approved` Whether the authorization has been approved.\n  * `authorization_method` How the card details were provided.\n  * `balance_transactions` List of balance transactions associated with this authorization.\n  * `card` \n  * `cardholder` The cardholder to whom this authorization belongs.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` The currency of the cardholder. This currency can be different from the currency presented at authorization and the `merchant_currency` field on this authorization. Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `merchant_amount` The total amount that was authorized or rejected. This amount is in the `merchant_currency` and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). `merchant_amount` should be the same as `amount`, unless `merchant_currency` and `currency` are different.\n  * `merchant_currency` The local currency that was presented to the cardholder for the authorization. This currency can be different from the cardholder currency and the `currency` field on this authorization. Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `merchant_data` \n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `network_data` Details about the authorization, such as identifiers, set by the card network.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `pending_request` The pending authorization request. This field will only be non-null during an `issuing_authorization.request` webhook.\n  * `request_history` History of every time a `pending_request` authorization was approved/declined, either by you directly or by Stripe (e.g. based on your spending_controls). If the merchant changes the authorization by performing an incremental authorization, you can look at this field to see the previous requests for the authorization. This field can be helpful in determining why a given authorization was approved/declined.\n  * `status` The current status of the authorization in its lifecycle.\n  * `token` [Token](https://stripe.com/docs/api/issuing/tokens/object) object used for this authorization. If a network token was not used for this authorization, this field will be null.\n  * `transactions` List of [transactions](https://stripe.com/docs/api/issuing/transactions) associated with this authorization.\n  * `treasury` [Treasury](https://stripe.com/docs/api/treasury) details related to this authorization if it was created on a [FinancialAccount](https://stripe.com/docs/api/treasury/financial_accounts).\n  * `verification_data` \n  * `wallet` The digital wallet used for this transaction. One of `apple_pay`, `google_pay`, or `samsung_pay`. Will populate as `null` when no digital wallet was utilized.\n"
+    @typedoc "The `issuing.authorization` type.\n\n  * `amount` The total amount that was authorized or rejected. This amount is in `currency` and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). `amount` should be the same as `merchant_amount`, unless `currency` and `merchant_currency` are different.\n  * `amount_details` Detailed breakdown of amount components. These amounts are denominated in `currency` and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).\n  * `approved` Whether the authorization has been approved.\n  * `authorization_method` How the card details were provided.\n  * `balance_transactions` List of balance transactions associated with this authorization.\n  * `card` \n  * `cardholder` The cardholder to whom this authorization belongs.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` The currency of the cardholder. This currency can be different from the currency presented at authorization and the `merchant_currency` field on this authorization. Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `fleet` Fleet-specific information for authorizations using Fleet cards.\n  * `fuel` Information about fuel that was purchased with this transaction. Typically this information is received from the merchant after the authorization has been approved and the fuel dispensed.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `merchant_amount` The total amount that was authorized or rejected. This amount is in the `merchant_currency` and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). `merchant_amount` should be the same as `amount`, unless `merchant_currency` and `currency` are different.\n  * `merchant_currency` The local currency that was presented to the cardholder for the authorization. This currency can be different from the cardholder currency and the `currency` field on this authorization. Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `merchant_data` \n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `network_data` Details about the authorization, such as identifiers, set by the card network.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `pending_request` The pending authorization request. This field will only be non-null during an `issuing_authorization.request` webhook.\n  * `request_history` History of every time a `pending_request` authorization was approved/declined, either by you directly or by Stripe (e.g. based on your spending_controls). If the merchant changes the authorization by performing an incremental authorization, you can look at this field to see the previous requests for the authorization. This field can be helpful in determining why a given authorization was approved/declined.\n  * `status` The current status of the authorization in its lifecycle.\n  * `token` [Token](https://stripe.com/docs/api/issuing/tokens/object) object used for this authorization. If a network token was not used for this authorization, this field will be null.\n  * `transactions` List of [transactions](https://stripe.com/docs/api/issuing/transactions) associated with this authorization.\n  * `treasury` [Treasury](https://stripe.com/docs/api/treasury) details related to this authorization if it was created on a [FinancialAccount](https://stripe.com/docs/api/treasury/financial_accounts).\n  * `verification_data` \n  * `wallet` The digital wallet used for this transaction. One of `apple_pay`, `google_pay`, or `samsung_pay`. Will populate as `null` when no digital wallet was utilized.\n"
     @type t :: %__MODULE__{
             amount: integer,
             amount_details: term | nil,
@@ -42,6 +44,8 @@ defmodule Stripe.Issuing.Authorization do
             cardholder: (binary | Stripe.Issuing.Cardholder.t()) | nil,
             created: integer,
             currency: binary,
+            fleet: term | nil,
+            fuel: term | nil,
             id: binary,
             livemode: boolean,
             merchant_amount: integer,
@@ -78,12 +82,34 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
+    @typedoc "Answers to prompts presented to the cardholder at the point of sale. Prompted fields vary depending on the configuration of your physical fleet cards. Typical points of sale support only numeric entry."
+    @type cardholder_prompt_data :: %{
+            optional(:driver_id) => binary,
+            optional(:odometer) => integer,
+            optional(:unspecified_id) => binary,
+            optional(:user_id) => binary,
+            optional(:vehicle_number) => binary
+          }
+  )
+
+  (
     @typedoc nil
     @type created :: %{
             optional(:gt) => integer,
             optional(:gte) => integer,
             optional(:lt) => integer,
             optional(:lte) => integer
+          }
+  )
+
+  (
+    @typedoc "Fleet-specific information for authorizations using Fleet cards."
+    @type fleet :: %{
+            optional(:cardholder_prompt_data) => cardholder_prompt_data,
+            optional(:purchase_type) =>
+              :fuel_and_non_fuel_purchase | :fuel_purchase | :non_fuel_purchase,
+            optional(:reported_breakdown) => reported_breakdown,
+            optional(:service_type) => :full_service | :non_fuel_transaction | :self_service
           }
   )
 
@@ -99,14 +125,8 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
-    @typedoc "Information about fuel that was purchased with this transaction."
-    @type fuel :: %{
-            optional(:type) =>
-              :diesel | :other | :unleaded_plus | :unleaded_regular | :unleaded_super,
-            optional(:unit) => :liter | :us_gallon,
-            optional(:unit_cost_decimal) => binary,
-            optional(:volume_decimal) => binary
-          }
+    @typedoc "Breakdown of fuel portion of the purchase."
+    @type fuel :: %{optional(:gross_amount_decimal) => binary}
   )
 
   (
@@ -429,8 +449,14 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
+    @typedoc "Breakdown of non-fuel portion of the purchase."
+    @type non_fuel :: %{optional(:gross_amount_decimal) => binary}
+  )
+
+  (
     @typedoc "Additional purchase information that is optionally provided by the merchant."
     @type purchase_details :: %{
+            optional(:fleet) => fleet,
             optional(:flight) => flight,
             optional(:fuel) => fuel,
             optional(:lodging) => lodging,
@@ -450,6 +476,15 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
+    @typedoc "More information about the total amount. This information is not guaranteed to be accurate as some merchants may provide unreliable data."
+    @type reported_breakdown :: %{
+            optional(:fuel) => fuel,
+            optional(:non_fuel) => non_fuel,
+            optional(:tax) => tax
+          }
+  )
+
+  (
     @typedoc nil
     @type segments :: %{
             optional(:arrival_airport_code) => binary,
@@ -458,6 +493,14 @@ defmodule Stripe.Issuing.Authorization do
             optional(:flight_number) => binary,
             optional(:service_class) => binary,
             optional(:stopover_allowed) => boolean
+          }
+  )
+
+  (
+    @typedoc "Information about tax included in this transaction."
+    @type tax :: %{
+            optional(:local_amount_decimal) => binary,
+            optional(:national_amount_decimal) => binary
           }
   )
 
@@ -605,8 +648,7 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
-    nil
-
+    @deprecated "Stripe has deprecated this operation"
     @doc "<p>[Deprecated] Approves a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href=\"/docs/issuing/controls/real-time-authorizations\">real-time authorization</a> flow. \nThis method is deprecated. Instead, <a href=\"/docs/issuing/controls/real-time-authorizations#authorization-handling\">respond directly to the webhook request to approve an authorization</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/authorizations/{authorization}/approve`\n"
     (
       @spec approve(
@@ -653,8 +695,7 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
-    nil
-
+    @deprecated "Stripe has deprecated this operation"
     @doc "<p>[Deprecated] Declines a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href=\"/docs/issuing/controls/real-time-authorizations\">real time authorization</a> flow.\nThis method is deprecated. Instead, <a href=\"/docs/issuing/controls/real-time-authorizations#authorization-handling\">respond directly to the webhook request to decline an authorization</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/authorizations/{authorization}/decline`\n"
     (
       @spec decline(
@@ -713,6 +754,8 @@ defmodule Stripe.Issuing.Authorization do
                 optional(:card) => binary,
                 optional(:currency) => binary,
                 optional(:expand) => list(binary),
+                optional(:fleet) => fleet,
+                optional(:fuel) => fuel,
                 optional(:is_amount_controllable) => boolean,
                 optional(:merchant_data) => merchant_data,
                 optional(:network_data) => network_data,
@@ -730,6 +773,148 @@ defmodule Stripe.Issuing.Authorization do
             "/v1/test_helpers/issuing/authorizations",
             [],
             []
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Capture a test-mode authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/capture`\n"
+    (
+      @spec capture(
+              authorization :: binary(),
+              params :: %{
+                optional(:capture_amount) => integer,
+                optional(:close_authorization) => boolean,
+                optional(:expand) => list(binary),
+                optional(:purchase_details) => purchase_details
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Authorization.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def capture(authorization, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/issuing/authorizations/{authorization}/capture",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "authorization",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "authorization",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [authorization]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Expire a test-mode Authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/expire`\n"
+    (
+      @spec expire(
+              authorization :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Authorization.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def expire(authorization, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/issuing/authorizations/{authorization}/expire",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "authorization",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "authorization",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [authorization]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Finalize the amount on an Authorization prior to capture, when the initial authorization was for an estimated amount.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/finalize_amount`\n"
+    (
+      @spec finalize_amount(
+              authorization :: binary(),
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:final_amount) => integer,
+                optional(:fleet) => fleet,
+                optional(:fuel) => fuel
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Authorization.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def finalize_amount(authorization, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/issuing/authorizations/{authorization}/finalize_amount",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "authorization",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "authorization",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [authorization]
           )
 
         Stripe.Request.new_request(opts)
@@ -806,99 +991,6 @@ defmodule Stripe.Issuing.Authorization do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/test_helpers/issuing/authorizations/{authorization}/reverse",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "authorization",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "authorization",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [authorization]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Expire a test-mode Authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/expire`\n"
-    (
-      @spec expire(
-              authorization :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Authorization.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def expire(authorization, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/authorizations/{authorization}/expire",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "authorization",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "authorization",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [authorization]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Capture a test-mode authorization.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/authorizations/{authorization}/capture`\n"
-    (
-      @spec capture(
-              authorization :: binary(),
-              params :: %{
-                optional(:capture_amount) => integer,
-                optional(:close_authorization) => boolean,
-                optional(:expand) => list(binary),
-                optional(:purchase_details) => purchase_details
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Authorization.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def capture(authorization, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/authorizations/{authorization}/capture",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

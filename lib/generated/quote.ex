@@ -4,40 +4,40 @@ defmodule Stripe.Quote do
   @moduledoc "A Quote is a way to model prices that you'd like to provide to a customer.\nOnce accepted, it will automatically create an invoice, subscription or subscription schedule."
   (
     defstruct [
-      :default_tax_rates,
-      :id,
-      :transfer_data,
-      :application_fee_amount,
-      :number,
-      :from_quote,
-      :status,
-      :subscription,
-      :amount_total,
-      :amount_subtotal,
-      :discounts,
-      :created,
-      :currency,
-      :automatic_tax,
-      :test_clock,
-      :status_transitions,
-      :expires_at,
-      :total_details,
-      :invoice_settings,
-      :object,
-      :application,
-      :invoice,
-      :customer,
-      :on_behalf_of,
-      :subscription_schedule,
-      :header,
-      :footer,
-      :description,
-      :subscription_data,
-      :metadata,
       :line_items,
-      :collection_method,
       :livemode,
+      :customer,
+      :collection_method,
+      :header,
+      :subscription_data,
+      :created,
+      :transfer_data,
+      :application,
+      :expires_at,
+      :invoice,
+      :subscription_schedule,
+      :status,
+      :amount_total,
+      :description,
+      :id,
+      :footer,
+      :status_transitions,
+      :number,
+      :default_tax_rates,
+      :automatic_tax,
       :computed,
+      :invoice_settings,
+      :application_fee_amount,
+      :currency,
+      :object,
+      :on_behalf_of,
+      :discounts,
+      :total_details,
+      :subscription,
+      :test_clock,
+      :amount_subtotal,
+      :metadata,
+      :from_quote,
       :application_fee_percent
     ]
 
@@ -83,12 +83,16 @@ defmodule Stripe.Quote do
 
   (
     @typedoc "Settings for automatic tax lookup for this quote and resulting invoices and subscriptions."
-    @type automatic_tax :: %{optional(:enabled) => boolean}
+    @type automatic_tax :: %{optional(:enabled) => boolean, optional(:liability) => liability}
   )
 
   (
     @typedoc nil
-    @type discounts :: %{optional(:coupon) => binary, optional(:discount) => binary}
+    @type discounts :: %{
+            optional(:coupon) => binary,
+            optional(:discount) => binary,
+            optional(:promotion_code) => binary
+          }
   )
 
   (
@@ -98,12 +102,23 @@ defmodule Stripe.Quote do
 
   (
     @typedoc "All invoices will be billed using the specified settings."
-    @type invoice_settings :: %{optional(:days_until_due) => integer}
+    @type invoice_settings :: %{optional(:days_until_due) => integer, optional(:issuer) => issuer}
+  )
+
+  (
+    @typedoc "The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account."
+    @type issuer :: %{optional(:account) => binary, optional(:type) => :account | :self}
+  )
+
+  (
+    @typedoc "The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account."
+    @type liability :: %{optional(:account) => binary, optional(:type) => :account | :self}
   )
 
   (
     @typedoc nil
     @type line_items :: %{
+            optional(:discounts) => list(discounts) | binary,
             optional(:price) => binary,
             optional(:price_data) => price_data,
             optional(:quantity) => integer,
@@ -153,6 +168,38 @@ defmodule Stripe.Quote do
   (
     nil
 
+    @doc "<p>Returns a list of your quotes.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/quotes`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:customer) => binary,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary,
+                optional(:status) => :accepted | :canceled | :draft | :open,
+                optional(:test_clock) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Quote.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/quotes", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Retrieves the quote with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/quotes/{quote}`\n"
     (
       @spec retrieve(
@@ -164,6 +211,104 @@ defmodule Stripe.Quote do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/quotes/{quote}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "quote",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "quote",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [quote]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>When retrieving a quote, there is an includable <a href=\"https://stripe.com/docs/api/quotes/object#quote_object-computed-upfront-line_items\"><strong>computed.upfront.line_items</strong></a> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of upfront line items.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/quotes/{quote}/computed_upfront_line_items`\n"
+    (
+      @spec list_computed_upfront_line_items(
+              quote :: binary(),
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Item.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list_computed_upfront_line_items(quote, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/quotes/{quote}/computed_upfront_line_items",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "quote",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "quote",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [quote]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>When retrieving a quote, there is an includable <strong>line_items</strong> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/quotes/{quote}/line_items`\n"
+    (
+      @spec list_line_items(
+              quote :: binary(),
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Item.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list_line_items(quote, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/quotes/{quote}/line_items",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -296,6 +441,47 @@ defmodule Stripe.Quote do
   (
     nil
 
+    @doc "<p>Accepts the specified quote.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/quotes/{quote}/accept`\n"
+    (
+      @spec accept(
+              quote :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Quote.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def accept(quote, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/quotes/{quote}/accept",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "quote",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "quote",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [quote]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Cancels the quote.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/quotes/{quote}/cancel`\n"
     (
       @spec cancel(
@@ -378,178 +564,7 @@ defmodule Stripe.Quote do
   (
     nil
 
-    @doc "<p>Accepts the specified quote.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/quotes/{quote}/accept`\n"
-    (
-      @spec accept(
-              quote :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Quote.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def accept(quote, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/quotes/{quote}/accept",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "quote",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "quote",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [quote]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of your quotes.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/quotes`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:customer) => binary,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary,
-                optional(:status) => :accepted | :canceled | :draft | :open,
-                optional(:test_clock) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Quote.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/quotes", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>When retrieving a quote, there is an includable <strong>line_items</strong> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/quotes/{quote}/line_items`\n"
-    (
-      @spec list_line_items(
-              quote :: binary(),
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Item.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list_line_items(quote, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/quotes/{quote}/line_items",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "quote",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "quote",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [quote]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>When retrieving a quote, there is an includable <a href=\"https://stripe.com/docs/api/quotes/object#quote_object-computed-upfront-line_items\"><strong>computed.upfront.line_items</strong></a> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of upfront line items.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/quotes/{quote}/computed_upfront_line_items`\n"
-    (
-      @spec list_computed_upfront_line_items(
-              quote :: binary(),
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Item.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list_computed_upfront_line_items(quote, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/quotes/{quote}/computed_upfront_line_items",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "quote",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "quote",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [quote]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Download the PDF for a finalized quote</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/quotes/{quote}/pdf`\n"
+    @doc "<p>Download the PDF for a finalized quote. Explanation for special handling can be found <a href=\"https://docs.stripe.com/quotes/overview#quote_pdf\">here</a></p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/quotes/{quote}/pdf`\n"
     (
       @spec pdf(
               quote :: binary(),

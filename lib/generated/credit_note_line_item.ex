@@ -45,7 +45,7 @@ defmodule Stripe.CreditNoteLineItem do
   (
     nil
 
-    @doc "<p>When retrieving a credit note, you’ll get a <strong>lines</strong> property containing the the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/credit_notes/{credit_note}/lines`\n"
+    @doc "<p>When retrieving a credit note, you’ll get a <strong>lines</strong> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/credit_notes/{credit_note}/lines`\n"
     (
       @spec list(
               credit_note :: binary(),

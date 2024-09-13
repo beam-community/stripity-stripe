@@ -50,6 +50,7 @@ defmodule Stripe.SubscriptionSchedule do
   (
     @typedoc nil
     @type add_invoice_items :: %{
+            optional(:discounts) => list(discounts),
             optional(:price) => binary,
             optional(:price_data) => price_data,
             optional(:quantity) => integer,
@@ -59,7 +60,7 @@ defmodule Stripe.SubscriptionSchedule do
 
   (
     @typedoc "Automatic tax settings for this phase."
-    @type automatic_tax :: %{optional(:enabled) => boolean}
+    @type automatic_tax :: %{optional(:enabled) => boolean, optional(:liability) => liability}
   )
 
   (
@@ -117,14 +118,33 @@ defmodule Stripe.SubscriptionSchedule do
   )
 
   (
+    @typedoc nil
+    @type discounts :: %{
+            optional(:coupon) => binary,
+            optional(:discount) => binary,
+            optional(:promotion_code) => binary
+          }
+  )
+
+  (
     @typedoc "All invoices will be billed using the specified settings."
-    @type invoice_settings :: %{optional(:days_until_due) => integer}
+    @type invoice_settings :: %{
+            optional(:account_tax_ids) => list(binary) | binary,
+            optional(:days_until_due) => integer,
+            optional(:issuer) => issuer
+          }
+  )
+
+  (
+    @typedoc "The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account."
+    @type issuer :: %{optional(:account) => binary, optional(:type) => :account | :self}
   )
 
   (
     @typedoc nil
     @type items :: %{
             optional(:billing_thresholds) => billing_thresholds | binary,
+            optional(:discounts) => list(discounts) | binary,
             optional(:metadata) => %{optional(binary) => binary},
             optional(:plan) => binary,
             optional(:price) => binary,
@@ -132,6 +152,11 @@ defmodule Stripe.SubscriptionSchedule do
             optional(:quantity) => integer,
             optional(:tax_rates) => list(binary) | binary
           }
+  )
+
+  (
+    @typedoc "The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account."
+    @type liability :: %{optional(:account) => binary, optional(:type) => :account | :self}
   )
 
   (
@@ -148,6 +173,7 @@ defmodule Stripe.SubscriptionSchedule do
             optional(:default_payment_method) => binary,
             optional(:default_tax_rates) => list(binary) | binary,
             optional(:description) => binary | binary,
+            optional(:discounts) => list(discounts) | binary,
             optional(:end_date) => integer,
             optional(:invoice_settings) => invoice_settings,
             optional(:items) => list(items),
@@ -237,39 +263,6 @@ defmodule Stripe.SubscriptionSchedule do
   (
     nil
 
-    @doc "<p>Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscription_schedules`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:customer) => binary,
-                optional(:default_settings) => default_settings,
-                optional(:end_behavior) => :cancel | :none | :release | :renew,
-                optional(:expand) => list(binary),
-                optional(:from_subscription) => binary,
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:phases) => list(phases),
-                optional(:start_date) => integer | :now
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.SubscriptionSchedule.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscription_schedules", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Retrieves the details of an existing subscription schedule. You only need to supply the unique subscription schedule identifier that was returned upon subscription schedule creation.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscription_schedules/{schedule}`\n"
     (
       @spec retrieve(
@@ -306,6 +299,39 @@ defmodule Stripe.SubscriptionSchedule do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscription_schedules`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:customer) => binary,
+                optional(:default_settings) => default_settings,
+                optional(:end_behavior) => :cancel | :none | :release | :renew,
+                optional(:expand) => list(binary),
+                optional(:from_subscription) => binary,
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:phases) => list(phases),
+                optional(:start_date) => integer | :now
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.SubscriptionSchedule.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/subscription_schedules", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

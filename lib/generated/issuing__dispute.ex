@@ -11,6 +11,7 @@ defmodule Stripe.Issuing.Dispute do
       :evidence,
       :id,
       :livemode,
+      :loss_reason,
       :metadata,
       :object,
       :status,
@@ -18,7 +19,7 @@ defmodule Stripe.Issuing.Dispute do
       :treasury
     ]
 
-    @typedoc "The `issuing.dispute` type.\n\n  * `amount` Disputed amount in the card's currency and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). Usually the amount of the `transaction`, but can differ (usually because of currency fluctuation).\n  * `balance_transactions` List of balance transactions associated with the dispute.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` The currency the `transaction` was made in.\n  * `evidence` \n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `status` Current status of the dispute.\n  * `transaction` The transaction being disputed.\n  * `treasury` [Treasury](https://stripe.com/docs/api/treasury) details related to this dispute if it was created on a [FinancialAccount](/docs/api/treasury/financial_accounts\n"
+    @typedoc "The `issuing.dispute` type.\n\n  * `amount` Disputed amount in the card's currency and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). Usually the amount of the `transaction`, but can differ (usually because of currency fluctuation).\n  * `balance_transactions` List of balance transactions associated with the dispute.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` The currency the `transaction` was made in.\n  * `evidence` \n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `loss_reason` The enum that describes the dispute loss outcome. If the dispute is not lost, this field will be absent. New enum values may be added in the future, so be sure to handle unknown values.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `status` Current status of the dispute.\n  * `transaction` The transaction being disputed.\n  * `treasury` [Treasury](https://stripe.com/docs/api/treasury) details related to this dispute if it was created on a [FinancialAccount](/docs/api/treasury/financial_accounts\n"
     @type t :: %__MODULE__{
             amount: integer,
             balance_transactions: term | nil,
@@ -27,6 +28,7 @@ defmodule Stripe.Issuing.Dispute do
             evidence: term,
             id: binary,
             livemode: boolean,
+            loss_reason: binary,
             metadata: term,
             object: binary,
             status: binary,
@@ -80,6 +82,7 @@ defmodule Stripe.Issuing.Dispute do
             optional(:duplicate) => duplicate | binary,
             optional(:fraudulent) => fraudulent | binary,
             optional(:merchandise_not_as_described) => merchandise_not_as_described | binary,
+            optional(:no_valid_authorization) => no_valid_authorization | binary,
             optional(:not_received) => not_received | binary,
             optional(:other) => other | binary,
             optional(:reason) =>
@@ -87,6 +90,7 @@ defmodule Stripe.Issuing.Dispute do
               | :duplicate
               | :fraudulent
               | :merchandise_not_as_described
+              | :no_valid_authorization
               | :not_received
               | :other
               | :service_not_as_described,
@@ -111,6 +115,14 @@ defmodule Stripe.Issuing.Dispute do
             optional(:return_description) => binary | binary,
             optional(:return_status) => :merchant_rejected | :successful,
             optional(:returned_at) => integer | binary
+          }
+  )
+
+  (
+    @typedoc nil
+    @type no_valid_authorization :: %{
+            optional(:additional_documentation) => binary | binary,
+            optional(:explanation) => binary | binary
           }
   )
 
@@ -173,6 +185,50 @@ defmodule Stripe.Issuing.Dispute do
               | {:error, term()}
       def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/issuing/disputes", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves an Issuing <code>Dispute</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/issuing/disputes/{dispute}`\n"
+    (
+      @spec retrieve(
+              dispute :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Dispute.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(dispute, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/issuing/disputes/{dispute}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "dispute",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "dispute",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [dispute]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -258,50 +314,6 @@ defmodule Stripe.Issuing.Dispute do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves an Issuing <code>Dispute</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/issuing/disputes/{dispute}`\n"
-    (
-      @spec retrieve(
-              dispute :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Dispute.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(dispute, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/issuing/disputes/{dispute}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "dispute",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "dispute",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [dispute]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

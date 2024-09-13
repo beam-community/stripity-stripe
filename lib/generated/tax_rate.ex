@@ -13,6 +13,7 @@ defmodule Stripe.TaxRate do
       :id,
       :inclusive,
       :jurisdiction,
+      :jurisdiction_level,
       :livemode,
       :metadata,
       :object,
@@ -21,7 +22,7 @@ defmodule Stripe.TaxRate do
       :tax_type
     ]
 
-    @typedoc "The `tax_rate` type.\n\n  * `active` Defaults to `true`. When set to `false`, this tax rate cannot be used with new applications or Checkout Sessions, but will still work for subscriptions and invoices that already have it set.\n  * `country` Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `description` An arbitrary string attached to the tax rate for your internal use only. It will not be visible to your customers.\n  * `display_name` The display name of the tax rates as it will appear to your customer on their receipt email, PDF, and the hosted invoice page.\n  * `effective_percentage` Actual/effective tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true,\nthis percentage reflects the rate actually used to calculate tax based on the product's taxability\nand whether the user is registered to collect taxes in the corresponding jurisdiction.\n  * `id` Unique identifier for the object.\n  * `inclusive` This specifies if the tax rate is inclusive or exclusive.\n  * `jurisdiction` The jurisdiction for the tax rate. You can use this label field for tax reporting purposes. It also appears on your customer’s invoice.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `percentage` Tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true, this percentage includes the statutory tax rate of non-taxable jurisdictions.\n  * `state` [ISO 3166-2 subdivision code](https://en.wikipedia.org/wiki/ISO_3166-2:US), without country prefix. For example, \"NY\" for New York, United States.\n  * `tax_type` The high-level tax type, such as `vat` or `sales_tax`.\n"
+    @typedoc "The `tax_rate` type.\n\n  * `active` Defaults to `true`. When set to `false`, this tax rate cannot be used with new applications or Checkout Sessions, but will still work for subscriptions and invoices that already have it set.\n  * `country` Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `description` An arbitrary string attached to the tax rate for your internal use only. It will not be visible to your customers.\n  * `display_name` The display name of the tax rates as it will appear to your customer on their receipt email, PDF, and the hosted invoice page.\n  * `effective_percentage` Actual/effective tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true,\nthis percentage reflects the rate actually used to calculate tax based on the product's taxability\nand whether the user is registered to collect taxes in the corresponding jurisdiction.\n  * `id` Unique identifier for the object.\n  * `inclusive` This specifies if the tax rate is inclusive or exclusive.\n  * `jurisdiction` The jurisdiction for the tax rate. You can use this label field for tax reporting purposes. It also appears on your customer’s invoice.\n  * `jurisdiction_level` The level of the jurisdiction that imposes this tax rate. Will be `null` for manually defined tax rates.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `percentage` Tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true, this percentage includes the statutory tax rate of non-taxable jurisdictions.\n  * `state` [ISO 3166-2 subdivision code](https://en.wikipedia.org/wiki/ISO_3166-2:US), without country prefix. For example, \"NY\" for New York, United States.\n  * `tax_type` The high-level tax type, such as `vat` or `sales_tax`.\n"
     @type t :: %__MODULE__{
             active: boolean,
             country: binary | nil,
@@ -32,6 +33,7 @@ defmodule Stripe.TaxRate do
             id: binary,
             inclusive: boolean,
             jurisdiction: binary | nil,
+            jurisdiction_level: binary | nil,
             livemode: boolean,
             metadata: term | nil,
             object: binary,
@@ -153,7 +155,6 @@ defmodule Stripe.TaxRate do
                   | :qst
                   | :rst
                   | :sales_tax
-                  | :service_tax
                   | :vat
               },
               opts :: Keyword.t()
@@ -198,7 +199,6 @@ defmodule Stripe.TaxRate do
                   | :qst
                   | :rst
                   | :sales_tax
-                  | :service_tax
                   | :vat
               },
               opts :: Keyword.t()

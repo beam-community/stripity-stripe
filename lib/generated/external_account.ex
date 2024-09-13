@@ -8,7 +8,7 @@ defmodule Stripe.ExternalAccount do
   )
 
   (
-    @typedoc "One or more documents that support the [Bank account ownership verification](https://support.stripe.com/questions/bank-account-ownership-verification) requirement. Must be a document associated with the bank account that displays the last 4 digits of the account number, either a statement or a voided check."
+    @typedoc "One or more documents that support the [Bank account ownership verification](https://support.stripe.com/questions/bank-account-ownership-verification) requirement. Must be a document associated with the bank account that displays the last 4 digits of the account number, either a statement or a check."
     @type bank_account_ownership_verification :: %{optional(:files) => list(binary)}
   )
 
@@ -17,6 +17,58 @@ defmodule Stripe.ExternalAccount do
     @type documents :: %{
             optional(:bank_account_ownership_verification) => bank_account_ownership_verification
           }
+  )
+
+  (
+    nil
+
+    @doc "<p>Delete a specified external account for a given account.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}/external_accounts/{id}`\n"
+    (
+      @spec delete(account :: binary(), id :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedExternalAccount.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(account, id, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/accounts/{account}/external_accounts/{id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "account",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "account",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              },
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [account, id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
   )
 
   (
@@ -179,7 +231,7 @@ defmodule Stripe.ExternalAccount do
   (
     nil
 
-    @doc "<p>Updates the metadata, account holder name, account holder type of a bank account belonging to a <a href=\"/docs/connect/custom-accounts\">Custom account</a>, and optionally sets it as the default for its currency. Other bank account details are not editable by design.</p>\n\n<p>You can re-enable a disabled bank account by performing an update call without providing any arguments or changes.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}/external_accounts/{id}`\n"
+    @doc "<p>Updates the metadata, account holder name, account holder type of a bank account belonging to\na connected account and optionally sets it as the default for its currency. Other bank account\ndetails are not editable by design.</p>\n\n<p>You can only update bank accounts when <a href=\"/api/accounts/object#account_object-controller-requirement_collection\">account.controller.requirement_collection</a> is <code>application</code>, which includes <a href=\"/connect/custom-accounts\">Custom accounts</a>.</p>\n\n<p>You can re-enable a disabled bank account by performing an update call without providing any\narguments or changes.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/accounts/{account}/external_accounts/{id}`\n"
     (
       @spec update(
               account :: binary(),
@@ -246,58 +298,6 @@ defmodule Stripe.ExternalAccount do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Delete a specified external account for a given account.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}/external_accounts/{id}`\n"
-    (
-      @spec delete(account :: binary(), id :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedExternalAccount.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(account, id, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/accounts/{account}/external_accounts/{id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "account",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              },
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [account, id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
