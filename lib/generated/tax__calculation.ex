@@ -13,6 +13,7 @@ defmodule Stripe.Tax.Calculation do
       :line_items,
       :livemode,
       :object,
+      :ship_from_details,
       :shipping_cost,
       :tax_amount_exclusive,
       :tax_amount_inclusive,
@@ -20,7 +21,7 @@ defmodule Stripe.Tax.Calculation do
       :tax_date
     ]
 
-    @typedoc "The `tax.calculation` type.\n\n  * `amount_total` Total after taxes.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `customer` The ID of an existing [Customer](https://stripe.com/docs/api/customers/object) used for the resource.\n  * `customer_details` \n  * `expires_at` Timestamp of date at which the tax calculation will expire.\n  * `id` Unique identifier for the calculation.\n  * `line_items` The list of items the customer is purchasing.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `shipping_cost` The shipping cost details for the calculation.\n  * `tax_amount_exclusive` The amount of tax to be collected on top of the line item prices.\n  * `tax_amount_inclusive` The amount of tax already included in the line item prices.\n  * `tax_breakdown` Breakdown of individual tax amounts that add up to the total.\n  * `tax_date` Timestamp of date at which the tax rules and rates in effect applies for the calculation.\n"
+    @typedoc "The `tax.calculation` type.\n\n  * `amount_total` Total amount after taxes in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `customer` The ID of an existing [Customer](https://stripe.com/docs/api/customers/object) used for the resource.\n  * `customer_details` \n  * `expires_at` Timestamp of date at which the tax calculation will expire.\n  * `id` Unique identifier for the calculation.\n  * `line_items` The list of items the customer is purchasing.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `ship_from_details` The details of the ship from location, such as the address.\n  * `shipping_cost` The shipping cost details for the calculation.\n  * `tax_amount_exclusive` The amount of tax to be collected on top of the line item prices.\n  * `tax_amount_inclusive` The amount of tax already included in the line item prices.\n  * `tax_breakdown` Breakdown of individual tax amounts that add up to the total.\n  * `tax_date` Timestamp of date at which the tax rules and rates in effect applies for the calculation.\n"
     @type t :: %__MODULE__{
             amount_total: integer,
             currency: binary,
@@ -31,6 +32,7 @@ defmodule Stripe.Tax.Calculation do
             line_items: term | nil,
             livemode: boolean,
             object: binary,
+            ship_from_details: term | nil,
             shipping_cost: term | nil,
             tax_amount_exclusive: integer,
             tax_amount_inclusive: integer,
@@ -40,7 +42,7 @@ defmodule Stripe.Tax.Calculation do
   )
 
   (
-    @typedoc "The customer's postal address (for example, home or business location)."
+    @typedoc "The address from which the goods are being shipped from."
     @type address :: %{
             optional(:city) => binary | binary,
             optional(:country) => binary,
@@ -75,6 +77,11 @@ defmodule Stripe.Tax.Calculation do
   )
 
   (
+    @typedoc "Details about the address from which the goods are being shipped."
+    @type ship_from_details :: %{optional(:address) => address}
+  )
+
+  (
     @typedoc "Shipping cost details to be used for the calculation."
     @type shipping_cost :: %{
             optional(:amount) => integer,
@@ -94,6 +101,7 @@ defmodule Stripe.Tax.Calculation do
               | :au_abn
               | :au_arn
               | :bg_uic
+              | :bh_vat
               | :bo_tin
               | :br_cnpj
               | :br_cpf
@@ -103,11 +111,13 @@ defmodule Stripe.Tax.Calculation do
               | :ca_pst_mb
               | :ca_pst_sk
               | :ca_qst
+              | :ch_uid
               | :ch_vat
               | :cl_tin
               | :cn_tin
               | :co_nit
               | :cr_tin
+              | :de_stn
               | :do_rcn
               | :ec_ruc
               | :eg_tin
@@ -117,6 +127,7 @@ defmodule Stripe.Tax.Calculation do
               | :gb_vat
               | :ge_vat
               | :hk_br
+              | :hr_oib
               | :hu_tin
               | :id_npwp
               | :il_vat
@@ -127,13 +138,17 @@ defmodule Stripe.Tax.Calculation do
               | :jp_trn
               | :ke_pin
               | :kr_brn
+              | :kz_bin
               | :li_uid
               | :mx_rfc
               | :my_frp
               | :my_itn
               | :my_sst
+              | :ng_tin
               | :no_vat
+              | :no_voec
               | :nz_gst
+              | :om_vat
               | :pe_ruc
               | :ph_tin
               | :ro_tin
@@ -161,30 +176,42 @@ defmodule Stripe.Tax.Calculation do
   (
     nil
 
-    @doc "<p>Calculates tax based on input and returns a Tax <code>Calculation</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/calculations`\n"
+    @doc "<p>Retrieves a Tax <code>Calculation</code> object, if the calculation hasn’t expired.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/calculations/{calculation}`\n"
     (
-      @spec create(
-              params :: %{
-                optional(:currency) => binary,
-                optional(:customer) => binary,
-                optional(:customer_details) => customer_details,
-                optional(:expand) => list(binary),
-                optional(:line_items) => list(line_items),
-                optional(:shipping_cost) => shipping_cost,
-                optional(:tax_date) => integer
-              },
+      @spec retrieve(
+              calculation :: binary(),
+              params :: %{optional(:expand) => list(binary)},
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.Tax.Calculation.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/tax/calculations", [], [])
+      def retrieve(calculation, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/tax/calculations/{calculation}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "calculation",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "calculation",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [calculation]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -193,7 +220,7 @@ defmodule Stripe.Tax.Calculation do
   (
     nil
 
-    @doc "<p>Retrieves the line items of a persisted tax calculation as a collection.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/calculations/{calculation}/line_items`\n"
+    @doc "<p>Retrieves the line items of a tax calculation as a collection, if the calculation hasn’t expired.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/calculations/{calculation}/line_items`\n"
     (
       @spec list_line_items(
               calculation :: binary(),
@@ -234,6 +261,39 @@ defmodule Stripe.Tax.Calculation do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Calculates tax based on the input and returns a Tax <code>Calculation</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/calculations`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:currency) => binary,
+                optional(:customer) => binary,
+                optional(:customer_details) => customer_details,
+                optional(:expand) => list(binary),
+                optional(:line_items) => list(line_items),
+                optional(:ship_from_details) => ship_from_details,
+                optional(:shipping_cost) => shipping_cost,
+                optional(:tax_date) => integer
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Tax.Calculation.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/tax/calculations", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

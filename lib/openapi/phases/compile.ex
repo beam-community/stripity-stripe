@@ -1173,7 +1173,92 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostPlans", "/v1/plans", "create"} => "create",
     {"GetPlansPlan", "/v1/plans/{plan}", "retrieve"} => "retrieve",
     {"PostPlansPlan", "/v1/plans/{plan}", "update"} => "update",
-    {"DeletePlansPlan", "/v1/plans/{plan}", "delete"} => "delete"
+    {"DeletePlansPlan", "/v1/plans/{plan}", "delete"} => "delete",
+    {"GetConfirmationTokensConfirmationToken", "/v1/confirmation_tokens/{confirmation_token}",
+     "retrieve"} => "retrieve",
+    {"PostTestHelpersConfirmationTokens", "/v1/test_helpers/confirmation_tokens", "create"} =>
+      "create",
+    {"PostCheckoutSessionsSession", "/v1/checkout/sessions/{session}", "update"} => "update",
+    {"PostTestHelpersTreasuryOutboundPaymentsId",
+     "/v1/test_helpers/treasury/outbound_payments/{id}", "update"} => "update",
+    {"GetBillingMetersIdEventSummaries", "/v1/billing/meters/{id}/event_summaries", "list"} =>
+      "list",
+    {"GetEntitlementsFeatures", "/v1/entitlements/features", "list"} => "list",
+    {"GetEntitlementsFeaturesId", "/v1/entitlements/features/{id}", "retrieve"} => "retrieve",
+    {"PostEntitlementsFeatures", "/v1/entitlements/features", "create"} => "create",
+    {"PostEntitlementsFeaturesId", "/v1/entitlements/features/{id}", "update"} => "update",
+    {"PostBillingMeterEventAdjustments", "/v1/billing/meter_event_adjustments", "create"} =>
+      "create",
+    {"PostBillingMeterEvents", "/v1/billing/meter_events", "create"} => "create",
+    {"GetIssuingPersonalizationDesigns", "/v1/issuing/personalization_designs", "list"} => "list",
+    {"GetIssuingPersonalizationDesignsPersonalizationDesign",
+     "/v1/issuing/personalization_designs/{personalization_design}", "retrieve"} => "retrieve",
+    {"PostIssuingPersonalizationDesigns", "/v1/issuing/personalization_designs", "create"} =>
+      "create",
+    {"PostIssuingPersonalizationDesignsPersonalizationDesign",
+     "/v1/issuing/personalization_designs/{personalization_design}", "update"} => "update",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivate",
+     "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/activate",
+     "activate"} => "activate",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivate",
+     "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/deactivate",
+     "deactivate"} => "deactivate",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReject",
+     "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/reject",
+     "reject"} => "reject",
+    {"PostInvoicesInvoiceAddLines", "/v1/invoices/{invoice}/add_lines", "add_lines"} =>
+      "add_lines",
+    {"PostInvoicesInvoiceRemoveLines", "/v1/invoices/{invoice}/remove_lines", "remove_lines"} =>
+      "remove_lines",
+    {"PostInvoicesInvoiceUpdateLines", "/v1/invoices/{invoice}/update_lines", "update_lines"} =>
+      "update_lines",
+    {"PostInvoicesCreatePreview", "/v1/invoices/create_preview", "create_preview"} =>
+      "create_preview",
+    {"GetEntitlementsActiveEntitlements", "/v1/entitlements/active_entitlements", "list"} =>
+      "list",
+    {"GetEntitlementsActiveEntitlementsId", "/v1/entitlements/active_entitlements/{id}",
+     "retrieve"} => "retrieve",
+    {"GetIssuingPhysicalBundles", "/v1/issuing/physical_bundles", "list"} => "list",
+    {"GetIssuingPhysicalBundlesPhysicalBundle", "/v1/issuing/physical_bundles/{physical_bundle}",
+     "retrieve"} => "retrieve",
+    {"PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmount",
+     "/v1/test_helpers/issuing/authorizations/{authorization}/finalize_amount",
+     "finalize_amount"} => "finalize_amount",
+    {"PostTestHelpersTreasuryOutboundTransfersOutboundTransfer",
+     "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}", "update"} => "update",
+    {"GetTaxCalculationsCalculation", "/v1/tax/calculations/{calculation}", "retrieve"} =>
+      "retrieve",
+    {"GetBillingMeters", "/v1/billing/meters", "list"} => "list",
+    {"GetBillingMetersId", "/v1/billing/meters/{id}", "retrieve"} => "retrieve",
+    {"PostBillingMeters", "/v1/billing/meters", "create"} => "create",
+    {"PostBillingMetersId", "/v1/billing/meters/{id}", "update"} => "update",
+    {"PostBillingMetersIdDeactivate", "/v1/billing/meters/{id}/deactivate", "deactivate"} =>
+      "deactivate",
+    {"PostBillingMetersIdReactivate", "/v1/billing/meters/{id}/reactivate", "reactivate"} =>
+      "reactivate",
+    {"GetForwardingRequests", "/v1/forwarding/requests", "list"} => "list",
+    {"GetForwardingRequestsId", "/v1/forwarding/requests/{id}", "retrieve"} => "retrieve",
+    {"PostForwardingRequests", "/v1/forwarding/requests", "create"} => "create",
+    {"GetBillingAlerts", "/v1/billing/alerts", "list"} => "list",
+    {"GetBillingAlertsId", "/v1/billing/alerts/{id}", "retrieve"} => "retrieve",
+    {"PostBillingAlerts", "/v1/billing/alerts", "create"} => "create",
+    {"PostBillingAlertsIdActivate", "/v1/billing/alerts/{id}/activate", "activate"} => "activate",
+    {"PostBillingAlertsIdArchive", "/v1/billing/alerts/{id}/archive", "archive"} => "archive",
+    {"PostBillingAlertsIdDeactivate", "/v1/billing/alerts/{id}/deactivate", "deactivate"} =>
+      "deactivate",
+    {"DeleteProductsProductFeaturesId", "/v1/products/{product}/features/{id}", "delete"} =>
+      "delete",
+    {"GetProductsProductFeatures", "/v1/products/{product}/features", "list"} => "list",
+    {"GetProductsProductFeaturesId", "/v1/products/{product}/features/{id}", "retrieve"} =>
+      "retrieve",
+    {"PostProductsProductFeatures", "/v1/products/{product}/features", "create"} => "create",
+    {"GetInvoiceRenderingTemplates", "/v1/invoice_rendering_templates", "list"} => "list",
+    {"GetInvoiceRenderingTemplatesTemplate", "/v1/invoice_rendering_templates/{template}",
+     "retrieve"} => "retrieve",
+    {"PostInvoiceRenderingTemplatesTemplateArchive",
+     "/v1/invoice_rendering_templates/{template}/archive", "archive"} => "archive",
+    {"PostInvoiceRenderingTemplatesTemplateUnarchive",
+     "/v1/invoice_rendering_templates/{template}/unarchive", "unarchive"} => "unarchive"
   }
 
   defp to_func_name(operation, stripe_extension) do

@@ -1,7 +1,7 @@
 defmodule Stripe.Person do
   use Stripe.Entity
 
-  @moduledoc "This is an object representing a person associated with a Stripe account.\n\nA platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account.\nSee the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform prefilling and account onboarding steps.\n\nRelated guide: [Handling identity verification with the API](https://stripe.com/docs/connect/handling-api-verification#person-information)"
+  @moduledoc "This is an object representing a person associated with a Stripe account.\n\nA platform cannot access a person for an account where [account.controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`, which includes Standard and Express accounts, after creating an Account Link or Account Session to start Connect onboarding.\n\nSee the [Standard onboarding](/connect/standard-accounts) or [Express onboarding](/connect/express-accounts) documentation for information about prefilling information and account onboarding steps. Learn more about [handling identity verification with the API](/connect/handling-api-verification#person-information)."
   (
     defstruct [
       :account,
@@ -88,7 +88,7 @@ defmodule Stripe.Person do
   )
 
   (
-    @typedoc "Details on the legal guardian's acceptance of the required Stripe agreements."
+    @typedoc "Details on the legal guardian's or authorizer's acceptance of the required Stripe agreements."
     @type additional_tos_acceptances :: %{optional(:account) => account}
   )
 
@@ -197,6 +197,56 @@ defmodule Stripe.Person do
   (
     @typedoc "One or more documents showing the person's visa required for living in the country where they are residing."
     @type visa :: %{optional(:files) => list(binary | binary)}
+  )
+
+  (
+    nil
+
+    @doc "<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}/persons/{person}`\n"
+    (
+      @spec delete(account :: binary(), person :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedPerson.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(account, person, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/accounts/{account}/persons/{person}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "account",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "account",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              },
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "person",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "person",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [account, person]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
   )
 
   (
@@ -453,56 +503,6 @@ defmodule Stripe.Person do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}/persons/{person}`\n"
-    (
-      @spec delete(account :: binary(), person :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedPerson.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(account, person, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/accounts/{account}/persons/{person}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "account",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              },
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "person",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "person",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [account, person]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

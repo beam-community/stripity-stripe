@@ -8,10 +8,10 @@ defmodule Stripe.Product do
       :created,
       :default_price,
       :description,
-      :features,
       :id,
       :images,
       :livemode,
+      :marketing_features,
       :metadata,
       :name,
       :object,
@@ -25,16 +25,16 @@ defmodule Stripe.Product do
       :url
     ]
 
-    @typedoc "The `product` type.\n\n  * `active` Whether the product is currently available for purchase.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `default_price` The ID of the [Price](https://stripe.com/docs/api/prices) object that is the default price for this product.\n  * `description` The product's description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.\n  * `features` A list of up to 15 features for this product. These are displayed in [pricing tables](https://stripe.com/docs/payments/checkout/pricing-table).\n  * `id` Unique identifier for the object.\n  * `images` A list of up to 8 URLs of images for this product, meant to be displayable to the customer.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name` The product's name, meant to be displayable to the customer.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `package_dimensions` The dimensions of this product for shipping purposes.\n  * `shippable` Whether this product is shipped (i.e., physical goods).\n  * `statement_descriptor` Extra information about a product which will appear on your customer's credit card statement. In the case that multiple products are billed at once, the first statement descriptor will be used.\n  * `tax_code` A [tax code](https://stripe.com/docs/tax/tax-categories) ID.\n  * `type` The type of the product. The product is either of type `good`, which is eligible for use with Orders and SKUs, or `service`, which is eligible for use with Subscriptions and Plans.\n  * `unit_label` A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.\n  * `updated` Time at which the object was last updated. Measured in seconds since the Unix epoch.\n  * `url` A URL of a publicly-accessible webpage for this product.\n"
+    @typedoc "The `product` type.\n\n  * `active` Whether the product is currently available for purchase.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `default_price` The ID of the [Price](https://stripe.com/docs/api/prices) object that is the default price for this product.\n  * `description` The product's description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.\n  * `id` Unique identifier for the object.\n  * `images` A list of up to 8 URLs of images for this product, meant to be displayable to the customer.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `marketing_features` A list of up to 15 marketing features for this product. These are displayed in [pricing tables](https://stripe.com/docs/payments/checkout/pricing-table).\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name` The product's name, meant to be displayable to the customer.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `package_dimensions` The dimensions of this product for shipping purposes.\n  * `shippable` Whether this product is shipped (i.e., physical goods).\n  * `statement_descriptor` Extra information about a product which will appear on your customer's credit card statement. In the case that multiple products are billed at once, the first statement descriptor will be used. Only used for subscription payments.\n  * `tax_code` A [tax code](https://stripe.com/docs/tax/tax-categories) ID.\n  * `type` The type of the product. The product is either of type `good`, which is eligible for use with Orders and SKUs, or `service`, which is eligible for use with Subscriptions and Plans.\n  * `unit_label` A label that represents units of this product. When set, this will be included in customers' receipts, invoices, Checkout, and the customer portal.\n  * `updated` Time at which the object was last updated. Measured in seconds since the Unix epoch.\n  * `url` A URL of a publicly-accessible webpage for this product.\n"
     @type t :: %__MODULE__{
             active: boolean,
             created: integer,
             default_price: (binary | Stripe.Price.t()) | nil,
             description: binary | nil,
-            features: term,
             id: binary,
             images: term,
             livemode: boolean,
+            marketing_features: term,
             metadata: term,
             name: binary,
             object: binary,
@@ -73,7 +73,7 @@ defmodule Stripe.Product do
 
   (
     @typedoc nil
-    @type features :: %{optional(:name) => binary}
+    @type marketing_features :: %{optional(:name) => binary}
   )
 
   (
@@ -97,27 +97,35 @@ defmodule Stripe.Product do
   (
     nil
 
-    @doc "<p>Search for products you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/products/search`\n"
+    @doc "<p>Delete a product. Deleting a product is only possible if it has no prices associated with it. Additionally, deleting a product with <code>type=good</code> is only possible if it has no SKUs associated with it.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/products/{id}`\n"
     (
-      @spec search(
-              params :: %{
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:page) => binary,
-                optional(:query) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.SearchResult.t(Stripe.Product.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def search(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/products/search", [], [])
+      @spec delete(id :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedProduct.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(id, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/products/{id}",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "id",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [id]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
@@ -126,36 +134,33 @@ defmodule Stripe.Product do
   (
     nil
 
-    @doc "<p>Creates a new product object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/products`\n"
+    @doc "<p>Returns a list of your products. The products are returned sorted by creation date, with the most recently created products appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/products`\n"
     (
-      @spec create(
+      @spec list(
               params :: %{
                 optional(:active) => boolean,
-                optional(:default_price_data) => default_price_data,
-                optional(:description) => binary,
+                optional(:created) => created | integer,
+                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
-                optional(:features) => list(features),
-                optional(:id) => binary,
-                optional(:images) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:name) => binary,
-                optional(:package_dimensions) => package_dimensions,
+                optional(:ids) => list(binary),
+                optional(:limit) => integer,
                 optional(:shippable) => boolean,
-                optional(:statement_descriptor) => binary,
-                optional(:tax_code) => binary,
+                optional(:starting_after) => binary,
                 optional(:type) => :good | :service,
-                optional(:unit_label) => binary,
                 optional(:url) => binary
               },
               opts :: Keyword.t()
-            ) :: {:ok, Stripe.Product.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Product.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/products", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -205,6 +210,73 @@ defmodule Stripe.Product do
   (
     nil
 
+    @doc "<p>Search for products you’ve previously created using Stripe’s <a href=\"/docs/search#search-query-language\">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/products/search`\n"
+    (
+      @spec search(
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:page) => binary,
+                optional(:query) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.SearchResult.t(Stripe.Product.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def search(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/products/search", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new product object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/products`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:active) => boolean,
+                optional(:default_price_data) => default_price_data,
+                optional(:description) => binary,
+                optional(:expand) => list(binary),
+                optional(:id) => binary,
+                optional(:images) => list(binary),
+                optional(:marketing_features) => list(marketing_features),
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:name) => binary,
+                optional(:package_dimensions) => package_dimensions,
+                optional(:shippable) => boolean,
+                optional(:statement_descriptor) => binary,
+                optional(:tax_code) => binary,
+                optional(:type) => :good | :service,
+                optional(:unit_label) => binary,
+                optional(:url) => binary
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Product.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/products", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Updates the specific product by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/products/{id}`\n"
     (
       @spec update(
@@ -214,8 +286,8 @@ defmodule Stripe.Product do
                 optional(:default_price) => binary,
                 optional(:description) => binary | binary,
                 optional(:expand) => list(binary),
-                optional(:features) => list(features) | binary,
                 optional(:images) => list(binary) | binary,
+                optional(:marketing_features) => list(marketing_features) | binary,
                 optional(:metadata) => %{optional(binary) => binary} | binary,
                 optional(:name) => binary,
                 optional(:package_dimensions) => package_dimensions | binary,
@@ -253,78 +325,6 @@ defmodule Stripe.Product do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of your products. The products are returned sorted by creation date, with the most recently created products appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/products`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:active) => boolean,
-                optional(:created) => created | integer,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:ids) => list(binary),
-                optional(:limit) => integer,
-                optional(:shippable) => boolean,
-                optional(:starting_after) => binary,
-                optional(:type) => :good | :service,
-                optional(:url) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Product.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/products", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Delete a product. Deleting a product is only possible if it has no prices associated with it. Additionally, deleting a product with <code>type=good</code> is only possible if it has no SKUs associated with it.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/products/{id}`\n"
-    (
-      @spec delete(id :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedProduct.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(id, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/products/{id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

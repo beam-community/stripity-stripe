@@ -19,6 +19,7 @@ defmodule Stripe.Issuing.Card do
       :metadata,
       :number,
       :object,
+      :personalization_design,
       :replaced_by,
       :replacement_for,
       :replacement_reason,
@@ -29,7 +30,7 @@ defmodule Stripe.Issuing.Card do
       :wallets
     ]
 
-    @typedoc "The `issuing.card` type.\n\n  * `brand` The brand of the card.\n  * `cancellation_reason` The reason why the card was canceled.\n  * `cardholder` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Supported currencies are `usd` in the US, `eur` in the EU, and `gbp` in the UK.\n  * `cvc` The card's CVC. For security reasons, this is only available for virtual cards, and will be omitted unless you explicitly request it with [the `expand` parameter](https://stripe.com/docs/api/expanding_objects). Additionally, it's only available via the [\"Retrieve a card\" endpoint](https://stripe.com/docs/api/issuing/cards/retrieve), not via \"List all cards\" or any other endpoint.\n  * `exp_month` The expiration month of the card.\n  * `exp_year` The expiration year of the card.\n  * `financial_account` The financial account this card is attached to.\n  * `id` Unique identifier for the object.\n  * `last4` The last 4 digits of the card number.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `number` The full unredacted card number. For security reasons, this is only available for virtual cards, and will be omitted unless you explicitly request it with [the `expand` parameter](https://stripe.com/docs/api/expanding_objects). Additionally, it's only available via the [\"Retrieve a card\" endpoint](https://stripe.com/docs/api/issuing/cards/retrieve), not via \"List all cards\" or any other endpoint.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `replaced_by` The latest card that replaces this card, if any.\n  * `replacement_for` The card this card replaces, if any.\n  * `replacement_reason` The reason why the previous card needed to be replaced.\n  * `shipping` Where and how the card will be shipped.\n  * `spending_controls` \n  * `status` Whether authorizations can be approved on this card. May be blocked from activating cards depending on past-due Cardholder requirements. Defaults to `inactive`.\n  * `type` The type of the card.\n  * `wallets` Information relating to digital wallets (like Apple Pay and Google Pay).\n"
+    @typedoc "The `issuing.card` type.\n\n  * `brand` The brand of the card.\n  * `cancellation_reason` The reason why the card was canceled.\n  * `cardholder` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Supported currencies are `usd` in the US, `eur` in the EU, and `gbp` in the UK.\n  * `cvc` The card's CVC. For security reasons, this is only available for virtual cards, and will be omitted unless you explicitly request it with [the `expand` parameter](https://stripe.com/docs/api/expanding_objects). Additionally, it's only available via the [\"Retrieve a card\" endpoint](https://stripe.com/docs/api/issuing/cards/retrieve), not via \"List all cards\" or any other endpoint.\n  * `exp_month` The expiration month of the card.\n  * `exp_year` The expiration year of the card.\n  * `financial_account` The financial account this card is attached to.\n  * `id` Unique identifier for the object.\n  * `last4` The last 4 digits of the card number.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `number` The full unredacted card number. For security reasons, this is only available for virtual cards, and will be omitted unless you explicitly request it with [the `expand` parameter](https://stripe.com/docs/api/expanding_objects). Additionally, it's only available via the [\"Retrieve a card\" endpoint](https://stripe.com/docs/api/issuing/cards/retrieve), not via \"List all cards\" or any other endpoint.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `personalization_design` The personalization design object belonging to this card.\n  * `replaced_by` The latest card that replaces this card, if any.\n  * `replacement_for` The card this card replaces, if any.\n  * `replacement_reason` The reason why the previous card needed to be replaced.\n  * `shipping` Where and how the card will be shipped.\n  * `spending_controls` \n  * `status` Whether authorizations can be approved on this card. May be blocked from activating cards depending on past-due Cardholder requirements. Defaults to `inactive`.\n  * `type` The type of the card.\n  * `wallets` Information relating to digital wallets (like Apple Pay and Google Pay).\n"
     @type t :: %__MODULE__{
             brand: binary,
             cancellation_reason: binary | nil,
@@ -46,6 +47,7 @@ defmodule Stripe.Issuing.Card do
             metadata: term,
             number: binary,
             object: binary,
+            personalization_design: (binary | Stripe.Issuing.PersonalizationDesign.t()) | nil,
             replaced_by: (binary | Stripe.Issuing.Card.t()) | nil,
             replacement_for: (binary | Stripe.Issuing.Card.t()) | nil,
             replacement_reason: binary | nil,
@@ -70,6 +72,13 @@ defmodule Stripe.Issuing.Card do
   )
 
   (
+    @typedoc "Address validation settings."
+    @type address_validation :: %{
+            optional(:mode) => :disabled | :normalization_only | :validation_and_normalization
+          }
+  )
+
+  (
     @typedoc nil
     @type created :: %{
             optional(:gt) => integer,
@@ -85,7 +94,7 @@ defmodule Stripe.Issuing.Card do
   )
 
   (
-    @typedoc "The desired new PIN for this card."
+    @typedoc "The desired PIN for this card."
     @type pin :: %{optional(:encrypted_number) => binary}
   )
 
@@ -93,6 +102,7 @@ defmodule Stripe.Issuing.Card do
     @typedoc "The address where the card will be shipped."
     @type shipping :: %{
             optional(:address) => address,
+            optional(:address_validation) => address_validation,
             optional(:customs) => customs,
             optional(:name) => binary,
             optional(:phone_number) => binary,
@@ -403,6 +413,7 @@ defmodule Stripe.Issuing.Card do
                 | :womens_ready_to_wear_stores
                 | :wrecking_and_salvage_yards
               ),
+            optional(:allowed_merchant_countries) => list(binary),
             optional(:blocked_categories) =>
               list(
                 :ac_refrigeration_repair
@@ -701,6 +712,7 @@ defmodule Stripe.Issuing.Card do
                 | :womens_ready_to_wear_stores
                 | :wrecking_and_salvage_yards
               ),
+            optional(:blocked_merchant_countries) => list(binary),
             optional(:spending_limits) => list(spending_limits)
           }
   )
@@ -1027,6 +1039,7 @@ defmodule Stripe.Issuing.Card do
                 optional(:expand) => list(binary),
                 optional(:last4) => binary,
                 optional(:limit) => integer,
+                optional(:personalization_design) => binary,
                 optional(:starting_after) => binary,
                 optional(:status) => :active | :canceled | :inactive,
                 optional(:type) => :physical | :virtual
@@ -1043,40 +1056,6 @@ defmodule Stripe.Issuing.Card do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Creates an Issuing <code>Card</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/cards`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:cardholder) => binary,
-                optional(:currency) => binary,
-                optional(:expand) => list(binary),
-                optional(:financial_account) => binary,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:replacement_for) => binary,
-                optional(:replacement_reason) => :damaged | :expired | :lost | :stolen,
-                optional(:shipping) => shipping,
-                optional(:spending_controls) => spending_controls,
-                optional(:status) => :active | :inactive,
-                optional(:type) => :physical | :virtual
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Card.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/issuing/cards", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -1127,6 +1106,43 @@ defmodule Stripe.Issuing.Card do
   (
     nil
 
+    @doc "<p>Creates an Issuing <code>Card</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/cards`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:cardholder) => binary,
+                optional(:currency) => binary,
+                optional(:expand) => list(binary),
+                optional(:financial_account) => binary,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:personalization_design) => binary,
+                optional(:pin) => pin,
+                optional(:replacement_for) => binary,
+                optional(:replacement_reason) => :damaged | :expired | :lost | :stolen,
+                optional(:second_line) => binary | binary,
+                optional(:shipping) => shipping,
+                optional(:spending_controls) => spending_controls,
+                optional(:status) => :active | :inactive,
+                optional(:type) => :physical | :virtual
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Card.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/issuing/cards", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Updates the specified Issuing <code>Card</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/cards/{card}`\n"
     (
       @spec update(
@@ -1135,7 +1151,9 @@ defmodule Stripe.Issuing.Card do
                 optional(:cancellation_reason) => :lost | :stolen,
                 optional(:expand) => list(binary),
                 optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:personalization_design) => binary,
                 optional(:pin) => pin,
+                optional(:shipping) => shipping,
                 optional(:spending_controls) => spending_controls,
                 optional(:status) => :active | :canceled | :inactive
               },
@@ -1218,18 +1236,18 @@ defmodule Stripe.Issuing.Card do
   (
     nil
 
-    @doc "<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>shipped</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/cards/{card}/shipping/ship`\n"
+    @doc "<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>failure</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/cards/{card}/shipping/fail`\n"
     (
-      @spec ship_card(
+      @spec fail_card(
               card :: binary(),
               params :: %{optional(:expand) => list(binary)},
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.Issuing.Card.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def ship_card(card, params \\ %{}, opts \\ []) do
+      def fail_card(card, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/cards/{card}/shipping/ship",
+            "/v1/test_helpers/issuing/cards/{card}/shipping/fail",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",
@@ -1302,18 +1320,18 @@ defmodule Stripe.Issuing.Card do
   (
     nil
 
-    @doc "<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>failure</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/cards/{card}/shipping/fail`\n"
+    @doc "<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>shipped</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/issuing/cards/{card}/shipping/ship`\n"
     (
-      @spec fail_card(
+      @spec ship_card(
               card :: binary(),
               params :: %{optional(:expand) => list(binary)},
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.Issuing.Card.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def fail_card(card, params \\ %{}, opts \\ []) do
+      def ship_card(card, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/test_helpers/issuing/cards/{card}/shipping/fail",
+            "/v1/test_helpers/issuing/cards/{card}/shipping/ship",
             [
               %OpenApiGen.Blueprint.Parameter{
                 in: "path",

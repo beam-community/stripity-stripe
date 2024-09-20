@@ -4,44 +4,44 @@ defmodule Stripe.Source do
   @moduledoc "`Source` objects allow you to accept a variety of payment methods. They\nrepresent a customer's payment instrument, and can be used with the Stripe API\njust like a `Card` object: once chargeable, they can be charged, or can be\nattached to customers.\n\nStripe doesn't recommend using the deprecated [Sources API](https://stripe.com/docs/api/sources).\nWe recommend that you adopt the [PaymentMethods API](https://stripe.com/docs/api/payment_methods).\nThis newer API provides access to our latest features and payment method types.\n\nRelated guides: [Sources API](https://stripe.com/docs/sources) and [Sources & Customers](https://stripe.com/docs/sources/customers)."
   (
     defstruct [
-      :eps,
-      :owner,
-      :id,
-      :source_order,
-      :klarna,
       :sepa_debit,
       :flow,
-      :card_present,
-      :au_becs_debit,
       :three_d_secure,
-      :bancontact,
-      :status,
-      :type,
-      :created,
-      :currency,
-      :p24,
-      :sofort,
-      :object,
-      :client_secret,
-      :wechat,
-      :statement_descriptor,
-      :amount,
-      :ach_credit_transfer,
+      :livemode,
       :customer,
-      :receiver,
-      :usage,
-      :sepa_credit_transfer,
-      :multibanco,
-      :metadata,
-      :card,
-      :code_verification,
-      :ideal,
+      :statement_descriptor,
+      :type,
       :redirect,
-      :giropay,
-      :alipay,
-      :ach_debit,
+      :source_order,
+      :wechat,
+      :created,
+      :p24,
       :acss_debit,
-      :livemode
+      :status,
+      :code_verification,
+      :id,
+      :card,
+      :currency,
+      :klarna,
+      :usage,
+      :multibanco,
+      :giropay,
+      :object,
+      :owner,
+      :receiver,
+      :ideal,
+      :client_secret,
+      :eps,
+      :bancontact,
+      :ach_debit,
+      :sepa_credit_transfer,
+      :ach_credit_transfer,
+      :card_present,
+      :amount,
+      :metadata,
+      :au_becs_debit,
+      :alipay,
+      :sofort
     ]
 
     @typedoc "The `source` type.\n\n  * `ach_credit_transfer` \n  * `ach_debit` \n  * `acss_debit` \n  * `alipay` \n  * `amount` A positive integer in the smallest currency unit (that is, 100 cents for $1.00, or 1 for ¥1, Japanese Yen being a zero-decimal currency) representing the total amount associated with the source. This is the amount for which the source will be chargeable once ready. Required for `single_use` sources.\n  * `au_becs_debit` \n  * `bancontact` \n  * `card` \n  * `card_present` \n  * `client_secret` The client secret of the source. Used for client-side retrieval using a publishable key.\n  * `code_verification` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO code for the currency](https://stripe.com/docs/currencies) associated with the source. This is the currency for which the source will be chargeable once ready. Required for `single_use` sources.\n  * `customer` The ID of the customer to which this source is attached. This will not be present when the source has not been attached to a customer.\n  * `eps` \n  * `flow` The authentication `flow` of the source. `flow` is one of `redirect`, `receiver`, `code_verification`, `none`.\n  * `giropay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `klarna` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `multibanco` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `owner` Information about the owner of the payment instrument that may be used or required by particular source types.\n  * `p24` \n  * `receiver` \n  * `redirect` \n  * `sepa_credit_transfer` \n  * `sepa_debit` \n  * `sofort` \n  * `source_order` \n  * `statement_descriptor` Extra information about a source. This will appear on your customer's statement every time you charge the source.\n  * `status` The status of the source, one of `canceled`, `chargeable`, `consumed`, `failed`, or `pending`. Only `chargeable` sources can be used to create a charge.\n  * `three_d_secure` \n  * `type` The `type` of the source. The `type` is a payment method, one of `ach_credit_transfer`, `ach_debit`, `alipay`, `bancontact`, `card`, `card_present`, `eps`, `giropay`, `ideal`, `multibanco`, `klarna`, `p24`, `sepa_debit`, `sofort`, `three_d_secure`, or `wechat`. An additional hash is included on the source with a name matching this value. It contains additional information specific to the [payment method](https://stripe.com/docs/sources) used.\n  * `usage` Either `reusable` or `single_use`. Whether this source should be reusable or not. Some source types may or may not be reusable by construction, while others may leave the option at creation. If an incompatible value is passed, an error will be returned.\n  * `wechat` \n"
@@ -288,6 +288,55 @@ defmodule Stripe.Source do
   (
     nil
 
+    @doc "<p>List source transactions for a given source.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/sources/{source}/source_transactions`\n"
+    (
+      @spec source_transactions(
+              source :: binary(),
+              params :: %{
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.SourceTransaction.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def source_transactions(source, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/sources/{source}/source_transactions",
+            [
+              %OpenApiGen.Blueprint.Parameter{
+                in: "path",
+                name: "source",
+                required: true,
+                schema: %OpenApiGen.Blueprint.Parameter.Schema{
+                  name: "source",
+                  title: nil,
+                  type: "string",
+                  items: [],
+                  properties: [],
+                  any_of: []
+                }
+              }
+            ],
+            [source]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Creates a new source object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/sources`\n"
     (
       @spec create(
@@ -407,55 +456,6 @@ defmodule Stripe.Source do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>List source transactions for a given source.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/sources/{source}/source_transactions`\n"
-    (
-      @spec source_transactions(
-              source :: binary(),
-              params :: %{
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.SourceTransaction.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def source_transactions(source, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/sources/{source}/source_transactions",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "source",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "source",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [source]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

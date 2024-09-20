@@ -1,7 +1,7 @@
 defmodule Stripe.UsageRecord do
   use Stripe.Entity
 
-  @moduledoc "Usage records allow you to report customer usage and metrics to Stripe for\nmetered billing of subscription prices.\n\nRelated guide: [Metered billing](https://stripe.com/docs/billing/subscriptions/metered-billing)"
+  @moduledoc "Usage records allow you to report customer usage and metrics to Stripe for\nmetered billing of subscription prices.\n\nRelated guide: [Metered billing](https://stripe.com/docs/billing/subscriptions/metered-billing)\n\nThis is our legacy usage-based billing API. See the [updated usage-based billing docs](https://docs.stripe.com/billing/subscriptions/usage-based)."
   (
     defstruct [:id, :livemode, :object, :quantity, :subscription_item, :timestamp]
 

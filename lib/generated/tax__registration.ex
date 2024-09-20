@@ -64,6 +64,11 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in BH."
+    @type bh :: %{optional(:type) => :standard}
+  )
+
+  (
     @typedoc "Options for the registration in CA."
     @type ca :: %{
             optional(:province_standard) => province_standard,
@@ -89,55 +94,62 @@ defmodule Stripe.Tax.Registration do
   (
     @typedoc "Specific options for a registration in the specified `country`."
     @type country_options :: %{
-            optional(:vn) => vn,
-            optional(:lv) => lv,
-            optional(:cl) => cl,
-            optional(:se) => se,
-            optional(:pl) => pl,
-            optional(:nz) => nz,
-            optional(:lt) => lt,
-            optional(:de) => de,
-            optional(:fr) => fr,
-            optional(:fi) => fi,
-            optional(:sa) => sa,
-            optional(:es) => es,
-            optional(:sg) => sg,
-            optional(:tr) => tr,
-            optional(:sk) => sk,
-            optional(:ie) => ie,
+            optional(:is) => is,
             optional(:th) => th,
-            optional(:us) => us,
-            optional(:co) => co,
+            optional(:fi) => fi,
+            optional(:om) => om,
             optional(:ee) => ee,
-            optional(:hu) => hu,
-            optional(:it) => it,
-            optional(:jp) => jp,
-            optional(:si) => si,
-            optional(:kr) => kr,
-            optional(:gb) => gb,
-            optional(:ca) => ca,
-            optional(:dk) => dk,
-            optional(:nl) => nl,
-            optional(:my) => my,
-            optional(:ae) => ae,
             optional(:gr) => gr,
-            optional(:ch) => ch,
+            optional(:sa) => sa,
+            optional(:bh) => bh,
             optional(:be) => be,
-            optional(:cz) => cz,
-            optional(:no) => no,
-            optional(:lu) => lu,
+            optional(:mt) => mt,
+            optional(:fr) => fr,
+            optional(:eg) => eg,
+            optional(:pl) => pl,
+            optional(:de) => de,
+            optional(:ge) => ge,
+            optional(:co) => co,
+            optional(:kz) => kz,
+            optional(:ch) => ch,
+            optional(:se) => se,
+            optional(:sk) => sk,
+            optional(:us) => us,
             optional(:cy) => cy,
             optional(:au) => au,
-            optional(:mt) => mt,
-            optional(:is) => is,
-            optional(:bg) => bg,
-            optional(:za) => za,
+            optional(:si) => si,
+            optional(:it) => it,
+            optional(:vn) => vn,
             optional(:hr) => hr,
-            optional(:id) => id,
             optional(:ro) => ro,
             optional(:mx) => mx,
-            optional(:pt) => pt,
-            optional(:at) => at
+            optional(:ie) => ie,
+            optional(:id) => id,
+            optional(:es) => es,
+            optional(:sg) => sg,
+            optional(:cl) => cl,
+            optional(:hu) => hu,
+            optional(:kr) => kr,
+            optional(:ae) => ae,
+            optional(:ke) => ke,
+            optional(:jp) => jp,
+            optional(:lv) => lv,
+            optional(:no) => no,
+            optional(:cz) => cz,
+            optional(:ca) => ca,
+            optional(:nz) => nz,
+            optional(:dk) => dk,
+            optional(:my) => my,
+            optional(:nl) => nl,
+            optional(:lu) => lu,
+            optional(:za) => za,
+            optional(:lt) => lt,
+            optional(:bg) => bg,
+            optional(:tr) => tr,
+            optional(:at) => at,
+            optional(:ng) => ng,
+            optional(:gb) => gb,
+            optional(:pt) => pt
           }
   )
 
@@ -182,6 +194,20 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in EG."
+    @type eg :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc nil
+    @type elections :: %{
+            optional(:jurisdiction) => binary,
+            optional(:type) =>
+              :local_use_tax | :simplified_sellers_use_tax | :single_local_use_tax
+          }
+  )
+
+  (
     @typedoc "Options for the registration in ES."
     @type es :: %{
             optional(:standard) => standard,
@@ -208,6 +234,11 @@ defmodule Stripe.Tax.Registration do
   (
     @typedoc "Options for the registration in GB."
     @type gb :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in GE."
+    @type ge :: %{optional(:type) => :simplified}
   )
 
   (
@@ -266,8 +297,18 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in KE."
+    @type ke :: %{optional(:type) => :simplified}
+  )
+
+  (
     @typedoc "Options for the registration in KR."
     @type kr :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in KZ."
+    @type kz :: %{optional(:type) => :simplified}
   )
 
   (
@@ -323,6 +364,11 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in NG."
+    @type ng :: %{optional(:type) => :simplified}
+  )
+
+  (
     @typedoc "Options for the registration in NL."
     @type nl :: %{
             optional(:standard) => standard,
@@ -338,6 +384,11 @@ defmodule Stripe.Tax.Registration do
   (
     @typedoc "Options for the registration in NZ."
     @type nz :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in OM."
+    @type om :: %{optional(:type) => :standard}
   )
 
   (
@@ -409,6 +460,11 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the state sales tax registration."
+    @type state_sales_tax :: %{optional(:elections) => list(elections)}
+  )
+
+  (
     @typedoc "Options for the registration in TH."
     @type th :: %{optional(:type) => :simplified}
   )
@@ -424,6 +480,7 @@ defmodule Stripe.Tax.Registration do
             optional(:local_amusement_tax) => local_amusement_tax,
             optional(:local_lease_tax) => local_lease_tax,
             optional(:state) => binary,
+            optional(:state_sales_tax) => state_sales_tax,
             optional(:type) =>
               :local_amusement_tax
               | :local_lease_tax
@@ -475,36 +532,6 @@ defmodule Stripe.Tax.Registration do
   (
     nil
 
-    @doc "<p>Creates a new Tax <code>Registration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/registrations`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:active_from) => :now | integer,
-                optional(:country) => binary,
-                optional(:country_options) => country_options,
-                optional(:expand) => list(binary),
-                optional(:expires_at) => integer
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Tax.Registration.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/tax/registrations", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Returns a Tax <code>Registration</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/registrations/{id}`\n"
     (
       @spec retrieve(
@@ -541,6 +568,36 @@ defmodule Stripe.Tax.Registration do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new Tax <code>Registration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/registrations`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:active_from) => :now | integer,
+                optional(:country) => binary,
+                optional(:country_options) => country_options,
+                optional(:expand) => list(binary),
+                optional(:expires_at) => integer
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Tax.Registration.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/tax/registrations", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

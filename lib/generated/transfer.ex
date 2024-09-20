@@ -23,7 +23,7 @@ defmodule Stripe.Transfer do
       :transfer_group
     ]
 
-    @typedoc "The `transfer` type.\n\n  * `amount` Amount in cents (or local equivalent) to be transferred.\n  * `amount_reversed` Amount in cents (or local equivalent) reversed (can be less than the amount attribute on the transfer if a partial reversal was issued).\n  * `balance_transaction` Balance transaction that describes the impact of this transfer on your account balance.\n  * `created` Time that this record of the transfer was first created.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `destination` ID of the Stripe account the transfer was sent to.\n  * `destination_payment` If the destination is a Stripe account, this will be the ID of the payment that the destination account received for the transfer.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `reversals` A list of reversals that have been applied to the transfer.\n  * `reversed` Whether the transfer has been fully reversed. If the transfer is only partially reversed, this attribute will still be false.\n  * `source_transaction` ID of the charge or payment that was used to fund the transfer. If null, the transfer was funded from the available balance.\n  * `source_type` The source balance this transfer came from. One of `card`, `fpx`, or `bank_account`.\n  * `transfer_group` A string that identifies this transaction as part of a group. See the [Connect documentation](https://stripe.com/docs/connect/separate-charges-and-transfers#transfer-options) for details.\n"
+    @typedoc "The `transfer` type.\n\n  * `amount` Amount in cents (or local equivalent) to be transferred.\n  * `amount_reversed` Amount in cents (or local equivalent) reversed (can be less than the amount attribute on the transfer if a partial reversal was issued).\n  * `balance_transaction` Balance transaction that describes the impact of this transfer on your account balance.\n  * `created` Time that this record of the transfer was first created.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `destination` ID of the Stripe account the transfer was sent to.\n  * `destination_payment` If the destination is a Stripe account, this will be the ID of the payment that the destination account received for the transfer.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `reversals` A list of reversals that have been applied to the transfer.\n  * `reversed` Whether the transfer has been fully reversed. If the transfer is only partially reversed, this attribute will still be false.\n  * `source_transaction` ID of the charge that was used to fund the transfer. If null, the transfer was funded from the available balance.\n  * `source_type` The source balance this transfer came from. One of `card`, `fpx`, or `bank_account`.\n  * `transfer_group` A string that identifies this transaction as part of a group. See the [Connect documentation](https://stripe.com/docs/connect/separate-charges-and-transfers#transfer-options) for details.\n"
     @type t :: %__MODULE__{
             amount: integer,
             amount_reversed: integer,
@@ -53,37 +53,6 @@ defmodule Stripe.Transfer do
             optional(:lt) => integer,
             optional(:lte) => integer
           }
-  )
-
-  (
-    nil
-
-    @doc "<p>To send funds from your Stripe account to a connected account, you create a new transfer object. Your <a href=\"#balance\">Stripe balance</a> must be able to cover the transfer amount, or you’ll receive an “Insufficient Funds” error.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/transfers`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:amount) => integer,
-                optional(:currency) => binary,
-                optional(:description) => binary,
-                optional(:destination) => binary,
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:source_transaction) => binary,
-                optional(:source_type) => :bank_account | :card | :fpx,
-                optional(:transfer_group) => binary
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Transfer.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/transfers", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
   )
 
   (
@@ -154,6 +123,37 @@ defmodule Stripe.Transfer do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>To send funds from your Stripe account to a connected account, you create a new transfer object. Your <a href=\"#balance\">Stripe balance</a> must be able to cover the transfer amount, or you’ll receive an “Insufficient Funds” error.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/transfers`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:amount) => integer,
+                optional(:currency) => binary,
+                optional(:description) => binary,
+                optional(:destination) => binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:source_transaction) => binary,
+                optional(:source_type) => :bank_account | :card | :fpx,
+                optional(:transfer_group) => binary
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Transfer.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/transfers", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

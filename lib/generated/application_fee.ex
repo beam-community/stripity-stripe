@@ -11,6 +11,7 @@ defmodule Stripe.ApplicationFee do
       :charge,
       :created,
       :currency,
+      :fee_source,
       :id,
       :livemode,
       :object,
@@ -19,7 +20,7 @@ defmodule Stripe.ApplicationFee do
       :refunds
     ]
 
-    @typedoc "The `application_fee` type.\n\n  * `account` ID of the Stripe account this fee was taken from.\n  * `amount` Amount earned, in cents (or local equivalent).\n  * `amount_refunded` Amount in cents (or local equivalent) refunded (can be less than the amount attribute on the fee if a partial refund was issued)\n  * `application` ID of the Connect application that earned the fee.\n  * `balance_transaction` Balance transaction that describes the impact of this collected application fee on your account balance (not including refunds).\n  * `charge` ID of the charge that the application fee was taken from.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `originating_transaction` ID of the corresponding charge on the platform account, if this fee was the result of a charge using the `destination` parameter.\n  * `refunded` Whether the fee has been fully refunded. If the fee is only partially refunded, this attribute will still be false.\n  * `refunds` A list of refunds that have been applied to the fee.\n"
+    @typedoc "The `application_fee` type.\n\n  * `account` ID of the Stripe account this fee was taken from.\n  * `amount` Amount earned, in cents (or local equivalent).\n  * `amount_refunded` Amount in cents (or local equivalent) refunded (can be less than the amount attribute on the fee if a partial refund was issued)\n  * `application` ID of the Connect application that earned the fee.\n  * `balance_transaction` Balance transaction that describes the impact of this collected application fee on your account balance (not including refunds).\n  * `charge` ID of the charge that the application fee was taken from.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `fee_source` Polymorphic source of the application fee. Includes the ID of the object the application fee was created from.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `originating_transaction` ID of the corresponding charge on the platform account, if this fee was the result of a charge using the `destination` parameter.\n  * `refunded` Whether the fee has been fully refunded. If the fee is only partially refunded, this attribute will still be false.\n  * `refunds` A list of refunds that have been applied to the fee.\n"
     @type t :: %__MODULE__{
             account: binary | Stripe.Account.t(),
             amount: integer,
@@ -29,6 +30,7 @@ defmodule Stripe.ApplicationFee do
             charge: binary | Stripe.Charge.t(),
             created: integer,
             currency: binary,
+            fee_source: term | nil,
             id: binary,
             livemode: boolean,
             object: binary,

@@ -1,7 +1,7 @@
 defmodule Stripe.PaymentMethodDomain do
   use Stripe.Entity
 
-  @moduledoc "A payment method domain represents a web domain that you have registered with Stripe.\nStripe Elements use registered payment method domains to control where certain payment methods are shown.\n\nRelated guides: [Payment method domains](https://stripe.com/docs/payments/payment-methods/pmd-registration)."
+  @moduledoc "A payment method domain represents a web domain that you have registered with Stripe.\nStripe Elements use registered payment method domains to control where certain payment methods are shown.\n\nRelated guide: [Payment method domains](https://stripe.com/docs/payments/payment-methods/pmd-registration)."
   (
     defstruct [
       :apple_pay,
@@ -29,6 +29,37 @@ defmodule Stripe.PaymentMethodDomain do
             object: binary,
             paypal: term
           }
+  )
+
+  (
+    nil
+
+    @doc "<p>Lists the details of existing payment method domains.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_method_domains`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:domain_name) => binary,
+                optional(:enabled) => boolean,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.PaymentMethodDomain.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/payment_method_domains", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
   )
 
   (
@@ -65,37 +96,6 @@ defmodule Stripe.PaymentMethodDomain do
             ],
             [payment_method_domain]
           )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Lists the details of existing payment method domains.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_method_domains`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:domain_name) => binary,
-                optional(:enabled) => boolean,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.PaymentMethodDomain.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/payment_method_domains", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)

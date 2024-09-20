@@ -406,6 +406,7 @@ defmodule Stripe.Issuing.Cardholder do
                 | :womens_ready_to_wear_stores
                 | :wrecking_and_salvage_yards
               ),
+            optional(:allowed_merchant_countries) => list(binary),
             optional(:blocked_categories) =>
               list(
                 :ac_refrigeration_repair
@@ -704,6 +705,7 @@ defmodule Stripe.Issuing.Cardholder do
                 | :womens_ready_to_wear_stores
                 | :wrecking_and_salvage_yards
               ),
+            optional(:blocked_merchant_countries) => list(binary),
             optional(:spending_limits) => list(spending_limits),
             optional(:spending_limits_currency) => binary
           }
@@ -1067,43 +1069,6 @@ defmodule Stripe.Issuing.Cardholder do
   (
     nil
 
-    @doc "<p>Creates a new Issuing <code>Cardholder</code> object that can be issued cards.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/cardholders`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:billing) => billing,
-                optional(:company) => company,
-                optional(:email) => binary,
-                optional(:expand) => list(binary),
-                optional(:individual) => individual,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:name) => binary,
-                optional(:phone_number) => binary,
-                optional(:preferred_locales) => list(:de | :en | :es | :fr | :it),
-                optional(:spending_controls) => spending_controls,
-                optional(:status) => :active | :inactive,
-                optional(:type) => :company | :individual
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Cardholder.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/issuing/cardholders", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Retrieves an Issuing <code>Cardholder</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/issuing/cardholders/{cardholder}`\n"
     (
       @spec retrieve(
@@ -1140,6 +1105,43 @@ defmodule Stripe.Issuing.Cardholder do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new Issuing <code>Cardholder</code> object that can be issued cards.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/cardholders`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:billing) => billing,
+                optional(:company) => company,
+                optional(:email) => binary,
+                optional(:expand) => list(binary),
+                optional(:individual) => individual,
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:name) => binary,
+                optional(:phone_number) => binary,
+                optional(:preferred_locales) => list(:de | :en | :es | :fr | :it),
+                optional(:spending_controls) => spending_controls,
+                optional(:status) => :active | :inactive,
+                optional(:type) => :company | :individual
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Cardholder.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/issuing/cardholders", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

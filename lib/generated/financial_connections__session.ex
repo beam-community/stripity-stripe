@@ -42,40 +42,11 @@ defmodule Stripe.FinancialConnections.Session do
 
   (
     @typedoc "Filters to restrict the kinds of accounts to collect."
-    @type filters :: %{optional(:countries) => list(binary)}
-  )
-
-  (
-    nil
-
-    @doc "<p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s <code>client_secret</code> can be used to launch the flow using Stripe.js.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/financial_connections/sessions`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:account_holder) => account_holder,
-                optional(:expand) => list(binary),
-                optional(:filters) => filters,
-                optional(:permissions) =>
-                  list(:balances | :ownership | :payment_method | :transactions),
-                optional(:prefetch) => list(:balances | :ownership | :transactions),
-                optional(:return_url) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.FinancialConnections.Session.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params("/v1/financial_connections/sessions", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
+    @type filters :: %{
+            optional(:account_subcategories) =>
+              list(:checking | :credit_card | :line_of_credit | :mortgage | :savings),
+            optional(:countries) => list(binary)
+          }
   )
 
   (
@@ -117,6 +88,39 @@ defmodule Stripe.FinancialConnections.Session do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s <code>client_secret</code> can be used to launch the flow using Stripe.js.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/financial_connections/sessions`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:account_holder) => account_holder,
+                optional(:expand) => list(binary),
+                optional(:filters) => filters,
+                optional(:permissions) =>
+                  list(:balances | :ownership | :payment_method | :transactions),
+                optional(:prefetch) => list(:balances | :ownership | :transactions),
+                optional(:return_url) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.FinancialConnections.Session.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params("/v1/financial_connections/sessions", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
