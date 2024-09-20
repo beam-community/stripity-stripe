@@ -62,11 +62,11 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is an `acss_debit` PaymentMethod, this hash contains details about the ACSS Debit payment method."
+    @typedoc "If this is a `acss_debit` SetupIntent, this sub-hash contains details about the ACSS Debit payment method options."
     @type acss_debit :: %{
-            optional(:account_number) => binary,
-            optional(:institution_number) => binary,
-            optional(:transit_number) => binary
+            optional(:currency) => :cad | :usd,
+            optional(:mandate_options) => mandate_options,
+            optional(:verification_method) => :automatic | :instant | :microdeposits
           }
   )
 
@@ -96,8 +96,8 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `bacs_debit` SetupIntent, this sub-hash contains details about the Bacs Debit payment method options."
-    @type bacs_debit :: %{optional(:mandate_options) => map()}
+    @typedoc "If this is a `bacs_debit` PaymentMethod, this hash contains details about the Bacs Direct Debit bank account."
+    @type bacs_debit :: %{optional(:account_number) => binary, optional(:sort_code) => binary}
   )
 
   (
@@ -297,7 +297,13 @@ defmodule Stripe.SetupIntent do
 
   (
     @typedoc "Additional fields for Mandate creation"
-    @type mandate_options :: %{optional(:collection_method) => :paper}
+    @type mandate_options :: %{
+            optional(:custom_mandate_url) => binary | binary,
+            optional(:default_for) => list(:invoice | :subscription),
+            optional(:interval_description) => binary,
+            optional(:payment_schedule) => :combined | :interval | :sporadic,
+            optional(:transaction_type) => :business | :personal
+          }
   )
 
   (
@@ -486,12 +492,13 @@ defmodule Stripe.SetupIntent do
   )
 
   (
-    @typedoc "If this is a `us_bank_account` SetupIntent, this sub-hash contains details about the US bank account payment method options."
+    @typedoc "If this is an `us_bank_account` PaymentMethod, this hash contains details about the US bank account payment method."
     @type us_bank_account :: %{
-            optional(:financial_connections) => financial_connections,
-            optional(:mandate_options) => mandate_options,
-            optional(:networks) => networks,
-            optional(:verification_method) => :automatic | :instant | :microdeposits
+            optional(:account_holder_type) => :company | :individual,
+            optional(:account_number) => binary,
+            optional(:account_type) => :checking | :savings,
+            optional(:financial_connections_account) => binary,
+            optional(:routing_number) => binary
           }
   )
 

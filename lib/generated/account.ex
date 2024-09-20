@@ -248,13 +248,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to card charging on the account."
-    @type card_payments :: %{
-            optional(:decline_on) => decline_on,
-            optional(:statement_descriptor_prefix) => binary,
-            optional(:statement_descriptor_prefix_kana) => binary | binary,
-            optional(:statement_descriptor_prefix_kanji) => binary | binary
-          }
+    @typedoc "The card_payments capability."
+    @type card_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -375,7 +370,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "An identifying document, either a passport or local ID card."
+    @typedoc "A document verifying the business."
     @type document :: %{optional(:back) => binary, optional(:front) => binary}
   )
 
@@ -710,8 +705,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
