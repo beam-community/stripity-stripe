@@ -121,7 +121,15 @@ defmodule Stripe.PaymentLink do
 
   (
     @typedoc nil
-    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
+    @type custom_fields :: %{
+            optional(:dropdown) => dropdown,
+            optional(:key) => binary,
+            optional(:label) => label,
+            optional(:numeric) => numeric,
+            optional(:optional) => boolean,
+            optional(:text) => text,
+            optional(:type) => :dropdown | :numeric | :text
+          }
   )
 
   (
@@ -525,7 +533,10 @@ defmodule Stripe.PaymentLink do
 
   (
     @typedoc "Controls tax ID collection during checkout."
-    @type tax_id_collection :: %{optional(:enabled) => boolean}
+    @type tax_id_collection :: %{
+            optional(:enabled) => boolean,
+            optional(:required) => :if_supported | :never
+          }
   )
 
   (

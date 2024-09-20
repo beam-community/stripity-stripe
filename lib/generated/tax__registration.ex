@@ -199,6 +199,15 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc nil
+    @type elections :: %{
+            optional(:jurisdiction) => binary,
+            optional(:type) =>
+              :local_use_tax | :simplified_sellers_use_tax | :single_local_use_tax
+          }
+  )
+
+  (
     @typedoc "Options for the registration in ES."
     @type es :: %{
             optional(:standard) => standard,
@@ -451,6 +460,11 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the state sales tax registration."
+    @type state_sales_tax :: %{optional(:elections) => list(elections)}
+  )
+
+  (
     @typedoc "Options for the registration in TH."
     @type th :: %{optional(:type) => :simplified}
   )
@@ -466,6 +480,7 @@ defmodule Stripe.Tax.Registration do
             optional(:local_amusement_tax) => local_amusement_tax,
             optional(:local_lease_tax) => local_lease_tax,
             optional(:state) => binary,
+            optional(:state_sales_tax) => state_sales_tax,
             optional(:type) =>
               :local_amusement_tax
               | :local_lease_tax
