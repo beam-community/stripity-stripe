@@ -18,7 +18,7 @@ defmodule Stripe.Event do
 
     @typedoc "The `event` type.\n\n  * `account` The connected account that originates the event.\n  * `api_version` The Stripe API version used to render `data`. This property is populated only for events on or after October 31, 2014.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `data` \n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `pending_webhooks` Number of webhooks that haven't been successfully delivered (for example, to return a 20x response) to the URLs you specify.\n  * `request` Information on the API request that triggers the event.\n  * `type` Description of the event (for example, `invoice.created` or `charge.refunded`).\n"
     @type t :: %__MODULE__{
-            account: binary,
+            account: binary | nil,
             api_version: binary | nil,
             created: integer,
             data: term,
