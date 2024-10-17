@@ -102,7 +102,7 @@ if Code.ensure_loaded?(Plug) do
     plug Stripe.WebhookPlug,
       at: "/webhook/stripe",
       handler: MyAppWeb.StripeHandler,
-      secret: fn -> Application.get_env(:myapp, :stripe_webhook_secret) end
+      secret: &MyAppWeb.Secrets.stripe_webhook_secret/0 # a remote function in the format &Mod.fun/arity
     ```
     """
 
