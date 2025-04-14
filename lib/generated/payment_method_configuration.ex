@@ -4,66 +4,82 @@ defmodule Stripe.PaymentMethodConfiguration do
   @moduledoc "PaymentMethodConfigurations control which payment methods are displayed to your customers when you don't explicitly specify payment method types. You can have multiple configurations with different sets of payment methods for different scenarios.\n\nThere are two types of PaymentMethodConfigurations. Which is used depends on the [charge type](https://stripe.com/docs/connect/charges):\n\n**Direct** configurations apply to payments created on your account, including Connect destination charges, Connect separate charges and transfers, and payments not involving Connect.\n\n**Child** configurations apply to payments created on your connected accounts using direct charges, and charges with the on_behalf_of parameter.\n\nChild configurations have a `parent` that sets default values and controls which settings connected accounts may override. You can specify a parent ID at payment time, and Stripe will automatically resolve the connected account’s associated child configuration. Parent configurations are [managed in the dashboard](https://dashboard.stripe.com/settings/payment_methods/connected_accounts) and are not available in this API.\n\nRelated guides:\n- [Payment Method Configurations API](https://stripe.com/docs/connect/payment-method-configurations)\n- [Multiple configurations on dynamic payment methods](https://stripe.com/docs/payments/multiple-payment-method-configs)\n- [Multiple configurations for your Connect accounts](https://stripe.com/docs/connect/multiple-payment-method-configurations)"
   (
     defstruct [
-      :eps,
-      :id,
-      :paynow,
-      :klarna,
-      :sepa_debit,
-      :au_becs_debit,
-      :bancontact,
-      :parent,
-      :grabpay,
-      :cartes_bancaires,
+      :zip,
+      :swish,
+      :us_bank_account,
       :afterpay_clearpay,
-      :google_pay,
-      :p24,
-      :apple_pay,
-      :sofort,
+      :sepa_debit,
+      :cashapp,
+      :livemode,
+      :promptpay,
       :wechat_pay,
-      :blik,
-      :konbini,
-      :object,
-      :jcb,
-      :boleto,
+      :alma,
+      :paynow,
+      :oxxo,
+      :google_pay,
+      :fpx,
       :paypal,
       :application,
-      :us_bank_account,
-      :oxxo,
-      :cashapp,
-      :promptpay,
+      :cartes_bancaires,
+      :p24,
+      :blik,
+      :konbini,
       :link,
-      :active,
-      :card,
-      :revolut_pay,
-      :ideal,
-      :giropay,
-      :alipay,
-      :is_default,
-      :bacs_debit,
       :acss_debit,
-      :livemode,
-      :affirm,
+      :is_default,
       :name,
-      :fpx
+      :id,
+      :twint,
+      :card,
+      :apple_pay,
+      :klarna,
+      :revolut_pay,
+      :multibanco,
+      :giropay,
+      :object,
+      :ideal,
+      :billie,
+      :eps,
+      :grabpay,
+      :jcb,
+      :nz_bank_account,
+      :pay_by_bank,
+      :mobilepay,
+      :affirm,
+      :bacs_debit,
+      :bancontact,
+      :active,
+      :parent,
+      :amazon_pay,
+      :au_becs_debit,
+      :alipay,
+      :boleto,
+      :satispay,
+      :customer_balance,
+      :sofort
     ]
 
-    @typedoc "The `payment_method_configuration` type.\n\n  * `acss_debit` \n  * `active` Whether the configuration can be used for new payments.\n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `apple_pay` \n  * `application` For child configs, the Connect application associated with the configuration.\n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `cartes_bancaires` \n  * `cashapp` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `google_pay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `is_default` The default configuration is used whenever a payment method configuration is not specified.\n  * `jcb` \n  * `klarna` \n  * `konbini` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `name` The configuration's name.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `parent` For child configs, the configuration's parent configuration.\n  * `paynow` \n  * `paypal` \n  * `promptpay` \n  * `revolut_pay` \n  * `sepa_debit` \n  * `sofort` \n  * `us_bank_account` \n  * `wechat_pay` \n"
+    @typedoc "The `payment_method_configuration` type.\n\n  * `acss_debit` \n  * `active` Whether the configuration can be used for new payments.\n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `alma` \n  * `amazon_pay` \n  * `apple_pay` \n  * `application` For child configs, the Connect application associated with the configuration.\n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `billie` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `cartes_bancaires` \n  * `cashapp` \n  * `customer_balance` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `google_pay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `is_default` The default configuration is used whenever a payment method configuration is not specified.\n  * `jcb` \n  * `klarna` \n  * `konbini` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `mobilepay` \n  * `multibanco` \n  * `name` The configuration's name.\n  * `nz_bank_account` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `parent` For child configs, the configuration's parent configuration.\n  * `pay_by_bank` \n  * `paynow` \n  * `paypal` \n  * `promptpay` \n  * `revolut_pay` \n  * `satispay` \n  * `sepa_debit` \n  * `sofort` \n  * `swish` \n  * `twint` \n  * `us_bank_account` \n  * `wechat_pay` \n  * `zip` \n"
     @type t :: %__MODULE__{
             acss_debit: term,
             active: boolean,
             affirm: term,
             afterpay_clearpay: term,
             alipay: term,
+            alma: term,
+            amazon_pay: term,
             apple_pay: term,
             application: binary | nil,
             au_becs_debit: term,
             bacs_debit: term,
             bancontact: term,
+            billie: term,
             blik: term,
             boleto: term,
             card: term,
             cartes_bancaires: term,
             cashapp: term,
+            customer_balance: term,
             eps: term,
             fpx: term,
             giropay: term,
@@ -77,19 +93,27 @@ defmodule Stripe.PaymentMethodConfiguration do
             konbini: term,
             link: term,
             livemode: boolean,
+            mobilepay: term,
+            multibanco: term,
             name: binary,
+            nz_bank_account: term,
             object: binary,
             oxxo: term,
             p24: term,
             parent: binary | nil,
+            pay_by_bank: term,
             paynow: term,
             paypal: term,
             promptpay: term,
             revolut_pay: term,
+            satispay: term,
             sepa_debit: term,
             sofort: term,
+            swish: term,
+            twint: term,
             us_bank_account: term,
-            wechat_pay: term
+            wechat_pay: term,
+            zip: term
           }
   )
 
@@ -111,6 +135,16 @@ defmodule Stripe.PaymentMethodConfiguration do
   (
     @typedoc "Alipay is a digital wallet in China that has more than a billion active users worldwide. Alipay users can pay on the web or on a mobile device using login credentials or their Alipay app. Alipay has a low dispute rate and reduces fraud by authenticating payments using the customer's login credentials. Check this [page](https://stripe.com/docs/payments/alipay) for more details."
     @type alipay :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Alma is a Buy Now, Pay Later payment method that offers customers the ability to pay in 2, 3, or 4 installments."
+    @type alma :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Amazon Pay is a wallet payment method that lets your customers check out the same way as on Amazon."
+    @type amazon_pay :: %{optional(:display_preference) => display_preference}
   )
 
   (
@@ -139,6 +173,11 @@ defmodule Stripe.PaymentMethodConfiguration do
   )
 
   (
+    @typedoc "Billie is a [single-use](https://docs.stripe.com/payments/payment-methods#usage) payment method that offers businesses Pay by Invoice where they offer payment terms ranging from 7-120 days. Customers are redirected from your website or app, authorize the payment with Billie, then return to your website or app. You get [immediate notification](/payments/payment-methods#payment-notification) of whether the payment succeeded or failed."
+    @type billie :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
     @typedoc "BLIK is a [single use](https://stripe.com/docs/payments/payment-methods#usage) payment method that requires customers to authenticate their payments. When customers want to pay online using BLIK, they request a six-digit code from their banking application and enter it into the payment collection form. Check this [page](https://stripe.com/docs/payments/blik) for more details."
     @type blik :: %{optional(:display_preference) => display_preference}
   )
@@ -161,6 +200,11 @@ defmodule Stripe.PaymentMethodConfiguration do
   (
     @typedoc "Cash App is a popular consumer app in the US that allows customers to bank, invest, send, and receive money using their digital wallet. Check this [page](https://stripe.com/docs/payments/cash-app-pay) for more details."
     @type cashapp :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Uses a customer’s [cash balance](https://stripe.com/docs/payments/customer-balance) for the payment. The cash balance can be funded via a bank transfer. Check this [page](https://stripe.com/docs/payments/bank-transfers) for more details."
+    @type customer_balance :: %{optional(:display_preference) => display_preference}
   )
 
   (
@@ -219,6 +263,21 @@ defmodule Stripe.PaymentMethodConfiguration do
   )
 
   (
+    @typedoc "MobilePay is a [single-use](https://stripe.com/docs/payments/payment-methods#usage) card wallet payment method used in Denmark and Finland. It allows customers to [authenticate and approve](https://stripe.com/docs/payments/payment-methods#customer-actions) payments using the MobilePay app. Check this [page](https://stripe.com/docs/payments/mobilepay) for more details."
+    @type mobilepay :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Stripe users in Europe and the United States can accept Multibanco payments from customers in Portugal using [Sources](https://stripe.com/docs/sources)—a single integration path for creating payments using any supported method."
+    @type multibanco :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Stripe users in New Zealand can accept Bulk Electronic Clearing System (BECS) direct debit payments from customers with a New Zeland bank account. Check this [page](https://stripe.com/docs/payments/nz-bank-account) for more details."
+    @type nz_bank_account :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
     @typedoc "OXXO is a Mexican chain of convenience stores with thousands of locations across Latin America and represents nearly 20% of online transactions in Mexico. OXXO allows customers to pay bills and online purchases in-store with cash. Check this [page](https://stripe.com/docs/payments/oxxo) for more details."
     @type oxxo :: %{optional(:display_preference) => display_preference}
   )
@@ -226,6 +285,11 @@ defmodule Stripe.PaymentMethodConfiguration do
   (
     @typedoc "Przelewy24 is a Poland-based payment method aggregator that allows customers to complete transactions online using bank transfers and other methods. Bank transfers account for 30% of online payments in Poland and Przelewy24 provides a way for customers to pay with over 165 banks. Check this [page](https://stripe.com/docs/payments/p24) for more details."
     @type p24 :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Pay by bank is a redirect payment method backed by bank transfers. A customer is redirected to their bank to authorize a bank transfer for a given amount. This removes a lot of the error risks inherent in waiting for the customer to initiate a transfer themselves, and is less expensive than card payments."
+    @type pay_by_bank :: %{optional(:display_preference) => display_preference}
   )
 
   (
@@ -249,6 +313,11 @@ defmodule Stripe.PaymentMethodConfiguration do
   )
 
   (
+    @typedoc "Satispay is a [single-use](https://docs.stripe.com/payments/payment-methods#usage) payment method where customers are required to [authenticate](/payments/payment-methods#customer-actions) their payment. Customers pay by being redirected from your website or app, authorizing the payment with Satispay, then returning to your website or app. You get [immediate notification](/payments/payment-methods#payment-notification) of whether the payment succeeded or failed."
+    @type satispay :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
     @typedoc "The [Single Euro Payments Area (SEPA)](https://en.wikipedia.org/wiki/Single_Euro_Payments_Area) is an initiative of the European Union to simplify payments within and across member countries. SEPA established and enforced banking standards to allow for the direct debiting of every EUR-denominated bank account within the SEPA region, check this [page](https://stripe.com/docs/payments/sepa-debit) for more details."
     @type sepa_debit :: %{optional(:display_preference) => display_preference}
   )
@@ -259,13 +328,28 @@ defmodule Stripe.PaymentMethodConfiguration do
   )
 
   (
-    @typedoc "Stripe users in the United States can accept ACH direct debit payments from customers with a US bank account using the Automated Clearing House (ACH) payments system operated by Nacha. Check this [page](https://stripe.com/docs/payments/ach-debit) for more details."
+    @typedoc "Swish is a [real-time](https://stripe.com/docs/payments/real-time) payment method popular in Sweden. It allows customers to [authenticate and approve](https://stripe.com/docs/payments/payment-methods#customer-actions) payments using the Swish mobile app and the Swedish BankID mobile app. Check this [page](https://stripe.com/docs/payments/swish) for more details."
+    @type swish :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Twint is a payment method popular in Switzerland. It allows customers to pay using their mobile phone. Check this [page](https://docs.stripe.com/payments/twint) for more details."
+    @type twint :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Stripe users in the United States can accept ACH direct debit payments from customers with a US bank account using the Automated Clearing House (ACH) payments system operated by Nacha. Check this [page](https://stripe.com/docs/payments/ach-direct-debit) for more details."
     @type us_bank_account :: %{optional(:display_preference) => display_preference}
   )
 
   (
     @typedoc "WeChat, owned by Tencent, is China's leading mobile app with over 1 billion monthly active users. Chinese consumers can use WeChat Pay to pay for goods and services inside of businesses' apps and websites. WeChat Pay users buy most frequently in gaming, e-commerce, travel, online education, and food/nutrition. Check this [page](https://stripe.com/docs/payments/wechat-pay) for more details."
     @type wechat_pay :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Zip gives your customers a way to split purchases over a series of payments. Check this [page](https://stripe.com/docs/payments/zip) for more details like country availability."
+    @type zip :: %{optional(:display_preference) => display_preference}
   )
 
   (
@@ -276,7 +360,10 @@ defmodule Stripe.PaymentMethodConfiguration do
       @spec list(
               params :: %{
                 optional(:application) => binary | binary,
-                optional(:expand) => list(binary)
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
               },
               opts :: Keyword.t()
             ) ::
@@ -314,17 +401,19 @@ defmodule Stripe.PaymentMethodConfiguration do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_method_configurations/{configuration}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "configuration",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "configuration",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "configuration",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -343,75 +432,68 @@ defmodule Stripe.PaymentMethodConfiguration do
   (
     nil
 
-    @doc "<p>Update payment method configuration</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_method_configurations/{configuration}`\n"
+    @doc "<p>Creates a payment method configuration</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_method_configurations`\n"
     (
-      @spec update(
-              configuration :: binary(),
+      @spec create(
               params :: %{
-                optional(:fpx) => fpx,
-                optional(:name) => binary,
-                optional(:affirm) => affirm,
-                optional(:acss_debit) => acss_debit,
-                optional(:bacs_debit) => bacs_debit,
-                optional(:alipay) => alipay,
-                optional(:giropay) => giropay,
-                optional(:ideal) => ideal,
-                optional(:revolut_pay) => revolut_pay,
-                optional(:expand) => list(binary),
-                optional(:card) => card,
-                optional(:active) => boolean,
-                optional(:link) => link,
-                optional(:promptpay) => promptpay,
-                optional(:cashapp) => cashapp,
-                optional(:oxxo) => oxxo,
-                optional(:us_bank_account) => us_bank_account,
-                optional(:paypal) => paypal,
+                optional(:sofort) => sofort,
+                optional(:customer_balance) => customer_balance,
+                optional(:satispay) => satispay,
                 optional(:boleto) => boleto,
+                optional(:alipay) => alipay,
+                optional(:au_becs_debit) => au_becs_debit,
+                optional(:amazon_pay) => amazon_pay,
+                optional(:parent) => binary,
+                optional(:bancontact) => bancontact,
+                optional(:bacs_debit) => bacs_debit,
+                optional(:affirm) => affirm,
+                optional(:mobilepay) => mobilepay,
+                optional(:pay_by_bank) => pay_by_bank,
+                optional(:nz_bank_account) => nz_bank_account,
                 optional(:jcb) => jcb,
+                optional(:grabpay) => grabpay,
+                optional(:eps) => eps,
+                optional(:billie) => billie,
+                optional(:ideal) => ideal,
+                optional(:giropay) => giropay,
+                optional(:multibanco) => multibanco,
+                optional(:revolut_pay) => revolut_pay,
+                optional(:klarna) => klarna,
+                optional(:apple_pay) => apple_pay,
+                optional(:card) => card,
+                optional(:twint) => twint,
+                optional(:name) => binary,
+                optional(:acss_debit) => acss_debit,
+                optional(:link) => link,
                 optional(:konbini) => konbini,
                 optional(:blik) => blik,
-                optional(:wechat_pay) => wechat_pay,
-                optional(:sofort) => sofort,
-                optional(:apple_pay) => apple_pay,
                 optional(:p24) => p24,
-                optional(:google_pay) => google_pay,
-                optional(:afterpay_clearpay) => afterpay_clearpay,
                 optional(:cartes_bancaires) => cartes_bancaires,
-                optional(:grabpay) => grabpay,
-                optional(:apple_pay_later) => apple_pay_later,
-                optional(:bancontact) => bancontact,
-                optional(:au_becs_debit) => au_becs_debit,
-                optional(:sepa_debit) => sepa_debit,
-                optional(:klarna) => klarna,
+                optional(:paypal) => paypal,
+                optional(:fpx) => fpx,
+                optional(:google_pay) => google_pay,
+                optional(:oxxo) => oxxo,
                 optional(:paynow) => paynow,
-                optional(:eps) => eps
+                optional(:alma) => alma,
+                optional(:wechat_pay) => wechat_pay,
+                optional(:promptpay) => promptpay,
+                optional(:expand) => list(binary),
+                optional(:cashapp) => cashapp,
+                optional(:apple_pay_later) => apple_pay_later,
+                optional(:sepa_debit) => sepa_debit,
+                optional(:afterpay_clearpay) => afterpay_clearpay,
+                optional(:us_bank_account) => us_bank_account,
+                optional(:swish) => swish,
+                optional(:zip) => zip
               },
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.PaymentMethodConfiguration.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def update(configuration, params \\ %{}, opts \\ []) do
+      def create(params \\ %{}, opts \\ []) do
         path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/payment_method_configurations/{configuration}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "configuration",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "configuration",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [configuration]
-          )
+          Stripe.OpenApi.Path.replace_path_params("/v1/payment_method_configurations", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -425,56 +507,89 @@ defmodule Stripe.PaymentMethodConfiguration do
   (
     nil
 
-    @doc "<p>Creates a payment method configuration</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_method_configurations`\n"
+    @doc "<p>Update payment method configuration</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_method_configurations/{configuration}`\n"
     (
-      @spec create(
+      @spec update(
+              configuration :: binary(),
               params :: %{
-                optional(:fpx) => fpx,
-                optional(:name) => binary,
-                optional(:affirm) => affirm,
-                optional(:acss_debit) => acss_debit,
-                optional(:bacs_debit) => bacs_debit,
-                optional(:alipay) => alipay,
-                optional(:giropay) => giropay,
-                optional(:ideal) => ideal,
-                optional(:revolut_pay) => revolut_pay,
-                optional(:expand) => list(binary),
-                optional(:card) => card,
-                optional(:link) => link,
-                optional(:promptpay) => promptpay,
-                optional(:cashapp) => cashapp,
-                optional(:oxxo) => oxxo,
-                optional(:us_bank_account) => us_bank_account,
-                optional(:paypal) => paypal,
+                optional(:sofort) => sofort,
+                optional(:customer_balance) => customer_balance,
+                optional(:satispay) => satispay,
                 optional(:boleto) => boleto,
+                optional(:alipay) => alipay,
+                optional(:au_becs_debit) => au_becs_debit,
+                optional(:amazon_pay) => amazon_pay,
+                optional(:active) => boolean,
+                optional(:bancontact) => bancontact,
+                optional(:bacs_debit) => bacs_debit,
+                optional(:affirm) => affirm,
+                optional(:mobilepay) => mobilepay,
+                optional(:pay_by_bank) => pay_by_bank,
+                optional(:nz_bank_account) => nz_bank_account,
                 optional(:jcb) => jcb,
+                optional(:grabpay) => grabpay,
+                optional(:eps) => eps,
+                optional(:billie) => billie,
+                optional(:ideal) => ideal,
+                optional(:giropay) => giropay,
+                optional(:multibanco) => multibanco,
+                optional(:revolut_pay) => revolut_pay,
+                optional(:klarna) => klarna,
+                optional(:apple_pay) => apple_pay,
+                optional(:card) => card,
+                optional(:twint) => twint,
+                optional(:name) => binary,
+                optional(:acss_debit) => acss_debit,
+                optional(:link) => link,
                 optional(:konbini) => konbini,
                 optional(:blik) => blik,
-                optional(:wechat_pay) => wechat_pay,
-                optional(:sofort) => sofort,
-                optional(:apple_pay) => apple_pay,
                 optional(:p24) => p24,
-                optional(:google_pay) => google_pay,
-                optional(:afterpay_clearpay) => afterpay_clearpay,
                 optional(:cartes_bancaires) => cartes_bancaires,
-                optional(:grabpay) => grabpay,
-                optional(:apple_pay_later) => apple_pay_later,
-                optional(:parent) => binary,
-                optional(:bancontact) => bancontact,
-                optional(:au_becs_debit) => au_becs_debit,
-                optional(:sepa_debit) => sepa_debit,
-                optional(:klarna) => klarna,
+                optional(:paypal) => paypal,
+                optional(:fpx) => fpx,
+                optional(:google_pay) => google_pay,
+                optional(:oxxo) => oxxo,
                 optional(:paynow) => paynow,
-                optional(:eps) => eps
+                optional(:alma) => alma,
+                optional(:wechat_pay) => wechat_pay,
+                optional(:promptpay) => promptpay,
+                optional(:expand) => list(binary),
+                optional(:cashapp) => cashapp,
+                optional(:apple_pay_later) => apple_pay_later,
+                optional(:sepa_debit) => sepa_debit,
+                optional(:afterpay_clearpay) => afterpay_clearpay,
+                optional(:us_bank_account) => us_bank_account,
+                optional(:swish) => swish,
+                optional(:zip) => zip
               },
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.PaymentMethodConfiguration.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
+      def update(configuration, params \\ %{}, opts \\ []) do
         path =
-          Stripe.OpenApi.Path.replace_path_params("/v1/payment_method_configurations", [], [])
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/payment_method_configurations/{configuration}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "configuration",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "configuration",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [configuration]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)

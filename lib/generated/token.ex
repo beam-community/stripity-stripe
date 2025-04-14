@@ -1,7 +1,7 @@
 defmodule Stripe.Token do
   use Stripe.Entity
 
-  @moduledoc "Tokenization is the process Stripe uses to collect sensitive card or bank\naccount details, or personally identifiable information (PII), directly from\nyour customers in a secure manner. A token representing this information is\nreturned to your server to use. Use our\n[recommended payments integrations](https://stripe.com/docs/payments) to perform this process\non the client-side. This guarantees that no sensitive card data touches your server,\nand allows your integration to operate in a PCI-compliant way.\n\nIf you can't use client-side tokenization, you can also create tokens using\nthe API with either your publishable or secret API key. If\nyour integration uses this method, you're responsible for any PCI compliance\nthat it might require, and you must keep your secret API key safe. Unlike with\nclient-side tokenization, your customer's information isn't sent directly to\nStripe, so we can't determine how it's handled or stored.\n\nYou can't store or use tokens more than once. To store card or bank account\ninformation for later use, create [Customer](https://stripe.com/docs/api#customers)\nobjects or [Custom accounts](https://stripe.com/docs/api#external_accounts).\n[Radar](https://stripe.com/docs/radar), our integrated solution for automatic fraud protection,\nperforms best with integrations that use client-side tokenization."
+  @moduledoc "Tokenization is the process Stripe uses to collect sensitive card or bank\naccount details, or personally identifiable information (PII), directly from\nyour customers in a secure manner. A token representing this information is\nreturned to your server to use. Use our\n[recommended payments integrations](https://stripe.com/docs/payments) to perform this process\non the client-side. This guarantees that no sensitive card data touches your server,\nand allows your integration to operate in a PCI-compliant way.\n\nIf you can't use client-side tokenization, you can also create tokens using\nthe API with either your publishable or secret API key. If\nyour integration uses this method, you're responsible for any PCI compliance\nthat it might require, and you must keep your secret API key safe. Unlike with\nclient-side tokenization, your customer's information isn't sent directly to\nStripe, so we can't determine how it's handled or stored.\n\nYou can't store or use tokens more than once. To store card or bank account\ninformation for later use, create [Customer](https://stripe.com/docs/api#customers)\nobjects or [External accounts](/api#external_accounts).\n[Radar](https://stripe.com/docs/radar), our integrated solution for automatic fraud protection,\nperforms best with integrations that use client-side tokenization."
   (
     defstruct [:bank_account, :card, :client_ip, :created, :id, :livemode, :object, :type, :used]
 
@@ -34,7 +34,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Details on the legal guardian's acceptance of the required Stripe agreements."
+    @typedoc "Details on the legal guardian's or authorizer's acceptance of the required Stripe agreements."
     @type additional_tos_acceptances :: %{optional(:account) => account}
   )
 
@@ -51,7 +51,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The Kana variation of the the individual's primary address (Japan only)."
+    @typedoc "The Kana variation of the company's primary address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -64,7 +64,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The Kanji variation of the person's address (Japan only)."
+    @typedoc "The Kanji variation of the individual's primary address (Japan only)."
     @type address_kanji :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -85,6 +85,7 @@ defmodule Stripe.Token do
             optional(:account_type) => :checking | :futsu | :savings | :toza,
             optional(:country) => binary,
             optional(:currency) => binary,
+            optional(:payment_method) => binary,
             optional(:routing_number) => binary
           }
   )
@@ -103,6 +104,7 @@ defmodule Stripe.Token do
             optional(:exp_month) => binary,
             optional(:exp_year) => binary,
             optional(:name) => binary,
+            optional(:networks) => networks,
             optional(:number) => binary
           }
   )
@@ -114,6 +116,7 @@ defmodule Stripe.Token do
             optional(:address_kana) => address_kana,
             optional(:address_kanji) => address_kanji,
             optional(:directors_provided) => boolean,
+            optional(:directorship_declaration) => directorship_declaration,
             optional(:executives_provided) => boolean,
             optional(:export_license_id) => binary,
             optional(:export_purpose_code) => binary,
@@ -123,6 +126,8 @@ defmodule Stripe.Token do
             optional(:owners_provided) => boolean,
             optional(:ownership_declaration) => ownership_declaration,
             optional(:ownership_declaration_shown_and_signed) => boolean,
+            optional(:ownership_exemption_reason) =>
+              :qualified_entity_exceeds_ownership_threshold | :qualifies_as_financial_institution,
             optional(:phone) => binary,
             optional(:registration_number) => binary,
             optional(:structure) =>
@@ -141,6 +146,7 @@ defmodule Stripe.Token do
               | :public_company
               | :public_corporation
               | :public_partnership
+              | :registered_charity
               | :single_member_llc
               | :sole_establishment
               | :sole_proprietorship
@@ -163,6 +169,15 @@ defmodule Stripe.Token do
   (
     @typedoc "The updated CVC value this token represents."
     @type cvc_update :: %{optional(:cvc) => binary}
+  )
+
+  (
+    @typedoc "This hash is used to attest that the directors information provided to Stripe is both current and correct."
+    @type directorship_declaration :: %{
+            optional(:date) => integer,
+            optional(:ip) => binary,
+            optional(:user_agent) => binary
+          }
   )
 
   (
@@ -211,9 +226,15 @@ defmodule Stripe.Token do
             optional(:phone) => binary,
             optional(:political_exposure) => :existing | :none,
             optional(:registered_address) => registered_address,
+            optional(:relationship) => relationship,
             optional(:ssn_last_4) => binary,
             optional(:verification) => verification
           }
+  )
+
+  (
+    @typedoc "Contains information about card networks used to process the payment."
+    @type networks :: %{optional(:preferred) => :cartes_bancaires | :mastercard | :visa}
   )
 
   (
@@ -254,7 +275,7 @@ defmodule Stripe.Token do
             optional(:metadata) => %{optional(binary) => binary} | binary,
             optional(:nationality) => binary,
             optional(:phone) => binary,
-            optional(:political_exposure) => binary,
+            optional(:political_exposure) => :existing | :none,
             optional(:registered_address) => registered_address,
             optional(:relationship) => relationship,
             optional(:ssn_last_4) => binary,
@@ -282,6 +303,7 @@ defmodule Stripe.Token do
   (
     @typedoc "The relationship that this person has with the account's legal entity."
     @type relationship :: %{
+            optional(:authorizer) => boolean,
             optional(:director) => boolean,
             optional(:executive) => boolean,
             optional(:legal_guardian) => boolean,
@@ -293,8 +315,11 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The person's verification status."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
@@ -317,17 +342,19 @@ defmodule Stripe.Token do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/tokens/{token}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "token",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "token",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "token",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -346,7 +373,7 @@ defmodule Stripe.Token do
   (
     nil
 
-    @doc "<p>Creates a single-use token that represents a bank account’s details.\nYou can use this token with any API method in place of a bank account dictionary. You can only use this token once. To do so, attach it to a <a href=\"#accounts\">Custom account</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tokens`\n"
+    @doc "<p>Creates a single-use token that represents a bank account’s details.\nYou can use this token with any v1 API method in place of a bank account dictionary. You can only use this token once. To do so, attach it to a <a href=\"#accounts\">connected account</a> where <a href=\"/api/accounts/object#account_object-controller-requirement_collection\">controller.requirement_collection</a> is <code>application</code>, which includes Custom accounts.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tokens`\n"
     (
       @spec create(
               params :: %{

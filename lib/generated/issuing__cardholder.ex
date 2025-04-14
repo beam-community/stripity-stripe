@@ -1,7 +1,7 @@
 defmodule Stripe.Issuing.Cardholder do
   use Stripe.Entity
 
-  @moduledoc "An Issuing `Cardholder` object represents an individual or business entity who is [issued](https://stripe.com/docs/issuing) cards.\n\nRelated guide: [How to create a cardholder](https://stripe.com/docs/issuing/cards#create-cardholder)"
+  @moduledoc "An Issuing `Cardholder` object represents an individual or business entity who is [issued](https://stripe.com/docs/issuing) cards.\n\nRelated guide: [How to create a cardholder](https://stripe.com/docs/issuing/cards/virtual/issue-cards#create-cardholder)"
   (
     defstruct [
       :billing,
@@ -406,6 +406,7 @@ defmodule Stripe.Issuing.Cardholder do
                 | :womens_ready_to_wear_stores
                 | :wrecking_and_salvage_yards
               ),
+            optional(:allowed_merchant_countries) => list(binary),
             optional(:blocked_categories) =>
               list(
                 :ac_refrigeration_repair
@@ -704,6 +705,7 @@ defmodule Stripe.Issuing.Cardholder do
                 | :womens_ready_to_wear_stores
                 | :wrecking_and_salvage_yards
               ),
+            optional(:blocked_merchant_countries) => list(binary),
             optional(:spending_limits) => list(spending_limits),
             optional(:spending_limits_currency) => binary
           }
@@ -1067,6 +1069,52 @@ defmodule Stripe.Issuing.Cardholder do
   (
     nil
 
+    @doc "<p>Retrieves an Issuing <code>Cardholder</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/issuing/cardholders/{cardholder}`\n"
+    (
+      @spec retrieve(
+              cardholder :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Issuing.Cardholder.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(cardholder, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/issuing/cardholders/{cardholder}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "cardholder",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "cardholder",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [cardholder]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Creates a new Issuing <code>Cardholder</code> object that can be issued cards.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/cardholders`\n"
     (
       @spec create(
@@ -1104,50 +1152,6 @@ defmodule Stripe.Issuing.Cardholder do
   (
     nil
 
-    @doc "<p>Retrieves an Issuing <code>Cardholder</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/issuing/cardholders/{cardholder}`\n"
-    (
-      @spec retrieve(
-              cardholder :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Issuing.Cardholder.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(cardholder, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/issuing/cardholders/{cardholder}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "cardholder",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "cardholder",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [cardholder]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Updates the specified Issuing <code>Cardholder</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/issuing/cardholders/{cardholder}`\n"
     (
       @spec update(
@@ -1174,17 +1178,19 @@ defmodule Stripe.Issuing.Cardholder do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/issuing/cardholders/{cardholder}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "cardholder",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "cardholder",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "cardholder",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

@@ -66,6 +66,11 @@ defmodule Stripe.BillingPortal.Configuration do
   )
 
   (
+    @typedoc nil
+    @type conditions :: %{optional(:type) => :decreasing_item_amount | :shortening_interval}
+  )
+
+  (
     @typedoc "Information about updating the customer details in the portal."
     @type customer_update :: %{
             optional(:allowed_updates) =>
@@ -81,7 +86,6 @@ defmodule Stripe.BillingPortal.Configuration do
             optional(:invoice_history) => invoice_history,
             optional(:payment_method_update) => payment_method_update,
             optional(:subscription_cancel) => subscription_cancel,
-            optional(:subscription_pause) => subscription_pause,
             optional(:subscription_update) => subscription_update
           }
   )
@@ -107,6 +111,11 @@ defmodule Stripe.BillingPortal.Configuration do
   )
 
   (
+    @typedoc "Setting to control when an update should be scheduled at the end of the period instead of applying immediately."
+    @type schedule_at_period_end :: %{optional(:conditions) => list(conditions)}
+  )
+
+  (
     @typedoc "Information about canceling subscriptions in the portal."
     @type subscription_cancel :: %{
             optional(:cancellation_reason) => cancellation_reason,
@@ -117,18 +126,14 @@ defmodule Stripe.BillingPortal.Configuration do
   )
 
   (
-    @typedoc "Information about pausing subscriptions in the portal."
-    @type subscription_pause :: %{optional(:enabled) => boolean}
-  )
-
-  (
     @typedoc "Information about updating subscriptions in the portal."
     @type subscription_update :: %{
             optional(:default_allowed_updates) =>
               list(:price | :promotion_code | :quantity) | binary,
             optional(:enabled) => boolean,
             optional(:products) => list(products) | binary,
-            optional(:proration_behavior) => :always_invoice | :create_prorations | :none
+            optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
+            optional(:schedule_at_period_end) => schedule_at_period_end
           }
   )
 
@@ -154,6 +159,52 @@ defmodule Stripe.BillingPortal.Configuration do
       def list(params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params("/v1/billing_portal/configurations", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves a configuration that describes the functionality of the customer portal.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/billing_portal/configurations/{configuration}`\n"
+    (
+      @spec retrieve(
+              configuration :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.BillingPortal.Configuration.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(configuration, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/billing_portal/configurations/{configuration}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "configuration",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "configuration",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [configuration]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -222,17 +273,19 @@ defmodule Stripe.BillingPortal.Configuration do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/billing_portal/configurations/{configuration}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "configuration",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "configuration",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "configuration",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -243,50 +296,6 @@ defmodule Stripe.BillingPortal.Configuration do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves a configuration that describes the functionality of the customer portal.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/billing_portal/configurations/{configuration}`\n"
-    (
-      @spec retrieve(
-              configuration :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.BillingPortal.Configuration.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(configuration, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/billing_portal/configurations/{configuration}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "configuration",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "configuration",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [configuration]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

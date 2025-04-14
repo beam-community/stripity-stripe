@@ -5,7 +5,7 @@ defmodule Stripe.Tax.Settings do
   (
     defstruct [:defaults, :head_office, :livemode, :object, :status, :status_details]
 
-    @typedoc "The `tax.settings` type.\n\n  * `defaults` \n  * `head_office` The place where your business is located.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `status` The `active` status indicates you have all required settings to calculate tax. A status can transition out of `active` when new required settings are introduced.\n  * `status_details` \n"
+    @typedoc "The `tax.settings` type.\n\n  * `defaults` \n  * `head_office` The place where your business is located.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `status` The status of the Tax `Settings`.\n  * `status_details` \n"
     @type t :: %__MODULE__{
             defaults: term,
             head_office: term | nil,

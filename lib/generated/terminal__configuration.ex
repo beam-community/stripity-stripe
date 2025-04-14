@@ -8,22 +8,30 @@ defmodule Stripe.Terminal.Configuration do
       :id,
       :is_account_default,
       :livemode,
+      :name,
       :object,
       :offline,
+      :reboot_window,
+      :stripe_s700,
       :tipping,
-      :verifone_p400
+      :verifone_p400,
+      :wifi
     ]
 
-    @typedoc "The `terminal.configuration` type.\n\n  * `bbpos_wisepos_e` \n  * `id` Unique identifier for the object.\n  * `is_account_default` Whether this Configuration is the default for your account\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `offline` \n  * `tipping` \n  * `verifone_p400` \n"
+    @typedoc "The `terminal.configuration` type.\n\n  * `bbpos_wisepos_e` \n  * `id` Unique identifier for the object.\n  * `is_account_default` Whether this Configuration is the default for your account\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `name` String indicating the name of the Configuration object, set by the user\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `offline` \n  * `reboot_window` \n  * `stripe_s700` \n  * `tipping` \n  * `verifone_p400` \n  * `wifi` \n"
     @type t :: %__MODULE__{
             bbpos_wisepos_e: term,
             id: binary,
             is_account_default: boolean | nil,
             livemode: boolean,
+            name: binary | nil,
             object: binary,
             offline: term,
+            reboot_window: term,
+            stripe_s700: term,
             tipping: term,
-            verifone_p400: term
+            verifone_p400: term,
+            wifi: term
           }
   )
 
@@ -78,6 +86,27 @@ defmodule Stripe.Terminal.Configuration do
   )
 
   (
+    @typedoc "Credentials for a WPA-Enterprise WiFi network using the EAP-PEAP authentication method."
+    @type enterprise_eap_peap :: %{
+            optional(:ca_certificate_file) => binary,
+            optional(:password) => binary,
+            optional(:ssid) => binary,
+            optional(:username) => binary
+          }
+  )
+
+  (
+    @typedoc "Credentials for a WPA-Enterprise WiFi network using the EAP-TLS authentication method."
+    @type enterprise_eap_tls :: %{
+            optional(:ca_certificate_file) => binary,
+            optional(:client_certificate_file) => binary,
+            optional(:private_key_file) => binary,
+            optional(:private_key_file_password) => binary,
+            optional(:ssid) => binary
+          }
+  )
+
+  (
     @typedoc "Tipping configuration for EUR"
     @type eur :: %{
             optional(:fixed_amounts) => list(integer),
@@ -98,6 +127,15 @@ defmodule Stripe.Terminal.Configuration do
   (
     @typedoc "Tipping configuration for HKD"
     @type hkd :: %{
+            optional(:fixed_amounts) => list(integer),
+            optional(:percentages) => list(integer),
+            optional(:smart_tip_threshold) => integer
+          }
+  )
+
+  (
+    @typedoc "Tipping configuration for JPY"
+    @type jpy :: %{
             optional(:fixed_amounts) => list(integer),
             optional(:percentages) => list(integer),
             optional(:smart_tip_threshold) => integer
@@ -137,6 +175,25 @@ defmodule Stripe.Terminal.Configuration do
   )
 
   (
+    @typedoc "Credentials for a WPA-Personal WiFi network."
+    @type personal_psk :: %{optional(:password) => binary, optional(:ssid) => binary}
+  )
+
+  (
+    @typedoc "Tipping configuration for PLN"
+    @type pln :: %{
+            optional(:fixed_amounts) => list(integer),
+            optional(:percentages) => list(integer),
+            optional(:smart_tip_threshold) => integer
+          }
+  )
+
+  (
+    @typedoc "Reboot time settings for readers that support customized reboot time configuration."
+    @type reboot_window :: %{optional(:end_hour) => integer, optional(:start_hour) => integer}
+  )
+
+  (
     @typedoc "Tipping configuration for SEK"
     @type sek :: %{
             optional(:fixed_amounts) => list(integer),
@@ -155,6 +212,11 @@ defmodule Stripe.Terminal.Configuration do
   )
 
   (
+    @typedoc "An object containing device type specific settings for Stripe S700 readers"
+    @type stripe_s700 :: %{optional(:splashscreen) => binary | binary}
+  )
+
+  (
     @typedoc nil
     @type tipping :: %{
             optional(:aud) => aud,
@@ -165,9 +227,11 @@ defmodule Stripe.Terminal.Configuration do
             optional(:eur) => eur,
             optional(:gbp) => gbp,
             optional(:hkd) => hkd,
+            optional(:jpy) => jpy,
             optional(:myr) => myr,
             optional(:nok) => nok,
             optional(:nzd) => nzd,
+            optional(:pln) => pln,
             optional(:sek) => sek,
             optional(:sgd) => sgd,
             optional(:usd) => usd
@@ -189,30 +253,51 @@ defmodule Stripe.Terminal.Configuration do
   )
 
   (
+    @typedoc nil
+    @type wifi :: %{
+            optional(:enterprise_eap_peap) => enterprise_eap_peap,
+            optional(:enterprise_eap_tls) => enterprise_eap_tls,
+            optional(:personal_psk) => personal_psk,
+            optional(:type) => :enterprise_eap_peap | :enterprise_eap_tls | :personal_psk
+          }
+  )
+
+  (
     nil
 
-    @doc "<p>Creates a new <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/configurations`\n"
+    @doc "<p>Deletes a <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/configurations/{configuration}`\n"
     (
-      @spec create(
-              params :: %{
-                optional(:bbpos_wisepos_e) => bbpos_wisepos_e,
-                optional(:expand) => list(binary),
-                optional(:offline) => offline | binary,
-                optional(:tipping) => tipping | binary,
-                optional(:verifone_p400) => verifone_p400
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Terminal.Configuration.t()}
+      @spec delete(configuration :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedTerminal.Configuration.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/configurations", [], [])
+      def delete(configuration, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/terminal/configurations/{configuration}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "configuration",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "configuration",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [configuration]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
@@ -266,17 +351,19 @@ defmodule Stripe.Terminal.Configuration do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/configurations/{configuration}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "configuration",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "configuration",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "configuration",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -295,43 +382,27 @@ defmodule Stripe.Terminal.Configuration do
   (
     nil
 
-    @doc "<p>Updates a new <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/configurations/{configuration}`\n"
+    @doc "<p>Creates a new <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/configurations`\n"
     (
-      @spec update(
-              configuration :: binary(),
+      @spec create(
               params :: %{
-                optional(:bbpos_wisepos_e) => bbpos_wisepos_e | binary,
+                optional(:bbpos_wisepos_e) => bbpos_wisepos_e,
                 optional(:expand) => list(binary),
+                optional(:name) => binary,
                 optional(:offline) => offline | binary,
+                optional(:reboot_window) => reboot_window,
+                optional(:stripe_s700) => stripe_s700,
                 optional(:tipping) => tipping | binary,
-                optional(:verifone_p400) => verifone_p400 | binary
+                optional(:verifone_p400) => verifone_p400,
+                optional(:wifi) => wifi | binary
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.Terminal.Configuration.t() | Stripe.DeletedTerminal.Configuration.t()}
+              {:ok, Stripe.Terminal.Configuration.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def update(configuration, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/terminal/configurations/{configuration}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "configuration",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "configuration",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [configuration]
-          )
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/configurations", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -345,28 +416,44 @@ defmodule Stripe.Terminal.Configuration do
   (
     nil
 
-    @doc "<p>Deletes a <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/configurations/{configuration}`\n"
+    @doc "<p>Updates a new <code>Configuration</code> object.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/configurations/{configuration}`\n"
     (
-      @spec delete(configuration :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedTerminal.Configuration.t()}
+      @spec update(
+              configuration :: binary(),
+              params :: %{
+                optional(:bbpos_wisepos_e) => bbpos_wisepos_e | binary,
+                optional(:expand) => list(binary),
+                optional(:name) => binary,
+                optional(:offline) => offline | binary,
+                optional(:reboot_window) => reboot_window | binary,
+                optional(:stripe_s700) => stripe_s700 | binary,
+                optional(:tipping) => tipping | binary,
+                optional(:verifone_p400) => verifone_p400 | binary,
+                optional(:wifi) => wifi | binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Configuration.t() | Stripe.DeletedTerminal.Configuration.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def delete(configuration, opts \\ []) do
+      def update(configuration, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/configurations/{configuration}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "configuration",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "configuration",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "configuration",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -375,7 +462,8 @@ defmodule Stripe.Terminal.Configuration do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

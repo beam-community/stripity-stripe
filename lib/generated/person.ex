@@ -1,7 +1,7 @@
 defmodule Stripe.Person do
   use Stripe.Entity
 
-  @moduledoc "This is an object representing a person associated with a Stripe account.\n\nA platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account.\nSee the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform prefilling and account onboarding steps.\n\nRelated guide: [Handling identity verification with the API](https://stripe.com/docs/connect/handling-api-verification#person-information)"
+  @moduledoc "This is an object representing a person associated with a Stripe account.\n\nA platform can only access a subset of data in a person for an account where [account.controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`, which includes Standard and Express accounts, after creating an Account Link or Account Session to start Connect onboarding.\n\nSee the [Standard onboarding](/connect/standard-accounts) or [Express onboarding](/connect/express-accounts) documentation for information about prefilling information and account onboarding steps. Learn more about [handling identity verification with the API](/connect/handling-api-verification#person-information)."
   (
     defstruct [
       :account,
@@ -37,7 +37,7 @@ defmodule Stripe.Person do
       :verification
     ]
 
-    @typedoc "The `person` type.\n\n  * `account` The account the person is associated with.\n  * `additional_tos_acceptances` \n  * `address` \n  * `address_kana` The Kana variation of the person's address (Japan only).\n  * `address_kanji` The Kanji variation of the person's address (Japan only).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `dob` \n  * `email` The person's email address.\n  * `first_name` The person's first name.\n  * `first_name_kana` The Kana variation of the person's first name (Japan only).\n  * `first_name_kanji` The Kanji variation of the person's first name (Japan only).\n  * `full_name_aliases` A list of alternate names or aliases that the person is known by.\n  * `future_requirements` Information about the [upcoming new requirements for this person](https://stripe.com/docs/connect/custom-accounts/future-requirements), including what information needs to be collected, and by when.\n  * `gender` The person's gender (International regulations require either \"male\" or \"female\").\n  * `id` Unique identifier for the object.\n  * `id_number_provided` Whether the person's `id_number` was provided. True if either the full ID number was provided or if only the required part of the ID number was provided (ex. last four of an individual's SSN for the US indicated by `ssn_last_4_provided`).\n  * `id_number_secondary_provided` Whether the person's `id_number_secondary` was provided.\n  * `last_name` The person's last name.\n  * `last_name_kana` The Kana variation of the person's last name (Japan only).\n  * `last_name_kanji` The Kanji variation of the person's last name (Japan only).\n  * `maiden_name` The person's maiden name.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `nationality` The country where the person is a national.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `phone` The person's phone number.\n  * `political_exposure` Indicates if the person or any of their representatives, family members, or other closely related persons, declares that they hold or have held an important public job or function, in any jurisdiction.\n  * `registered_address` \n  * `relationship` \n  * `requirements` Information about the requirements for this person, including what information needs to be collected, and by when.\n  * `ssn_last_4_provided` Whether the last four digits of the person's Social Security number have been provided (U.S. only).\n  * `verification` \n"
+    @typedoc "The `person` type.\n\n  * `account` The account the person is associated with.\n  * `additional_tos_acceptances` \n  * `address` \n  * `address_kana` The Kana variation of the person's address (Japan only).\n  * `address_kanji` The Kanji variation of the person's address (Japan only).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `dob` \n  * `email` The person's email address. Also available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.\n  * `first_name` The person's first name. Also available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.\n  * `first_name_kana` The Kana variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.\n  * `first_name_kanji` The Kanji variation of the person's first name (Japan only). Also available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.\n  * `full_name_aliases` A list of alternate names or aliases that the person is known by. Also available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.\n  * `future_requirements` Information about the [upcoming new requirements for this person](https://stripe.com/docs/connect/custom-accounts/future-requirements), including what information needs to be collected, and by when.\n  * `gender` The person's gender.\n  * `id` Unique identifier for the object.\n  * `id_number_provided` Whether the person's `id_number` was provided. True if either the full ID number was provided or if only the required part of the ID number was provided (ex. last four of an individual's SSN for the US indicated by `ssn_last_4_provided`).\n  * `id_number_secondary_provided` Whether the person's `id_number_secondary` was provided.\n  * `last_name` The person's last name. Also available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.\n  * `last_name_kana` The Kana variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.\n  * `last_name_kanji` The Kanji variation of the person's last name (Japan only). Also available for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `stripe`.\n  * `maiden_name` The person's maiden name.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `nationality` The country where the person is a national.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `phone` The person's phone number.\n  * `political_exposure` Indicates if the person or any of their representatives, family members, or other closely related persons, declares that they hold or have held an important public job or function, in any jurisdiction.\n  * `registered_address` \n  * `relationship` \n  * `requirements` Information about the requirements for this person, including what information needs to be collected, and by when.\n  * `ssn_last_4_provided` Whether the last four digits of the person's Social Security number have been provided (U.S. only).\n  * `verification` \n"
     @type t :: %__MODULE__{
             account: binary,
             additional_tos_acceptances: term,
@@ -88,7 +88,7 @@ defmodule Stripe.Person do
   )
 
   (
-    @typedoc "Details on the legal guardian's acceptance of the required Stripe agreements."
+    @typedoc "Details on the legal guardian's or authorizer's acceptance of the required Stripe agreements."
     @type additional_tos_acceptances :: %{optional(:account) => account}
   )
 
@@ -178,6 +178,7 @@ defmodule Stripe.Person do
   (
     @typedoc nil
     @type relationship :: %{
+            optional(:authorizer) => boolean,
             optional(:director) => boolean,
             optional(:executive) => boolean,
             optional(:legal_guardian) => boolean,
@@ -197,6 +198,60 @@ defmodule Stripe.Person do
   (
     @typedoc "One or more documents showing the person's visa required for living in the country where they are residing."
     @type visa :: %{optional(:files) => list(binary | binary)}
+  )
+
+  (
+    nil
+
+    @doc "<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}/persons/{person}`\n"
+    (
+      @spec delete(account :: binary(), person :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedPerson.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(account, person, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/accounts/{account}/persons/{person}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "account",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "account",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              },
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "person",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "person",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [account, person]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
   )
 
   (
@@ -223,17 +278,19 @@ defmodule Stripe.Person do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/persons",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -265,30 +322,34 @@ defmodule Stripe.Person do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/persons/{person}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "person",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "person",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "person",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -335,7 +396,7 @@ defmodule Stripe.Person do
                 optional(:nationality) => binary,
                 optional(:person_token) => binary,
                 optional(:phone) => binary,
-                optional(:political_exposure) => binary,
+                optional(:political_exposure) => :existing | :none,
                 optional(:registered_address) => registered_address,
                 optional(:relationship) => relationship,
                 optional(:ssn_last_4) => binary,
@@ -348,17 +409,19 @@ defmodule Stripe.Person do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/persons",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -406,7 +469,7 @@ defmodule Stripe.Person do
                 optional(:nationality) => binary,
                 optional(:person_token) => binary,
                 optional(:phone) => binary,
-                optional(:political_exposure) => binary,
+                optional(:political_exposure) => :existing | :none,
                 optional(:registered_address) => registered_address,
                 optional(:relationship) => relationship,
                 optional(:ssn_last_4) => binary,
@@ -419,30 +482,34 @@ defmodule Stripe.Person do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/persons/{person}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "person",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "person",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "person",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -453,56 +520,6 @@ defmodule Stripe.Person do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/accounts/{account}/persons/{person}`\n"
-    (
-      @spec delete(account :: binary(), person :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedPerson.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(account, person, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/accounts/{account}/persons/{person}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "account",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              },
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "person",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "person",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [account, person]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

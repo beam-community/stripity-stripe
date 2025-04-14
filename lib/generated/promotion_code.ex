@@ -19,7 +19,7 @@ defmodule Stripe.PromotionCode do
       :times_redeemed
     ]
 
-    @typedoc "The `promotion_code` type.\n\n  * `active` Whether the promotion code is currently active. A promotion code is only active if the coupon is also valid.\n  * `code` The customer-facing code. Regardless of case, this code must be unique across all active promotion codes for each customer.\n  * `coupon` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `customer` The customer that this promotion code can be used by.\n  * `expires_at` Date at which the promotion code can no longer be redeemed.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `max_redemptions` Maximum number of times this promotion code can be redeemed.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `restrictions` \n  * `times_redeemed` Number of times this promotion code has been used.\n"
+    @typedoc "The `promotion_code` type.\n\n  * `active` Whether the promotion code is currently active. A promotion code is only active if the coupon is also valid.\n  * `code` The customer-facing code. Regardless of case, this code must be unique across all active promotion codes for each customer. Valid characters are lower case letters (a-z), upper case letters (A-Z), and digits (0-9).\n  * `coupon` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `customer` The customer that this promotion code can be used by.\n  * `expires_at` Date at which the promotion code can no longer be redeemed.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `max_redemptions` Maximum number of times this promotion code can be redeemed.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `restrictions` \n  * `times_redeemed` Number of times this promotion code has been used.\n"
     @type t :: %__MODULE__{
             active: boolean,
             code: binary,
@@ -60,6 +60,40 @@ defmodule Stripe.PromotionCode do
   (
     nil
 
+    @doc "<p>Returns a list of your promotion codes.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/promotion_codes`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:active) => boolean,
+                optional(:code) => binary,
+                optional(:coupon) => binary,
+                optional(:created) => created | integer,
+                optional(:customer) => binary,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.PromotionCode.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/promotion_codes", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Retrieves the promotion code with the given ID. In order to retrieve a promotion code by the customer-facing <code>code</code> use <a href=\"/docs/api/promotion_codes/list\">list</a> with the desired <code>code</code>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/promotion_codes/{promotion_code}`\n"
     (
       @spec retrieve(
@@ -73,17 +107,19 @@ defmodule Stripe.PromotionCode do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/promotion_codes/{promotion_code}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "promotion_code",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "promotion_code",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "promotion_code",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -152,17 +188,19 @@ defmodule Stripe.PromotionCode do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/promotion_codes/{promotion_code}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "promotion_code",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "promotion_code",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "promotion_code",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -173,40 +211,6 @@ defmodule Stripe.PromotionCode do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of your promotion codes.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/promotion_codes`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:active) => boolean,
-                optional(:code) => binary,
-                optional(:coupon) => binary,
-                optional(:created) => created | integer,
-                optional(:customer) => binary,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.PromotionCode.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/promotion_codes", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

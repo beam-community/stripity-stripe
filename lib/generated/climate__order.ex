@@ -63,48 +63,6 @@ defmodule Stripe.Climate.Order do
   (
     nil
 
-    @doc "<p>Retrieves the details of a Climate order object with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/climate/orders/{order}`\n"
-    (
-      @spec retrieve(
-              order :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Climate.Order.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(order, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/climate/orders/{order}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "order",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "order",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [order]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Lists all Climate order objects. The orders are returned sorted by creation date, with the\nmost recently created orders appearing first.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/climate/orders`\n"
     (
       @spec list(
@@ -121,6 +79,50 @@ defmodule Stripe.Climate.Order do
               | {:error, term()}
       def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/climate/orders", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the details of a Climate order object with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/climate/orders/{order}`\n"
+    (
+      @spec retrieve(
+              order :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Climate.Order.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(order, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/climate/orders/{order}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "order",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "order",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [order]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -181,17 +183,19 @@ defmodule Stripe.Climate.Order do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/climate/orders/{order}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "order",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "order",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "order",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -210,7 +214,7 @@ defmodule Stripe.Climate.Order do
   (
     nil
 
-    @doc "<p>Cancels a Climate order. You can cancel an order within 30 days of creation. Stripe refunds the\nreservation <code>amount_subtotal</code>, but not the <code>amount_fees</code> for user-triggered cancellations. Frontier\nmight cancel reservations if suppliers fail to deliver. If Frontier cancels the reservation, Stripe\nprovides 90 days advance notice and refunds the <code>amount_total</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/climate/orders/{order}/cancel`\n"
+    @doc "<p>Cancels a Climate order. You can cancel an order within 24 hours of creation. Stripe refunds the\nreservation <code>amount_subtotal</code>, but not the <code>amount_fees</code> for user-triggered cancellations. Frontier\nmight cancel reservations if suppliers fail to deliver. If Frontier cancels the reservation, Stripe\nprovides 90 days advance notice and refunds the <code>amount_total</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/climate/orders/{order}/cancel`\n"
     (
       @spec cancel(
               order :: binary(),
@@ -223,17 +227,19 @@ defmodule Stripe.Climate.Order do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/climate/orders/{order}/cancel",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "order",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "order",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "order",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

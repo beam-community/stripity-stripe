@@ -3,6 +3,7 @@ defmodule Stripe.OpenApi.Phases.BuildModules do
   def run(blueprint, _options \\ []) do
     components =
       for {name, map} <- blueprint.source["components"]["schemas"],
+
           # map["x-stripeOperations"] != nil,
           map["x-resourceId"] != nil || name == "api_errors",
           into: %{} do

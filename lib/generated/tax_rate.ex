@@ -1,7 +1,7 @@
 defmodule Stripe.TaxRate do
   use Stripe.Entity
 
-  @moduledoc "Tax rates can be applied to [invoices](https://stripe.com/docs/billing/invoices/tax-rates), [subscriptions](https://stripe.com/docs/billing/subscriptions/taxes) and [Checkout Sessions](https://stripe.com/docs/payments/checkout/set-up-a-subscription#tax-rates) to collect tax.\n\nRelated guide: [Tax rates](https://stripe.com/docs/billing/taxes/tax-rates)"
+  @moduledoc "Tax rates can be applied to [invoices](/invoicing/taxes/tax-rates), [subscriptions](/billing/taxes/tax-rates) and [Checkout Sessions](/payments/checkout/use-manual-tax-rates) to collect tax.\n\nRelated guide: [Tax rates](/billing/taxes/tax-rates)"
   (
     defstruct [
       :active,
@@ -10,18 +10,21 @@ defmodule Stripe.TaxRate do
       :description,
       :display_name,
       :effective_percentage,
+      :flat_amount,
       :id,
       :inclusive,
       :jurisdiction,
+      :jurisdiction_level,
       :livemode,
       :metadata,
       :object,
       :percentage,
+      :rate_type,
       :state,
       :tax_type
     ]
 
-    @typedoc "The `tax_rate` type.\n\n  * `active` Defaults to `true`. When set to `false`, this tax rate cannot be used with new applications or Checkout Sessions, but will still work for subscriptions and invoices that already have it set.\n  * `country` Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `description` An arbitrary string attached to the tax rate for your internal use only. It will not be visible to your customers.\n  * `display_name` The display name of the tax rates as it will appear to your customer on their receipt email, PDF, and the hosted invoice page.\n  * `effective_percentage` Actual/effective tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true,\nthis percentage reflects the rate actually used to calculate tax based on the product's taxability\nand whether the user is registered to collect taxes in the corresponding jurisdiction.\n  * `id` Unique identifier for the object.\n  * `inclusive` This specifies if the tax rate is inclusive or exclusive.\n  * `jurisdiction` The jurisdiction for the tax rate. You can use this label field for tax reporting purposes. It also appears on your customer’s invoice.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `percentage` Tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true, this percentage includes the statutory tax rate of non-taxable jurisdictions.\n  * `state` [ISO 3166-2 subdivision code](https://en.wikipedia.org/wiki/ISO_3166-2:US), without country prefix. For example, \"NY\" for New York, United States.\n  * `tax_type` The high-level tax type, such as `vat` or `sales_tax`.\n"
+    @typedoc "The `tax_rate` type.\n\n  * `active` Defaults to `true`. When set to `false`, this tax rate cannot be used with new applications or Checkout Sessions, but will still work for subscriptions and invoices that already have it set.\n  * `country` Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `description` An arbitrary string attached to the tax rate for your internal use only. It will not be visible to your customers.\n  * `display_name` The display name of the tax rates as it will appear to your customer on their receipt email, PDF, and the hosted invoice page.\n  * `effective_percentage` Actual/effective tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true,\nthis percentage reflects the rate actually used to calculate tax based on the product's taxability\nand whether the user is registered to collect taxes in the corresponding jurisdiction.\n  * `flat_amount` The amount of the tax rate when the `rate_type` is `flat_amount`. Tax rates with `rate_type` `percentage` can vary based on the transaction, resulting in this field being `null`. This field exposes the amount and currency of the flat tax rate.\n  * `id` Unique identifier for the object.\n  * `inclusive` This specifies if the tax rate is inclusive or exclusive.\n  * `jurisdiction` The jurisdiction for the tax rate. You can use this label field for tax reporting purposes. It also appears on your customer’s invoice.\n  * `jurisdiction_level` The level of the jurisdiction that imposes this tax rate. Will be `null` for manually defined tax rates.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `percentage` Tax rate percentage out of 100. For tax calculations with automatic_tax[enabled]=true, this percentage includes the statutory tax rate of non-taxable jurisdictions.\n  * `rate_type` Indicates the type of tax rate applied to the taxable amount. This value can be `null` when no tax applies to the location. This field is only present for TaxRates created by Stripe Tax.\n  * `state` [ISO 3166-2 subdivision code](https://en.wikipedia.org/wiki/ISO_3166-2), without country prefix. For example, \"NY\" for New York, United States.\n  * `tax_type` The high-level tax type, such as `vat` or `sales_tax`.\n"
     @type t :: %__MODULE__{
             active: boolean,
             country: binary | nil,
@@ -29,13 +32,16 @@ defmodule Stripe.TaxRate do
             description: binary | nil,
             display_name: binary,
             effective_percentage: term | nil,
+            flat_amount: term | nil,
             id: binary,
             inclusive: boolean,
             jurisdiction: binary | nil,
+            jurisdiction_level: binary | nil,
             livemode: boolean,
             metadata: term | nil,
             object: binary,
             percentage: term,
+            rate_type: binary | nil,
             state: binary | nil,
             tax_type: binary | nil
           }
@@ -98,17 +104,19 @@ defmodule Stripe.TaxRate do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/tax_rates/{tax_rate}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "tax_rate",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "tax_rate",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "tax_rate",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -151,6 +159,7 @@ defmodule Stripe.TaxRate do
                   | :lease_tax
                   | :pst
                   | :qst
+                  | :retail_delivery_fee
                   | :rst
                   | :sales_tax
                   | :service_tax
@@ -196,6 +205,7 @@ defmodule Stripe.TaxRate do
                   | :lease_tax
                   | :pst
                   | :qst
+                  | :retail_delivery_fee
                   | :rst
                   | :sales_tax
                   | :service_tax
@@ -208,17 +218,19 @@ defmodule Stripe.TaxRate do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/tax_rates/{tax_rate}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "tax_rate",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "tax_rate",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "tax_rate",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

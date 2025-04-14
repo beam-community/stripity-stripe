@@ -35,6 +35,21 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in AL."
+    @type al :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in AM."
+    @type am :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in AO."
+    @type ao :: %{optional(:type) => :standard}
+  )
+
+  (
     @typedoc "Options for the registration in AT."
     @type at :: %{
             optional(:standard) => standard,
@@ -45,6 +60,16 @@ defmodule Stripe.Tax.Registration do
   (
     @typedoc "Options for the registration in AU."
     @type au :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in BA."
+    @type ba :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in BB."
+    @type bb :: %{optional(:type) => :standard}
   )
 
   (
@@ -64,11 +89,31 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in BH."
+    @type bh :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in BS."
+    @type bs :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in BY."
+    @type by :: %{optional(:type) => :simplified}
+  )
+
+  (
     @typedoc "Options for the registration in CA."
     @type ca :: %{
             optional(:province_standard) => province_standard,
             optional(:type) => :province_standard | :simplified | :standard
           }
+  )
+
+  (
+    @typedoc "Options for the registration in CD."
+    @type cd :: %{optional(:type) => :standard}
   )
 
   (
@@ -89,56 +134,98 @@ defmodule Stripe.Tax.Registration do
   (
     @typedoc "Specific options for a registration in the specified `country`."
     @type country_options :: %{
-            optional(:vn) => vn,
-            optional(:lv) => lv,
-            optional(:cl) => cl,
-            optional(:se) => se,
-            optional(:pl) => pl,
-            optional(:nz) => nz,
-            optional(:lt) => lt,
-            optional(:de) => de,
-            optional(:fr) => fr,
-            optional(:fi) => fi,
-            optional(:sa) => sa,
-            optional(:es) => es,
-            optional(:sg) => sg,
-            optional(:tr) => tr,
-            optional(:sk) => sk,
-            optional(:ie) => ie,
+            optional(:is) => is,
+            optional(:ec) => ec,
             optional(:th) => th,
-            optional(:us) => us,
-            optional(:co) => co,
+            optional(:fi) => fi,
+            optional(:om) => om,
             optional(:ee) => ee,
-            optional(:hu) => hu,
-            optional(:it) => it,
-            optional(:jp) => jp,
-            optional(:si) => si,
-            optional(:kr) => kr,
-            optional(:gb) => gb,
-            optional(:ca) => ca,
-            optional(:dk) => dk,
-            optional(:nl) => nl,
-            optional(:my) => my,
-            optional(:ae) => ae,
+            optional(:me) => me,
+            optional(:am) => am,
             optional(:gr) => gr,
-            optional(:ch) => ch,
+            optional(:ug) => ug,
+            optional(:zw) => zw,
+            optional(:cd) => cd,
+            optional(:sa) => sa,
+            optional(:sn) => sn,
+            optional(:tz) => tz,
+            optional(:bh) => bh,
             optional(:be) => be,
-            optional(:cz) => cz,
-            optional(:no) => no,
-            optional(:lu) => lu,
+            optional(:kh) => kh,
+            optional(:mt) => mt,
+            optional(:fr) => fr,
+            optional(:eg) => eg,
+            optional(:pl) => pl,
+            optional(:de) => de,
+            optional(:ge) => ge,
+            optional(:co) => co,
+            optional(:np) => np,
+            optional(:kz) => kz,
+            optional(:ch) => ch,
+            optional(:se) => se,
+            optional(:sk) => sk,
+            optional(:us) => us,
             optional(:cy) => cy,
             optional(:au) => au,
-            optional(:mt) => mt,
-            optional(:is) => is,
-            optional(:bg) => bg,
-            optional(:za) => za,
+            optional(:md) => md,
+            optional(:si) => si,
+            optional(:it) => it,
+            optional(:vn) => vn,
+            optional(:mr) => mr,
             optional(:hr) => hr,
-            optional(:id) => id,
+            optional(:zm) => zm,
+            optional(:by) => by,
+            optional(:bb) => bb,
             optional(:ro) => ro,
+            optional(:bs) => bs,
             optional(:mx) => mx,
-            optional(:pt) => pt,
-            optional(:at) => at
+            optional(:ie) => ie,
+            optional(:id) => id,
+            optional(:es) => es,
+            optional(:sg) => sg,
+            optional(:gn) => gn,
+            optional(:ru) => ru,
+            optional(:cl) => cl,
+            optional(:hu) => hu,
+            optional(:kr) => kr,
+            optional(:ae) => ae,
+            optional(:ke) => ke,
+            optional(:jp) => jp,
+            optional(:lv) => lv,
+            optional(:no) => no,
+            optional(:cz) => cz,
+            optional(:ca) => ca,
+            optional(:tj) => tj,
+            optional(:al) => al,
+            optional(:cr) => cr,
+            optional(:nz) => nz,
+            optional(:dk) => dk,
+            optional(:my) => my,
+            optional(:sr) => sr,
+            optional(:mk) => mk,
+            optional(:nl) => nl,
+            optional(:lu) => lu,
+            optional(:ao) => ao,
+            optional(:uz) => uz,
+            optional(:ba) => ba,
+            optional(:za) => za,
+            optional(:lt) => lt,
+            optional(:pe) => pe,
+            optional(:bg) => bg,
+            optional(:rs) => rs,
+            optional(:tr) => tr,
+            optional(:uy) => uy,
+            optional(:ma) => ma,
+            optional(:at) => at,
+            optional(:ng) => ng,
+            optional(:gb) => gb,
+            optional(:pt) => pt
           }
+  )
+
+  (
+    @typedoc "Options for the registration in CR."
+    @type cr :: %{optional(:type) => :simplified}
   )
 
   (
@@ -174,10 +261,29 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in EC."
+    @type ec :: %{optional(:type) => :simplified}
+  )
+
+  (
     @typedoc "Options for the registration in EE."
     @type ee :: %{
             optional(:standard) => standard,
             optional(:type) => :ioss | :oss_non_union | :oss_union | :standard
+          }
+  )
+
+  (
+    @typedoc "Options for the registration in EG."
+    @type eg :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc nil
+    @type elections :: %{
+            optional(:jurisdiction) => binary,
+            optional(:type) =>
+              :local_use_tax | :simplified_sellers_use_tax | :single_local_use_tax
           }
   )
 
@@ -208,6 +314,16 @@ defmodule Stripe.Tax.Registration do
   (
     @typedoc "Options for the registration in GB."
     @type gb :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in GE."
+    @type ge :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in GN."
+    @type gn :: %{optional(:type) => :standard}
   )
 
   (
@@ -266,8 +382,23 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in KE."
+    @type ke :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in KH."
+    @type kh :: %{optional(:type) => :simplified}
+  )
+
+  (
     @typedoc "Options for the registration in KR."
     @type kr :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in KZ."
+    @type kz :: %{optional(:type) => :simplified}
   )
 
   (
@@ -305,6 +436,31 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in MA."
+    @type ma :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in MD."
+    @type md :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in ME."
+    @type me :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in MK."
+    @type mk :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in MR."
+    @type mr :: %{optional(:type) => :standard}
+  )
+
+  (
     @typedoc "Options for the registration in MT."
     @type mt :: %{
             optional(:standard) => standard,
@@ -323,6 +479,11 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in NG."
+    @type ng :: %{optional(:type) => :simplified}
+  )
+
+  (
     @typedoc "Options for the registration in NL."
     @type nl :: %{
             optional(:standard) => standard,
@@ -336,8 +497,23 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in NP."
+    @type np :: %{optional(:type) => :simplified}
+  )
+
+  (
     @typedoc "Options for the registration in NZ."
     @type nz :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in OM."
+    @type om :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in PE."
+    @type pe :: %{optional(:type) => :simplified}
   )
 
   (
@@ -367,6 +543,16 @@ defmodule Stripe.Tax.Registration do
             optional(:standard) => standard,
             optional(:type) => :ioss | :oss_non_union | :oss_union | :standard
           }
+  )
+
+  (
+    @typedoc "Options for the registration in RS."
+    @type rs :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in RU."
+    @type ru :: %{optional(:type) => :simplified}
   )
 
   (
@@ -404,8 +590,23 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in SN."
+    @type sn :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in SR."
+    @type sr :: %{optional(:type) => :standard}
+  )
+
+  (
     @typedoc "Options for the standard registration."
     @type standard :: %{optional(:place_of_supply_scheme) => :small_seller | :standard}
+  )
+
+  (
+    @typedoc "Options for the state sales tax registration."
+    @type state_sales_tax :: %{optional(:elections) => list(elections)}
   )
 
   (
@@ -414,8 +615,23 @@ defmodule Stripe.Tax.Registration do
   )
 
   (
+    @typedoc "Options for the registration in TJ."
+    @type tj :: %{optional(:type) => :simplified}
+  )
+
+  (
     @typedoc "Options for the registration in TR."
     @type tr :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in TZ."
+    @type tz :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in UG."
+    @type ug :: %{optional(:type) => :simplified}
   )
 
   (
@@ -424,12 +640,24 @@ defmodule Stripe.Tax.Registration do
             optional(:local_amusement_tax) => local_amusement_tax,
             optional(:local_lease_tax) => local_lease_tax,
             optional(:state) => binary,
+            optional(:state_sales_tax) => state_sales_tax,
             optional(:type) =>
               :local_amusement_tax
               | :local_lease_tax
               | :state_communications_tax
+              | :state_retail_delivery_fee
               | :state_sales_tax
           }
+  )
+
+  (
+    @typedoc "Options for the registration in UY."
+    @type uy :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in UZ."
+    @type uz :: %{optional(:type) => :simplified}
   )
 
   (
@@ -440,6 +668,16 @@ defmodule Stripe.Tax.Registration do
   (
     @typedoc "Options for the registration in ZA."
     @type za :: %{optional(:type) => :standard}
+  )
+
+  (
+    @typedoc "Options for the registration in ZM."
+    @type zm :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in ZW."
+    @type zw :: %{optional(:type) => :standard}
   )
 
   (
@@ -462,6 +700,52 @@ defmodule Stripe.Tax.Registration do
               | {:error, term()}
       def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/tax/registrations", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Returns a Tax <code>Registration</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/registrations/{id}`\n"
+    (
+      @spec retrieve(
+              id :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Tax.Registration.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/tax/registrations/{id}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "id",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [id]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -505,50 +789,6 @@ defmodule Stripe.Tax.Registration do
   (
     nil
 
-    @doc "<p>Returns a Tax <code>Registration</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/tax/registrations/{id}`\n"
-    (
-      @spec retrieve(
-              id :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Tax.Registration.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/tax/registrations/{id}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Updates an existing Tax <code>Registration</code> object.</p>\n\n<p>A registration cannot be deleted after it has been created. If you wish to end a registration you may do so by setting <code>expires_at</code>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/tax/registrations/{id}`\n"
     (
       @spec update(
@@ -568,17 +808,19 @@ defmodule Stripe.Tax.Registration do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/tax/registrations/{id}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

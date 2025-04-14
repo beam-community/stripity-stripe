@@ -17,27 +17,82 @@ defmodule Stripe.AccountSession do
   )
 
   (
+    @typedoc "Configuration for the account management embedded component."
+    @type account_management :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
     @typedoc "Configuration for the account onboarding embedded component."
-    @type account_onboarding :: %{optional(:enabled) => boolean, optional(:features) => map()}
+    @type account_onboarding :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the balances embedded component."
+    @type balances :: %{optional(:enabled) => boolean, optional(:features) => features}
   )
 
   (
     @typedoc "Each key of the dictionary represents an embedded component, and each embedded component maps to its configuration (e.g. whether it has been enabled or not)."
     @type components :: %{
+            optional(:account_management) => account_management,
             optional(:account_onboarding) => account_onboarding,
+            optional(:balances) => balances,
+            optional(:documents) => documents,
+            optional(:financial_account) => financial_account,
+            optional(:financial_account_transactions) => financial_account_transactions,
+            optional(:issuing_card) => issuing_card,
+            optional(:issuing_cards_list) => issuing_cards_list,
+            optional(:notification_banner) => notification_banner,
             optional(:payment_details) => payment_details,
             optional(:payments) => payments,
-            optional(:payouts) => payouts
+            optional(:payouts) => payouts,
+            optional(:payouts_list) => payouts_list,
+            optional(:tax_registrations) => tax_registrations,
+            optional(:tax_settings) => tax_settings
           }
+  )
+
+  (
+    @typedoc "Configuration for the documents embedded component."
+    @type documents :: %{optional(:enabled) => boolean, optional(:features) => map()}
   )
 
   (
     @typedoc "The list of features enabled in the embedded component."
     @type features :: %{
             optional(:capture_payments) => boolean,
+            optional(:destination_on_behalf_of_charge_management) => boolean,
             optional(:dispute_management) => boolean,
             optional(:refund_management) => boolean
           }
+  )
+
+  (
+    @typedoc "Configuration for the financial account embedded component."
+    @type financial_account :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the financial account transactions embedded component."
+    @type financial_account_transactions :: %{
+            optional(:enabled) => boolean,
+            optional(:features) => features
+          }
+  )
+
+  (
+    @typedoc "Configuration for the issuing card embedded component."
+    @type issuing_card :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the issuing cards list embedded component."
+    @type issuing_cards_list :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the notification banner embedded component."
+    @type notification_banner :: %{optional(:enabled) => boolean, optional(:features) => features}
   )
 
   (
@@ -53,6 +108,21 @@ defmodule Stripe.AccountSession do
   (
     @typedoc "Configuration for the payouts embedded component."
     @type payouts :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the payouts list embedded component."
+    @type payouts_list :: %{optional(:enabled) => boolean, optional(:features) => map()}
+  )
+
+  (
+    @typedoc "Configuration for the tax registrations embedded component."
+    @type tax_registrations :: %{optional(:enabled) => boolean, optional(:features) => map()}
+  )
+
+  (
+    @typedoc "Configuration for the tax settings embedded component."
+    @type tax_settings :: %{optional(:enabled) => boolean, optional(:features) => map()}
   )
 
   (

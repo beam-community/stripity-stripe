@@ -24,7 +24,7 @@ defmodule Stripe.Item do
             amount_tax: integer,
             amount_total: integer,
             currency: binary,
-            description: binary,
+            description: binary | nil,
             discounts: term,
             id: binary,
             object: binary,

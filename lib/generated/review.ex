@@ -20,7 +20,7 @@ defmodule Stripe.Review do
       :session
     ]
 
-    @typedoc "The `review` type.\n\n  * `billing_zip` The ZIP or postal code of the card used, if applicable.\n  * `charge` The charge associated with this review.\n  * `closed_reason` The reason the review was closed, or null if it has not yet been closed. One of `approved`, `refunded`, `refunded_as_fraud`, `disputed`, or `redacted`.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `id` Unique identifier for the object.\n  * `ip_address` The IP address where the payment originated.\n  * `ip_address_location` Information related to the location of the payment. Note that this information is an approximation and attempts to locate the nearest population center - it should not be used to determine a specific address.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `open` If `true`, the review needs action.\n  * `opened_reason` The reason the review was opened. One of `rule` or `manual`.\n  * `payment_intent` The PaymentIntent ID associated with this review, if one exists.\n  * `reason` The reason the review is currently open or closed. One of `rule`, `manual`, `approved`, `refunded`, `refunded_as_fraud`, `disputed`, or `redacted`.\n  * `session` Information related to the browsing session of the user who initiated the payment.\n"
+    @typedoc "The `review` type.\n\n  * `billing_zip` The ZIP or postal code of the card used, if applicable.\n  * `charge` The charge associated with this review.\n  * `closed_reason` The reason the review was closed, or null if it has not yet been closed. One of `approved`, `refunded`, `refunded_as_fraud`, `disputed`, `redacted`, or `canceled`.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `id` Unique identifier for the object.\n  * `ip_address` The IP address where the payment originated.\n  * `ip_address_location` Information related to the location of the payment. Note that this information is an approximation and attempts to locate the nearest population center - it should not be used to determine a specific address.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `open` If `true`, the review needs action.\n  * `opened_reason` The reason the review was opened. One of `rule` or `manual`.\n  * `payment_intent` The PaymentIntent ID associated with this review, if one exists.\n  * `reason` The reason the review is currently open or closed. One of `rule`, `manual`, `approved`, `refunded`, `refunded_as_fraud`, `disputed`, `redacted`, or `canceled`.\n  * `session` Information related to the browsing session of the user who initiated the payment.\n"
     @type t :: %__MODULE__{
             billing_zip: binary | nil,
             charge: (binary | Stripe.Charge.t()) | nil,
@@ -94,17 +94,19 @@ defmodule Stripe.Review do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/reviews/{review}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "review",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "review",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "review",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -135,17 +137,19 @@ defmodule Stripe.Review do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/reviews/{review}/approve",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "review",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "review",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "review",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

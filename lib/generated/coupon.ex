@@ -63,6 +63,45 @@ defmodule Stripe.Coupon do
   (
     nil
 
+    @doc "<p>You can delete coupons via the <a href=\"https://dashboard.stripe.com/coupons\">coupon management</a> page of the Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means that new customers can’t redeem the coupon. You can also delete coupons via the API.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/coupons/{coupon}`\n"
+    (
+      @spec delete(coupon :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedCoupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(coupon, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/coupons/{coupon}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "coupon",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "coupon",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [coupon]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of your coupons.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/coupons`\n"
     (
       @spec list(
@@ -80,6 +119,49 @@ defmodule Stripe.Coupon do
               | {:error, term()}
       def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/coupons", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the coupon with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/coupons/{coupon}`\n"
+    (
+      @spec retrieve(
+              coupon :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Coupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(coupon, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/coupons/{coupon}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "coupon",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "coupon",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [coupon]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -128,47 +210,6 @@ defmodule Stripe.Coupon do
   (
     nil
 
-    @doc "<p>Retrieves the coupon with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/coupons/{coupon}`\n"
-    (
-      @spec retrieve(
-              coupon :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Coupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(coupon, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/coupons/{coupon}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "coupon",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "coupon",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [coupon]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Updates the metadata of a coupon. Other coupon details (currency, duration, amount_off) are, by design, not editable.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/coupons/{coupon}`\n"
     (
       @spec update(
@@ -186,17 +227,19 @@ defmodule Stripe.Coupon do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/coupons/{coupon}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "coupon",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "coupon",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "coupon",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -207,43 +250,6 @@ defmodule Stripe.Coupon do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>You can delete coupons via the <a href=\"https://dashboard.stripe.com/coupons\">coupon management</a> page of the Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means that new customers can’t redeem the coupon. You can also delete coupons via the API.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/coupons/{coupon}`\n"
-    (
-      @spec delete(coupon :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedCoupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(coupon, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/coupons/{coupon}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "coupon",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "coupon",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [coupon]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

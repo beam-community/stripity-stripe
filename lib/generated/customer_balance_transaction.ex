@@ -5,6 +5,7 @@ defmodule Stripe.CustomerBalanceTransaction do
   (
     defstruct [
       :amount,
+      :checkout_session,
       :created,
       :credit_note,
       :currency,
@@ -19,9 +20,10 @@ defmodule Stripe.CustomerBalanceTransaction do
       :type
     ]
 
-    @typedoc "The `customer_balance_transaction` type.\n\n  * `amount` The amount of the transaction. A negative value is a credit for the customer's balance, and a positive value is a debit to the customer's `balance`.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `credit_note` The ID of the credit note (if any) related to the transaction.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `customer` The ID of the customer the transaction belongs to.\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `ending_balance` The customer's `balance` after the transaction was applied. A negative value decreases the amount due on the customer's next invoice. A positive value increases the amount due on the customer's next invoice.\n  * `id` Unique identifier for the object.\n  * `invoice` The ID of the invoice (if any) related to the transaction.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `type` Transaction type: `adjustment`, `applied_to_invoice`, `credit_note`, `initial`, `invoice_overpaid`, `invoice_too_large`, `invoice_too_small`, `unspent_receiver_credit`, or `unapplied_from_invoice`. See the [Customer Balance page](https://stripe.com/docs/billing/customer/balance#types) to learn more about transaction types.\n"
+    @typedoc "The `customer_balance_transaction` type.\n\n  * `amount` The amount of the transaction. A negative value is a credit for the customer's balance, and a positive value is a debit to the customer's `balance`.\n  * `checkout_session` The ID of the checkout session (if any) that created the transaction.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `credit_note` The ID of the credit note (if any) related to the transaction.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `customer` The ID of the customer the transaction belongs to.\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `ending_balance` The customer's `balance` after the transaction was applied. A negative value decreases the amount due on the customer's next invoice. A positive value increases the amount due on the customer's next invoice.\n  * `id` Unique identifier for the object.\n  * `invoice` The ID of the invoice (if any) related to the transaction.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `type` Transaction type: `adjustment`, `applied_to_invoice`, `credit_note`, `initial`, `invoice_overpaid`, `invoice_too_large`, `invoice_too_small`, `unspent_receiver_credit`, `unapplied_from_invoice`, `checkout_session_subscription_payment`, or `checkout_session_subscription_payment_canceled`. See the [Customer Balance page](https://stripe.com/docs/billing/customer/balance#types) to learn more about transaction types.\n"
     @type t :: %__MODULE__{
             amount: integer,
+            checkout_session: (binary | Stripe.Checkout.Session.t()) | nil,
             created: integer,
             credit_note: (binary | Stripe.CreditNote.t()) | nil,
             currency: binary,
@@ -35,64 +37,6 @@ defmodule Stripe.CustomerBalanceTransaction do
             object: binary,
             type: binary
           }
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves a specific customer balance transaction that updated the customer’s <a href=\"/docs/billing/customer/balance\">balances</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/balance_transactions/{transaction}`\n"
-    (
-      @spec retrieve(
-              customer :: binary(),
-              transaction :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.CustomerBalanceTransaction.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(customer, transaction, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/balance_transactions/{transaction}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "customer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              },
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "transaction",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "transaction",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [customer, transaction]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
   )
 
   (
@@ -118,21 +62,85 @@ defmodule Stripe.CustomerBalanceTransaction do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/customers/{customer}/balance_transactions",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "customer",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "customer",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
             [customer]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves a specific customer balance transaction that updated the customer’s <a href=\"/docs/billing/customer/balance\">balances</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/balance_transactions/{transaction}`\n"
+    (
+      @spec retrieve(
+              customer :: binary(),
+              transaction :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.CustomerBalanceTransaction.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(customer, transaction, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/customers/{customer}/balance_transactions/{transaction}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "customer",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "customer",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              },
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "transaction",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "transaction",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [customer, transaction]
           )
 
         Stripe.Request.new_request(opts)
@@ -168,17 +176,19 @@ defmodule Stripe.CustomerBalanceTransaction do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/customers/{customer}/balance_transactions",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "customer",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "customer",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -217,30 +227,34 @@ defmodule Stripe.CustomerBalanceTransaction do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/customers/{customer}/balance_transactions/{transaction}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "customer",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "customer",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "transaction",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "transaction",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "transaction",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
