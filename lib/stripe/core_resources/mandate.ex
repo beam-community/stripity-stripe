@@ -24,6 +24,12 @@ defmodule Stripe.Mandate do
         }
 
   @type payment_method_details :: %{
+          optional(:acss_debit) => %{
+            default_for: [String.t()] | nil,
+            interval_description: String.t() | nil,
+            payment_schedule: String.t() | nil,
+            transaction_type: String.t() | nil
+          },
           optional(:au_becs_debit) => %{
             url: String.t()
           },
