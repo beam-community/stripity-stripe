@@ -8,6 +8,14 @@ defmodule Stripe.PaymentMethod do
   use Stripe.Entity
   import Stripe.Request
 
+  @type acss_debit :: %{
+          bank_name: String.t() | nil,
+          fingerprint: String.t() | nil,
+          institution_number: String.t() | nil,
+          last4: String.t() | nil,
+          transit_number: String.t() | nil
+        }
+
   @type au_becs_debit :: %{
           bsb_number: String.t(),
           fingerprint: String.t(),
@@ -54,6 +62,7 @@ defmodule Stripe.PaymentMethod do
           link: %{persistent_token: String.t() | nil} | nil,
           livemode: boolean,
           metadata: Stripe.Types.metadata(),
+          acss_debit: acss_debit() | nil,
           au_becs_debit: au_becs_debit() | nil,
           sepa_debit: sepa_debit() | nil,
           bacs_debit: bacs_debit() | nil,
@@ -71,6 +80,7 @@ defmodule Stripe.PaymentMethod do
     :link,
     :livemode,
     :metadata,
+    :acss_debit,
     :au_becs_debit,
     :sepa_debit,
     :bacs_debit,
