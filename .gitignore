@@ -41,3 +41,4 @@ stripity_stripe-*.tar
 .DS_Store
 config/config.secret.exs
 tags
+.expert

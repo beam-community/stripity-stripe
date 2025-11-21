@@ -19,9 +19,9 @@ jobs:
     name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
     strategy:
       matrix:
-        elixir: ["1.17"]
+        elixir: ["1.19"]
         # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
-        otp: [26]
+        otp: [27]
     services:
       stripe-mock:
         image: stripe/stripe-mock:v0.125.0
@@ -46,9 +46,9 @@ jobs:
     name: Linting
     strategy:
       matrix:
-        elixir: ["1.17", "1.16"]
+        elixir: ["1.19"]
         # All of the above can use this version. For details see: https://hexdocs.pm/elixir/compatibility-and-deprecations.html#compatibility-between-elixir-and-erlang-otp
-        otp: [26, 25]
+        otp: [27]
     steps:
       - uses: actions/checkout@v4
       - uses: erlef/setup-beam@v1
