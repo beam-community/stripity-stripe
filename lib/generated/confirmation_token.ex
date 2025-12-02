@@ -173,6 +173,7 @@ defmodule Stripe.ConfirmationToken do
               | :asn_bank
               | :bunq
               | :buut
+              | :finom
               | :handelsbanken
               | :ing
               | :knab
@@ -277,6 +278,7 @@ defmodule Stripe.ConfirmationToken do
             optional(:multibanco) => map(),
             optional(:revolut_pay) => map(),
             optional(:klarna) => klarna,
+            optional(:mb_way) => map(),
             optional(:twint) => map(),
             optional(:naver_pay) => naver_pay,
             optional(:crypto) => map(),
@@ -319,6 +321,7 @@ defmodule Stripe.ConfirmationToken do
               | :konbini
               | :kr_card
               | :link
+              | :mb_way
               | :mobilepay
               | :multibanco
               | :naver_pay

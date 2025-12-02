@@ -5,23 +5,33 @@ defmodule Stripe.Terminal.Location do
   (
     defstruct [
       :address,
+      :address_kana,
+      :address_kanji,
       :configuration_overrides,
       :display_name,
+      :display_name_kana,
+      :display_name_kanji,
       :id,
       :livemode,
       :metadata,
-      :object
+      :object,
+      :phone
     ]
 
-    @typedoc "The `terminal.location` type.\n\n  * `address` \n  * `configuration_overrides` The ID of a configuration that will be used to customize all readers in this location.\n  * `display_name` The display name of the location.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n"
+    @typedoc "The `terminal.location` type.\n\n  * `address` \n  * `address_kana` \n  * `address_kanji` \n  * `configuration_overrides` The ID of a configuration that will be used to customize all readers in this location.\n  * `display_name` The display name of the location.\n  * `display_name_kana` The Kana variation of the display name of the location.\n  * `display_name_kanji` The Kanji variation of the display name of the location.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `phone` The phone number of the location.\n"
     @type t :: %__MODULE__{
             address: term,
+            address_kana: term,
+            address_kanji: term,
             configuration_overrides: binary,
             display_name: binary,
+            display_name_kana: binary,
+            display_name_kanji: binary,
             id: binary,
             livemode: boolean,
             metadata: term,
-            object: binary
+            object: binary,
+            phone: binary
           }
   )
 
@@ -34,6 +44,32 @@ defmodule Stripe.Terminal.Location do
             optional(:line2) => binary,
             optional(:postal_code) => binary,
             optional(:state) => binary
+          }
+  )
+
+  (
+    @typedoc "The Kana variation of the full address of the location (Japan only)."
+    @type address_kana :: %{
+            optional(:city) => binary,
+            optional(:country) => binary,
+            optional(:line1) => binary,
+            optional(:line2) => binary,
+            optional(:postal_code) => binary,
+            optional(:state) => binary,
+            optional(:town) => binary
+          }
+  )
+
+  (
+    @typedoc "The Kanji variation of the full address of the location (Japan only)."
+    @type address_kanji :: %{
+            optional(:city) => binary,
+            optional(:country) => binary,
+            optional(:line1) => binary,
+            optional(:line2) => binary,
+            optional(:postal_code) => binary,
+            optional(:state) => binary,
+            optional(:town) => binary
           }
   )
 
@@ -161,10 +197,15 @@ defmodule Stripe.Terminal.Location do
       @spec create(
               params :: %{
                 optional(:address) => address,
+                optional(:address_kana) => address_kana,
+                optional(:address_kanji) => address_kanji,
                 optional(:configuration_overrides) => binary,
                 optional(:display_name) => binary,
+                optional(:display_name_kana) => binary,
+                optional(:display_name_kanji) => binary,
                 optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary} | binary
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:phone) => binary
               },
               opts :: Keyword.t()
             ) ::
@@ -192,10 +233,15 @@ defmodule Stripe.Terminal.Location do
               location :: binary(),
               params :: %{
                 optional(:address) => address,
+                optional(:address_kana) => address_kana,
+                optional(:address_kanji) => address_kanji,
                 optional(:configuration_overrides) => binary | binary,
                 optional(:display_name) => binary | binary,
+                optional(:display_name_kana) => binary | binary,
+                optional(:display_name_kanji) => binary | binary,
                 optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary} | binary
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:phone) => binary | binary
               },
               opts :: Keyword.t()
             ) ::

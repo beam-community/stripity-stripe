@@ -88,7 +88,10 @@ defmodule Stripe.Quote do
 
   (
     @typedoc "Controls how prorations and invoices for subscriptions are calculated and orchestrated."
-    @type billing_mode :: %{optional(:type) => :classic | :flexible}
+    @type billing_mode :: %{
+            optional(:flexible) => flexible,
+            optional(:type) => :classic | :flexible
+          }
   )
 
   (
@@ -98,6 +101,11 @@ defmodule Stripe.Quote do
             optional(:discount) => binary,
             optional(:promotion_code) => binary
           }
+  )
+
+  (
+    @typedoc "Configure behavior for flexible billing mode."
+    @type flexible :: %{optional(:proration_discounts) => :included | :itemized}
   )
 
   (

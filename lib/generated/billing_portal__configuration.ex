@@ -1,7 +1,7 @@
 defmodule Stripe.BillingPortal.Configuration do
   use Stripe.Entity
 
-  @moduledoc "A portal configuration describes the functionality and behavior of a portal session."
+  @moduledoc "A portal configuration describes the functionality and behavior you embed in a portal session. Related guide: [Configure the customer portal](/customer-management/configure-portal)."
   (
     defstruct [
       :active,
@@ -113,7 +113,10 @@ defmodule Stripe.BillingPortal.Configuration do
 
   (
     @typedoc "Information about updating payment methods in the portal."
-    @type payment_method_update :: %{optional(:enabled) => boolean}
+    @type payment_method_update :: %{
+            optional(:enabled) => boolean,
+            optional(:payment_method_configuration) => binary | binary
+          }
   )
 
   (
@@ -148,7 +151,8 @@ defmodule Stripe.BillingPortal.Configuration do
             optional(:enabled) => boolean,
             optional(:products) => list(products) | binary,
             optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
-            optional(:schedule_at_period_end) => schedule_at_period_end
+            optional(:schedule_at_period_end) => schedule_at_period_end,
+            optional(:trial_update_behavior) => :continue_trial | :end_trial
           }
   )
 

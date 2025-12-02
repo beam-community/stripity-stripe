@@ -37,7 +37,21 @@ defmodule Stripe.InvoicePayment do
 
   (
     @typedoc nil
-    @type payment :: %{optional(:payment_intent) => binary, optional(:type) => :payment_intent}
+    @type created :: %{
+            optional(:gt) => integer,
+            optional(:gte) => integer,
+            optional(:lt) => integer,
+            optional(:lte) => integer
+          }
+  )
+
+  (
+    @typedoc nil
+    @type payment :: %{
+            optional(:payment_intent) => binary,
+            optional(:payment_record) => binary,
+            optional(:type) => :payment_intent | :payment_record
+          }
   )
 
   (
@@ -47,6 +61,7 @@ defmodule Stripe.InvoicePayment do
     (
       @spec list(
               params :: %{
+                optional(:created) => created | integer,
                 optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
                 optional(:invoice) => binary,

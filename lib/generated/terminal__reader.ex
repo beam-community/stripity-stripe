@@ -10,6 +10,7 @@ defmodule Stripe.Terminal.Reader do
       :id,
       :ip_address,
       :label,
+      :last_seen_at,
       :livemode,
       :location,
       :metadata,
@@ -18,7 +19,7 @@ defmodule Stripe.Terminal.Reader do
       :status
     ]
 
-    @typedoc "The `terminal.reader` type.\n\n  * `action` The most recent action performed by the reader.\n  * `device_sw_version` The current software version of the reader.\n  * `device_type` Device type of the reader.\n  * `id` Unique identifier for the object.\n  * `ip_address` The local IP address of the reader.\n  * `label` Custom label given to the reader for easier identification.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `location` The location identifier of the reader.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `serial_number` Serial number of the reader.\n  * `status` The networking status of the reader. We do not recommend using this field in flows that may block taking payments.\n"
+    @typedoc "The `terminal.reader` type.\n\n  * `action` The most recent action performed by the reader.\n  * `device_sw_version` The current software version of the reader.\n  * `device_type` Device type of the reader.\n  * `id` Unique identifier for the object.\n  * `ip_address` The local IP address of the reader.\n  * `label` Custom label given to the reader for easier identification.\n  * `last_seen_at` The last time this reader reported to Stripe backend.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `location` The location identifier of the reader.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `serial_number` Serial number of the reader.\n  * `status` The networking status of the reader. We do not recommend using this field in flows that may block taking payments.\n"
     @type t :: %__MODULE__{
             action: term | nil,
             device_sw_version: binary | nil,
@@ -26,6 +27,7 @@ defmodule Stripe.Terminal.Reader do
             id: binary,
             ip_address: binary | nil,
             label: binary,
+            last_seen_at: integer | nil,
             livemode: boolean,
             location: (binary | Stripe.Terminal.Location.t()) | nil,
             metadata: term,
@@ -51,7 +53,7 @@ defmodule Stripe.Terminal.Reader do
   )
 
   (
-    @typedoc "Cart"
+    @typedoc "Cart details to display on the reader screen, including line items, amounts, and currency."
     @type cart :: %{
             optional(:currency) => binary,
             optional(:line_items) => list(line_items),
@@ -70,7 +72,7 @@ defmodule Stripe.Terminal.Reader do
   )
 
   (
-    @typedoc "Configuration overrides."
+    @typedoc "Configuration overrides for this collection, such as tipping, surcharging, and customer cancellation settings."
     @type collect_config :: %{
             optional(:allow_redisplay) => :always | :limited | :unspecified,
             optional(:enable_customer_cancellation) => boolean,
@@ -80,7 +82,7 @@ defmodule Stripe.Terminal.Reader do
   )
 
   (
-    @typedoc "Configuration overrides."
+    @typedoc "Configuration overrides for this confirmation, such as surcharge settings and return URL."
     @type confirm_config :: %{optional(:return_url) => binary}
   )
 
@@ -120,7 +122,7 @@ defmodule Stripe.Terminal.Reader do
   )
 
   (
-    @typedoc "Configuration overrides"
+    @typedoc "Configuration overrides for this transaction, such as tipping and customer cancellation settings."
     @type process_config :: %{
             optional(:allow_redisplay) => :always | :limited | :unspecified,
             optional(:enable_customer_cancellation) => boolean,
@@ -131,7 +133,7 @@ defmodule Stripe.Terminal.Reader do
   )
 
   (
-    @typedoc "Configuration overrides"
+    @typedoc "Configuration overrides for this refund, such as customer cancellation settings."
     @type refund_payment_config :: %{optional(:enable_customer_cancellation) => boolean}
   )
 
@@ -366,7 +368,7 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Cancels the current reader action.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/cancel_action`\n"
+    @doc "<p>Cancels the current reader action. See <a href=\"/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven#programmatic-cancellation\">Programmatic Cancellation</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/cancel_action`\n"
     (
       @spec cancel_action(
               reader :: binary(),
@@ -412,7 +414,7 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Initiates an input collection flow on a Reader.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/collect_inputs`\n"
+    @doc "<p>Initiates an <a href=\"/docs/terminal/features/collect-inputs\">input collection flow</a> on a Reader to display input forms and collect information from your customers.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/collect_inputs`\n"
     (
       @spec collect_inputs(
               reader :: binary(),
@@ -462,7 +464,7 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Initiates a payment flow on a Reader and updates the PaymentIntent with card details before manual confirmation.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/collect_payment_method`\n"
+    @doc "<p>Initiates a payment flow on a Reader and updates the PaymentIntent with card details before manual confirmation. See <a href=\"/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=inspect#collect-a-paymentmethod\">Collecting a Payment method</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/collect_payment_method`\n"
     (
       @spec collect_payment_method(
               reader :: binary(),
@@ -512,7 +514,7 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Finalizes a payment on a Reader.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/confirm_payment_intent`\n"
+    @doc "<p>Finalizes a payment on a Reader. See <a href=\"/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=inspect#confirm-the-paymentintent\">Confirming a Payment</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/confirm_payment_intent`\n"
     (
       @spec confirm_payment_intent(
               reader :: binary(),
@@ -562,7 +564,7 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Initiates a payment flow on a Reader.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/process_payment_intent`\n"
+    @doc "<p>Initiates a payment flow on a Reader. See <a href=\"/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=immediately#process-payment\">process the payment</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/process_payment_intent`\n"
     (
       @spec process_payment_intent(
               reader :: binary(),
@@ -612,7 +614,7 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Initiates a setup intent flow on a Reader.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/process_setup_intent`\n"
+    @doc "<p>Initiates a SetupIntent flow on a Reader. See <a href=\"/docs/terminal/features/saving-payment-details/save-directly\">Save directly without charging</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/process_setup_intent`\n"
     (
       @spec process_setup_intent(
               reader :: binary(),
@@ -663,7 +665,7 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Initiates a refund on a Reader</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/refund_payment`\n"
+    @doc "<p>Initiates an in-person refund on a Reader. See <a href=\"/docs/terminal/payments/regional?integration-country=CA#refund-an-interac-payment\">Refund an Interac Payment</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/refund_payment`\n"
     (
       @spec refund_payment(
               reader :: binary(),
@@ -718,7 +720,7 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Sets reader display to show cart details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/set_reader_display`\n"
+    @doc "<p>Sets the reader display to show <a href=\"/docs/terminal/features/display\">cart details</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/set_reader_display`\n"
     (
       @spec set_reader_display(
               reader :: binary(),

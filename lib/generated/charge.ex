@@ -1,7 +1,7 @@
 defmodule Stripe.Charge do
   use Stripe.Entity
 
-  @moduledoc "The `Charge` object represents a single attempt to move money into your Stripe account.\nPaymentIntent confirmation is the most common way to create Charges, but transferring\nmoney to a different Stripe account through Connect also creates Charges.\nSome legacy payment flows create Charges directly, which is not recommended for new integrations."
+  @moduledoc "The `Charge` object represents a single attempt to move money into your Stripe account.\nPaymentIntent confirmation is the most common way to create Charges, but [Account Debits](https://stripe.com/docs/connect/account-debits) may also create Charges.\nSome legacy payment flows create Charges directly, which is not recommended for new integrations."
   (
     defstruct [
       :receipt_url,

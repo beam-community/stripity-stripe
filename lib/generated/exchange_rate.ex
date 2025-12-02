@@ -1,7 +1,7 @@
 defmodule Stripe.ExchangeRate do
   use Stripe.Entity
 
-  @moduledoc "`ExchangeRate` objects allow you to determine the rates that Stripe is currently\nusing to convert from one currency to another. Since this number is variable\nthroughout the day, there are various reasons why you might want to know the current\nrate (for example, to dynamically price an item for a user with a default\npayment in a foreign currency).\n\nPlease refer to our [Exchange Rates API](https://stripe.com/docs/fx-rates) guide for more details.\n\n*[Note: this integration path is supported but no longer recommended]* Additionally,\nyou can guarantee that a charge is made with an exchange rate that you expect is\ncurrent. To do so, you must pass in the exchange_rate to charges endpoints. If the\nvalue is no longer up to date, the charge won't go through. Please refer to our\n[Using with charges](https://stripe.com/docs/exchange-rates) guide for more details.\n\n-----\n\n&nbsp;\n\n*This Exchange Rates API is a Beta Service and is subject to Stripe's terms of service. You may use the API solely for the purpose of transacting on Stripe. For example, the API may be queried in order to:*\n\n- *localize prices for processing payments on Stripe*\n- *reconcile Stripe transactions*\n- *determine how much money to send to a connected account*\n- *determine app fees to charge a connected account*\n\n*Using this Exchange Rates API beta for any purpose other than to transact on Stripe is strictly prohibited and constitutes a violation of Stripe's terms of service.*"
+  @moduledoc "[Deprecated] The `ExchangeRate` APIs are deprecated. Please use the [FX Quotes API](https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api) instead.\n\n`ExchangeRate` objects allow you to determine the rates that Stripe is currently\nusing to convert from one currency to another. Since this number is variable\nthroughout the day, there are various reasons why you might want to know the current\nrate (for example, to dynamically price an item for a user with a default\npayment in a foreign currency).\n\nPlease refer to our [Exchange Rates API](https://stripe.com/docs/fx-rates) guide for more details.\n\n*[Note: this integration path is supported but no longer recommended]* Additionally,\nyou can guarantee that a charge is made with an exchange rate that you expect is\ncurrent. To do so, you must pass in the exchange_rate to charges endpoints. If the\nvalue is no longer up to date, the charge won't go through. Please refer to our\n[Using with charges](https://stripe.com/docs/exchange-rates) guide for more details.\n\n-----\n\n&nbsp;\n\n*This Exchange Rates API is a Beta Service and is subject to Stripe's terms of service. You may use the API solely for the purpose of transacting on Stripe. For example, the API may be queried in order to:*\n\n- *localize prices for processing payments on Stripe*\n- *reconcile Stripe transactions*\n- *determine how much money to send to a connected account*\n- *determine app fees to charge a connected account*\n\n*Using this Exchange Rates API beta for any purpose other than to transact on Stripe is strictly prohibited and constitutes a violation of Stripe's terms of service.*"
   (
     defstruct [:id, :object, :rates]
 
@@ -12,7 +12,7 @@ defmodule Stripe.ExchangeRate do
   (
     nil
 
-    @doc "<p>Returns a list of objects that contain the rates at which foreign currencies are converted to one another. Only shows the currencies for which Stripe supports.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/exchange_rates`\n"
+    @doc "<p>[Deprecated] The <code>ExchangeRate</code> APIs are deprecated. Please use the <a href=\"https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api\">FX Quotes API</a> instead.</p>\n\n<p>Returns a list of objects that contain the rates at which foreign currencies are converted to one another. Only shows the currencies for which Stripe supports.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/exchange_rates`\n"
     (
       @spec list(
               params :: %{
@@ -41,7 +41,7 @@ defmodule Stripe.ExchangeRate do
   (
     nil
 
-    @doc "<p>Retrieves the exchange rates from the given currency to every supported currency.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/exchange_rates/{rate_id}`\n"
+    @doc "<p>[Deprecated] The <code>ExchangeRate</code> APIs are deprecated. Please use the <a href=\"https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api\">FX Quotes API</a> instead.</p>\n\n<p>Retrieves the exchange rates from the given currency to every supported currency.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/exchange_rates/{rate_id}`\n"
     (
       @spec retrieve(
               rate_id :: binary(),

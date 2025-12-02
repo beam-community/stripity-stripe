@@ -15,17 +15,19 @@ defmodule Stripe.Invoiceitem do
       :invoice,
       :livemode,
       :metadata,
+      :net_amount,
       :object,
       :parent,
       :period,
       :pricing,
       :proration,
+      :proration_details,
       :quantity,
       :tax_rates,
       :test_clock
     ]
 
-    @typedoc "The `invoiceitem` type.\n\n  * `amount` Amount (in the `currency` specified) of the invoice item. This should always be equal to `unit_amount * quantity`.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `customer` The ID of the customer who will be billed when this invoice item is billed.\n  * `date` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `discountable` If true, discounts will apply to this invoice item. Always false for prorations.\n  * `discounts` The discounts which apply to the invoice item. Item discounts are applied before invoice discounts. Use `expand[]=discounts` to expand each discount.\n  * `id` Unique identifier for the object.\n  * `invoice` The ID of the invoice this invoice item belongs to.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `parent` The parent that generated this invoice item.\n  * `period` \n  * `pricing` The pricing information of the invoice item.\n  * `proration` Whether the invoice item was created automatically as a proration adjustment when the customer switched plans.\n  * `quantity` Quantity of units for the invoice item. If the invoice item is a proration, the quantity of the subscription that the proration was computed for.\n  * `tax_rates` The tax rates which apply to the invoice item. When set, the `default_tax_rates` on the invoice do not apply to this invoice item.\n  * `test_clock` ID of the test clock this invoice item belongs to.\n"
+    @typedoc "The `invoiceitem` type.\n\n  * `amount` Amount (in the `currency` specified) of the invoice item. This should always be equal to `unit_amount * quantity`.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `customer` The ID of the customer who will be billed when this invoice item is billed.\n  * `date` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `discountable` If true, discounts will apply to this invoice item. Always false for prorations.\n  * `discounts` The discounts which apply to the invoice item. Item discounts are applied before invoice discounts. Use `expand[]=discounts` to expand each discount.\n  * `id` Unique identifier for the object.\n  * `invoice` The ID of the invoice this invoice item belongs to.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `net_amount` The amount after discounts, but before credits and taxes. This field is `null` for `discountable=true` items.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `parent` The parent that generated this invoice item.\n  * `period` \n  * `pricing` The pricing information of the invoice item.\n  * `proration` Whether the invoice item was created automatically as a proration adjustment when the customer switched plans.\n  * `proration_details` \n  * `quantity` Quantity of units for the invoice item. If the invoice item is a proration, the quantity of the subscription that the proration was computed for.\n  * `tax_rates` The tax rates which apply to the invoice item. When set, the `default_tax_rates` on the invoice do not apply to this invoice item.\n  * `test_clock` ID of the test clock this invoice item belongs to.\n"
     @type t :: %__MODULE__{
             amount: integer,
             currency: binary,
@@ -38,11 +40,13 @@ defmodule Stripe.Invoiceitem do
             invoice: (binary | Stripe.Invoice.t()) | nil,
             livemode: boolean,
             metadata: term | nil,
+            net_amount: integer,
             object: binary,
             parent: term | nil,
             period: term,
             pricing: term | nil,
             proration: boolean,
+            proration_details: term,
             quantity: integer,
             tax_rates: term | nil,
             test_clock: (binary | Stripe.TestHelpers.TestClock.t()) | nil

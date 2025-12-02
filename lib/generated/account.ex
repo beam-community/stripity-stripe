@@ -68,7 +68,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The individual's primary address."
+    @typedoc "The company's primary address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -80,7 +80,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kana variation of the individual's primary address (Japan only)."
+    @typedoc "The Kana variation of the company's primary address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -93,7 +93,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kanji variation of the company's primary address (Japan only)."
+    @typedoc "The Kanji variation of the individual's primary address (Japan only)."
     @type address_kanji :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -140,8 +140,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to Bacs Direct Debit."
-    @type bacs_debit_payments :: %{optional(:display_name) => binary}
+    @typedoc "The bacs_debit_payments capability."
+    @type bacs_debit_payments :: %{optional(:requested) => boolean}
   )
 
   (
@@ -266,6 +266,7 @@ defmodule Stripe.Account do
             optional(:naver_pay_payments) => naver_pay_payments,
             optional(:card_payments) => card_payments,
             optional(:jp_bank_transfer_payments) => jp_bank_transfer_payments,
+            optional(:mb_way_payments) => mb_way_payments,
             optional(:pix_payments) => pix_payments,
             optional(:transfers) => transfers,
             optional(:card_issuing) => card_issuing,
@@ -275,13 +276,18 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Settings specific to the account's use of the Card Issuing product."
-    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
+    @typedoc "The card_issuing capability."
+    @type card_issuing :: %{optional(:requested) => boolean}
   )
 
   (
-    @typedoc "The card_payments capability."
-    @type card_payments :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to card charging on the account."
+    @type card_payments :: %{
+            optional(:decline_on) => decline_on,
+            optional(:statement_descriptor_prefix) => binary,
+            optional(:statement_descriptor_prefix_kana) => binary | binary,
+            optional(:statement_descriptor_prefix_kanji) => binary | binary
+          }
   )
 
   (
@@ -315,6 +321,7 @@ defmodule Stripe.Account do
             optional(:phone) => binary,
             optional(:registration_date) => registration_date | binary,
             optional(:registration_number) => binary,
+            optional(:representative_declaration) => representative_declaration,
             optional(:structure) =>
               :free_zone_establishment
               | :free_zone_llc
@@ -565,6 +572,11 @@ defmodule Stripe.Account do
   )
 
   (
+    @typedoc "The mb_way_payments capability."
+    @type mb_way_payments :: %{optional(:requested) => boolean}
+  )
+
+  (
     @typedoc "The mobilepay_payments capability."
     @type mobilepay_payments :: %{optional(:requested) => boolean}
   )
@@ -708,6 +720,15 @@ defmodule Stripe.Account do
   )
 
   (
+    @typedoc "This hash is used to attest that the representative is authorized to act as the representative of their legal entity."
+    @type representative_declaration :: %{
+            optional(:date) => integer,
+            optional(:ip) => binary,
+            optional(:user_agent) => binary
+          }
+  )
+
+  (
     @typedoc "The revolut_pay_payments capability."
     @type revolut_pay_payments :: %{optional(:requested) => boolean}
   )
@@ -732,7 +753,7 @@ defmodule Stripe.Account do
             optional(:weekly_anchor) =>
               :friday | :monday | :saturday | :sunday | :thursday | :tuesday | :wednesday,
             optional(:weekly_payout_days) =>
-              list(:friday | :monday | :saturday | :sunday | :thursday | :tuesday | :wednesday)
+              list(:friday | :monday | :thursday | :tuesday | :wednesday)
           }
   )
 
@@ -798,7 +819,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](/issuing/connect/tos_acceptance)."
+    @typedoc "Details on the account's acceptance of the Stripe Treasury Services Agreement."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
@@ -832,11 +853,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The individual's verification document information."
-    @type verification :: %{
-            optional(:additional_document) => additional_document,
-            optional(:document) => document
-          }
+    @typedoc "Information on the verification state of the company."
+    @type verification :: %{optional(:document) => document}
   )
 
   (

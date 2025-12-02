@@ -56,19 +56,22 @@ defmodule Stripe.Checkout.Session do
       :locale,
       :shipping_options,
       :subscription,
+      :name_collection,
       :redirect_on_completion,
       :amount_subtotal,
       :payment_status,
       :custom_fields,
       :metadata,
+      :excluded_payment_method_types,
       :custom_text,
       :shipping_address_collection,
       :presentment_details,
+      :branding_settings,
       :submit_type,
       :payment_method_configuration_details
     ]
 
-    @typedoc "The `checkout.session` type.\n\n  * `adaptive_pricing` Settings for price localization with [Adaptive Pricing](https://docs.stripe.com/payments/checkout/adaptive-pricing).\n  * `after_expiration` When set, provides configuration for actions to take if this Checkout Session expires.\n  * `allow_promotion_codes` Enables user redeemable promotion codes.\n  * `amount_subtotal` Total of all items before discounts or taxes are applied.\n  * `amount_total` Total of all items after discounts and taxes are applied.\n  * `automatic_tax` \n  * `billing_address_collection` Describes whether Checkout should collect the customer's billing address. Defaults to `auto`.\n  * `cancel_url` If set, Checkout displays a back button and customers will be directed to this URL if they decide to cancel payment and return to your website.\n  * `client_reference_id` A unique string to reference the Checkout Session. This can be a\ncustomer ID, a cart ID, or similar, and can be used to reconcile the\nSession with your internal systems.\n  * `client_secret` The client secret of your Checkout Session. Applies to Checkout Sessions with `ui_mode: embedded` or `ui_mode: custom`. For `ui_mode: embedded`, the client secret is to be used when initializing Stripe.js embedded checkout.\n For `ui_mode: custom`, use the client secret with [initCheckout](https://stripe.com/docs/js/custom_checkout/init) on your front end.\n  * `collected_information` Information about the customer collected within the Checkout Session.\n  * `consent` Results of `consent_collection` for this session.\n  * `consent_collection` When set, provides configuration for the Checkout Session to gather active consent from customers.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `currency_conversion` Currency conversion details for [Adaptive Pricing](https://docs.stripe.com/payments/checkout/adaptive-pricing) sessions created before 2025-03-31.\n  * `custom_fields` Collect additional information from your customer using custom fields. Up to 3 fields are supported.\n  * `custom_text` \n  * `customer` The ID of the customer for this Session.\nFor Checkout Sessions in `subscription` mode or Checkout Sessions with `customer_creation` set as `always` in `payment` mode, Checkout\nwill create a new customer object based on information provided\nduring the payment flow unless an existing customer was provided when\nthe Session was created.\n  * `customer_creation` Configure whether a Checkout Session creates a Customer when the Checkout Session completes.\n  * `customer_details` The customer details including the customer's tax exempt status and the customer's tax IDs. Customer's address details are not present on Sessions in `setup` mode.\n  * `customer_email` If provided, this value will be used when the Customer object is created.\nIf not provided, customers will be asked to enter their email address.\nUse this parameter to prefill customer data if you already have an email\non file. To access information about the customer once the payment flow is\ncomplete, use the `customer` attribute.\n  * `discounts` List of coupons and promotion codes attached to the Checkout Session.\n  * `expires_at` The timestamp at which the Checkout Session will expire.\n  * `id` Unique identifier for the object.\n  * `invoice` ID of the invoice created by the Checkout Session, if it exists.\n  * `invoice_creation` Details on the state of invoice creation for the Checkout Session.\n  * `line_items` The line items purchased by the customer.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `locale` The IETF language tag of the locale Checkout is displayed in. If blank or `auto`, the browser's locale is used.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `mode` The mode of the Checkout Session.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `optional_items` The optional items presented to the customer at checkout.\n  * `origin_context` Where the user is coming from. This informs the optimizations that are applied to the session.\n  * `payment_intent` The ID of the PaymentIntent for Checkout Sessions in `payment` mode. You can't confirm or cancel the PaymentIntent for a Checkout Session. To cancel, [expire the Checkout Session](https://stripe.com/docs/api/checkout/sessions/expire) instead.\n  * `payment_link` The ID of the Payment Link that created this Session.\n  * `payment_method_collection` Configure whether a Checkout Session should collect a payment method. Defaults to `always`.\n  * `payment_method_configuration_details` Information about the payment method configuration used for this Checkout session if using dynamic payment methods.\n  * `payment_method_options` Payment-method-specific configuration for the PaymentIntent or SetupIntent of this CheckoutSession.\n  * `payment_method_types` A list of the types of payment methods (e.g. card) this Checkout\nSession is allowed to accept.\n  * `payment_status` The payment status of the Checkout Session, one of `paid`, `unpaid`, or `no_payment_required`.\nYou can use this value to decide when to fulfill your customer's order.\n  * `permissions` This property is used to set up permissions for various actions (e.g., update) on the CheckoutSession object.\n\nFor specific permissions, please refer to their dedicated subsections, such as `permissions.update_shipping_details`.\n  * `phone_number_collection` \n  * `presentment_details` \n  * `recovered_from` The ID of the original expired Checkout Session that triggered the recovery flow.\n  * `redirect_on_completion` This parameter applies to `ui_mode: embedded`. Learn more about the [redirect behavior](https://stripe.com/docs/payments/checkout/custom-success-page?payment-ui=embedded-form) of embedded sessions. Defaults to `always`.\n  * `return_url` Applies to Checkout Sessions with `ui_mode: embedded` or `ui_mode: custom`. The URL to redirect your customer back to after they authenticate or cancel their payment on the payment method's app or site.\n  * `saved_payment_method_options` Controls saved payment method settings for the session. Only available in `payment` and `subscription` mode.\n  * `setup_intent` The ID of the SetupIntent for Checkout Sessions in `setup` mode. You can't confirm or cancel the SetupIntent for a Checkout Session. To cancel, [expire the Checkout Session](https://stripe.com/docs/api/checkout/sessions/expire) instead.\n  * `shipping_address_collection` When set, provides configuration for Checkout to collect a shipping address from a customer.\n  * `shipping_cost` The details of the customer cost of shipping, including the customer chosen ShippingRate.\n  * `shipping_options` The shipping rate options applied to this Session.\n  * `status` The status of the Checkout Session, one of `open`, `complete`, or `expired`.\n  * `submit_type` Describes the type of transaction being performed by Checkout in order to customize\nrelevant text on the page, such as the submit button. `submit_type` can only be\nspecified on Checkout Sessions in `payment` mode. If blank or `auto`, `pay` is used.\n  * `subscription` The ID of the [Subscription](https://stripe.com/docs/api/subscriptions) for Checkout Sessions in `subscription` mode.\n  * `success_url` The URL the customer will be directed to after the payment or\nsubscription creation is successful.\n  * `tax_id_collection` \n  * `total_details` Tax and discount details for the computed total amount.\n  * `ui_mode` The UI mode of the Session. Defaults to `hosted`.\n  * `url` The URL to the Checkout Session. Applies to Checkout Sessions with `ui_mode: hosted`. Redirect customers to this URL to take them to Checkout. If you’re using [Custom Domains](https://stripe.com/docs/payments/checkout/custom-domains), the URL will use your subdomain. Otherwise, it’ll use `checkout.stripe.com.`\nThis value is only present when the session is active.\n  * `wallet_options` Wallet-specific configuration for this Checkout Session.\n"
+    @typedoc "The `checkout.session` type.\n\n  * `adaptive_pricing` Settings for price localization with [Adaptive Pricing](https://docs.stripe.com/payments/checkout/adaptive-pricing).\n  * `after_expiration` When set, provides configuration for actions to take if this Checkout Session expires.\n  * `allow_promotion_codes` Enables user redeemable promotion codes.\n  * `amount_subtotal` Total of all items before discounts or taxes are applied.\n  * `amount_total` Total of all items after discounts and taxes are applied.\n  * `automatic_tax` \n  * `billing_address_collection` Describes whether Checkout should collect the customer's billing address. Defaults to `auto`.\n  * `branding_settings` \n  * `cancel_url` If set, Checkout displays a back button and customers will be directed to this URL if they decide to cancel payment and return to your website.\n  * `client_reference_id` A unique string to reference the Checkout Session. This can be a\ncustomer ID, a cart ID, or similar, and can be used to reconcile the\nSession with your internal systems.\n  * `client_secret` The client secret of your Checkout Session. Applies to Checkout Sessions with `ui_mode: embedded` or `ui_mode: custom`. For `ui_mode: embedded`, the client secret is to be used when initializing Stripe.js embedded checkout.\n For `ui_mode: custom`, use the client secret with [initCheckout](https://stripe.com/docs/js/custom_checkout/init) on your front end.\n  * `collected_information` Information about the customer collected within the Checkout Session.\n  * `consent` Results of `consent_collection` for this session.\n  * `consent_collection` When set, provides configuration for the Checkout Session to gather active consent from customers.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `currency_conversion` Currency conversion details for [Adaptive Pricing](https://docs.stripe.com/payments/checkout/adaptive-pricing) sessions created before 2025-03-31.\n  * `custom_fields` Collect additional information from your customer using custom fields. Up to 3 fields are supported.\n  * `custom_text` \n  * `customer` The ID of the customer for this Session.\nFor Checkout Sessions in `subscription` mode or Checkout Sessions with `customer_creation` set as `always` in `payment` mode, Checkout\nwill create a new customer object based on information provided\nduring the payment flow unless an existing customer was provided when\nthe Session was created.\n  * `customer_creation` Configure whether a Checkout Session creates a Customer when the Checkout Session completes.\n  * `customer_details` The customer details including the customer's tax exempt status and the customer's tax IDs. Customer's address details are not present on Sessions in `setup` mode.\n  * `customer_email` If provided, this value will be used when the Customer object is created.\nIf not provided, customers will be asked to enter their email address.\nUse this parameter to prefill customer data if you already have an email\non file. To access information about the customer once the payment flow is\ncomplete, use the `customer` attribute.\n  * `discounts` List of coupons and promotion codes attached to the Checkout Session.\n  * `excluded_payment_method_types` A list of the types of payment methods (e.g., `card`) that should be excluded from this Checkout Session. This should only be used when payment methods for this Checkout Session are managed through the [Stripe Dashboard](https://dashboard.stripe.com/settings/payment_methods).\n  * `expires_at` The timestamp at which the Checkout Session will expire.\n  * `id` Unique identifier for the object.\n  * `invoice` ID of the invoice created by the Checkout Session, if it exists.\n  * `invoice_creation` Details on the state of invoice creation for the Checkout Session.\n  * `line_items` The line items purchased by the customer.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `locale` The IETF language tag of the locale Checkout is displayed in. If blank or `auto`, the browser's locale is used.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `mode` The mode of the Checkout Session.\n  * `name_collection` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `optional_items` The optional items presented to the customer at checkout.\n  * `origin_context` Where the user is coming from. This informs the optimizations that are applied to the session.\n  * `payment_intent` The ID of the PaymentIntent for Checkout Sessions in `payment` mode. You can't confirm or cancel the PaymentIntent for a Checkout Session. To cancel, [expire the Checkout Session](https://stripe.com/docs/api/checkout/sessions/expire) instead.\n  * `payment_link` The ID of the Payment Link that created this Session.\n  * `payment_method_collection` Configure whether a Checkout Session should collect a payment method. Defaults to `always`.\n  * `payment_method_configuration_details` Information about the payment method configuration used for this Checkout session if using dynamic payment methods.\n  * `payment_method_options` Payment-method-specific configuration for the PaymentIntent or SetupIntent of this CheckoutSession.\n  * `payment_method_types` A list of the types of payment methods (e.g. card) this Checkout\nSession is allowed to accept.\n  * `payment_status` The payment status of the Checkout Session, one of `paid`, `unpaid`, or `no_payment_required`.\nYou can use this value to decide when to fulfill your customer's order.\n  * `permissions` This property is used to set up permissions for various actions (e.g., update) on the CheckoutSession object.\n\nFor specific permissions, please refer to their dedicated subsections, such as `permissions.update_shipping_details`.\n  * `phone_number_collection` \n  * `presentment_details` \n  * `recovered_from` The ID of the original expired Checkout Session that triggered the recovery flow.\n  * `redirect_on_completion` This parameter applies to `ui_mode: embedded`. Learn more about the [redirect behavior](https://stripe.com/docs/payments/checkout/custom-success-page?payment-ui=embedded-form) of embedded sessions. Defaults to `always`.\n  * `return_url` Applies to Checkout Sessions with `ui_mode: embedded` or `ui_mode: custom`. The URL to redirect your customer back to after they authenticate or cancel their payment on the payment method's app or site.\n  * `saved_payment_method_options` Controls saved payment method settings for the session. Only available in `payment` and `subscription` mode.\n  * `setup_intent` The ID of the SetupIntent for Checkout Sessions in `setup` mode. You can't confirm or cancel the SetupIntent for a Checkout Session. To cancel, [expire the Checkout Session](https://stripe.com/docs/api/checkout/sessions/expire) instead.\n  * `shipping_address_collection` When set, provides configuration for Checkout to collect a shipping address from a customer.\n  * `shipping_cost` The details of the customer cost of shipping, including the customer chosen ShippingRate.\n  * `shipping_options` The shipping rate options applied to this Session.\n  * `status` The status of the Checkout Session, one of `open`, `complete`, or `expired`.\n  * `submit_type` Describes the type of transaction being performed by Checkout in order to customize\nrelevant text on the page, such as the submit button. `submit_type` can only be\nspecified on Checkout Sessions in `payment` mode. If blank or `auto`, `pay` is used.\n  * `subscription` The ID of the [Subscription](https://stripe.com/docs/api/subscriptions) for Checkout Sessions in `subscription` mode.\n  * `success_url` The URL the customer will be directed to after the payment or\nsubscription creation is successful.\n  * `tax_id_collection` \n  * `total_details` Tax and discount details for the computed total amount.\n  * `ui_mode` The UI mode of the Session. Defaults to `hosted`.\n  * `url` The URL to the Checkout Session. Applies to Checkout Sessions with `ui_mode: hosted`. Redirect customers to this URL to take them to Checkout. If you’re using [Custom Domains](https://stripe.com/docs/payments/checkout/custom-domains), the URL will use your subdomain. Otherwise, it’ll use `checkout.stripe.com.`\nThis value is only present when the session is active.\n  * `wallet_options` Wallet-specific configuration for this Checkout Session.\n"
     @type t :: %__MODULE__{
             adaptive_pricing: term | nil,
             after_expiration: term | nil,
@@ -77,6 +80,7 @@ defmodule Stripe.Checkout.Session do
             amount_total: integer | nil,
             automatic_tax: term,
             billing_address_collection: binary | nil,
+            branding_settings: term,
             cancel_url: binary | nil,
             client_reference_id: binary | nil,
             client_secret: binary | nil,
@@ -93,6 +97,7 @@ defmodule Stripe.Checkout.Session do
             customer_details: term | nil,
             customer_email: binary | nil,
             discounts: term | nil,
+            excluded_payment_method_types: term,
             expires_at: integer,
             id: binary,
             invoice: (binary | Stripe.Invoice.t()) | nil,
@@ -102,6 +107,7 @@ defmodule Stripe.Checkout.Session do
             locale: binary | nil,
             metadata: term | nil,
             mode: binary,
+            name_collection: term,
             object: binary,
             optional_items: term | nil,
             origin_context: binary | nil,
@@ -174,7 +180,10 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc "contains details about the Affirm payment method options."
-    @type affirm :: %{optional(:setup_future_usage) => :none}
+    @type affirm :: %{
+            optional(:capture_method) => :manual,
+            optional(:setup_future_usage) => :none
+          }
   )
 
   (
@@ -189,7 +198,10 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc "contains details about the Afterpay Clearpay payment method options."
-    @type afterpay_clearpay :: %{optional(:setup_future_usage) => :none}
+    @type afterpay_clearpay :: %{
+            optional(:capture_method) => :manual,
+            optional(:setup_future_usage) => :none
+          }
   )
 
   (
@@ -198,8 +210,16 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
+    @typedoc "contains details about the Alma payment method options."
+    @type alma :: %{optional(:capture_method) => :manual}
+  )
+
+  (
     @typedoc "contains details about the AmazonPay payment method options."
-    @type amazon_pay :: %{optional(:setup_future_usage) => :none | :off_session}
+    @type amazon_pay :: %{
+            optional(:capture_method) => :manual,
+            optional(:setup_future_usage) => :none | :off_session
+          }
   )
 
   (
@@ -245,8 +265,16 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
+    @typedoc "contains details about the Billie payment method options."
+    @type billie :: %{optional(:capture_method) => :manual}
+  )
+
+  (
     @typedoc "Controls how prorations and invoices for subscriptions are calculated and orchestrated."
-    @type billing_mode :: %{optional(:type) => :classic | :flexible}
+    @type billing_mode :: %{
+            optional(:flexible) => flexible,
+            optional(:type) => :classic | :flexible
+          }
   )
 
   (
@@ -258,8 +286,53 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
+    @typedoc "The branding settings for the Checkout Session. This parameter is not allowed if ui_mode is `custom`."
+    @type branding_settings :: %{
+            optional(:background_color) => binary | binary,
+            optional(:border_style) => :pill | :rectangular | :rounded,
+            optional(:button_color) => binary | binary,
+            optional(:display_name) => binary,
+            optional(:font_family) =>
+              :be_vietnam_pro
+              | :bitter
+              | :chakra_petch
+              | :default
+              | :hahmlet
+              | :inconsolata
+              | :inter
+              | :lato
+              | :lora
+              | :m_plus_1_code
+              | :montserrat
+              | :noto_sans
+              | :noto_sans_jp
+              | :noto_serif
+              | :nunito
+              | :open_sans
+              | :pridi
+              | :pt_sans
+              | :pt_serif
+              | :raleway
+              | :roboto
+              | :roboto_slab
+              | :source_sans_pro
+              | :titillium_web
+              | :ubuntu_mono
+              | :zen_maru_gothic,
+            optional(:icon) => icon,
+            optional(:logo) => logo
+          }
+  )
+
+  (
+    @typedoc "Controls settings applied for collecting the customer's business name on the session."
+    @type business :: %{optional(:enabled) => boolean, optional(:optional) => boolean}
+  )
+
+  (
     @typedoc "contains details about the Card payment method options."
     @type card :: %{
+            optional(:capture_method) => :manual,
             optional(:installments) => installments,
             optional(:request_extended_authorization) => :if_available | :never,
             optional(:request_incremental_authorization) => :if_available | :never,
@@ -275,7 +348,10 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc "contains details about the Cashapp Pay payment method options."
-    @type cashapp :: %{optional(:setup_future_usage) => :none | :off_session | :on_session}
+    @type cashapp :: %{
+            optional(:capture_method) => :manual,
+            optional(:setup_future_usage) => :none | :off_session | :on_session
+          }
   )
 
   (
@@ -354,6 +430,11 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
+    @typedoc "contains details about the DemoPay payment method options."
+    @type demo_pay :: %{optional(:setup_future_usage) => :none | :off_session}
+  )
+
+  (
     @typedoc nil
     @type discounts :: %{optional(:coupon) => binary, optional(:promotion_code) => binary}
   )
@@ -399,6 +480,11 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
+    @typedoc "Configure behavior for flexible billing mode."
+    @type flexible :: %{optional(:proration_discounts) => :included | :itemized}
+  )
+
+  (
     @typedoc "contains details about the FPX payment method options."
     @type fpx :: %{optional(:setup_future_usage) => :none}
   )
@@ -414,8 +500,22 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
+    @typedoc "The icon for the Checkout Session. For best results, use a square image."
+    @type icon :: %{
+            optional(:file) => binary,
+            optional(:type) => :file | :url,
+            optional(:url) => binary
+          }
+  )
+
+  (
     @typedoc "contains details about the Ideal payment method options."
     @type ideal :: %{optional(:setup_future_usage) => :none}
+  )
+
+  (
+    @typedoc "Controls settings applied for collecting the customer's individual name on the session."
+    @type individual :: %{optional(:enabled) => boolean, optional(:optional) => boolean}
   )
 
   (
@@ -465,6 +565,7 @@ defmodule Stripe.Checkout.Session do
   (
     @typedoc "contains details about the Klarna payment method options."
     @type klarna :: %{
+            optional(:capture_method) => :manual,
             optional(:setup_future_usage) => :none,
             optional(:subscriptions) => list(subscriptions) | binary
           }
@@ -509,13 +610,31 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
-    @typedoc "contains details about the Link wallet options."
-    @type link :: %{optional(:display) => :auto | :never}
+    @typedoc "contains details about the Link payment method options."
+    @type link :: %{
+            optional(:capture_method) => :manual,
+            optional(:setup_future_usage) => :none | :off_session
+          }
+  )
+
+  (
+    @typedoc "The logo for the Checkout Session."
+    @type logo :: %{
+            optional(:file) => binary,
+            optional(:type) => :file | :url,
+            optional(:url) => binary
+          }
   )
 
   (
     @typedoc "Additional fields for Mandate creation"
-    @type mandate_options :: %{optional(:reference_prefix) => binary | binary}
+    @type mandate_options :: %{
+            optional(:custom_mandate_url) => binary | binary,
+            optional(:default_for) => list(:invoice | :subscription),
+            optional(:interval_description) => binary,
+            optional(:payment_schedule) => :combined | :interval | :sporadic,
+            optional(:transaction_type) => :business | :personal
+          }
   )
 
   (
@@ -536,12 +655,23 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc "contains details about the Mobilepay payment method options."
-    @type mobilepay :: %{optional(:setup_future_usage) => :none}
+    @type mobilepay :: %{
+            optional(:capture_method) => :manual,
+            optional(:setup_future_usage) => :none
+          }
   )
 
   (
     @typedoc "contains details about the Multibanco payment method options."
     @type multibanco :: %{optional(:setup_future_usage) => :none}
+  )
+
+  (
+    @typedoc "Controls name collection settings for the session.\n\nYou can configure Checkout to collect your customers' business names, individual names, or both. Each name field can be either required or optional.\n\nIf a [Customer](https://stripe.com/docs/api/customers) is created or provided, the names can be saved to the Customer object as well."
+    @type name_collection :: %{
+            optional(:business) => business,
+            optional(:individual) => individual
+          }
   )
 
   (
@@ -631,6 +761,7 @@ defmodule Stripe.Checkout.Session do
     @type payment_method_options :: %{
             optional(:sofort) => sofort,
             optional(:customer_balance) => customer_balance,
+            optional(:satispay) => satispay,
             optional(:boleto) => boleto,
             optional(:alipay) => alipay,
             optional(:au_becs_debit) => au_becs_debit,
@@ -642,6 +773,7 @@ defmodule Stripe.Checkout.Session do
             optional(:pay_by_bank) => map(),
             optional(:grabpay) => grabpay,
             optional(:eps) => eps,
+            optional(:billie) => billie,
             optional(:ideal) => ideal,
             optional(:pix) => pix,
             optional(:giropay) => giropay,
@@ -649,6 +781,7 @@ defmodule Stripe.Checkout.Session do
             optional(:revolut_pay) => revolut_pay,
             optional(:klarna) => klarna,
             optional(:card) => card,
+            optional(:twint) => twint,
             optional(:naver_pay) => naver_pay,
             optional(:acss_debit) => acss_debit,
             optional(:link) => link,
@@ -659,7 +792,9 @@ defmodule Stripe.Checkout.Session do
             optional(:fpx) => fpx,
             optional(:oxxo) => oxxo,
             optional(:paynow) => paynow,
+            optional(:alma) => alma,
             optional(:wechat_pay) => wechat_pay,
+            optional(:demo_pay) => demo_pay,
             optional(:samsung_pay) => samsung_pay,
             optional(:kakao_pay) => kakao_pay,
             optional(:cashapp) => cashapp,
@@ -752,7 +887,8 @@ defmodule Stripe.Checkout.Session do
             optional(:images) => list(binary),
             optional(:metadata) => %{optional(binary) => binary},
             optional(:name) => binary,
-            optional(:tax_code) => binary
+            optional(:tax_code) => binary,
+            optional(:unit_label) => binary
           }
   )
 
@@ -790,12 +926,20 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc "contains details about the RevolutPay payment method options."
-    @type revolut_pay :: %{optional(:setup_future_usage) => :none | :off_session}
+    @type revolut_pay :: %{
+            optional(:capture_method) => :manual,
+            optional(:setup_future_usage) => :none | :off_session
+          }
   )
 
   (
     @typedoc "contains details about the Samsung Pay payment method options."
     @type samsung_pay :: %{optional(:capture_method) => :manual}
+  )
+
+  (
+    @typedoc "contains details about the Satispay payment method options."
+    @type satispay :: %{optional(:capture_method) => :manual}
   )
 
   (
@@ -1182,13 +1326,21 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
-    @typedoc "The parameters used to automatically create a Transfer when the payment succeeds.\nFor more information, see the PaymentIntents [use case for connected accounts](https://stripe.com/docs/payments/connected-accounts)."
-    @type transfer_data :: %{optional(:amount) => integer, optional(:destination) => binary}
+    @typedoc "If specified, the funds from the subscription's invoices will be transferred to the destination and the ID of the resulting transfers will be found on the resulting charges."
+    @type transfer_data :: %{
+            optional(:amount_percent) => number,
+            optional(:destination) => binary
+          }
   )
 
   (
     @typedoc "Settings related to subscription trials."
     @type trial_settings :: %{optional(:end_behavior) => end_behavior}
+  )
+
+  (
+    @typedoc "contains details about the TWINT payment method options."
+    @type twint :: %{optional(:setup_future_usage) => :none}
   )
 
   (
@@ -1356,13 +1508,66 @@ defmodule Stripe.Checkout.Session do
       @spec create(
               params :: %{
                 optional(:submit_type) => :auto | :book | :donate | :pay | :subscribe,
+                optional(:branding_settings) => branding_settings,
                 optional(:shipping_address_collection) => shipping_address_collection,
                 optional(:custom_text) => custom_text,
+                optional(:excluded_payment_method_types) =>
+                  list(
+                    :acss_debit
+                    | :affirm
+                    | :afterpay_clearpay
+                    | :alipay
+                    | :alma
+                    | :amazon_pay
+                    | :au_becs_debit
+                    | :bacs_debit
+                    | :bancontact
+                    | :billie
+                    | :blik
+                    | :boleto
+                    | :card
+                    | :cashapp
+                    | :crypto
+                    | :customer_balance
+                    | :eps
+                    | :fpx
+                    | :giropay
+                    | :grabpay
+                    | :ideal
+                    | :kakao_pay
+                    | :klarna
+                    | :konbini
+                    | :kr_card
+                    | :mb_way
+                    | :mobilepay
+                    | :multibanco
+                    | :naver_pay
+                    | :nz_bank_account
+                    | :oxxo
+                    | :p24
+                    | :pay_by_bank
+                    | :payco
+                    | :paynow
+                    | :paypal
+                    | :pix
+                    | :promptpay
+                    | :revolut_pay
+                    | :samsung_pay
+                    | :satispay
+                    | :sepa_debit
+                    | :sofort
+                    | :swish
+                    | :twint
+                    | :us_bank_account
+                    | :wechat_pay
+                    | :zip
+                  ),
                 optional(:metadata) => %{optional(binary) => binary},
                 optional(:custom_fields) => list(custom_fields),
                 optional(:setup_intent_data) => setup_intent_data,
                 optional(:redirect_on_completion) => :always | :if_required | :never,
                 optional(:payment_method_configuration) => binary,
+                optional(:name_collection) => name_collection,
                 optional(:shipping_options) => list(shipping_options),
                 optional(:locale) =>
                   :auto
@@ -1440,6 +1645,7 @@ defmodule Stripe.Checkout.Session do
                     | :konbini
                     | :kr_card
                     | :link
+                    | :mb_way
                     | :mobilepay
                     | :multibanco
                     | :naver_pay

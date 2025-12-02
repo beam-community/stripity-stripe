@@ -286,7 +286,7 @@ defmodule Stripe.Payout do
   (
     nil
 
-    @doc "<p>Reverses a payout by debiting the destination bank account. At this time, you can only reverse payouts for connected accounts to US bank accounts. If the payout is manual and in the <code>pending</code> status, use <code>/v1/payouts/:id/cancel</code> instead.</p>\n\n<p>By requesting a reversal through <code>/v1/payouts/:id/reverse</code>, you confirm that the authorized signatory of the selected bank account authorizes the debit on the bank account and that no other authorization is required.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payouts/{payout}/reverse`\n"
+    @doc "<p>Reverses a payout by debiting the destination bank account. At this time, you can only reverse payouts for connected accounts to US and Canadian bank accounts. If the payout is manual and in the <code>pending</code> status, use <code>/v1/payouts/:id/cancel</code> instead.</p>\n\n<p>By requesting a reversal through <code>/v1/payouts/:id/reverse</code>, you confirm that the authorized signatory of the selected bank account authorizes the debit on the bank account and that no other authorization is required.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payouts/{payout}/reverse`\n"
     (
       @spec reverse(
               payout :: binary(),

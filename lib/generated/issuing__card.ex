@@ -15,6 +15,7 @@ defmodule Stripe.Issuing.Card do
       :financial_account,
       :id,
       :last4,
+      :latest_fraud_warning,
       :livemode,
       :metadata,
       :number,
@@ -23,6 +24,7 @@ defmodule Stripe.Issuing.Card do
       :replaced_by,
       :replacement_for,
       :replacement_reason,
+      :second_line,
       :shipping,
       :spending_controls,
       :status,
@@ -30,7 +32,7 @@ defmodule Stripe.Issuing.Card do
       :wallets
     ]
 
-    @typedoc "The `issuing.card` type.\n\n  * `brand` The brand of the card.\n  * `cancellation_reason` The reason why the card was canceled.\n  * `cardholder` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Supported currencies are `usd` in the US, `eur` in the EU, and `gbp` in the UK.\n  * `cvc` The card's CVC. For security reasons, this is only available for virtual cards, and will be omitted unless you explicitly request it with [the `expand` parameter](https://stripe.com/docs/api/expanding_objects). Additionally, it's only available via the [\"Retrieve a card\" endpoint](https://stripe.com/docs/api/issuing/cards/retrieve), not via \"List all cards\" or any other endpoint.\n  * `exp_month` The expiration month of the card.\n  * `exp_year` The expiration year of the card.\n  * `financial_account` The financial account this card is attached to.\n  * `id` Unique identifier for the object.\n  * `last4` The last 4 digits of the card number.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `number` The full unredacted card number. For security reasons, this is only available for virtual cards, and will be omitted unless you explicitly request it with [the `expand` parameter](https://stripe.com/docs/api/expanding_objects). Additionally, it's only available via the [\"Retrieve a card\" endpoint](https://stripe.com/docs/api/issuing/cards/retrieve), not via \"List all cards\" or any other endpoint.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `personalization_design` The personalization design object belonging to this card.\n  * `replaced_by` The latest card that replaces this card, if any.\n  * `replacement_for` The card this card replaces, if any.\n  * `replacement_reason` The reason why the previous card needed to be replaced.\n  * `shipping` Where and how the card will be shipped.\n  * `spending_controls` \n  * `status` Whether authorizations can be approved on this card. May be blocked from activating cards depending on past-due Cardholder requirements. Defaults to `inactive`.\n  * `type` The type of the card.\n  * `wallets` Information relating to digital wallets (like Apple Pay and Google Pay).\n"
+    @typedoc "The `issuing.card` type.\n\n  * `brand` The brand of the card.\n  * `cancellation_reason` The reason why the card was canceled.\n  * `cardholder` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Supported currencies are `usd` in the US, `eur` in the EU, and `gbp` in the UK.\n  * `cvc` The card's CVC. For security reasons, this is only available for virtual cards, and will be omitted unless you explicitly request it with [the `expand` parameter](https://stripe.com/docs/api/expanding_objects). Additionally, it's only available via the [\"Retrieve a card\" endpoint](https://stripe.com/docs/api/issuing/cards/retrieve), not via \"List all cards\" or any other endpoint.\n  * `exp_month` The expiration month of the card.\n  * `exp_year` The expiration year of the card.\n  * `financial_account` The financial account this card is attached to.\n  * `id` Unique identifier for the object.\n  * `last4` The last 4 digits of the card number.\n  * `latest_fraud_warning` Stripe’s assessment of whether this card’s details have been compromised. If this property isn't null, cancel and reissue the card to prevent fraudulent activity risk.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `number` The full unredacted card number. For security reasons, this is only available for virtual cards, and will be omitted unless you explicitly request it with [the `expand` parameter](https://stripe.com/docs/api/expanding_objects). Additionally, it's only available via the [\"Retrieve a card\" endpoint](https://stripe.com/docs/api/issuing/cards/retrieve), not via \"List all cards\" or any other endpoint.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `personalization_design` The personalization design object belonging to this card.\n  * `replaced_by` The latest card that replaces this card, if any.\n  * `replacement_for` The card this card replaces, if any.\n  * `replacement_reason` The reason why the previous card needed to be replaced.\n  * `second_line` Text separate from cardholder name, printed on the card.\n  * `shipping` Where and how the card will be shipped.\n  * `spending_controls` \n  * `status` Whether authorizations can be approved on this card. May be blocked from activating cards depending on past-due Cardholder requirements. Defaults to `inactive`.\n  * `type` The type of the card.\n  * `wallets` Information relating to digital wallets (like Apple Pay and Google Pay).\n"
     @type t :: %__MODULE__{
             brand: binary,
             cancellation_reason: binary | nil,
@@ -43,6 +45,7 @@ defmodule Stripe.Issuing.Card do
             financial_account: binary | nil,
             id: binary,
             last4: binary,
+            latest_fraud_warning: term | nil,
             livemode: boolean,
             metadata: term,
             number: binary,
@@ -51,6 +54,7 @@ defmodule Stripe.Issuing.Card do
             replaced_by: (binary | Stripe.Issuing.Card.t()) | nil,
             replacement_for: (binary | Stripe.Issuing.Card.t()) | nil,
             replacement_reason: binary | nil,
+            second_line: binary | nil,
             shipping: term | nil,
             spending_controls: term,
             status: binary,

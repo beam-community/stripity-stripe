@@ -86,6 +86,16 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
+    @typedoc "Stripe's assessment of this authorization's likelihood of being card testing activity."
+    @type card_testing_risk :: %{
+            optional(:invalid_account_number_decline_rate_past_hour) => integer,
+            optional(:invalid_credentials_decline_rate_past_hour) => integer,
+            optional(:risk_level) =>
+              :elevated | :highest | :low | :normal | :not_assessed | :unknown
+          }
+  )
+
+  (
     @typedoc "Answers to prompts presented to the cardholder at the point of sale. Prompted fields vary depending on the configuration of your physical fleet cards. Typical points of sale support only numeric entry."
     @type cardholder_prompt_data :: %{
             optional(:driver_id) => binary,
@@ -125,6 +135,14 @@ defmodule Stripe.Issuing.Authorization do
             optional(:refundable) => boolean,
             optional(:segments) => list(segments),
             optional(:travel_agency) => binary
+          }
+  )
+
+  (
+    @typedoc "Stripe’s assessment of this authorization’s likelihood to be fraudulent."
+    @type fraud_risk :: %{
+            optional(:level) => :elevated | :highest | :low | :normal | :not_assessed | :unknown,
+            optional(:score) => number
           }
   )
 
@@ -448,6 +466,15 @@ defmodule Stripe.Issuing.Authorization do
   )
 
   (
+    @typedoc "The dispute risk of the merchant (the seller on a purchase) on an authorization based on all Stripe Issuing activity."
+    @type merchant_dispute_risk :: %{
+            optional(:dispute_rate) => integer,
+            optional(:risk_level) =>
+              :elevated | :highest | :low | :normal | :not_assessed | :unknown
+          }
+  )
+
+  (
     @typedoc "Details about the authorization, such as identifiers, set by the card network."
     @type network_data :: %{optional(:acquiring_institution_id) => binary}
   )
@@ -485,6 +512,15 @@ defmodule Stripe.Issuing.Authorization do
             optional(:fuel) => fuel,
             optional(:non_fuel) => non_fuel,
             optional(:tax) => tax
+          }
+  )
+
+  (
+    @typedoc "Stripe’s assessment of the fraud risk for this authorization."
+    @type risk_assessment :: %{
+            optional(:card_testing_risk) => card_testing_risk,
+            optional(:fraud_risk) => fraud_risk,
+            optional(:merchant_dispute_risk) => merchant_dispute_risk
           }
   )
 
@@ -767,12 +803,15 @@ defmodule Stripe.Issuing.Authorization do
                 optional(:currency) => binary,
                 optional(:expand) => list(binary),
                 optional(:fleet) => fleet,
+                optional(:fraud_disputability_likelihood) =>
+                  :neutral | :unknown | :very_likely | :very_unlikely,
                 optional(:fuel) => fuel,
                 optional(:is_amount_controllable) => boolean,
                 optional(:merchant_amount) => integer,
                 optional(:merchant_currency) => binary,
                 optional(:merchant_data) => merchant_data,
                 optional(:network_data) => network_data,
+                optional(:risk_assessment) => risk_assessment,
                 optional(:verification_data) => verification_data,
                 optional(:wallet) => :apple_pay | :google_pay | :samsung_pay
               },

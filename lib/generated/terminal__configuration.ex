@@ -4,6 +4,7 @@ defmodule Stripe.Terminal.Configuration do
   @moduledoc "A Configurations object represents how features should be configured for terminal readers.\nFor information about how to use it, see the [Terminal configurations documentation](https://docs.stripe.com/terminal/fleet/configurations-overview)."
   (
     defstruct [
+      :bbpos_wisepad3,
       :bbpos_wisepos_e,
       :id,
       :is_account_default,
@@ -18,8 +19,9 @@ defmodule Stripe.Terminal.Configuration do
       :wifi
     ]
 
-    @typedoc "The `terminal.configuration` type.\n\n  * `bbpos_wisepos_e` \n  * `id` Unique identifier for the object.\n  * `is_account_default` Whether this Configuration is the default for your account\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `name` String indicating the name of the Configuration object, set by the user\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `offline` \n  * `reboot_window` \n  * `stripe_s700` \n  * `tipping` \n  * `verifone_p400` \n  * `wifi` \n"
+    @typedoc "The `terminal.configuration` type.\n\n  * `bbpos_wisepad3` \n  * `bbpos_wisepos_e` \n  * `id` Unique identifier for the object.\n  * `is_account_default` Whether this Configuration is the default for your account\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `name` String indicating the name of the Configuration object, set by the user\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `offline` \n  * `reboot_window` \n  * `stripe_s700` \n  * `tipping` \n  * `verifone_p400` \n  * `wifi` \n"
     @type t :: %__MODULE__{
+            bbpos_wisepad3: term,
             bbpos_wisepos_e: term,
             id: binary,
             is_account_default: boolean | nil,
@@ -54,7 +56,12 @@ defmodule Stripe.Terminal.Configuration do
   )
 
   (
-    @typedoc "An object containing device type specific settings for BBPOS WisePOS E readers"
+    @typedoc "An object containing device type specific settings for BBPOS WisePad 3 readers."
+    @type bbpos_wisepad3 :: %{optional(:splashscreen) => binary | binary}
+  )
+
+  (
+    @typedoc "An object containing device type specific settings for BBPOS WisePOS E readers."
     @type bbpos_wisepos_e :: %{optional(:splashscreen) => binary | binary}
   )
 
@@ -136,6 +143,15 @@ defmodule Stripe.Terminal.Configuration do
   (
     @typedoc "Tipping configuration for GBP"
     @type gbp :: %{
+            optional(:fixed_amounts) => list(integer),
+            optional(:percentages) => list(integer),
+            optional(:smart_tip_threshold) => integer
+          }
+  )
+
+  (
+    @typedoc "Tipping configuration for GIP"
+    @type gip :: %{
             optional(:fixed_amounts) => list(integer),
             optional(:percentages) => list(integer),
             optional(:smart_tip_threshold) => integer
@@ -225,7 +241,7 @@ defmodule Stripe.Terminal.Configuration do
   )
 
   (
-    @typedoc "Reboot time settings for readers that support customized reboot time configuration."
+    @typedoc "Reboot time settings for readers. that support customized reboot time configuration."
     @type reboot_window :: %{optional(:end_hour) => integer, optional(:start_hour) => integer}
   )
 
@@ -257,7 +273,7 @@ defmodule Stripe.Terminal.Configuration do
   )
 
   (
-    @typedoc "An object containing device type specific settings for Stripe S700 readers"
+    @typedoc "An object containing device type specific settings for Stripe S700 readers."
     @type stripe_s700 :: %{optional(:splashscreen) => binary | binary}
   )
 
@@ -273,6 +289,7 @@ defmodule Stripe.Terminal.Configuration do
             optional(:dkk) => dkk,
             optional(:eur) => eur,
             optional(:gbp) => gbp,
+            optional(:gip) => gip,
             optional(:hkd) => hkd,
             optional(:huf) => huf,
             optional(:jpy) => jpy,
@@ -298,7 +315,7 @@ defmodule Stripe.Terminal.Configuration do
   )
 
   (
-    @typedoc "An object containing device type specific settings for Verifone P400 readers"
+    @typedoc "An object containing device type specific settings for Verifone P400 readers."
     @type verifone_p400 :: %{optional(:splashscreen) => binary | binary}
   )
 
@@ -436,6 +453,7 @@ defmodule Stripe.Terminal.Configuration do
     (
       @spec create(
               params :: %{
+                optional(:bbpos_wisepad3) => bbpos_wisepad3,
                 optional(:bbpos_wisepos_e) => bbpos_wisepos_e,
                 optional(:expand) => list(binary),
                 optional(:name) => binary,
@@ -471,6 +489,7 @@ defmodule Stripe.Terminal.Configuration do
       @spec update(
               configuration :: binary(),
               params :: %{
+                optional(:bbpos_wisepad3) => bbpos_wisepad3 | binary,
                 optional(:bbpos_wisepos_e) => bbpos_wisepos_e | binary,
                 optional(:expand) => list(binary),
                 optional(:name) => binary,

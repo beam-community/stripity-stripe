@@ -85,7 +85,8 @@ defmodule Stripe.LineItem do
             optional(:images) => list(binary),
             optional(:metadata) => %{optional(binary) => binary},
             optional(:name) => binary,
-            optional(:tax_code) => binary
+            optional(:tax_code) => binary,
+            optional(:unit_label) => binary
           }
   )
 

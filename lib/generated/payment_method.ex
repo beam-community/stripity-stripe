@@ -25,6 +25,7 @@ defmodule Stripe.PaymentMethod do
       :oxxo,
       :created,
       :fpx,
+      :custom,
       :paypal,
       :p24,
       :blik,
@@ -36,6 +37,7 @@ defmodule Stripe.PaymentMethod do
       :crypto,
       :naver_pay,
       :twint,
+      :mb_way,
       :card,
       :klarna,
       :revolut_pay,
@@ -66,7 +68,7 @@ defmodule Stripe.PaymentMethod do
       :sofort
     ]
 
-    @typedoc "The `payment_method` type.\n\n  * `acss_debit` \n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `allow_redisplay` This field indicates whether this payment method can be shown again to its customer in a checkout flow. Stripe products such as Checkout and Elements use this field to determine whether a payment method can be shown as a saved payment method in a checkout flow. The field defaults to “unspecified”.\n  * `alma` \n  * `amazon_pay` \n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `billie` \n  * `billing_details` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `card_present` \n  * `cashapp` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `crypto` \n  * `customer` The ID of the Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.\n  * `customer_balance` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `interac_present` \n  * `kakao_pay` \n  * `klarna` \n  * `konbini` \n  * `kr_card` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `mobilepay` \n  * `multibanco` \n  * `naver_pay` \n  * `nz_bank_account` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `pay_by_bank` \n  * `payco` \n  * `paynow` \n  * `paypal` \n  * `pix` \n  * `promptpay` \n  * `radar_options` \n  * `revolut_pay` \n  * `samsung_pay` \n  * `satispay` \n  * `sepa_debit` \n  * `sofort` \n  * `swish` \n  * `twint` \n  * `type` The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.\n  * `us_bank_account` \n  * `wechat_pay` \n  * `zip` \n"
+    @typedoc "The `payment_method` type.\n\n  * `acss_debit` \n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `allow_redisplay` This field indicates whether this payment method can be shown again to its customer in a checkout flow. Stripe products such as Checkout and Elements use this field to determine whether a payment method can be shown as a saved payment method in a checkout flow. The field defaults to “unspecified”.\n  * `alma` \n  * `amazon_pay` \n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `billie` \n  * `billing_details` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `card_present` \n  * `cashapp` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `crypto` \n  * `custom` \n  * `customer` The ID of the Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.\n  * `customer_balance` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `interac_present` \n  * `kakao_pay` \n  * `klarna` \n  * `konbini` \n  * `kr_card` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `mb_way` \n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `mobilepay` \n  * `multibanco` \n  * `naver_pay` \n  * `nz_bank_account` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `pay_by_bank` \n  * `payco` \n  * `paynow` \n  * `paypal` \n  * `pix` \n  * `promptpay` \n  * `radar_options` \n  * `revolut_pay` \n  * `samsung_pay` \n  * `satispay` \n  * `sepa_debit` \n  * `sofort` \n  * `swish` \n  * `twint` \n  * `type` The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.\n  * `us_bank_account` \n  * `wechat_pay` \n  * `zip` \n"
     @type t :: %__MODULE__{
             acss_debit: term,
             affirm: term,
@@ -87,6 +89,7 @@ defmodule Stripe.PaymentMethod do
             cashapp: term,
             created: integer,
             crypto: term,
+            custom: term,
             customer: (binary | Stripe.Customer.t()) | nil,
             customer_balance: term,
             eps: term,
@@ -102,6 +105,7 @@ defmodule Stripe.PaymentMethod do
             kr_card: term,
             link: term,
             livemode: boolean,
+            mb_way: term,
             metadata: term | nil,
             mobilepay: term,
             multibanco: term,
@@ -190,6 +194,11 @@ defmodule Stripe.PaymentMethod do
   )
 
   (
+    @typedoc "If this is a `custom` PaymentMethod, this hash contains details about the Custom payment method."
+    @type custom :: %{optional(:type) => binary}
+  )
+
+  (
     @typedoc "Customer's date of birth"
     @type dob :: %{
             optional(:day) => integer,
@@ -271,6 +280,7 @@ defmodule Stripe.PaymentMethod do
               | :asn_bank
               | :bunq
               | :buut
+              | :finom
               | :handelsbanken
               | :ing
               | :knab
@@ -401,6 +411,7 @@ defmodule Stripe.PaymentMethod do
                   | :card
                   | :cashapp
                   | :crypto
+                  | :custom
                   | :customer_balance
                   | :eps
                   | :fpx
@@ -412,6 +423,7 @@ defmodule Stripe.PaymentMethod do
                   | :konbini
                   | :kr_card
                   | :link
+                  | :mb_way
                   | :mobilepay
                   | :multibanco
                   | :naver_pay
@@ -529,6 +541,7 @@ defmodule Stripe.PaymentMethod do
                 optional(:revolut_pay) => map(),
                 optional(:klarna) => klarna,
                 optional(:card) => card | card,
+                optional(:mb_way) => map(),
                 optional(:twint) => map(),
                 optional(:naver_pay) => naver_pay,
                 optional(:crypto) => map(),
@@ -539,6 +552,7 @@ defmodule Stripe.PaymentMethod do
                 optional(:blik) => map(),
                 optional(:p24) => p24,
                 optional(:paypal) => map(),
+                optional(:custom) => custom,
                 optional(:fpx) => fpx,
                 optional(:payment_method) => binary,
                 optional(:oxxo) => map(),
@@ -562,6 +576,7 @@ defmodule Stripe.PaymentMethod do
                   | :card
                   | :cashapp
                   | :crypto
+                  | :custom
                   | :customer_balance
                   | :eps
                   | :fpx
@@ -573,6 +588,7 @@ defmodule Stripe.PaymentMethod do
                   | :konbini
                   | :kr_card
                   | :link
+                  | :mb_way
                   | :mobilepay
                   | :multibanco
                   | :naver_pay
@@ -636,9 +652,7 @@ defmodule Stripe.PaymentMethod do
                 optional(:billing_details) => billing_details,
                 optional(:card) => card,
                 optional(:expand) => list(binary),
-                optional(:link) => map(),
                 optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:pay_by_bank) => map(),
                 optional(:us_bank_account) => us_bank_account
               },
               opts :: Keyword.t()

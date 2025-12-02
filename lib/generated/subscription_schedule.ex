@@ -69,7 +69,10 @@ defmodule Stripe.SubscriptionSchedule do
 
   (
     @typedoc "Controls how prorations and invoices for subscriptions are calculated and orchestrated."
-    @type billing_mode :: %{optional(:type) => :classic | :flexible}
+    @type billing_mode :: %{
+            optional(:flexible) => flexible,
+            optional(:type) => :classic | :flexible
+          }
   )
 
   (
@@ -152,6 +155,11 @@ defmodule Stripe.SubscriptionSchedule do
   )
 
   (
+    @typedoc "Configure behavior for flexible billing mode."
+    @type flexible :: %{optional(:proration_discounts) => :included | :itemized}
+  )
+
+  (
     @typedoc "All invoices will be billed using the specified settings."
     @type invoice_settings :: %{
             optional(:account_tax_ids) => list(binary) | binary,
@@ -185,7 +193,7 @@ defmodule Stripe.SubscriptionSchedule do
   )
 
   (
-    @typedoc "The period associated with this invoice item. Defaults to the period of the underlying subscription that surrounds the start of the phase."
+    @typedoc "The period associated with this invoice item. If not set, `period.start.type` defaults to `max_item_period_start` and `period.end.type` defaults to `min_item_period_end`."
     @type period :: %{optional(:end) => end_field, optional(:start) => start}
   )
 
@@ -207,7 +215,6 @@ defmodule Stripe.SubscriptionSchedule do
             optional(:end_date) => integer,
             optional(:invoice_settings) => invoice_settings,
             optional(:items) => list(items),
-            optional(:iterations) => integer,
             optional(:metadata) => %{optional(binary) => binary},
             optional(:on_behalf_of) => binary,
             optional(:proration_behavior) => :always_invoice | :create_prorations | :none,

@@ -234,6 +234,7 @@ defmodule Stripe.Tax.Registration do
             optional(:al) => al,
             optional(:ph) => ph,
             optional(:in) => in_field,
+            optional(:tw) => tw,
             optional(:cr) => cr,
             optional(:nz) => nz,
             optional(:dk) => dk,
@@ -695,6 +696,11 @@ defmodule Stripe.Tax.Registration do
   (
     @typedoc "Options for the registration in TR."
     @type tr :: %{optional(:type) => :simplified}
+  )
+
+  (
+    @typedoc "Options for the registration in TW."
+    @type tw :: %{optional(:type) => :simplified}
   )
 
   (

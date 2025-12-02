@@ -15,49 +15,30 @@ defmodule Stripe.InvoiceTest do
     end
   end
 
-  describe "upcoming/1" do
+  describe "create_preview/1" do
     test "retrieves an upcoming invoice for a customer" do
       params = %{customer: "cus_123", subscription: "sub_123"}
-      assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.upcoming(params)
-
-      assert_stripe_requested(
-        :get,
-        "/v1/invoices/upcoming",
-        query: %{customer: "cus_123", subscription: "sub_123"}
-      )
+      assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.create_preview(params)
+      assert_stripe_requested(:post, "/v1/invoices/create_preview")
     end
 
     test "retrieves an upcoming invoice for a subscription" do
       params = %{subscription: "sub_123"}
-      assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.upcoming(params)
-      assert_stripe_requested(:get, "/v1/invoices/upcoming", query: %{subscription: "sub_123"})
+      assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.create_preview(params)
+      assert_stripe_requested(:post, "/v1/invoices/create_preview")
     end
 
     test "retrieves an upcoming invoice for a customer with items" do
       items = [%{plan: "gold", quantity: 2}]
-      params = %{customer: "cus_123", subscription_items: items}
-      assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.upcoming(params)
-
-      assert_stripe_requested(
-        :get,
-        "/v1/invoices/upcoming",
-        query: %{
-          :customer => "cus_123",
-          :"subscription_items[0][plan]" => "gold",
-          :"subscription_items[0][quantity]" => 2
-        }
-      )
+      params = %{customer: "cus_123", invoice_items: items}
+      assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.create_preview(params)
+      assert_stripe_requested(:post, "/v1/invoices/create_preview")
     end
 
-    test "can be called with an empty string" do
-      params = %{coupon: "", customer: "cus_123"}
-      assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.upcoming(params)
-
-      assert_stripe_requested(
-        :get,
-        "/v1/invoices/upcoming",
-        query: %{customer: "cus_123", coupon: ""}
-      )
+    test "can be called with discounts" do
+      params = %{customer: "cus_123", discounts: [%{coupon: "25OFF"}]}
+      assert {:ok, %Stripe.Invoice{}} = Stripe.Invoice.create_preview(params)
+      assert_stripe_requested(:post, "/v1/invoices/create_preview")
     end
   end
 

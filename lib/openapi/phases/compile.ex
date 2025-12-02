@@ -1227,7 +1227,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostBillingCreditGrantsIdVoid", "/v1/billing/credit_grants/{id}/void", "void_grant"} => "void_grant",
     {"PostTestHelpersTreasuryOutboundTransfersOutboundTransfer", "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}", "update"} => "update",
     {"GetTaxCalculationsCalculation", "/v1/tax/calculations/{calculation}", "retrieve"} => "retrieve",
-    {"GetBillingMeters", "/v1/billing/meters", "list"} => "list",
+       {"GetBillingMeters", "/v1/billing/meters", "list"} => "list",
     {"GetBillingMetersId", "/v1/billing/meters/{id}", "retrieve"} => "retrieve",
     {"PostBillingMeters", "/v1/billing/meters", "create"} => "create",
     {"PostBillingMetersId", "/v1/billing/meters/{id}", "update"} => "update",
@@ -1251,6 +1251,21 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"GetProductsProductFeatures", "/v1/products/{product}/features", "list"} => "list",
     {"GetProductsProductFeaturesId", "/v1/products/{product}/features/{id}", "retrieve"} => "retrieve",
     {"PostProductsProductFeatures", "/v1/products/{product}/features", "create"} => "create",
+    {"GetTaxAssociationsFind", "/v1/tax/associations/find", "find"} => "find",
+    {"GetPaymentRecordsId", "/v1/payment_records/{id}", "retrieve"} => "retrieve",
+    {"PostPaymentRecordsIdReportPaymentAttempt", "/v1/payment_records/{id}/report_payment_attempt", "report_payment_attempt"} => "report_payment_attempt",
+    {"PostPaymentRecordsIdReportPaymentAttemptCanceled", "/v1/payment_records/{id}/report_payment_attempt_canceled", "report_payment_attempt_canceled"} => "report_payment_attempt_canceled",
+    {"PostPaymentRecordsIdReportPaymentAttemptFailed", "/v1/payment_records/{id}/report_payment_attempt_failed", "report_payment_attempt_failed"} => "report_payment_attempt_failed",
+    {"PostPaymentRecordsIdReportPaymentAttemptGuaranteed", "/v1/payment_records/{id}/report_payment_attempt_guaranteed", "report_payment_attempt_guaranteed"} => "report_payment_attempt_guaranteed",
+    {"PostPaymentRecordsIdReportPaymentAttemptInformational", "/v1/payment_records/{id}/report_payment_attempt_informational", "report_payment_attempt_informational"} => "report_payment_attempt_informational",
+    {"PostPaymentRecordsIdReportRefund", "/v1/payment_records/{id}/report_refund", "report_refund"} => "report_refund",
+    {"PostPaymentRecordsReportPayment", "/v1/payment_records/report_payment", "report_payment"} => "report_payment",
+    {"GetPaymentIntentsIntentAmountDetailsLineItems", "/v1/payment_intents/{intent}/amount_details_line_items", "list"} => "list",
+    {"GetPaymentAttemptRecords", "/v1/payment_attempt_records", "list"} => "list",
+    {"GetPaymentAttemptRecordsId", "/v1/payment_attempt_records/{id}", "retrieve"} => "retrieve",
+    {"GetBalanceSettings", "/v1/balance_settings", "retrieve"} => "retrieve",
+    {"PostBalanceSettings", "/v1/balance_settings", "update"} => "update",
+    {"PostTerminalOnboardingLinks", "/v1/terminal/onboarding_links", "create"} => "create"
   }
 
   defp to_func_name(operation, stripe_extension) do

@@ -23,12 +23,19 @@ defmodule Stripe.CustomerSession do
   )
 
   (
-    @typedoc "Configuration for each component. Exactly 1 component must be enabled."
+    @typedoc "Configuration for each component. At least 1 component must be enabled."
     @type components :: %{
             optional(:buy_button) => buy_button,
+            optional(:customer_sheet) => customer_sheet,
+            optional(:mobile_payment_element) => mobile_payment_element,
             optional(:payment_element) => payment_element,
             optional(:pricing_table) => pricing_table
           }
+  )
+
+  (
+    @typedoc "Configuration for the customer sheet."
+    @type customer_sheet :: %{optional(:enabled) => boolean, optional(:features) => features}
   )
 
   (
@@ -41,6 +48,14 @@ defmodule Stripe.CustomerSession do
             optional(:payment_method_remove) => :disabled | :enabled,
             optional(:payment_method_save) => :disabled | :enabled,
             optional(:payment_method_save_usage) => :off_session | :on_session
+          }
+  )
+
+  (
+    @typedoc "Configuration for the mobile payment element."
+    @type mobile_payment_element :: %{
+            optional(:enabled) => boolean,
+            optional(:features) => features
           }
   )
 

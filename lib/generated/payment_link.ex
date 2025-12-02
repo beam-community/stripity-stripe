@@ -31,6 +31,7 @@ defmodule Stripe.PaymentLink do
       :payment_intent_data,
       :shipping_options,
       :after_completion,
+      :name_collection,
       :active,
       :custom_fields,
       :metadata,
@@ -40,7 +41,7 @@ defmodule Stripe.PaymentLink do
       :application_fee_percent
     ]
 
-    @typedoc "The `payment_link` type.\n\n  * `active` Whether the payment link's `url` is active. If `false`, customers visiting the URL will be shown a page saying that the link has been deactivated.\n  * `after_completion` \n  * `allow_promotion_codes` Whether user redeemable promotion codes are enabled.\n  * `application` The ID of the Connect application that created the Payment Link.\n  * `application_fee_amount` The amount of the application fee (if any) that will be requested to be applied to the payment and transferred to the application owner's Stripe account.\n  * `application_fee_percent` This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account.\n  * `automatic_tax` \n  * `billing_address_collection` Configuration for collecting the customer's billing address. Defaults to `auto`.\n  * `consent_collection` When set, provides configuration to gather active consent from customers.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `custom_fields` Collect additional information from your customer using custom fields. Up to 3 fields are supported.\n  * `custom_text` \n  * `customer_creation` Configuration for Customer creation during checkout.\n  * `id` Unique identifier for the object.\n  * `inactive_message` The custom message to be displayed to a customer when a payment link is no longer active.\n  * `invoice_creation` Configuration for creating invoice for payment mode payment links.\n  * `line_items` The line items representing what is being sold.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account on behalf of which to charge. See the [Connect documentation](https://support.stripe.com/questions/sending-invoices-on-behalf-of-connected-accounts) for details.\n  * `optional_items` The optional items presented to the customer at checkout.\n  * `payment_intent_data` Indicates the parameters to be passed to PaymentIntent creation during checkout.\n  * `payment_method_collection` Configuration for collecting a payment method during checkout. Defaults to `always`.\n  * `payment_method_types` The list of payment method types that customers can use. When `null`, Stripe will dynamically show relevant payment methods you've enabled in your [payment method settings](https://dashboard.stripe.com/settings/payment_methods).\n  * `phone_number_collection` \n  * `restrictions` Settings that restrict the usage of a payment link.\n  * `shipping_address_collection` Configuration for collecting the customer's shipping address.\n  * `shipping_options` The shipping rate options applied to the session.\n  * `submit_type` Indicates the type of transaction being performed which customizes relevant text on the page, such as the submit button.\n  * `subscription_data` When creating a subscription, the specified configuration data will be used. There must be at least one line item with a recurring price to use `subscription_data`.\n  * `tax_id_collection` \n  * `transfer_data` The account (if any) the payments will be attributed to for tax reporting, and where funds from each payment will be transferred to.\n  * `url` The public URL that can be shared with customers.\n"
+    @typedoc "The `payment_link` type.\n\n  * `active` Whether the payment link's `url` is active. If `false`, customers visiting the URL will be shown a page saying that the link has been deactivated.\n  * `after_completion` \n  * `allow_promotion_codes` Whether user redeemable promotion codes are enabled.\n  * `application` The ID of the Connect application that created the Payment Link.\n  * `application_fee_amount` The amount of the application fee (if any) that will be requested to be applied to the payment and transferred to the application owner's Stripe account.\n  * `application_fee_percent` This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account.\n  * `automatic_tax` \n  * `billing_address_collection` Configuration for collecting the customer's billing address. Defaults to `auto`.\n  * `consent_collection` When set, provides configuration to gather active consent from customers.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `custom_fields` Collect additional information from your customer using custom fields. Up to 3 fields are supported.\n  * `custom_text` \n  * `customer_creation` Configuration for Customer creation during checkout.\n  * `id` Unique identifier for the object.\n  * `inactive_message` The custom message to be displayed to a customer when a payment link is no longer active.\n  * `invoice_creation` Configuration for creating invoice for payment mode payment links.\n  * `line_items` The line items representing what is being sold.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name_collection` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account on behalf of which to charge. See the [Connect documentation](https://support.stripe.com/questions/sending-invoices-on-behalf-of-connected-accounts) for details.\n  * `optional_items` The optional items presented to the customer at checkout.\n  * `payment_intent_data` Indicates the parameters to be passed to PaymentIntent creation during checkout.\n  * `payment_method_collection` Configuration for collecting a payment method during checkout. Defaults to `always`.\n  * `payment_method_types` The list of payment method types that customers can use. When `null`, Stripe will dynamically show relevant payment methods you've enabled in your [payment method settings](https://dashboard.stripe.com/settings/payment_methods).\n  * `phone_number_collection` \n  * `restrictions` Settings that restrict the usage of a payment link.\n  * `shipping_address_collection` Configuration for collecting the customer's shipping address.\n  * `shipping_options` The shipping rate options applied to the session.\n  * `submit_type` Indicates the type of transaction being performed which customizes relevant text on the page, such as the submit button.\n  * `subscription_data` When creating a subscription, the specified configuration data will be used. There must be at least one line item with a recurring price to use `subscription_data`.\n  * `tax_id_collection` \n  * `transfer_data` The account (if any) the payments will be attributed to for tax reporting, and where funds from each payment will be transferred to.\n  * `url` The public URL that can be shared with customers.\n"
     @type t :: %__MODULE__{
             active: boolean,
             after_completion: term,
@@ -61,6 +62,7 @@ defmodule Stripe.PaymentLink do
             line_items: term,
             livemode: boolean,
             metadata: term,
+            name_collection: term,
             object: binary,
             on_behalf_of: (binary | Stripe.Account.t()) | nil,
             optional_items: term | nil,
@@ -80,7 +82,7 @@ defmodule Stripe.PaymentLink do
   )
 
   (
-    @typedoc "When set, provides configuration for this item’s quantity to be adjusted by the customer during checkout."
+    @typedoc "When set, provides configuration for the customer to adjust the quantity of the line item created when a customer chooses to add this optional item to their order."
     @type adjustable_quantity :: %{
             optional(:enabled) => boolean,
             optional(:maximum) => integer,
@@ -105,6 +107,11 @@ defmodule Stripe.PaymentLink do
   (
     @typedoc "Configuration for automatic tax collection."
     @type automatic_tax :: %{optional(:enabled) => boolean, optional(:liability) => liability}
+  )
+
+  (
+    @typedoc "Controls settings applied for collecting the customer's business name."
+    @type business :: %{optional(:enabled) => boolean, optional(:optional) => boolean}
   )
 
   (
@@ -162,6 +169,11 @@ defmodule Stripe.PaymentLink do
   )
 
   (
+    @typedoc "Controls settings applied for collecting the customer's individual name."
+    @type individual :: %{optional(:enabled) => boolean, optional(:optional) => boolean}
+  )
+
+  (
     @typedoc "Generate a post-purchase Invoice for one-time payments."
     @type invoice_creation :: %{
             optional(:enabled) => boolean,
@@ -209,6 +221,14 @@ defmodule Stripe.PaymentLink do
             optional(:price) => binary,
             optional(:price_data) => price_data,
             optional(:quantity) => integer
+          }
+  )
+
+  (
+    @typedoc "Controls settings applied for collecting the customer's name."
+    @type name_collection :: %{
+            optional(:business) => business,
+            optional(:individual) => individual
           }
   )
 
@@ -278,7 +298,8 @@ defmodule Stripe.PaymentLink do
             optional(:images) => list(binary),
             optional(:metadata) => %{optional(binary) => binary},
             optional(:name) => binary,
-            optional(:tax_code) => binary
+            optional(:tax_code) => binary,
+            optional(:unit_label) => binary
           }
   )
 
@@ -760,6 +781,7 @@ defmodule Stripe.PaymentLink do
                 optional(:invoice_creation) => invoice_creation,
                 optional(:line_items) => list(line_items),
                 optional(:metadata) => %{optional(binary) => binary},
+                optional(:name_collection) => name_collection,
                 optional(:on_behalf_of) => binary,
                 optional(:optional_items) => list(optional_items),
                 optional(:payment_intent_data) => payment_intent_data,
@@ -786,6 +808,7 @@ defmodule Stripe.PaymentLink do
                     | :klarna
                     | :konbini
                     | :link
+                    | :mb_way
                     | :mobilepay
                     | :multibanco
                     | :oxxo
@@ -848,6 +871,7 @@ defmodule Stripe.PaymentLink do
                 optional(:invoice_creation) => invoice_creation,
                 optional(:line_items) => list(line_items),
                 optional(:metadata) => %{optional(binary) => binary},
+                optional(:name_collection) => name_collection | binary,
                 optional(:payment_intent_data) => payment_intent_data,
                 optional(:payment_method_collection) => :always | :if_required,
                 optional(:payment_method_types) =>
@@ -872,6 +896,7 @@ defmodule Stripe.PaymentLink do
                     | :klarna
                     | :konbini
                     | :link
+                    | :mb_way
                     | :mobilepay
                     | :multibanco
                     | :oxxo

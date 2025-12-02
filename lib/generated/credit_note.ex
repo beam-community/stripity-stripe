@@ -103,8 +103,21 @@ defmodule Stripe.CreditNote do
   )
 
   (
+    @typedoc "The PaymentRecord refund details to link to this credit note. Required when `type` is `payment_record_refund`."
+    @type payment_record_refund :: %{
+            optional(:payment_record) => binary,
+            optional(:refund_group) => binary
+          }
+  )
+
+  (
     @typedoc nil
-    @type refunds :: %{optional(:amount_refunded) => integer, optional(:refund) => binary}
+    @type refunds :: %{
+            optional(:amount_refunded) => integer,
+            optional(:payment_record_refund) => payment_record_refund,
+            optional(:refund) => binary,
+            optional(:type) => :payment_record_refund | :refund
+          }
   )
 
   (

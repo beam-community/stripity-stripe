@@ -40,6 +40,16 @@ defmodule Stripe.CustomerBalanceTransaction do
   )
 
   (
+    @typedoc nil
+    @type created :: %{
+            optional(:gt) => integer,
+            optional(:gte) => integer,
+            optional(:lt) => integer,
+            optional(:lte) => integer
+          }
+  )
+
+  (
     nil
 
     @doc "<p>Returns a list of transactions that updated the customer’s <a href=\"/docs/billing/customer/balance\">balances</a>.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/balance_transactions`\n"
@@ -47,6 +57,7 @@ defmodule Stripe.CustomerBalanceTransaction do
       @spec list(
               customer :: binary(),
               params :: %{
+                optional(:created) => created | integer,
                 optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
                 optional(:limit) => integer,

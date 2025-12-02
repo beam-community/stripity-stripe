@@ -14,7 +14,7 @@ defmodule Stripe.PromotionCodeTest do
   end
 
   test "is creatable" do
-    params = %{code: "FALL21", max_redemptions: 2, coupon: "25OFF"}
+    params = %{code: "FALL21", max_redemptions: 2, promotion: %{coupon: "25OFF", type: :coupon}}
     assert {:ok, %Stripe.PromotionCode{}} = Stripe.PromotionCode.create(params)
     assert_stripe_requested(:post, "/v1/promotion_codes")
   end

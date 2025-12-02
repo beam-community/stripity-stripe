@@ -33,8 +33,10 @@ defmodule Stripe.PaymentMethodConfiguration do
       :is_default,
       :name,
       :id,
+      :crypto,
       :naver_pay,
       :twint,
+      :mb_way,
       :card,
       :apple_pay,
       :klarna,
@@ -65,7 +67,7 @@ defmodule Stripe.PaymentMethodConfiguration do
       :sofort
     ]
 
-    @typedoc "The `payment_method_configuration` type.\n\n  * `acss_debit` \n  * `active` Whether the configuration can be used for new payments.\n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `alma` \n  * `amazon_pay` \n  * `apple_pay` \n  * `application` For child configs, the Connect application associated with the configuration.\n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `billie` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `cartes_bancaires` \n  * `cashapp` \n  * `customer_balance` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `google_pay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `is_default` The default configuration is used whenever a payment method configuration is not specified.\n  * `jcb` \n  * `kakao_pay` \n  * `klarna` \n  * `konbini` \n  * `kr_card` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `mobilepay` \n  * `multibanco` \n  * `name` The configuration's name.\n  * `naver_pay` \n  * `nz_bank_account` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `parent` For child configs, the configuration's parent configuration.\n  * `pay_by_bank` \n  * `payco` \n  * `paynow` \n  * `paypal` \n  * `pix` \n  * `promptpay` \n  * `revolut_pay` \n  * `samsung_pay` \n  * `satispay` \n  * `sepa_debit` \n  * `sofort` \n  * `swish` \n  * `twint` \n  * `us_bank_account` \n  * `wechat_pay` \n  * `zip` \n"
+    @typedoc "The `payment_method_configuration` type.\n\n  * `acss_debit` \n  * `active` Whether the configuration can be used for new payments.\n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `alma` \n  * `amazon_pay` \n  * `apple_pay` \n  * `application` For child configs, the Connect application associated with the configuration.\n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `billie` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `cartes_bancaires` \n  * `cashapp` \n  * `crypto` \n  * `customer_balance` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `google_pay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `is_default` The default configuration is used whenever a payment method configuration is not specified.\n  * `jcb` \n  * `kakao_pay` \n  * `klarna` \n  * `konbini` \n  * `kr_card` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `mb_way` \n  * `mobilepay` \n  * `multibanco` \n  * `name` The configuration's name.\n  * `naver_pay` \n  * `nz_bank_account` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `parent` For child configs, the configuration's parent configuration.\n  * `pay_by_bank` \n  * `payco` \n  * `paynow` \n  * `paypal` \n  * `pix` \n  * `promptpay` \n  * `revolut_pay` \n  * `samsung_pay` \n  * `satispay` \n  * `sepa_debit` \n  * `sofort` \n  * `swish` \n  * `twint` \n  * `us_bank_account` \n  * `wechat_pay` \n  * `zip` \n"
     @type t :: %__MODULE__{
             acss_debit: term,
             active: boolean,
@@ -85,6 +87,7 @@ defmodule Stripe.PaymentMethodConfiguration do
             card: term,
             cartes_bancaires: term,
             cashapp: term,
+            crypto: term,
             customer_balance: term,
             eps: term,
             fpx: term,
@@ -101,6 +104,7 @@ defmodule Stripe.PaymentMethodConfiguration do
             kr_card: term,
             link: term,
             livemode: boolean,
+            mb_way: term,
             mobilepay: term,
             multibanco: term,
             name: binary,
@@ -215,6 +219,11 @@ defmodule Stripe.PaymentMethodConfiguration do
   )
 
   (
+    @typedoc "[Stablecoin payments](https://stripe.com/docs/payments/stablecoin-payments) enable customers to pay in stablecoins like USDC from 100s of wallets including Phantom and Metamask."
+    @type crypto :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
     @typedoc "Uses a customer’s [cash balance](https://stripe.com/docs/payments/customer-balance) for the payment. The cash balance can be funded via a bank transfer. Check this [page](https://stripe.com/docs/payments/bank-transfers) for more details."
     @type customer_balance :: %{optional(:display_preference) => display_preference}
   )
@@ -232,6 +241,11 @@ defmodule Stripe.PaymentMethodConfiguration do
   (
     @typedoc "Financial Process Exchange (FPX) is a Malaysia-based payment method that allows customers to complete transactions online using their bank credentials. Bank Negara Malaysia (BNM), the Central Bank of Malaysia, and eleven other major Malaysian financial institutions are members of the PayNet Group, which owns and operates FPX. It is one of the most popular online payment methods in Malaysia, with nearly 90 million transactions in 2018 according to BNM. Check this [page](https://stripe.com/docs/payments/fpx) for more details."
     @type fpx :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "Meal vouchers in France, or “titres-restaurant”, is a local benefits program commonly offered by employers for their employees to purchase prepared food and beverages on working days. Check this [page](https://stripe.com/docs/payments/benefits/fr-meal-vouchers) for more details."
+    @type fr_meal_voucher_conecs :: %{optional(:display_preference) => display_preference}
   )
 
   (
@@ -282,6 +296,11 @@ defmodule Stripe.PaymentMethodConfiguration do
   (
     @typedoc "[Link](https://stripe.com/docs/payments/link) is a payment method network. With Link, users save their payment details once, then reuse that information to pay with one click for any business on the network."
     @type link :: %{optional(:display_preference) => display_preference}
+  )
+
+  (
+    @typedoc "MB WAY is the most popular wallet in Portugal. After entering their phone number in your checkout, customers approve the payment directly in their MB WAY app. Check this [page](https://stripe.com/docs/payments/mb-way) for more details."
+    @type mb_way :: %{optional(:display_preference) => display_preference}
   )
 
   (
@@ -504,8 +523,10 @@ defmodule Stripe.PaymentMethodConfiguration do
                 optional(:klarna) => klarna,
                 optional(:apple_pay) => apple_pay,
                 optional(:card) => card,
+                optional(:mb_way) => mb_way,
                 optional(:twint) => twint,
                 optional(:naver_pay) => naver_pay,
+                optional(:crypto) => crypto,
                 optional(:name) => binary,
                 optional(:acss_debit) => acss_debit,
                 optional(:link) => link,
@@ -522,6 +543,7 @@ defmodule Stripe.PaymentMethodConfiguration do
                 optional(:alma) => alma,
                 optional(:wechat_pay) => wechat_pay,
                 optional(:promptpay) => promptpay,
+                optional(:fr_meal_voucher_conecs) => fr_meal_voucher_conecs,
                 optional(:samsung_pay) => samsung_pay,
                 optional(:kakao_pay) => kakao_pay,
                 optional(:expand) => list(binary),
@@ -586,8 +608,10 @@ defmodule Stripe.PaymentMethodConfiguration do
                 optional(:klarna) => klarna,
                 optional(:apple_pay) => apple_pay,
                 optional(:card) => card,
+                optional(:mb_way) => mb_way,
                 optional(:twint) => twint,
                 optional(:naver_pay) => naver_pay,
+                optional(:crypto) => crypto,
                 optional(:name) => binary,
                 optional(:acss_debit) => acss_debit,
                 optional(:link) => link,
@@ -604,6 +628,7 @@ defmodule Stripe.PaymentMethodConfiguration do
                 optional(:alma) => alma,
                 optional(:wechat_pay) => wechat_pay,
                 optional(:promptpay) => promptpay,
+                optional(:fr_meal_voucher_conecs) => fr_meal_voucher_conecs,
                 optional(:samsung_pay) => samsung_pay,
                 optional(:kakao_pay) => kakao_pay,
                 optional(:expand) => list(binary),

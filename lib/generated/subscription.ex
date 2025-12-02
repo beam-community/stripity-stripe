@@ -139,7 +139,7 @@ defmodule Stripe.Subscription do
   )
 
   (
-    @typedoc "Mutually exclusive with billing_cycle_anchor and only valid with monthly and yearly price intervals. When provided, the billing_cycle_anchor is set to the next occurence of the day_of_month at the hour, minute, and second UTC."
+    @typedoc "Mutually exclusive with billing_cycle_anchor and only valid with monthly and yearly price intervals. When provided, the billing_cycle_anchor is set to the next occurrence of the day_of_month at the hour, minute, and second UTC."
     @type billing_cycle_anchor_config :: %{
             optional(:day_of_month) => integer,
             optional(:hour) => integer,
@@ -151,7 +151,10 @@ defmodule Stripe.Subscription do
 
   (
     @typedoc "Controls how prorations and invoices for subscriptions are calculated and orchestrated."
-    @type billing_mode :: %{optional(:type) => :classic | :flexible}
+    @type billing_mode :: %{
+            optional(:flexible) => flexible,
+            optional(:type) => :classic | :flexible
+          }
   )
 
   (
@@ -280,6 +283,11 @@ defmodule Stripe.Subscription do
   )
 
   (
+    @typedoc "Configure behavior for flexible billing mode."
+    @type flexible :: %{optional(:proration_discounts) => :included | :itemized}
+  )
+
+  (
     @typedoc "All invoices will be billed using the specified settings."
     @type invoice_settings :: %{
             optional(:account_tax_ids) => list(binary) | binary,
@@ -312,8 +320,12 @@ defmodule Stripe.Subscription do
   )
 
   (
-    @typedoc "Additional fields for Mandate creation"
-    @type mandate_options :: %{optional(:transaction_type) => :business | :personal}
+    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
+    @type mandate_options :: %{
+            optional(:amount) => integer,
+            optional(:amount_type) => :fixed | :maximum,
+            optional(:description) => binary
+          }
   )
 
   (
@@ -355,6 +367,7 @@ defmodule Stripe.Subscription do
                 | :card
                 | :cashapp
                 | :crypto
+                | :custom
                 | :customer_balance
                 | :eps
                 | :fpx
@@ -397,15 +410,16 @@ defmodule Stripe.Subscription do
   )
 
   (
-    @typedoc "The period associated with this invoice item. Defaults to the current period of the subscription."
+    @typedoc "The period associated with this invoice item. If not set, `period.start.type` defaults to `max_item_period_start` and `period.end.type` defaults to `min_item_period_end`."
     @type period :: %{optional(:end) => end_field, optional(:start) => start}
   )
 
   (
-    @typedoc "Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline. One of `price` or `price_data` is required."
+    @typedoc "Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline."
     @type price_data :: %{
             optional(:currency) => binary,
             optional(:product) => binary,
+            optional(:recurring) => recurring,
             optional(:tax_behavior) => :exclusive | :inclusive | :unspecified,
             optional(:unit_amount) => integer,
             optional(:unit_amount_decimal) => binary

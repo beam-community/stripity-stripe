@@ -27,11 +27,6 @@ defmodule Stripe.AccountSession do
   )
 
   (
-    @typedoc "Configuration for the [balance report](/connect/supported-embedded-components/financial-reports#balance-report) embedded component."
-    @type balance_report :: %{optional(:enabled) => boolean, optional(:features) => map()}
-  )
-
-  (
     @typedoc "Configuration for the [balances](/connect/supported-embedded-components/balances/) embedded component."
     @type balances :: %{optional(:enabled) => boolean, optional(:features) => features}
   )
@@ -41,7 +36,6 @@ defmodule Stripe.AccountSession do
     @type components :: %{
             optional(:account_management) => account_management,
             optional(:account_onboarding) => account_onboarding,
-            optional(:balance_report) => balance_report,
             optional(:balances) => balances,
             optional(:disputes_list) => disputes_list,
             optional(:documents) => documents,
@@ -55,7 +49,6 @@ defmodule Stripe.AccountSession do
             optional(:payment_disputes) => payment_disputes,
             optional(:payments) => payments,
             optional(:payout_details) => payout_details,
-            optional(:payout_reconciliation_report) => payout_reconciliation_report,
             optional(:payouts) => payouts,
             optional(:payouts_list) => payouts_list,
             optional(:tax_registrations) => tax_registrations,
@@ -137,14 +130,6 @@ defmodule Stripe.AccountSession do
   (
     @typedoc "Configuration for the [payout details](/connect/supported-embedded-components/payout-details/) embedded component."
     @type payout_details :: %{optional(:enabled) => boolean, optional(:features) => map()}
-  )
-
-  (
-    @typedoc "Configuration for the [payout reconciliation report](/connect/supported-embedded-components/financial-reports#payout-reconciliation-report) embedded component."
-    @type payout_reconciliation_report :: %{
-            optional(:enabled) => boolean,
-            optional(:features) => map()
-          }
   )
 
   (

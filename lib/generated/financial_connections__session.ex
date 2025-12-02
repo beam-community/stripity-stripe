@@ -20,7 +20,7 @@ defmodule Stripe.FinancialConnections.Session do
     @type t :: %__MODULE__{
             account_holder: term | nil,
             accounts: term,
-            client_secret: binary,
+            client_secret: binary | nil,
             filters: term,
             id: binary,
             livemode: boolean,
