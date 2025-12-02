@@ -156,10 +156,7 @@ defmodule Stripe.Subscription do
 
   (
     @typedoc nil
-    @type billing_thresholds :: %{
-            optional(:amount_gte) => integer,
-            optional(:reset_billing_cycle_anchor) => boolean
-          }
+    @type billing_thresholds :: %{optional(:usage_gte) => integer}
   )
 
   (
@@ -315,12 +312,8 @@ defmodule Stripe.Subscription do
   )
 
   (
-    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
-    @type mandate_options :: %{
-            optional(:amount) => integer,
-            optional(:amount_type) => :fixed | :maximum,
-            optional(:description) => binary
-          }
+    @typedoc "Additional fields for Mandate creation"
+    @type mandate_options :: %{optional(:transaction_type) => :business | :personal}
   )
 
   (
@@ -477,17 +470,19 @@ defmodule Stripe.Subscription do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/subscriptions/{subscription_exposed_id}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "subscription_exposed_id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_exposed_id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "subscription_exposed_id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -517,17 +512,19 @@ defmodule Stripe.Subscription do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/subscriptions/{subscription_exposed_id}/discount",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "subscription_exposed_id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_exposed_id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "subscription_exposed_id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -607,17 +604,19 @@ defmodule Stripe.Subscription do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/subscriptions/{subscription_exposed_id}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "subscription_exposed_id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_exposed_id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "subscription_exposed_id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -743,17 +742,19 @@ defmodule Stripe.Subscription do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/subscriptions/{subscription}/migrate",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "subscription",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "subscription",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -790,17 +791,19 @@ defmodule Stripe.Subscription do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/subscriptions/{subscription}/resume",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "subscription",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "subscription",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -869,17 +872,19 @@ defmodule Stripe.Subscription do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/subscriptions/{subscription_exposed_id}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "subscription_exposed_id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "subscription_exposed_id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "subscription_exposed_id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

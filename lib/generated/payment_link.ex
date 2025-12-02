@@ -80,7 +80,7 @@ defmodule Stripe.PaymentLink do
   )
 
   (
-    @typedoc "When set, provides configuration for the customer to adjust the quantity of the line item created when a customer chooses to add this optional item to their order."
+    @typedoc "When set, provides configuration for this item’s quantity to be adjusted by the customer during checkout."
     @type adjustable_quantity :: %{
             optional(:enabled) => boolean,
             optional(:maximum) => integer,
@@ -123,7 +123,15 @@ defmodule Stripe.PaymentLink do
 
   (
     @typedoc nil
-    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
+    @type custom_fields :: %{
+            optional(:dropdown) => dropdown,
+            optional(:key) => binary,
+            optional(:label) => label,
+            optional(:numeric) => numeric,
+            optional(:optional) => boolean,
+            optional(:text) => text,
+            optional(:type) => :dropdown | :numeric | :text
+          }
   )
 
   (
@@ -650,17 +658,19 @@ defmodule Stripe.PaymentLink do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_links/{payment_link}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "payment_link",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_link",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "payment_link",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -699,17 +709,19 @@ defmodule Stripe.PaymentLink do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_links/{payment_link}/line_items",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "payment_link",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_link",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "payment_link",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -893,17 +905,19 @@ defmodule Stripe.PaymentLink do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_links/{payment_link}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "payment_link",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_link",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "payment_link",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

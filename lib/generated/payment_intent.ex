@@ -152,8 +152,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `au_becs_debit` PaymentMethod, this hash contains details about the bank account."
-    @type au_becs_debit :: %{optional(:account_number) => binary, optional(:bsb_number) => binary}
+    @typedoc nil
+    @type au_becs_debit :: %{
+            optional(:setup_future_usage) => :none | :off_session | :on_session,
+            optional(:target_date) => binary
+          }
   )
 
   (
@@ -349,33 +352,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `fpx` PaymentMethod, this hash contains details about the FPX payment method."
-    @type fpx :: %{
-            optional(:account_holder_type) => :company | :individual,
-            optional(:bank) =>
-              :affin_bank
-              | :agrobank
-              | :alliance_bank
-              | :ambank
-              | :bank_islam
-              | :bank_muamalat
-              | :bank_of_china
-              | :bank_rakyat
-              | :bsn
-              | :cimb
-              | :deutsche_bank
-              | :hong_leong_bank
-              | :hsbc
-              | :kfh
-              | :maybank2e
-              | :maybank2u
-              | :ocbc
-              | :pb_enterprise
-              | :public_bank
-              | :rhb
-              | :standard_chartered
-              | :uob
-          }
+    @typedoc nil
+    @type fpx :: %{optional(:setup_future_usage) => :none}
   )
 
   (
@@ -389,27 +367,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is an `ideal` PaymentMethod, this hash contains details about the iDEAL payment method."
-    @type ideal :: %{
-            optional(:bank) =>
-              :abn_amro
-              | :asn_bank
-              | :bunq
-              | :buut
-              | :handelsbanken
-              | :ing
-              | :knab
-              | :moneyou
-              | :n26
-              | :nn
-              | :rabobank
-              | :regiobank
-              | :revolut
-              | :sns_bank
-              | :triodos_bank
-              | :van_lanschot
-              | :yoursafe
-          }
+    @typedoc nil
+    @type ideal :: %{optional(:setup_future_usage) => :none | :off_session}
   )
 
   (
@@ -426,8 +385,60 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method."
-    @type klarna :: %{optional(:dob) => dob}
+    @typedoc nil
+    @type klarna :: %{
+            optional(:capture_method) => :manual,
+            optional(:on_demand) => on_demand,
+            optional(:preferred_locale) =>
+              :"cs-CZ"
+              | :"da-DK"
+              | :"de-AT"
+              | :"de-CH"
+              | :"de-DE"
+              | :"el-GR"
+              | :"en-AT"
+              | :"en-AU"
+              | :"en-BE"
+              | :"en-CA"
+              | :"en-CH"
+              | :"en-CZ"
+              | :"en-DE"
+              | :"en-DK"
+              | :"en-ES"
+              | :"en-FI"
+              | :"en-FR"
+              | :"en-GB"
+              | :"en-GR"
+              | :"en-IE"
+              | :"en-IT"
+              | :"en-NL"
+              | :"en-NO"
+              | :"en-NZ"
+              | :"en-PL"
+              | :"en-PT"
+              | :"en-RO"
+              | :"en-SE"
+              | :"en-US"
+              | :"es-ES"
+              | :"es-US"
+              | :"fi-FI"
+              | :"fr-BE"
+              | :"fr-CA"
+              | :"fr-CH"
+              | :"fr-FR"
+              | :"it-CH"
+              | :"it-IT"
+              | :"nb-NO"
+              | :"nl-BE"
+              | :"nl-NL"
+              | :"pl-PL"
+              | :"pt-PT"
+              | :"ro-RO"
+              | :"sv-FI"
+              | :"sv-SE",
+            optional(:setup_future_usage) => :none | :off_session | :on_session,
+            optional(:subscriptions) => list(subscriptions) | binary
+          }
   )
 
   (
@@ -464,12 +475,17 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Additional fields for Mandate creation"
+    @typedoc "Configuration options for setting up an eMandate for cards issued in India."
     @type mandate_options :: %{
-            optional(:custom_mandate_url) => binary | binary,
-            optional(:interval_description) => binary,
-            optional(:payment_schedule) => :combined | :interval | :sporadic,
-            optional(:transaction_type) => :business | :personal
+            optional(:amount) => integer,
+            optional(:amount_type) => :fixed | :maximum,
+            optional(:description) => binary,
+            optional(:end_date) => integer,
+            optional(:interval) => :day | :month | :sporadic | :week | :year,
+            optional(:interval_count) => integer,
+            optional(:reference) => binary,
+            optional(:start_date) => integer,
+            optional(:supported_types) => list(:india)
           }
   )
 
@@ -487,11 +503,8 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc nil
-    @type naver_pay :: %{
-            optional(:capture_method) => :manual,
-            optional(:setup_future_usage) => :none | :off_session
-          }
+    @typedoc "If this is a `naver_pay` PaymentMethod, this hash contains details about the Naver Pay payment method."
+    @type naver_pay :: %{optional(:funding) => :card | :points}
   )
 
   (
@@ -807,7 +820,7 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "Options to configure Radar. See [Radar Session](https://stripe.com/docs/radar/radar-session) for more information."
+    @typedoc "Options to configure Radar. Learn more about [Radar Sessions](https://stripe.com/docs/radar/radar-session)."
     @type radar_options :: %{optional(:session) => binary}
   )
 
@@ -851,8 +864,11 @@ defmodule Stripe.PaymentIntent do
   )
 
   (
-    @typedoc "If this is a `sofort` PaymentMethod, this hash contains details about the SOFORT payment method."
-    @type sofort :: %{optional(:country) => :AT | :BE | :DE | :ES | :IT | :NL}
+    @typedoc nil
+    @type sofort :: %{
+            optional(:preferred_language) => :de | :en | :es | :fr | :it | :nl | :pl,
+            optional(:setup_future_usage) => :none | :off_session
+          }
   )
 
   (
@@ -972,17 +988,19 @@ defmodule Stripe.PaymentIntent do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_intents/{intent}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "intent",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "intent",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1169,17 +1187,19 @@ defmodule Stripe.PaymentIntent do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_intents/{intent}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "intent",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "intent",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1215,17 +1235,19 @@ defmodule Stripe.PaymentIntent do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_intents/{intent}/apply_customer_balance",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "intent",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "intent",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1261,17 +1283,19 @@ defmodule Stripe.PaymentIntent do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_intents/{intent}/cancel",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "intent",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "intent",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1312,17 +1336,19 @@ defmodule Stripe.PaymentIntent do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_intents/{intent}/capture",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "intent",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "intent",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1372,17 +1398,19 @@ defmodule Stripe.PaymentIntent do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_intents/{intent}/confirm",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "intent",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "intent",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1422,17 +1450,19 @@ defmodule Stripe.PaymentIntent do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_intents/{intent}/increment_authorization",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "intent",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "intent",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1468,17 +1498,19 @@ defmodule Stripe.PaymentIntent do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_intents/{intent}/verify_microdeposits",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "intent",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "intent",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "intent",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

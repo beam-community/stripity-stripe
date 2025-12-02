@@ -80,17 +80,19 @@ defmodule Stripe.ScheduledQueryRun do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/sigma/scheduled_query_runs/{scheduled_query_run}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "scheduled_query_run",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "scheduled_query_run",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "scheduled_query_run",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

@@ -68,7 +68,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The company's primary address."
+    @typedoc "The individual's primary address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -80,7 +80,7 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The Kana variation of the company's primary address (Japan only)."
+    @typedoc "The Kana variation of the individual's primary address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -275,8 +275,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The card_issuing capability."
-    @type card_issuing :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to the account's use of the Card Issuing product."
+    @type card_issuing :: %{optional(:tos_acceptance) => tos_acceptance}
   )
 
   (
@@ -798,12 +798,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Details on the account's acceptance of the [Stripe Services Agreement](/connect/updating-accounts#tos-acceptance). This property can only be updated for accounts where [controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts. This property defaults to a `full` service agreement when empty."
+    @typedoc "Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](/issuing/connect/tos_acceptance)."
     @type tos_acceptance :: %{
             optional(:date) => integer,
             optional(:ip) => binary,
-            optional(:service_agreement) => binary,
-            optional(:user_agent) => binary
+            optional(:user_agent) => binary | binary
           }
   )
 
@@ -813,8 +812,8 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "The treasury capability."
-    @type treasury :: %{optional(:requested) => boolean}
+    @typedoc "Settings specific to the account's Treasury FinancialAccounts."
+    @type treasury :: %{optional(:tos_acceptance) => tos_acceptance}
   )
 
   (
@@ -833,8 +832,11 @@ defmodule Stripe.Account do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
@@ -854,17 +856,19 @@ defmodule Stripe.Account do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -946,17 +950,19 @@ defmodule Stripe.Account do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/capabilities",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -996,17 +1002,19 @@ defmodule Stripe.Account do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/persons",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1095,17 +1103,19 @@ defmodule Stripe.Account do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1136,17 +1146,19 @@ defmodule Stripe.Account do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/reject",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

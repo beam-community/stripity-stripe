@@ -87,17 +87,19 @@ defmodule Stripe.Radar.EarlyFraudWarning do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/radar/early_fraud_warnings/{early_fraud_warning}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "early_fraud_warning",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "early_fraud_warning",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "early_fraud_warning",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

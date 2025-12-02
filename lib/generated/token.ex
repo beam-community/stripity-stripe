@@ -20,11 +20,12 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Details on the legal guardian's acceptance of the main Stripe service agreement."
+    @typedoc "Information for the account this token represents."
     @type account :: %{
-            optional(:date) => integer,
-            optional(:ip) => binary,
-            optional(:user_agent) => binary | binary
+            optional(:business_type) => :company | :government_entity | :individual | :non_profit,
+            optional(:company) => company,
+            optional(:individual) => individual,
+            optional(:tos_shown_and_accepted) => boolean
           }
   )
 
@@ -39,7 +40,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The person's address."
+    @typedoc "The individual's primary address."
     @type address :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -51,7 +52,7 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "The Kana variation of the company's primary address (Japan only)."
+    @typedoc "The Kana variation of the individual's primary address (Japan only)."
     @type address_kana :: %{
             optional(:city) => binary,
             optional(:country) => binary,
@@ -383,8 +384,11 @@ defmodule Stripe.Token do
   )
 
   (
-    @typedoc "Information on the verification state of the company."
-    @type verification :: %{optional(:document) => document}
+    @typedoc "The individual's verification document information."
+    @type verification :: %{
+            optional(:additional_document) => additional_document,
+            optional(:document) => document
+          }
   )
 
   (
@@ -407,17 +411,19 @@ defmodule Stripe.Token do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/tokens/{token}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "token",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "token",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "token",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

@@ -164,7 +164,7 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
-    @typedoc "When set, provides configuration for this item’s quantity to be adjusted by the customer during Checkout."
+    @typedoc "When set, provides configuration for the customer to adjust the quantity of the line item created when a customer chooses to add this optional item to their order."
     @type adjustable_quantity :: %{
             optional(:enabled) => boolean,
             optional(:maximum) => integer,
@@ -304,7 +304,15 @@ defmodule Stripe.Checkout.Session do
 
   (
     @typedoc nil
-    @type custom_fields :: %{optional(:name) => binary, optional(:value) => binary}
+    @type custom_fields :: %{
+            optional(:dropdown) => dropdown,
+            optional(:key) => binary,
+            optional(:label) => label,
+            optional(:numeric) => numeric,
+            optional(:optional) => boolean,
+            optional(:text) => text,
+            optional(:type) => :dropdown | :numeric | :text
+          }
   )
 
   (
@@ -501,19 +509,13 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
-    @typedoc "contains details about the Link payment method options."
-    @type link :: %{optional(:setup_future_usage) => :none | :off_session}
+    @typedoc "contains details about the Link wallet options."
+    @type link :: %{optional(:display) => :auto | :never}
   )
 
   (
     @typedoc "Additional fields for Mandate creation"
-    @type mandate_options :: %{
-            optional(:custom_mandate_url) => binary | binary,
-            optional(:default_for) => list(:invoice | :subscription),
-            optional(:interval_description) => binary,
-            optional(:payment_schedule) => :combined | :interval | :sporadic,
-            optional(:transaction_type) => :business | :personal
-          }
+    @type mandate_options :: %{optional(:reference_prefix) => binary | binary}
   )
 
   (
@@ -1180,11 +1182,8 @@ defmodule Stripe.Checkout.Session do
   )
 
   (
-    @typedoc "If specified, the funds from the subscription's invoices will be transferred to the destination and the ID of the resulting transfers will be found on the resulting charges."
-    @type transfer_data :: %{
-            optional(:amount_percent) => number,
-            optional(:destination) => binary
-          }
+    @typedoc "The parameters used to automatically create a Transfer when the payment succeeds.\nFor more information, see the PaymentIntents [use case for connected accounts](https://stripe.com/docs/payments/connected-accounts)."
+    @type transfer_data :: %{optional(:amount) => integer, optional(:destination) => binary}
   )
 
   (
@@ -1270,17 +1269,19 @@ defmodule Stripe.Checkout.Session do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/checkout/sessions/{session}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "session",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "session",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "session",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1319,17 +1320,19 @@ defmodule Stripe.Checkout.Session do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/checkout/sessions/{session}/line_items",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "session",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "session",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "session",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1529,17 +1532,19 @@ defmodule Stripe.Checkout.Session do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/checkout/sessions/{session}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "session",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "session",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "session",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -1573,17 +1578,19 @@ defmodule Stripe.Checkout.Session do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/checkout/sessions/{session}/expire",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "session",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "session",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "session",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

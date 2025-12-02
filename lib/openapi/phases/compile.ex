@@ -96,7 +96,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
                   path =
                     Stripe.OpenApi.Path.replace_path_params(
                       unquote(operation_definition.path),
-                      unquote(operation_definition.path_parameters),
+                      unquote(Macro.escape(operation_definition.path_parameters)),
                       unquote(argument_names)
                     )
 
@@ -144,7 +144,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
                     path =
                       Stripe.OpenApi.Path.replace_path_params(
                         unquote(operation_definition.path),
-                        unquote(operation_definition.path_parameters),
+                        unquote(Macro.escape(operation_definition.path_parameters)),
                         unquote(argument_values)
                       )
 
