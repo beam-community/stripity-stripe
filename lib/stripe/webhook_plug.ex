@@ -131,15 +131,29 @@ if Code.ensure_loaded?(Plug) do
         ) do
       secret = parse_secret!(secret)
 
-      with [signature] <- get_req_header(conn, "stripe-signature"),
-           {:ok, payload, conn} = Conn.read_body(conn),
-           {:ok, %Stripe.Event{} = event} <- construct_event(payload, signature, secret, opts),
-           :ok <- handle_event!(handler, event) do
-        send_resp(conn, 200, "Webhook received.") |> halt()
-      else
-        {:handle_error, reason} -> send_resp(conn, 400, reason) |> halt()
-        _ -> send_resp(conn, 400, "Bad request.") |> halt()
+      try do
+        signature =
+          case get_req_header(conn, "stripe-signature") do
+            [signature] -> signature
+            _ -> throw(conn)
+          end
+
+        {:ok, payload, conn} = Conn.read_body(conn)
+
+        event =
+          case construct_event(payload, signature, secret, opts) do
+            {:ok, %Stripe.Event{} = event} -> event
+            _ -> throw(conn)
+          end
+
+        case handle_event!(handler, event) do
+          :ok -> send_resp(conn, 200, "Webhook received.")
+          {:handle_error, reason} -> send_resp(conn, 400, reason)
+        end
+      catch
+        conn -> send_resp(conn, 400, "Bad request.")
       end
+      |> halt()
     end
 
     @impl true
