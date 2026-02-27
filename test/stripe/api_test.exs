@@ -105,7 +105,10 @@ defmodule Stripe.APITest do
   end
 
   test "oauth_request sets authorization header for deauthorize request" do
-    defmodule HackneyMock1 do
+    defmodule OAuthHeaderMock do
+      @behaviour Stripe.HTTP
+
+      @impl true
       def request(_, _, headers, _, _) do
         kv_headers =
           headers
@@ -113,9 +116,12 @@ defmodule Stripe.APITest do
 
         {:ok, 200, headers, Jason.encode!(kv_headers)}
       end
+
+      @impl true
+      def supervisor_children, do: []
     end
 
-    Application.put_env(:stripity_stripe, :http_module, HackneyMock1)
+    Application.put_env(:stripity_stripe, :http_module, OAuthHeaderMock)
 
     {:ok, body} = Stripe.API.oauth_request(:post, "deauthorize", %{})
     assert body["Authorization"] == "Bearer sk_test_123"
@@ -125,45 +131,5 @@ defmodule Stripe.APITest do
 
     {:ok, body} = Stripe.API.oauth_request(:post, "token", %{})
     assert Map.keys(body) |> Enum.member?("Authorization") == false
-  end
-
-  test "reads hackney timeout opts from config" do
-    # Return request opts as response body
-    defmodule HackneyMock2 do
-      def request(_, _, headers, _, opts) do
-        kv_opts =
-          opts
-          |> Enum.reduce(%{}, fn opt, acc ->
-            case opt do
-              {k, v} ->
-                Map.put(acc, k, v)
-
-              _ ->
-                Map.put(acc, opt, opt)
-            end
-          end)
-
-        {:ok, 200, headers, Jason.encode!(kv_opts)}
-      end
-    end
-
-    Application.put_env(:stripity_stripe, :http_module, HackneyMock2)
-
-    {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
-    refute Map.has_key?(request_opts, "connect_timeout")
-    refute Map.has_key?(request_opts, "recv_timeout")
-
-    Application.put_env(:stripity_stripe, :hackney_opts, [
-      {:connect_timeout, 1000},
-      {:recv_timeout, 5000}
-    ])
-
-    {:ok, request_opts} = Stripe.API.oauth_request(:post, "token", %{})
-    assert request_opts["connect_timeout"] == 1000
-    assert request_opts["recv_timeout"] == 5000
-
-    {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
-    assert request_opts["connect_timeout"] == 1000
-    assert request_opts["recv_timeout"] == 5000
   end
 end

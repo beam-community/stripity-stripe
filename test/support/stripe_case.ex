@@ -59,17 +59,35 @@ defmodule Stripe.StripeCase do
     stripe_base_url() <> path <> "?" <> URI.encode_query(query_params)
   end
 
-  defmodule HackneyMock do
-    @doc """
-    Send message to the owning process for each request so we can assert that
-    the request was made.
+  defmodule HTTPMock do
+    @moduledoc """
+    Test mock that implements the Stripe.HTTP behaviour.
 
+    Sends a message to the test process for each request so assertions
+    can verify the request was made, then delegates to the real HTTP
+    adapter configured via `:test_http_adapter` app env.
     """
+    @behaviour Stripe.HTTP
+
+    @impl true
     def request(method, path, headers, body, opts) do
       send(self(), {method, path, headers, body, opts})
 
-      :hackney.request(method, path, headers, body, opts)
+      adapter = Application.get_env(:stripity_stripe, :test_http_adapter, Stripe.HTTP.Hackney)
+      adapter.request(method, path, headers, body, opts)
     end
+
+    @impl true
+    def supervisor_children do
+      adapter = Application.get_env(:stripity_stripe, :test_http_adapter, Stripe.HTTP.Hackney)
+      adapter.supervisor_children()
+    end
+  end
+
+  # Backward-compatible alias
+  defmodule HackneyMock do
+    @moduledoc false
+    defdelegate request(method, path, headers, body, opts), to: HTTPMock
   end
 
   using do
@@ -82,7 +100,7 @@ defmodule Stripe.StripeCase do
           stripe_base_url: 0
         ]
 
-      Application.put_env(:stripity_stripe, :http_module, HackneyMock)
+      Application.put_env(:stripity_stripe, :http_module, HTTPMock)
     end
   end
 end

@@ -20,13 +20,14 @@ jobs:
       SKIP_STRIPE_MOCK_RUN: true
       SHELL: /bin/bash # erlexec needs this
     runs-on: ubuntu-latest
-    name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}})
+    name: Test (OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}} / ${{matrix.http_client}})
     strategy:
       matrix:
         # elixir: ["1.14", "1.15", "1.16"]
         # otp: [24, 25, 26]
         elixir: ["1.18"]
         otp: [27]
+        http_client: ["hackney", "req"]
     services:
       stripe-mock:
         image: stripe/stripe-mock:v0.144.0
@@ -45,6 +46,8 @@ jobs:
         run: mix deps.get
       - name: Test
         run: mix test
+        env:
+          STRIPE_HTTP_CLIENT: ${{ matrix.http_client }}
 
   lint:
     runs-on: ubuntu-latest

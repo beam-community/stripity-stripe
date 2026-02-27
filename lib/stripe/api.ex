@@ -15,7 +15,6 @@ defmodule Stripe.API do
   @typep http_success :: {:ok, integer, [{String.t(), String.t()}], String.t()}
   @typep http_failure :: {:error, term}
 
-  @pool_name __MODULE__
   @api_version "2022-11-15"
 
   @idempotency_key_header "Idempotency-Key"
@@ -35,16 +34,7 @@ defmodule Stripe.API do
   end
 
   def supervisor_children do
-    if use_pool?() do
-      [:hackney_pool.child_spec(@pool_name, get_pool_options())]
-    else
-      []
-    end
-  end
-
-  @spec get_pool_options() :: Keyword.t()
-  defp get_pool_options() do
-    Config.resolve(:pool_options)
+    http_module().supervisor_children()
   end
 
   @spec get_base_url() :: String.t()
@@ -68,14 +58,9 @@ defmodule Stripe.API do
     Config.resolve(:api_version, @api_version)
   end
 
-  @spec use_pool?() :: boolean
-  defp use_pool?() do
-    Config.resolve(:use_connection_pool)
-  end
-
   @spec http_module() :: module
   defp http_module() do
-    Config.resolve(:http_module, :hackney)
+    Stripe.HTTP.resolve_http_module()
   end
 
   @spec retry_config() :: Keyword.t()
@@ -194,29 +179,6 @@ defmodule Stripe.API do
     })
   end
 
-  @spec add_default_options(list) :: list
-  defp add_default_options(opts) do
-    [:with_body | opts]
-  end
-
-  @spec add_pool_option(list) :: list
-  defp add_pool_option(opts) do
-    if use_pool?() do
-      [{:pool, @pool_name} | opts]
-    else
-      opts
-    end
-  end
-
-  @spec add_options_from_config(list) :: list
-  defp add_options_from_config(opts) do
-    if is_list(Stripe.Config.resolve(:hackney_opts)) do
-      opts ++ Stripe.Config.resolve(:hackney_opts)
-    else
-      opts
-    end
-  end
-
   @doc """
   A low level utility function to make a direct request to the Stripe API
 
@@ -324,13 +286,7 @@ defmodule Stripe.API do
       |> add_api_version(api_version)
       |> add_idempotency_headers(method)
 
-    req_opts =
-      []
-      |> add_default_options()
-      |> add_pool_option()
-      |> add_options_from_config()
-
-    do_perform_request(method, req_url, req_headers, req_body, req_opts)
+    do_perform_request(method, req_url, req_headers, req_body, [])
   end
 
   @spec perform_request(String.t(), method, body, headers, list) ::
@@ -348,13 +304,7 @@ defmodule Stripe.API do
       |> add_api_version(api_version)
       |> add_idempotency_headers(method)
 
-    req_opts =
-      opts
-      |> add_default_options()
-      |> add_pool_option()
-      |> add_options_from_config()
-
-    do_perform_request(method, req_url, req_headers, body, req_opts)
+    do_perform_request(method, req_url, req_headers, body, opts)
   end
 
   @spec do_perform_request(method, String.t(), headers, body, list) ::
@@ -454,19 +404,15 @@ defmodule Stripe.API do
   defp retry_response?(_response), do: false
 
   @spec handle_response(http_success | http_failure) :: {:ok, map} | {:error, Stripe.Error.t()}
-  defp handle_response({:ok, status, headers, body}) when status >= 200 and status <= 299 do
-    decoded_body =
-      body
-      |> decompress_body(headers)
-      |> json_library().decode!()
-
+  defp handle_response({:ok, status, _headers, body}) when status >= 200 and status <= 299 do
+    decoded_body = json_library().decode!(body)
     {:ok, decoded_body}
   end
 
   defp handle_response({:ok, status, headers, body}) when status >= 300 and status <= 599 do
     request_id =
       Enum.find_value(headers, fn
-        {"Request-Id", request_id} -> request_id
+        {key, value} -> if String.downcase(key) == "request-id", do: value
         _header -> nil
       end)
 
@@ -487,18 +433,8 @@ defmodule Stripe.API do
   end
 
   defp handle_response({:error, reason}) do
-    error = Error.from_hackney_error(reason)
+    error = Error.from_network_error(reason)
     {:error, error}
-  end
-
-  defp decompress_body(body, headers) do
-    headers_dict = :hackney_headers.new(headers)
-
-    case :hackney_headers.get_value("Content-Encoding", headers_dict) do
-      "gzip" -> :zlib.gunzip(body)
-      "deflate" -> :zlib.unzip(body)
-      _ -> body
-    end
   end
 
   defp prepend_url("", url), do: url
