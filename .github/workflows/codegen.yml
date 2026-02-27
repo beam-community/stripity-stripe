@@ -2,12 +2,13 @@ name: stripe-codegen
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-  schedule:
-    ## Scheduled nightly at 00:23
-    - cron: '23 0 * * *'
+  # disable for now, codegen is currently broken pending a new PR
+  # push:
+  #   branches:
+  #     - main
+  # schedule:
+  #   ## Scheduled nightly at 00:23
+  #   - cron: '23 0 * * *'
 
 jobs:
   check:
@@ -47,11 +48,11 @@ jobs:
     strategy:
       fail-fast: false
     services:
-       stripe-mock:
-         image: stripe/stripe-mock:v0.144.0
-         ports:
-           - 12111:12111
-           - 12112:12112
+      stripe-mock:
+        image: stripe/stripe-mock:v0.144.0
+        ports:
+          - 12111:12111
+          - 12112:12112
     steps:
       - uses: actions/checkout@v2
 
