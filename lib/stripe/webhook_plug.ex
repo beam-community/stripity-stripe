@@ -151,7 +151,7 @@ if Code.ensure_loaded?(Plug) do
           {:handle_error, reason} -> send_resp(conn, 400, reason)
         end
       catch
-        conn -> send_resp(conn, 400, "Bad request.")
+        :throw, %Conn{} = conn -> send_resp(conn, 400, "Bad request.")
       end
       |> halt()
     end
