@@ -13,10 +13,6 @@ defmodule Stripe.Connect.OAuth do
 
   alias Stripe.{Config, Converter}
 
-  @callback token(code :: String.t()) :: {:ok, map}
-  @callback authorize_url(map) :: String.t()
-  @callback deauthorize_url(url :: String.t()) :: {:ok, map}
-
   @authorize_url_valid_keys [
     :always_prompt,
     :client_id,
@@ -27,6 +23,10 @@ defmodule Stripe.Connect.OAuth do
     :stripe_landing,
     :stripe_user
   ]
+
+  @callback token(code :: String.t()) :: {:ok, map}
+  @callback authorize_url(map) :: String.t()
+  @callback deauthorize_url(url :: String.t()) :: {:ok, map}
 
   defmodule AuthorizeResponse do
     defstruct [
@@ -76,7 +76,7 @@ defmodule Stripe.Connect.OAuth do
   }
   ```
   """
-  @spec token(String.t(), Stripe.options()) :: {:ok, map} | {:error, %Stripe.Error{}}
+  @spec token(String.t(), Stripe.options()) :: {:ok, map} | {:error, Stripe.Error.t()}
   def token(code, opts \\ []) do
     endpoint = "token"
     {api_key, _} = Keyword.pop(opts, :api_key)
@@ -104,7 +104,7 @@ defmodule Stripe.Connect.OAuth do
   ```
 
   """
-  @spec deauthorize(String.t()) :: {:ok, map} | {:error, %Stripe.Error{}}
+  @spec deauthorize(String.t()) :: {:ok, map} | {:error, Stripe.Error.t()}
   def deauthorize(stripe_user_id) do
     endpoint = "deauthorize"
 
@@ -197,17 +197,17 @@ defmodule Stripe.Connect.OAuth do
   end
 
   @spec get_client_id() :: String.t()
-  defp get_client_id() do
+  defp get_client_id do
     Config.resolve(:connect_client_id)
   end
 
   @spec get_client_secret() :: String.t()
-  defp get_client_secret() do
+  defp get_client_secret do
     Config.resolve(:api_key)
   end
 
   @spec get_default_authorize_map() :: map
-  defp get_default_authorize_map() do
+  defp get_default_authorize_map do
     %{
       client_id: get_client_id(),
       response_type: "code",

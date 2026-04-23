@@ -1,9 +1,11 @@
 defmodule Stripe.Reporting.ReportRunTest do
   use Stripe.StripeCase, async: true
 
+  alias Stripe.Reporting.ReportRun
+
   test "is creatable" do
-    assert {:ok, %Stripe.Reporting.ReportRun{}} =
-             Stripe.Reporting.ReportRun.create(%{
+    assert {:ok, %ReportRun{}} =
+             ReportRun.create(%{
                parameters: %{interval_start: 100, interval_end: 200},
                report_type: "balance.summary.1"
              })
@@ -12,14 +14,14 @@ defmodule Stripe.Reporting.ReportRunTest do
   end
 
   test "is retrievable" do
-    assert {:ok, %Stripe.Reporting.ReportRun{}} = Stripe.Reporting.ReportRun.retrieve("frr_123")
+    assert {:ok, %ReportRun{}} = ReportRun.retrieve("frr_123")
     assert_stripe_requested(:get, "/v1/reporting/report_runs/frr_123")
   end
 
   test "is listable" do
-    assert {:ok, %Stripe.List{data: report_runs}} = Stripe.Reporting.ReportRun.list()
+    assert {:ok, %Stripe.List{data: report_runs}} = ReportRun.list()
     assert_stripe_requested(:get, "/v1/reporting/report_runs")
     assert is_list(report_runs)
-    assert %Stripe.Reporting.ReportRun{} = hd(report_runs)
+    assert %ReportRun{} = hd(report_runs)
   end
 end

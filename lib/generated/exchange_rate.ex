@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.ExchangeRate do
   use Stripe.Entity
 

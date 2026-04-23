@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Tax.CalculationLineItem do
   use Stripe.Entity
   @moduledoc ""

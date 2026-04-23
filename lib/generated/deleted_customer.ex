@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.DeletedCustomer do
   use Stripe.Entity
   @moduledoc ""

@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.DeletedRadar.ValueList do
   use Stripe.Entity
   @moduledoc ""

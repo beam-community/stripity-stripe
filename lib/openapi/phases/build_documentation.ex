@@ -2,9 +2,8 @@ defmodule Stripe.OpenApi.Phases.BuildDocumentation do
   @moduledoc false
   def run(blueprint, _options \\ []) do
     operations =
-      Enum.map(blueprint.operations, fn {key, operation} ->
-        {key, build_description(operation)}
-      end)
+      blueprint.operations
+      |> Enum.map(fn {key, operation} -> {key, build_description(operation)} end)
       |> Map.new()
 
     {:ok, %{blueprint | operations: operations}}

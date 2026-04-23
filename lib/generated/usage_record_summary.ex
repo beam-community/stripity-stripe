@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.UsageRecordSummary do
   use Stripe.Entity
   @moduledoc ""

@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Tax.Registration do
   use Stripe.Entity
 

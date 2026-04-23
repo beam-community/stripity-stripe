@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Item do
   use Stripe.Entity
   @moduledoc "A line item."

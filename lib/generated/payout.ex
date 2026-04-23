@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Payout do
   use Stripe.Entity
 

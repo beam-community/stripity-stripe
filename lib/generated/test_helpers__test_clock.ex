@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.TestHelpers.TestClock do
   use Stripe.Entity
 

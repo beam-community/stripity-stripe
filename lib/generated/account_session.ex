@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.AccountSession do
   use Stripe.Entity
 

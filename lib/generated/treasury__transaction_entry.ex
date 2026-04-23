@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Treasury.TransactionEntry do
   use Stripe.Entity
 

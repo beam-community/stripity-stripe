@@ -1,9 +1,11 @@
 defmodule Stripe.Issuing.AuthorizationTest do
   use Stripe.StripeCase, async: true
 
+  alias Stripe.Issuing.Authorization
+
   test "is retrievable" do
-    assert {:ok, %Stripe.Issuing.Authorization{}} =
-             Stripe.Issuing.Authorization.retrieve("iauth_123")
+    assert {:ok, %Authorization{}} =
+             Authorization.retrieve("iauth_123")
 
     assert_stripe_requested(:get, "/v1/issuing/authorizations/iauth_123")
   end
@@ -11,16 +13,16 @@ defmodule Stripe.Issuing.AuthorizationTest do
   test "is updateable" do
     params = %{metadata: %{key: "value"}}
 
-    assert {:ok, %Stripe.Issuing.Authorization{}} =
-             Stripe.Issuing.Authorization.update("iauth_123", params)
+    assert {:ok, %Authorization{}} =
+             Authorization.update("iauth_123", params)
 
     assert_stripe_requested(:post, "/v1/issuing/authorizations/iauth_123")
   end
 
   test "is listable" do
-    assert {:ok, %Stripe.List{data: authorizations}} = Stripe.Issuing.Authorization.list()
+    assert {:ok, %Stripe.List{data: authorizations}} = Authorization.list()
     assert_stripe_requested(:get, "/v1/issuing/authorizations")
     assert is_list(authorizations)
-    assert %Stripe.Issuing.Authorization{} = hd(authorizations)
+    assert %Authorization{} = hd(authorizations)
   end
 end

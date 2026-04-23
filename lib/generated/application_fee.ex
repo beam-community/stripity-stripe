@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.ApplicationFee do
   use Stripe.Entity
   @moduledoc ""

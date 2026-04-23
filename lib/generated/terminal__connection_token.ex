@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Terminal.ConnectionToken do
   use Stripe.Entity
 

@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.LineItem do
   use Stripe.Entity
 

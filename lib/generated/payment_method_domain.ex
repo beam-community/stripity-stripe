@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.PaymentMethodDomain do
   use Stripe.Entity
 

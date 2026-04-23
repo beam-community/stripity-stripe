@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.FundingInstructions do
   use Stripe.Entity
 

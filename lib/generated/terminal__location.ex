@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Terminal.Location do
   use Stripe.Entity
 

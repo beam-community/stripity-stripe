@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.FinancialConnections.Transaction do
   use Stripe.Entity
 

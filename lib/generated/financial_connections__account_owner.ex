@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.FinancialConnections.AccountOwner do
   use Stripe.Entity
   @moduledoc "Describes an owner of an account."

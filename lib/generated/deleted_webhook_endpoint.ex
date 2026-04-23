@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.DeletedWebhookEndpoint do
   use Stripe.Entity
   @moduledoc ""

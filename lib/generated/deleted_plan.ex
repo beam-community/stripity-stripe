@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.DeletedPlan do
   use Stripe.Entity
   @moduledoc ""

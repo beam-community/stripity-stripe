@@ -5,6 +5,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
     after and catch do else end false fn for if in nil not or receive rescue true try when with
   )a
 
+  # credo:disable-for-next-line Credo.Check.Refactor.CyclomaticComplexity
   def run(blueprint, _options) do
     modules = Enum.map(blueprint.components, fn {_k, component} -> component.module end)
 
@@ -13,21 +14,21 @@ defmodule Stripe.OpenApi.Phases.Compile do
         for operation <- component.operations,
             operation_definition =
               lookup_operation(
+                # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
                 {operation["path"], String.to_atom(operation["operation"])},
                 blueprint.operations
               ),
             operation_definition != nil do
+          # credo:disable-for-lines:2 Credo.Check.Warning.UnsafeToAtom
           arguments =
-            operation_definition.path_parameters
-            |> Enum.map(&String.to_atom(&1.name))
+            Enum.map(operation_definition.path_parameters, &String.to_atom(&1.name))
 
           params? =
             match?({:object, _, [_ | _]}, operation_definition.query_parameters) ||
               match?({:object, _, [_ | _]}, operation_definition.body_parameters)
 
           argument_names =
-            arguments
-            |> Enum.map(fn
+            Enum.map(arguments, fn
               name ->
                 Macro.var(name, __MODULE__)
             end)
@@ -40,8 +41,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
             end)
 
           argument_specs =
-            arguments
-            |> Enum.map(fn
+            Enum.map(arguments, fn
               :params ->
                 quote do
                   params :: map()
@@ -57,6 +57,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
             operation_definition
             |> to_func_name(operation)
             |> Macro.underscore()
+            # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
             |> String.to_atom()
 
           success_response_spec = return_spec(operation_definition.success_response)
@@ -100,7 +101,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
                       unquote(argument_names)
                     )
 
-                  Stripe.Request.new_request(opts)
+                  opts
+                  |> Stripe.Request.new_request()
                   |> Stripe.Request.put_endpoint(path)
                   |> Stripe.Request.put_params(params)
                   |> Stripe.Request.put_method(unquote(operation_definition.method))
@@ -108,6 +110,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
                 end
               end
             else
+              # credo:disable-for-next-line Credo.Check.Refactor.Nesting
               if operation_definition.path == "/v1/files" and operation_definition.method == :post do
                 quote do
                   @spec unquote(function_name)(
@@ -121,7 +124,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
                         params \\ %{},
                         opts \\ []
                       ) do
-                    Stripe.Request.new_request(opts)
+                    opts
+                    |> Stripe.Request.new_request()
                     |> Stripe.Request.put_endpoint(unquote(operation_definition.path))
                     |> Stripe.Request.put_params(params)
                     |> Stripe.Request.put_method(unquote(operation_definition.method))
@@ -148,7 +152,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
                         unquote(argument_values)
                       )
 
-                    Stripe.Request.new_request(opts)
+                    opts
+                    |> Stripe.Request.new_request()
                     |> Stripe.Request.put_endpoint(path)
                     |> Stripe.Request.put_method(unquote(operation_definition.method))
                     |> Stripe.Request.make_request()
@@ -180,17 +185,21 @@ defmodule Stripe.OpenApi.Phases.Compile do
         end
 
       {funcs, types} = Enum.unzip(funcs_types)
+      # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
       fields = component.properties |> Map.keys() |> Enum.map(&String.to_atom/1)
 
-      # TODO fix  uniq
+      # Fix duplicate handling (uniq)
       types =
-        List.flatten(types)
+        types
+        |> List.flatten()
         |> Enum.uniq_by(fn {_, meta, _} -> meta[:name] end)
         |> Enum.sort()
         |> Enum.map(&to_type_spec/1)
 
       specs =
-        Enum.map(component.properties, fn {key, value} ->
+        component.properties
+        |> Enum.map(fn {key, value} ->
+          # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
           {String.to_atom(key), build_spec(value, modules)}
         end)
         |> Enum.sort()
@@ -247,7 +256,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
         |> Code.format_string!()
 
       [_ | names] = Module.split(component.module)
-      filename = names |> Enum.map_join("__", &Macro.underscore/1)
+      filename = Enum.map_join(names, "__", &Macro.underscore/1)
 
       File.write!("lib/generated/#{filename}.ex", bin)
     end
@@ -507,6 +516,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
     module =
       ref |> String.split("/") |> List.last() |> String.split(".") |> Enum.map(&Macro.camelize/1)
 
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
     Module.concat(["Stripe" | module])
   end
 
@@ -526,6 +536,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
   # stripe_extension["method_name"] could be default while we only add new ones.
   # That will be done in follow up work since it would be difficult to assess
   # the situation.
+  # credo:disable-for-next-line Credo.Check.Readability.StrictModuleLayout
   @operation_identity_mapping %{
     {"GetClimateProductsProduct", "/v1/climate/products/{product}", "retrieve"} => "retrieve",
     {"GetClimateProducts", "/v1/climate/products", "list"} => "list",
@@ -1176,7 +1187,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
         - Suggested Mapping: "#{suggested_mapping}"
         """
 
-      # TODO: Fallback to old mapping when the operation is not registered.
+      # Fallback to old mapping when the operation is not registered.
       # Waiting until I can successfully codegen newer versions of the spec.
       # stripe_extension["method_name"]
 

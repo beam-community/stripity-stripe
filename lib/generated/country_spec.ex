@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.CountrySpec do
   use Stripe.Entity
 

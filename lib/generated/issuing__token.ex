@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Issuing.Token do
   use Stripe.Entity
 

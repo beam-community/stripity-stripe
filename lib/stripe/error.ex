@@ -139,7 +139,7 @@ defmodule Stripe.Error do
       code: code_from_status(status),
       request_id: request_id,
       extra: %{http_status: status},
-      message: status |> message_from_status()
+      message: message_from_status(status)
     }
   end
 
@@ -150,7 +150,7 @@ defmodule Stripe.Error do
         from_stripe_error(status, nil, request_id)
 
       type ->
-        stripe_message = error_data |> Map.get("message")
+        stripe_message = Map.get(error_data, "message")
 
         user_message =
           case type do
@@ -163,9 +163,9 @@ defmodule Stripe.Error do
         extra =
           %{raw_error: error_data, http_status: status}
           |> maybe_put(:card_code, error_data |> Map.get("code") |> maybe_to_atom())
-          |> maybe_put(:decline_code, error_data |> Map.get("decline_code"))
+          |> maybe_put(:decline_code, Map.get(error_data, "decline_code"))
           |> maybe_put(:param, Map.get(error_data, "param"))
-          |> maybe_put(:charge_id, error_data |> Map.get("charge"))
+          |> maybe_put(:charge_id, Map.get(error_data, "charge"))
 
         %__MODULE__{
           source: :stripe,
@@ -223,8 +223,9 @@ defmodule Stripe.Error do
     do: "A client-side library failed to validate a field."
 
   defp maybe_put(map, _key, nil), do: map
-  defp maybe_put(map, key, value), do: map |> Map.put(key, value)
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 
   defp maybe_to_atom(nil), do: nil
-  defp maybe_to_atom(string) when is_binary(string), do: string |> String.to_atom()
+  # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
+  defp maybe_to_atom(string) when is_binary(string), do: String.to_atom(string)
 end

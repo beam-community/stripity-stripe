@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Product do
   use Stripe.Entity
 

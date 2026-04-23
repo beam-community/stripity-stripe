@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.DeletedTerminal.Location do
   use Stripe.Entity
   @moduledoc ""

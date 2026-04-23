@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.ScheduledQueryRun do
   use Stripe.Entity
 
