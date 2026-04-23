@@ -1,3 +1,4 @@
 ignore-files:
   - .github/common-config.yaml # Ignore this file itself
   - .formatter.exs
+  - .credo.exs
