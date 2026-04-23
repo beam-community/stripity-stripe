@@ -1,3 +1,4 @@
+# credo:disable-for-file
 defmodule Stripe.Invoice do
   use Stripe.Entity
 

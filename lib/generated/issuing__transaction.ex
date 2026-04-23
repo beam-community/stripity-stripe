@@ -1,3 +1,4 @@
+# credo:disable-for-file
 defmodule Stripe.Issuing.Transaction do
   use Stripe.Entity
 

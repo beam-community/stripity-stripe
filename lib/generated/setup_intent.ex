@@ -1,3 +1,4 @@
+# credo:disable-for-file
 defmodule Stripe.SetupIntent do
   use Stripe.Entity
 

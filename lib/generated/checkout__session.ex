@@ -1,3 +1,4 @@
+# credo:disable-for-file
 defmodule Stripe.Checkout.Session do
   use Stripe.Entity
 

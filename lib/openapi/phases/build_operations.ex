@@ -59,8 +59,7 @@ defmodule Stripe.OpenApi.Phases.BuildOperations do
           query_parameters: query_params,
           body_parameters: body_parameters,
           path: path,
-          success_response:
-            response_type(map["responses"]["200"]["content"]["application/json"]["schema"])
+          success_response: response_type(map["responses"]["200"]["content"]["application/json"]["schema"])
         }
 
         {{operation.path, operation.method}, operation}
@@ -216,8 +215,7 @@ defmodule Stripe.OpenApi.Phases.BuildOperations do
     %OpenApiGen.Blueprint.Parameter.Schema{
       type: schema["type"],
       name: name,
-      properties:
-        (schema["properties"] || []) |> Enum.map(&build_schema(elem(&1, 1), elem(&1, 0)))
+      properties: (schema["properties"] || []) |> Enum.map(&build_schema(elem(&1, 1), elem(&1, 0)))
     }
   end
 

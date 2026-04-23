@@ -1,3 +1,4 @@
+# credo:disable-for-file
 defmodule Stripe.CreditNote do
   use Stripe.Entity
 

@@ -209,9 +209,7 @@ defmodule Stripe.Request do
   Executes the request and returns the response for file uploads
   """
   @spec make_file_upload_request(t) :: {:ok, struct} | {:error, Stripe.Error.t()}
-  def make_file_upload_request(
-        %Request{params: params, endpoint: endpoint, method: method, opts: opts} = request
-      ) do
+  def make_file_upload_request(%Request{params: params, endpoint: endpoint, method: method, opts: opts} = request) do
     with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
          {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
          {:ok, result} <- API.request_file_upload(params, method, endpoint, %{}, opts) do
@@ -246,8 +244,7 @@ defmodule Stripe.Request do
           Stripe.Error.new(
             source: :internal,
             code: :endpoint_fun_invalid_result,
-            message:
-              "calling the endpoint function produced an invalid result of #{inspect(invalid)} "
+            message: "calling the endpoint function produced an invalid result of #{inspect(invalid)} "
           )
         }
     end

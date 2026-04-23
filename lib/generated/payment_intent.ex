@@ -1,3 +1,4 @@
+# credo:disable-for-file
 defmodule Stripe.PaymentIntent do
   use Stripe.Entity
 

@@ -20,8 +20,7 @@ defmodule Stripe.OpenApi.Phases.BuildModules do
              |> Enum.map(&%{&1 | "method_name" => Macro.underscore(&1["method_name"])}),
            module: Module.concat(["Stripe" | resource]),
            properties: map["properties"] || %{},
-           expandable_fields:
-             Map.get(map, "x-expandableFields", []) |> Enum.map(&String.to_atom/1)
+           expandable_fields: Map.get(map, "x-expandableFields", []) |> Enum.map(&String.to_atom/1)
          }}
       end
 

@@ -1,3 +1,4 @@
+# credo:disable-for-file
 defmodule Stripe.Subscription do
   use Stripe.Entity
 

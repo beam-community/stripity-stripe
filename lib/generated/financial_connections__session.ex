@@ -105,8 +105,7 @@ defmodule Stripe.FinancialConnections.Session do
                 optional(:account_holder) => account_holder,
                 optional(:expand) => list(binary),
                 optional(:filters) => filters,
-                optional(:permissions) =>
-                  list(:balances | :ownership | :payment_method | :transactions),
+                optional(:permissions) => list(:balances | :ownership | :payment_method | :transactions),
                 optional(:prefetch) => list(:balances | :ownership | :transactions),
                 optional(:return_url) => binary
               },

@@ -37,9 +37,7 @@ defmodule Stripe.PaymentMethodTest do
       assert {:ok, %Stripe.PaymentMethod{}} =
                Stripe.PaymentMethod.attach("pm_123", %{customer: "cus_123"})
 
-      assert_stripe_requested(:post, "/v1/payment_methods/pm_123/attach",
-        body: %{customer: "cus_123"}
-      )
+      assert_stripe_requested(:post, "/v1/payment_methods/pm_123/attach", body: %{customer: "cus_123"})
     end
   end
 

@@ -437,8 +437,7 @@ defmodule Stripe.Treasury.OutboundPayment do
                 optional(:description) => binary,
                 optional(:destination_payment_method) => binary,
                 optional(:destination_payment_method_data) => destination_payment_method_data,
-                optional(:destination_payment_method_options) =>
-                  destination_payment_method_options,
+                optional(:destination_payment_method_options) => destination_payment_method_options,
                 optional(:end_user_details) => end_user_details,
                 optional(:expand) => list(binary),
                 optional(:financial_account) => binary,

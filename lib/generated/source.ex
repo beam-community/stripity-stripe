@@ -133,8 +133,7 @@ defmodule Stripe.Source do
             optional(:amount) => integer | binary,
             optional(:currency) => binary,
             optional(:interval) => :one_time | :scheduled | :variable,
-            optional(:notification_method) =>
-              :deprecated_none | :email | :manual | :none | :stripe_email
+            optional(:notification_method) => :deprecated_none | :email | :manual | :none | :stripe_email
           }
   )
 

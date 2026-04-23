@@ -195,12 +195,10 @@ defmodule Stripe.Error do
   defp message_from_status(404), do: "The requested resource doesn't exist."
 
   defp message_from_status(409),
-    do:
-      "The request conflicts with another request (perhaps due to using the same idempotent key)."
+    do: "The request conflicts with another request (perhaps due to using the same idempotent key)."
 
   defp message_from_status(429),
-    do:
-      "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
+    do: "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
 
   defp message_from_status(s) when s in [500, 502, 503, 504],
     do: "Something went wrong on Stripe's end."
@@ -219,8 +217,7 @@ defmodule Stripe.Error do
   defp message_from_type(:invalid_request_error), do: "Your request had invalid parameters."
 
   defp message_from_type(:rate_limit_error),
-    do:
-      "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
+    do: "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
 
   defp message_from_type(:validation_error),
     do: "A client-side library failed to validate a field."

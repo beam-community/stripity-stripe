@@ -65,9 +65,7 @@ defmodule Stripe.StripeMock do
     executable = opts[:stripe_mock_path] || System.find_executable("stripe-mock")
 
     unless executable do
-      raise(
-        "Could not find stripe-mock. Make sure it's in your PATH or pass the :stripe_mock_path option."
-      )
+      raise("Could not find stripe-mock. Make sure it's in your PATH or pass the :stripe_mock_path option.")
     end
 
     port = opts[:port] || 12111

@@ -97,9 +97,7 @@ defmodule Stripe.APITest do
       api_version: "2019-05-16; checkout_sessions_beta=v1"
     )
 
-    assert_stripe_requested(:get, "/v1/products",
-      headers: {"Stripe-Version", "2019-05-16; checkout_sessions_beta=v1"}
-    )
+    assert_stripe_requested(:get, "/v1/products", headers: {"Stripe-Version", "2019-05-16; checkout_sessions_beta=v1"})
   end
 
   test "oauth_request sets authorization header for deauthorize request" do
