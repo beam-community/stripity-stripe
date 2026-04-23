@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Treasury.OutboundTransfer do
   use Stripe.Entity
 

@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Treasury.DebitReversal do
   use Stripe.Entity
 

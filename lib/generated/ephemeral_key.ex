@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.EphemeralKey do
   use Stripe.Entity
   @moduledoc ""

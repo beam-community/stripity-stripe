@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Terminal.OnboardingLink do
   use Stripe.Entity
   @moduledoc "Returns redirect links used for onboarding onto Tap to Pay on iPhone."

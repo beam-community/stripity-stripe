@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Tax.Association do
   use Stripe.Entity
 

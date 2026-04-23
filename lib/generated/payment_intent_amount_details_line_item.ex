@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.PaymentIntentAmountDetailsLineItem do
   use Stripe.Entity
   @moduledoc ""

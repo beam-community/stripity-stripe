@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.ShippingRate do
   use Stripe.Entity
 

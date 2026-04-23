@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Entitlements.Feature do
   use Stripe.Entity
 

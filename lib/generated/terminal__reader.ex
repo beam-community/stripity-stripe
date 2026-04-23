@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Terminal.Reader do
   use Stripe.Entity
 

@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Reporting.ReportType do
   use Stripe.Entity
 

@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Climate.Supplier do
   use Stripe.Entity
   @moduledoc "A supplier of carbon removal."

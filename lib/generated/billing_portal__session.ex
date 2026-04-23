@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.BillingPortal.Session do
   use Stripe.Entity
 

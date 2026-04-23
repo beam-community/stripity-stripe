@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Issuing.Card do
   use Stripe.Entity
 

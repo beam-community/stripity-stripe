@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.SetupAttempt do
   use Stripe.Entity
 

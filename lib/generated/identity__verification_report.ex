@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Identity.VerificationReport do
   use Stripe.Entity
 

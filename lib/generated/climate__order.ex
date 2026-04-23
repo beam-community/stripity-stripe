@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Climate.Order do
   use Stripe.Entity
 

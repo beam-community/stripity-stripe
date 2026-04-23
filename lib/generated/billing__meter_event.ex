@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Billing.MeterEvent do
   use Stripe.Entity
 

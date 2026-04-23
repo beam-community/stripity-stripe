@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.ApplePayDomain do
   use Stripe.Entity
   @moduledoc ""

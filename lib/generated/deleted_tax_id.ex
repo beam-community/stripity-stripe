@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.DeletedTaxId do
   use Stripe.Entity
   @moduledoc ""

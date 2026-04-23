@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Treasury.ReceivedCredit do
   use Stripe.Entity
 

@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.CreditNoteLineItem do
   use Stripe.Entity
   @moduledoc "The credit note line item object"

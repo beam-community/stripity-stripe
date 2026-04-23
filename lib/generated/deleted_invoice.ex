@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.DeletedInvoice do
   use Stripe.Entity
   @moduledoc ""

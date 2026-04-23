@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.Apps.Secret do
   use Stripe.Entity
 

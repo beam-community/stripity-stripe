@@ -1,4 +1,3 @@
-# credo:disable-for-this-file
 defmodule Stripe.PaymentSource do
   use Stripe.Entity
   @moduledoc nil
