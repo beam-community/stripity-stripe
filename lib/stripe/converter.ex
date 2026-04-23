@@ -7,10 +7,10 @@ defmodule Stripe.Converter do
   with atomized keys.
   """
 
+  @no_convert_maps ~w(metadata supported_bank_account_currencies)
+
   @spec convert_result(%{String.t() => any}) :: struct
   def convert_result(result), do: convert_value(result)
-
-  @no_convert_maps ~w(metadata supported_bank_account_currencies)
 
   @spec convert_value(any) :: any
   defp convert_value(%{"object" => object_name} = value) when is_binary(object_name) do
@@ -31,6 +31,7 @@ defmodule Stripe.Converter do
   @spec convert_map(map) :: map
   defp convert_map(value) do
     Enum.reduce(value, %{}, fn {key, value}, acc ->
+      # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
       Map.put(acc, String.to_atom(key), convert_value(value))
     end)
   end
@@ -38,7 +39,8 @@ defmodule Stripe.Converter do
   @spec convert_stripe_object(%{String.t() => any}) :: struct
   defp convert_stripe_object(%{"object" => object_name} = value) do
     module = Stripe.Util.object_name_to_module(object_name)
-    struct_keys = Map.keys(module.__struct__()) |> List.delete(:__struct__)
+    empty_struct = module.__struct__()
+    struct_keys = empty_struct |> Map.keys() |> List.delete(:__struct__)
     check_for_extra_keys(struct_keys, value)
 
     processed_map =
@@ -49,7 +51,7 @@ defmodule Stripe.Converter do
         converted_value =
           case string_key do
             string_key when string_key in @no_convert_maps -> Map.get(value, string_key)
-            _ -> Map.get(value, string_key) |> convert_value()
+            _ -> convert_value(Map.get(value, string_key))
           end
 
         Map.put(acc, key, converted_value)
@@ -60,7 +62,7 @@ defmodule Stripe.Converter do
   end
 
   @spec convert_list(list) :: list
-  defp convert_list(list), do: list |> Enum.map(&convert_value/1)
+  defp convert_list(list), do: Enum.map(list, &convert_value/1)
 
   if Mix.env() == :prod do
     defp warn_unknown_object(_), do: :ok
@@ -84,9 +86,7 @@ defmodule Stripe.Converter do
         |> Enum.map(&String.to_atom/1)
         |> MapSet.new()
 
-      struct_keys =
-        struct_keys
-        |> MapSet.new()
+      struct_keys = MapSet.new(struct_keys)
 
       extra_keys =
         map_keys
@@ -112,7 +112,7 @@ defmodule Stripe.Converter do
 
   defp object_type_to_struct(object) do
     module = object |> String.split(".") |> Enum.map(&Macro.camelize/1)
-    Module.concat(["Stripe" | module])
+    Module.safe_concat(["Stripe" | module])
   end
 
   defp known_struct?(struct) do

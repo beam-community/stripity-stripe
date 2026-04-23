@@ -4,9 +4,7 @@ defmodule Mix.Tasks.Stripe.Generate do
 
   def run(_) do
     opts = [
-      path:
-        [:code.priv_dir(:stripity_stripe), "openapi", "spec3.sdk.json"]
-        |> Path.join(),
+      path: Path.join([:code.priv_dir(:stripity_stripe), "openapi", "spec3.sdk.json"]),
       base_url: "https://api.stripe.com"
     ]
 

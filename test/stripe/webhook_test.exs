@@ -11,11 +11,11 @@ defmodule Stripe.WebhookTest do
   @secret "secret"
 
   defp generate_signature(timestamp, payload, secret \\ @secret) do
-    hmac(:sha256, secret, "#{timestamp}.#{payload}")
-    |> Base.encode16(case: :lower)
+    signature = hmac(:sha256, secret, "#{timestamp}.#{payload}")
+    Base.encode16(signature, case: :lower)
   end
 
-  # TODO: remove when we require OTP 22
+  # Remove when OTP 22 compatibility is no longer needed
   if System.otp_release() >= "22" do
     defp hmac(digest, key, data), do: :crypto.mac(:hmac, digest, key, data)
   else

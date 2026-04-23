@@ -5,6 +5,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
     after and catch do else end false fn for if in nil not or receive rescue true try when with
   )a
 
+  # credo:disable-for-next-line Credo.Check.Refactor.CyclomaticComplexity
   def run(blueprint, _options) do
     modules = Enum.map(blueprint.components, fn {_k, component} -> component.module end)
 
@@ -13,21 +14,21 @@ defmodule Stripe.OpenApi.Phases.Compile do
         for operation <- component.operations,
             operation_definition =
               lookup_operation(
+                # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
                 {operation["path"], String.to_atom(operation["operation"])},
                 blueprint.operations
               ),
             operation_definition != nil do
+          # credo:disable-for-lines:2 Credo.Check.Warning.UnsafeToAtom
           arguments =
-            operation_definition.path_parameters
-            |> Enum.map(&String.to_atom(&1.name))
+            Enum.map(operation_definition.path_parameters, &String.to_atom(&1.name))
 
           params? =
             match?({:object, _, [_ | _]}, operation_definition.query_parameters) ||
               match?({:object, _, [_ | _]}, operation_definition.body_parameters)
 
           argument_names =
-            arguments
-            |> Enum.map(fn
+            Enum.map(arguments, fn
               name ->
                 Macro.var(name, __MODULE__)
             end)
@@ -40,8 +41,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
             end)
 
           argument_specs =
-            arguments
-            |> Enum.map(fn
+            Enum.map(arguments, fn
               :params ->
                 quote do
                   params :: map()
@@ -57,6 +57,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
             operation_definition
             |> to_func_name(operation)
             |> Macro.underscore()
+            # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
             |> String.to_atom()
 
           success_response_spec = return_spec(operation_definition.success_response)
@@ -100,7 +101,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
                       unquote(argument_names)
                     )
 
-                  Stripe.Request.new_request(opts)
+                  opts
+                  |> Stripe.Request.new_request()
                   |> Stripe.Request.put_endpoint(path)
                   |> Stripe.Request.put_params(params)
                   |> Stripe.Request.put_method(unquote(operation_definition.method))
@@ -108,6 +110,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
                 end
               end
             else
+              # credo:disable-for-next-line Credo.Check.Refactor.Nesting
               if operation_definition.path == "/v1/files" and operation_definition.method == :post do
                 quote do
                   @spec unquote(function_name)(
@@ -121,7 +124,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
                         params \\ %{},
                         opts \\ []
                       ) do
-                    Stripe.Request.new_request(opts)
+                    opts
+                    |> Stripe.Request.new_request()
                     |> Stripe.Request.put_endpoint(unquote(operation_definition.path))
                     |> Stripe.Request.put_params(params)
                     |> Stripe.Request.put_method(unquote(operation_definition.method))
@@ -148,7 +152,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
                         unquote(argument_values)
                       )
 
-                    Stripe.Request.new_request(opts)
+                    opts
+                    |> Stripe.Request.new_request()
                     |> Stripe.Request.put_endpoint(path)
                     |> Stripe.Request.put_method(unquote(operation_definition.method))
                     |> Stripe.Request.make_request()
@@ -180,17 +185,21 @@ defmodule Stripe.OpenApi.Phases.Compile do
         end
 
       {funcs, types} = Enum.unzip(funcs_types)
+      # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
       fields = component.properties |> Map.keys() |> Enum.map(&String.to_atom/1)
 
-      # TODO fix  uniq
+      # Fix duplicate handling (uniq)
       types =
-        List.flatten(types)
+        types
+        |> List.flatten()
         |> Enum.uniq_by(fn {_, meta, _} -> meta[:name] end)
         |> Enum.sort()
         |> Enum.map(&to_type_spec/1)
 
       specs =
-        Enum.map(component.properties, fn {key, value} ->
+        component.properties
+        |> Enum.map(fn {key, value} ->
+          # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
           {String.to_atom(key), build_spec(value, modules)}
         end)
         |> Enum.sort()
@@ -247,7 +256,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
         |> Code.format_string!()
 
       [_ | names] = Module.split(component.module)
-      filename = names |> Enum.map_join("__", &Macro.underscore/1)
+      filename = Enum.map_join(names, "__", &Macro.underscore/1)
 
       File.write!("lib/generated/#{filename}.ex", bin)
     end
@@ -305,10 +314,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
   end
 
   defp type_spec_name(name) do
-    cond do
-      name in [:reference] -> :reference_0
-      true -> safe_type_name(name)   # <- sanitize reserved words like :end
-    end
+    # sanitize reserved words like :end
+    if name in [:reference], do: :reference_0, else: safe_type_name(name)
   end
 
   defp to_inline_spec({_, _meta, children}) do
@@ -363,7 +370,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
   end
 
   def to_type({:ref, meta, _}) do
-    Macro.var(type_spec_name(meta[:name]), __MODULE__)
+    spec_name = type_spec_name(meta[:name])
+    Macro.var(spec_name, __MODULE__)
   end
 
   def to_type({:array, _meta, [type]}) do
@@ -507,6 +515,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
     module =
       ref |> String.split("/") |> List.last() |> String.split(".") |> Enum.map(&Macro.camelize/1)
 
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
     Module.concat(["Stripe" | module])
   end
 
@@ -526,52 +535,42 @@ defmodule Stripe.OpenApi.Phases.Compile do
   # stripe_extension["method_name"] could be default while we only add new ones.
   # That will be done in follow up work since it would be difficult to assess
   # the situation.
+  # credo:disable-for-next-line Credo.Check.Readability.StrictModuleLayout
   @operation_identity_mapping %{
     {"GetClimateProductsProduct", "/v1/climate/products/{product}", "retrieve"} => "retrieve",
     {"GetClimateProducts", "/v1/climate/products", "list"} => "list",
     {"PostPaymentMethods", "/v1/payment_methods", "create"} => "create",
-    {"GetPaymentMethodsPaymentMethod", "/v1/payment_methods/{payment_method}", "retrieve"} =>
-      "retrieve",
-    {"PostPaymentMethodsPaymentMethod", "/v1/payment_methods/{payment_method}", "update"} =>
-      "update",
+    {"GetPaymentMethodsPaymentMethod", "/v1/payment_methods/{payment_method}", "retrieve"} => "retrieve",
+    {"PostPaymentMethodsPaymentMethod", "/v1/payment_methods/{payment_method}", "update"} => "update",
     {"GetPaymentMethods", "/v1/payment_methods", "list"} => "list",
-    {"PostPaymentMethodsPaymentMethodAttach", "/v1/payment_methods/{payment_method}/attach",
-     "attach"} => "attach",
-    {"PostPaymentMethodsPaymentMethodDetach", "/v1/payment_methods/{payment_method}/detach",
-     "detach"} => "detach",
+    {"PostPaymentMethodsPaymentMethodAttach", "/v1/payment_methods/{payment_method}/attach", "attach"} => "attach",
+    {"PostPaymentMethodsPaymentMethodDetach", "/v1/payment_methods/{payment_method}/detach", "detach"} => "detach",
     {"GetTaxRegistrations", "/v1/tax/registrations", "list"} => "list",
     {"PostTaxRegistrations", "/v1/tax/registrations", "create"} => "create",
     {"GetTaxRegistrationsId", "/v1/tax/registrations/{id}", "retrieve"} => "retrieve",
     {"PostTaxRegistrationsId", "/v1/tax/registrations/{id}", "update"} => "update",
     {"GetTreasuryCreditReversals", "/v1/treasury/credit_reversals", "list"} => "list",
-    {"GetTreasuryCreditReversalsCreditReversal",
-     "/v1/treasury/credit_reversals/{credit_reversal}", "retrieve"} => "retrieve",
-    {"PostTreasuryCreditReversals", "/v1/treasury/credit_reversals", "create"} => "create",
-    {"GetFinancialConnectionsTransactionsTransaction",
-     "/v1/financial_connections/transactions/{transaction}", "retrieve"} => "retrieve",
-    {"GetFinancialConnectionsTransactions", "/v1/financial_connections/transactions", "list"} =>
-      "list",
-    {"GetRadarValueLists", "/v1/radar/value_lists", "list"} => "list",
-    {"GetRadarValueListsValueList", "/v1/radar/value_lists/{value_list}", "retrieve"} =>
+    {"GetTreasuryCreditReversalsCreditReversal", "/v1/treasury/credit_reversals/{credit_reversal}", "retrieve"} =>
       "retrieve",
+    {"PostTreasuryCreditReversals", "/v1/treasury/credit_reversals", "create"} => "create",
+    {"GetFinancialConnectionsTransactionsTransaction", "/v1/financial_connections/transactions/{transaction}",
+     "retrieve"} => "retrieve",
+    {"GetFinancialConnectionsTransactions", "/v1/financial_connections/transactions", "list"} => "list",
+    {"GetRadarValueLists", "/v1/radar/value_lists", "list"} => "list",
+    {"GetRadarValueListsValueList", "/v1/radar/value_lists/{value_list}", "retrieve"} => "retrieve",
     {"PostRadarValueLists", "/v1/radar/value_lists", "create"} => "create",
     {"PostRadarValueListsValueList", "/v1/radar/value_lists/{value_list}", "update"} => "update",
-    {"DeleteRadarValueListsValueList", "/v1/radar/value_lists/{value_list}", "delete"} =>
-      "delete",
+    {"DeleteRadarValueListsValueList", "/v1/radar/value_lists/{value_list}", "delete"} => "delete",
     {"GetIssuingAuthorizations", "/v1/issuing/authorizations", "list"} => "list",
-    {"GetIssuingAuthorizationsAuthorization", "/v1/issuing/authorizations/{authorization}",
-     "retrieve"} => "retrieve",
-    {"PostIssuingAuthorizationsAuthorization", "/v1/issuing/authorizations/{authorization}",
-     "update"} => "update",
-    {"PostIssuingAuthorizationsAuthorizationApprove",
-     "/v1/issuing/authorizations/{authorization}/approve", "approve"} => "approve",
-    {"PostIssuingAuthorizationsAuthorizationDecline",
-     "/v1/issuing/authorizations/{authorization}/decline", "decline"} => "decline",
-    {"PostTestHelpersIssuingAuthorizations", "/v1/test_helpers/issuing/authorizations", "create"} =>
-      "create",
+    {"GetIssuingAuthorizationsAuthorization", "/v1/issuing/authorizations/{authorization}", "retrieve"} => "retrieve",
+    {"PostIssuingAuthorizationsAuthorization", "/v1/issuing/authorizations/{authorization}", "update"} => "update",
+    {"PostIssuingAuthorizationsAuthorizationApprove", "/v1/issuing/authorizations/{authorization}/approve", "approve"} =>
+      "approve",
+    {"PostIssuingAuthorizationsAuthorizationDecline", "/v1/issuing/authorizations/{authorization}/decline", "decline"} =>
+      "decline",
+    {"PostTestHelpersIssuingAuthorizations", "/v1/test_helpers/issuing/authorizations", "create"} => "create",
     {"PostTestHelpersIssuingAuthorizationsAuthorizationIncrement",
-     "/v1/test_helpers/issuing/authorizations/{authorization}/increment",
-     "increment"} => "increment",
+     "/v1/test_helpers/issuing/authorizations/{authorization}/increment", "increment"} => "increment",
     {"PostTestHelpersIssuingAuthorizationsAuthorizationReverse",
      "/v1/test_helpers/issuing/authorizations/{authorization}/reverse", "reverse"} => "reverse",
     {"PostTestHelpersIssuingAuthorizationsAuthorizationExpire",
@@ -579,12 +578,12 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostTestHelpersIssuingAuthorizationsAuthorizationCapture",
      "/v1/test_helpers/issuing/authorizations/{authorization}/capture", "capture"} => "capture",
     {"GetCreditNotesCreditNoteLines", "/v1/credit_notes/{credit_note}/lines", "list"} => "list",
-    {"GetPaymentMethodDomainsPaymentMethodDomain",
-     "/v1/payment_method_domains/{payment_method_domain}", "retrieve"} => "retrieve",
+    {"GetPaymentMethodDomainsPaymentMethodDomain", "/v1/payment_method_domains/{payment_method_domain}", "retrieve"} =>
+      "retrieve",
     {"GetPaymentMethodDomains", "/v1/payment_method_domains", "list"} => "list",
     {"PostPaymentMethodDomains", "/v1/payment_method_domains", "create"} => "create",
-    {"PostPaymentMethodDomainsPaymentMethodDomain",
-     "/v1/payment_method_domains/{payment_method_domain}", "update"} => "update",
+    {"PostPaymentMethodDomainsPaymentMethodDomain", "/v1/payment_method_domains/{payment_method_domain}", "update"} =>
+      "update",
     {"PostPaymentMethodDomainsPaymentMethodDomainValidate",
      "/v1/payment_method_domains/{payment_method_domain}/validate", "validate"} => "validate",
     {"PostAccountsAccountLoginLinks", "/v1/accounts/{account}/login_links", "create"} => "create",
@@ -594,10 +593,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"DeleteApplePayDomainsDomain", "/v1/apple_pay/domains/{domain}", "delete"} => "delete",
     {"PostTransfersIdReversals", "/v1/transfers/{id}/reversals", "create"} => "create",
     {"GetTransfersIdReversals", "/v1/transfers/{id}/reversals", "list"} => "list",
-    {"GetTransfersTransferReversalsId", "/v1/transfers/{transfer}/reversals/{id}", "retrieve"} =>
-      "retrieve",
-    {"PostTransfersTransferReversalsId", "/v1/transfers/{transfer}/reversals/{id}", "update"} =>
-      "update",
+    {"GetTransfersTransferReversalsId", "/v1/transfers/{transfer}/reversals/{id}", "retrieve"} => "retrieve",
+    {"PostTransfersTransferReversalsId", "/v1/transfers/{transfer}/reversals/{id}", "update"} => "update",
     {"GetClimateOrdersOrder", "/v1/climate/orders/{order}", "retrieve"} => "retrieve",
     {"GetClimateOrders", "/v1/climate/orders", "list"} => "list",
     {"PostClimateOrders", "/v1/climate/orders", "create"} => "create",
@@ -608,8 +605,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostTokens", "/v1/tokens", "create"} => "create",
     {"GetPaymentLinks", "/v1/payment_links", "list"} => "list",
     {"GetPaymentLinksPaymentLink", "/v1/payment_links/{payment_link}", "retrieve"} => "retrieve",
-    {"GetPaymentLinksPaymentLinkLineItems", "/v1/payment_links/{payment_link}/line_items",
-     "list_line_items"} => "list_line_items",
+    {"GetPaymentLinksPaymentLinkLineItems", "/v1/payment_links/{payment_link}/line_items", "list_line_items"} =>
+      "list_line_items",
     {"PostPaymentLinks", "/v1/payment_links", "create"} => "create",
     {"PostPaymentLinksPaymentLink", "/v1/payment_links/{payment_link}", "update"} => "update",
     {"PostTopups", "/v1/topups", "create"} => "create",
@@ -617,10 +614,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"GetTopupsTopup", "/v1/topups/{topup}", "retrieve"} => "retrieve",
     {"PostTopupsTopup", "/v1/topups/{topup}", "update"} => "update",
     {"PostTopupsTopupCancel", "/v1/topups/{topup}/cancel", "cancel"} => "cancel",
-    {"PostCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "update"} =>
-      "update",
-    {"DeleteCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "delete"} =>
-      "delete",
+    {"PostCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "update"} => "update",
+    {"DeleteCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "delete"} => "delete",
     {"GetCoupons", "/v1/coupons", "list"} => "list",
     {"PostCoupons", "/v1/coupons", "create"} => "create",
     {"GetCouponsCoupon", "/v1/coupons/{coupon}", "retrieve"} => "retrieve",
@@ -631,39 +626,33 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostTerminalReaders", "/v1/terminal/readers", "create"} => "create",
     {"GetTerminalReaders", "/v1/terminal/readers", "list"} => "list",
     {"DeleteTerminalReadersReader", "/v1/terminal/readers/{reader}", "delete"} => "delete",
-    {"PostTerminalReadersReaderProcessPaymentIntent",
-     "/v1/terminal/readers/{reader}/process_payment_intent",
+    {"PostTerminalReadersReaderProcessPaymentIntent", "/v1/terminal/readers/{reader}/process_payment_intent",
      "process_payment_intent"} => "process_payment_intent",
-    {"PostTerminalReadersReaderProcessSetupIntent",
-     "/v1/terminal/readers/{reader}/process_setup_intent",
+    {"PostTerminalReadersReaderProcessSetupIntent", "/v1/terminal/readers/{reader}/process_setup_intent",
      "process_setup_intent"} => "process_setup_intent",
-    {"PostTerminalReadersReaderCancelAction", "/v1/terminal/readers/{reader}/cancel_action",
-     "cancel_action"} => "cancel_action",
-    {"PostTerminalReadersReaderSetReaderDisplay",
-     "/v1/terminal/readers/{reader}/set_reader_display",
+    {"PostTerminalReadersReaderCancelAction", "/v1/terminal/readers/{reader}/cancel_action", "cancel_action"} =>
+      "cancel_action",
+    {"PostTerminalReadersReaderSetReaderDisplay", "/v1/terminal/readers/{reader}/set_reader_display",
      "set_reader_display"} => "set_reader_display",
-    {"PostTerminalReadersReaderRefundPayment", "/v1/terminal/readers/{reader}/refund_payment",
-     "refund_payment"} => "refund_payment",
+    {"PostTerminalReadersReaderRefundPayment", "/v1/terminal/readers/{reader}/refund_payment", "refund_payment"} =>
+      "refund_payment",
     {"PostTestHelpersTerminalReadersReaderPresentPaymentMethod",
-     "/v1/test_helpers/terminal/readers/{reader}/present_payment_method",
-     "present_payment_method"} => "present_payment_method",
+     "/v1/test_helpers/terminal/readers/{reader}/present_payment_method", "present_payment_method"} =>
+      "present_payment_method",
     {"GetSubscriptionItems", "/v1/subscription_items", "list"} => "list",
     {"GetSubscriptionItemsItem", "/v1/subscription_items/{item}", "retrieve"} => "retrieve",
     {"PostSubscriptionItems", "/v1/subscription_items", "create"} => "create",
     {"PostSubscriptionItemsItem", "/v1/subscription_items/{item}", "update"} => "update",
     {"DeleteSubscriptionItemsItem", "/v1/subscription_items/{item}", "delete"} => "delete",
     {"GetSubscriptionItemsSubscriptionItemUsageRecordSummaries",
-     "/v1/subscription_items/{subscription_item}/usage_record_summaries",
-     "usage_record_summaries"} => "usage_record_summaries",
+     "/v1/subscription_items/{subscription_item}/usage_record_summaries", "usage_record_summaries"} =>
+      "usage_record_summaries",
     {"PostTerminalConnectionTokens", "/v1/terminal/connection_tokens", "create"} => "create",
     {"PostTerminalConfigurations", "/v1/terminal/configurations", "create"} => "create",
     {"GetTerminalConfigurations", "/v1/terminal/configurations", "list"} => "list",
-    {"GetTerminalConfigurationsConfiguration", "/v1/terminal/configurations/{configuration}",
-     "retrieve"} => "retrieve",
-    {"PostTerminalConfigurationsConfiguration", "/v1/terminal/configurations/{configuration}",
-     "update"} => "update",
-    {"DeleteTerminalConfigurationsConfiguration", "/v1/terminal/configurations/{configuration}",
-     "delete"} => "delete",
+    {"GetTerminalConfigurationsConfiguration", "/v1/terminal/configurations/{configuration}", "retrieve"} => "retrieve",
+    {"PostTerminalConfigurationsConfiguration", "/v1/terminal/configurations/{configuration}", "update"} => "update",
+    {"DeleteTerminalConfigurationsConfiguration", "/v1/terminal/configurations/{configuration}", "delete"} => "delete",
     {"GetApplicationFees", "/v1/application_fees", "list"} => "list",
     {"GetApplicationFeesId", "/v1/application_fees/{id}", "retrieve"} => "retrieve",
     {"GetFiles", "/v1/files", "list"} => "list",
@@ -673,57 +662,44 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"GetReviewsReview", "/v1/reviews/{review}", "retrieve"} => "retrieve",
     {"PostReviewsReviewApprove", "/v1/reviews/{review}/approve", "approve"} => "approve",
     {"GetBalance", "/v1/balance", "retrieve"} => "retrieve",
-    {"GetCustomersCustomerCashBalance", "/v1/customers/{customer}/cash_balance", "retrieve"} =>
-      "retrieve",
-    {"PostCustomersCustomerCashBalance", "/v1/customers/{customer}/cash_balance", "update"} =>
-      "update",
+    {"GetCustomersCustomerCashBalance", "/v1/customers/{customer}/cash_balance", "retrieve"} => "retrieve",
+    {"PostCustomersCustomerCashBalance", "/v1/customers/{customer}/cash_balance", "update"} => "update",
     {"GetPaymentIntentsSearch", "/v1/payment_intents/search", "search"} => "search",
     {"PostPaymentIntents", "/v1/payment_intents", "create"} => "create",
     {"GetPaymentIntents", "/v1/payment_intents", "list"} => "list",
     {"GetPaymentIntentsIntent", "/v1/payment_intents/{intent}", "retrieve"} => "retrieve",
     {"PostPaymentIntentsIntent", "/v1/payment_intents/{intent}", "update"} => "update",
-    {"PostPaymentIntentsIntentConfirm", "/v1/payment_intents/{intent}/confirm", "confirm"} =>
-      "confirm",
-    {"PostPaymentIntentsIntentCancel", "/v1/payment_intents/{intent}/cancel", "cancel"} =>
-      "cancel",
-    {"PostPaymentIntentsIntentCapture", "/v1/payment_intents/{intent}/capture", "capture"} =>
-      "capture",
-    {"PostPaymentIntentsIntentIncrementAuthorization",
-     "/v1/payment_intents/{intent}/increment_authorization",
+    {"PostPaymentIntentsIntentConfirm", "/v1/payment_intents/{intent}/confirm", "confirm"} => "confirm",
+    {"PostPaymentIntentsIntentCancel", "/v1/payment_intents/{intent}/cancel", "cancel"} => "cancel",
+    {"PostPaymentIntentsIntentCapture", "/v1/payment_intents/{intent}/capture", "capture"} => "capture",
+    {"PostPaymentIntentsIntentIncrementAuthorization", "/v1/payment_intents/{intent}/increment_authorization",
      "increment_authorization"} => "increment_authorization",
-    {"PostPaymentIntentsIntentVerifyMicrodeposits",
-     "/v1/payment_intents/{intent}/verify_microdeposits",
+    {"PostPaymentIntentsIntentVerifyMicrodeposits", "/v1/payment_intents/{intent}/verify_microdeposits",
      "verify_microdeposits"} => "verify_microdeposits",
-    {"PostPaymentIntentsIntentApplyCustomerBalance",
-     "/v1/payment_intents/{intent}/apply_customer_balance",
+    {"PostPaymentIntentsIntentApplyCustomerBalance", "/v1/payment_intents/{intent}/apply_customer_balance",
      "apply_customer_balance"} => "apply_customer_balance",
     {"GetAccountsAccountCapabilities", "/v1/accounts/{account}/capabilities", "list"} => "list",
-    {"GetAccountsAccountCapabilitiesCapability",
-     "/v1/accounts/{account}/capabilities/{capability}", "retrieve"} => "retrieve",
-    {"PostAccountsAccountCapabilitiesCapability",
-     "/v1/accounts/{account}/capabilities/{capability}", "update"} => "update",
+    {"GetAccountsAccountCapabilitiesCapability", "/v1/accounts/{account}/capabilities/{capability}", "retrieve"} =>
+      "retrieve",
+    {"PostAccountsAccountCapabilitiesCapability", "/v1/accounts/{account}/capabilities/{capability}", "update"} =>
+      "update",
     {"GetSubscriptionSchedules", "/v1/subscription_schedules", "list"} => "list",
     {"PostSubscriptionSchedules", "/v1/subscription_schedules", "create"} => "create",
-    {"GetSubscriptionSchedulesSchedule", "/v1/subscription_schedules/{schedule}", "retrieve"} =>
-      "retrieve",
-    {"PostSubscriptionSchedulesSchedule", "/v1/subscription_schedules/{schedule}", "update"} =>
-      "update",
-    {"PostSubscriptionSchedulesScheduleCancel", "/v1/subscription_schedules/{schedule}/cancel",
-     "cancel"} => "cancel",
-    {"PostSubscriptionSchedulesScheduleRelease", "/v1/subscription_schedules/{schedule}/release",
-     "release"} => "release",
+    {"GetSubscriptionSchedulesSchedule", "/v1/subscription_schedules/{schedule}", "retrieve"} => "retrieve",
+    {"PostSubscriptionSchedulesSchedule", "/v1/subscription_schedules/{schedule}", "update"} => "update",
+    {"PostSubscriptionSchedulesScheduleCancel", "/v1/subscription_schedules/{schedule}/cancel", "cancel"} => "cancel",
+    {"PostSubscriptionSchedulesScheduleRelease", "/v1/subscription_schedules/{schedule}/release", "release"} =>
+      "release",
     {"PostTreasuryFinancialAccounts", "/v1/treasury/financial_accounts", "create"} => "create",
-    {"PostTreasuryFinancialAccountsFinancialAccount",
-     "/v1/treasury/financial_accounts/{financial_account}", "update"} => "update",
+    {"PostTreasuryFinancialAccountsFinancialAccount", "/v1/treasury/financial_accounts/{financial_account}", "update"} =>
+      "update",
     {"PostTreasuryFinancialAccountsFinancialAccountFeatures",
-     "/v1/treasury/financial_accounts/{financial_account}/features",
-     "update_features"} => "update_features",
+     "/v1/treasury/financial_accounts/{financial_account}/features", "update_features"} => "update_features",
     {"GetTreasuryFinancialAccounts", "/v1/treasury/financial_accounts", "list"} => "list",
-    {"GetTreasuryFinancialAccountsFinancialAccount",
-     "/v1/treasury/financial_accounts/{financial_account}", "retrieve"} => "retrieve",
+    {"GetTreasuryFinancialAccountsFinancialAccount", "/v1/treasury/financial_accounts/{financial_account}", "retrieve"} =>
+      "retrieve",
     {"GetTreasuryFinancialAccountsFinancialAccountFeatures",
-     "/v1/treasury/financial_accounts/{financial_account}/features",
-     "retrieve_features"} => "retrieve_features",
+     "/v1/treasury/financial_accounts/{financial_account}/features", "retrieve_features"} => "retrieve_features",
     {"GetChargesSearch", "/v1/charges/search", "search"} => "search",
     {"GetCharges", "/v1/charges", "list"} => "list",
     {"PostCharges", "/v1/charges", "create"} => "create",
@@ -731,8 +707,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostChargesCharge", "/v1/charges/{charge}", "update"} => "update",
     {"PostChargesChargeCapture", "/v1/charges/{charge}/capture", "capture"} => "capture",
     {"GetCustomersCustomerSources", "/v1/customers/{customer}/sources", "list"} => "list",
-    {"GetCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "retrieve"} =>
-      "retrieve",
+    {"GetCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "retrieve"} => "retrieve",
     {"PostCustomersCustomerSources", "/v1/customers/{customer}/sources", "create"} => "create",
     {"GetCustomersSearch", "/v1/customers/search", "search"} => "search",
     {"GetCustomers", "/v1/customers", "list"} => "list",
@@ -740,128 +715,102 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"GetCustomersCustomer", "/v1/customers/{customer}", "retrieve"} => "retrieve",
     {"PostCustomersCustomer", "/v1/customers/{customer}", "update"} => "update",
     {"DeleteCustomersCustomer", "/v1/customers/{customer}", "delete"} => "delete",
-    {"GetCustomersCustomerPaymentMethods", "/v1/customers/{customer}/payment_methods",
-     "list_payment_methods"} => "list_payment_methods",
-    {"GetCustomersCustomerPaymentMethodsPaymentMethod",
-     "/v1/customers/{customer}/payment_methods/{payment_method}",
+    {"GetCustomersCustomerPaymentMethods", "/v1/customers/{customer}/payment_methods", "list_payment_methods"} =>
+      "list_payment_methods",
+    {"GetCustomersCustomerPaymentMethodsPaymentMethod", "/v1/customers/{customer}/payment_methods/{payment_method}",
      "retrieve_payment_method"} => "retrieve_payment_method",
-    {"GetCustomersCustomerBalanceTransactions", "/v1/customers/{customer}/balance_transactions",
-     "balance_transactions"} => "balance_transactions",
-    {"PostTestHelpersCustomersCustomerFundCashBalance",
-     "/v1/test_helpers/customers/{customer}/fund_cash_balance",
+    {"GetCustomersCustomerBalanceTransactions", "/v1/customers/{customer}/balance_transactions", "balance_transactions"} =>
+      "balance_transactions",
+    {"PostTestHelpersCustomersCustomerFundCashBalance", "/v1/test_helpers/customers/{customer}/fund_cash_balance",
      "fund_cash_balance"} => "fund_cash_balance",
     {"PostCustomersCustomerFundingInstructions", "/v1/customers/{customer}/funding_instructions",
      "create_funding_instructions"} => "create_funding_instructions",
-    {"DeleteCustomersCustomerDiscount", "/v1/customers/{customer}/discount", "delete_discount"} =>
-      "delete_discount",
-    {"GetReportingReportTypesReportType", "/v1/reporting/report_types/{report_type}", "retrieve"} =>
-      "retrieve",
+    {"DeleteCustomersCustomerDiscount", "/v1/customers/{customer}/discount", "delete_discount"} => "delete_discount",
+    {"GetReportingReportTypesReportType", "/v1/reporting/report_types/{report_type}", "retrieve"} => "retrieve",
     {"GetReportingReportTypes", "/v1/reporting/report_types", "list"} => "list",
     {"PostTaxCalculations", "/v1/tax/calculations", "create"} => "create",
-    {"GetTaxCalculationsCalculationLineItems", "/v1/tax/calculations/{calculation}/line_items",
-     "list_line_items"} => "list_line_items",
-    {"GetAccountsAccountExternalAccounts", "/v1/accounts/{account}/external_accounts", "list"} =>
-      "list",
-    {"GetAccountsAccountExternalAccountsId", "/v1/accounts/{account}/external_accounts/{id}",
-     "retrieve"} => "retrieve",
-    {"PostAccountsAccountExternalAccounts", "/v1/accounts/{account}/external_accounts", "create"} =>
-      "create",
-    {"PostAccountsAccountExternalAccountsId", "/v1/accounts/{account}/external_accounts/{id}",
-     "update"} => "update",
-    {"DeleteAccountsAccountExternalAccountsId", "/v1/accounts/{account}/external_accounts/{id}",
-     "delete"} => "delete",
+    {"GetTaxCalculationsCalculationLineItems", "/v1/tax/calculations/{calculation}/line_items", "list_line_items"} =>
+      "list_line_items",
+    {"GetAccountsAccountExternalAccounts", "/v1/accounts/{account}/external_accounts", "list"} => "list",
+    {"GetAccountsAccountExternalAccountsId", "/v1/accounts/{account}/external_accounts/{id}", "retrieve"} => "retrieve",
+    {"PostAccountsAccountExternalAccounts", "/v1/accounts/{account}/external_accounts", "create"} => "create",
+    {"PostAccountsAccountExternalAccountsId", "/v1/accounts/{account}/external_accounts/{id}", "update"} => "update",
+    {"DeleteAccountsAccountExternalAccountsId", "/v1/accounts/{account}/external_accounts/{id}", "delete"} => "delete",
     {"GetTreasuryTransactionsId", "/v1/treasury/transactions/{id}", "retrieve"} => "retrieve",
     {"GetTreasuryTransactions", "/v1/treasury/transactions", "list"} => "list",
     {"GetIssuingTokens", "/v1/issuing/tokens", "list"} => "list",
     {"GetIssuingTokensToken", "/v1/issuing/tokens/{token}", "retrieve"} => "retrieve",
     {"PostIssuingTokensToken", "/v1/issuing/tokens/{token}", "update"} => "update",
     {"GetWebhookEndpoints", "/v1/webhook_endpoints", "list"} => "list",
-    {"GetWebhookEndpointsWebhookEndpoint", "/v1/webhook_endpoints/{webhook_endpoint}", "retrieve"} =>
-      "retrieve",
+    {"GetWebhookEndpointsWebhookEndpoint", "/v1/webhook_endpoints/{webhook_endpoint}", "retrieve"} => "retrieve",
     {"PostWebhookEndpoints", "/v1/webhook_endpoints", "create"} => "create",
-    {"PostWebhookEndpointsWebhookEndpoint", "/v1/webhook_endpoints/{webhook_endpoint}", "update"} =>
-      "update",
-    {"DeleteWebhookEndpointsWebhookEndpoint", "/v1/webhook_endpoints/{webhook_endpoint}",
-     "delete"} => "delete",
+    {"PostWebhookEndpointsWebhookEndpoint", "/v1/webhook_endpoints/{webhook_endpoint}", "update"} => "update",
+    {"DeleteWebhookEndpointsWebhookEndpoint", "/v1/webhook_endpoints/{webhook_endpoint}", "delete"} => "delete",
     {"GetPricesSearch", "/v1/prices/search", "search"} => "search",
     {"GetPrices", "/v1/prices", "list"} => "list",
     {"PostPrices", "/v1/prices", "create"} => "create",
     {"GetPricesPrice", "/v1/prices/{price}", "retrieve"} => "retrieve",
     {"PostPricesPrice", "/v1/prices/{price}", "update"} => "update",
-    {"PostCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "update"} =>
-      "update",
-    {"DeleteCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "delete"} =>
-      "delete",
-    {"PostCustomersCustomerSourcesIdVerify", "/v1/customers/{customer}/sources/{id}/verify",
-     "verify"} => "verify",
+    {"PostCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "update"} => "update",
+    {"DeleteCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "delete"} => "delete",
+    {"PostCustomersCustomerSourcesIdVerify", "/v1/customers/{customer}/sources/{id}/verify", "verify"} => "verify",
     {"GetInvoicesSearch", "/v1/invoices/search", "search"} => "search",
     {"GetInvoicesUpcoming", "/v1/invoices/upcoming", "upcoming"} => "upcoming",
     {"PostInvoicesInvoice", "/v1/invoices/{invoice}", "update"} => "update",
     {"PostInvoicesInvoicePay", "/v1/invoices/{invoice}/pay", "pay"} => "pay",
-    {"GetInvoicesUpcomingLines", "/v1/invoices/upcoming/lines", "upcoming_lines"} =>
-      "upcoming_lines",
+    {"GetInvoicesUpcomingLines", "/v1/invoices/upcoming/lines", "upcoming_lines"} => "upcoming_lines",
     {"PostInvoices", "/v1/invoices", "create"} => "create",
     {"GetInvoices", "/v1/invoices", "list"} => "list",
     {"GetInvoicesInvoice", "/v1/invoices/{invoice}", "retrieve"} => "retrieve",
     {"DeleteInvoicesInvoice", "/v1/invoices/{invoice}", "delete"} => "delete",
-    {"PostInvoicesInvoiceFinalize", "/v1/invoices/{invoice}/finalize", "finalize_invoice"} =>
-      "finalize_invoice",
+    {"PostInvoicesInvoiceFinalize", "/v1/invoices/{invoice}/finalize", "finalize_invoice"} => "finalize_invoice",
     {"PostInvoicesInvoiceSend", "/v1/invoices/{invoice}/send", "send_invoice"} => "send_invoice",
-    {"PostInvoicesInvoiceMarkUncollectible", "/v1/invoices/{invoice}/mark_uncollectible",
-     "mark_uncollectible"} => "mark_uncollectible",
+    {"PostInvoicesInvoiceMarkUncollectible", "/v1/invoices/{invoice}/mark_uncollectible", "mark_uncollectible"} =>
+      "mark_uncollectible",
     {"PostInvoicesInvoiceVoid", "/v1/invoices/{invoice}/void", "void_invoice"} => "void_invoice",
     {"GetCustomersCustomerCashBalanceTransactionsTransaction",
-     "/v1/customers/{customer}/cash_balance_transactions/{transaction}",
-     "retrieve"} => "retrieve",
-    {"GetCustomersCustomerCashBalanceTransactions",
-     "/v1/customers/{customer}/cash_balance_transactions", "list"} => "list",
+     "/v1/customers/{customer}/cash_balance_transactions/{transaction}", "retrieve"} => "retrieve",
+    {"GetCustomersCustomerCashBalanceTransactions", "/v1/customers/{customer}/cash_balance_transactions", "list"} =>
+      "list",
     {"GetIssuingCards", "/v1/issuing/cards", "list"} => "list",
     {"PostIssuingCards", "/v1/issuing/cards", "create"} => "create",
     {"GetIssuingCardsCard", "/v1/issuing/cards/{card}", "retrieve"} => "retrieve",
     {"PostIssuingCardsCard", "/v1/issuing/cards/{card}", "update"} => "update",
-    {"PostTestHelpersIssuingCardsCardShippingDeliver",
-     "/v1/test_helpers/issuing/cards/{card}/shipping/deliver", "deliver_card"} => "deliver_card",
-    {"PostTestHelpersIssuingCardsCardShippingShip",
-     "/v1/test_helpers/issuing/cards/{card}/shipping/ship", "ship_card"} => "ship_card",
-    {"PostTestHelpersIssuingCardsCardShippingReturn",
-     "/v1/test_helpers/issuing/cards/{card}/shipping/return", "return_card"} => "return_card",
-    {"PostTestHelpersIssuingCardsCardShippingFail",
-     "/v1/test_helpers/issuing/cards/{card}/shipping/fail", "fail_card"} => "fail_card",
+    {"PostTestHelpersIssuingCardsCardShippingDeliver", "/v1/test_helpers/issuing/cards/{card}/shipping/deliver",
+     "deliver_card"} => "deliver_card",
+    {"PostTestHelpersIssuingCardsCardShippingShip", "/v1/test_helpers/issuing/cards/{card}/shipping/ship", "ship_card"} =>
+      "ship_card",
+    {"PostTestHelpersIssuingCardsCardShippingReturn", "/v1/test_helpers/issuing/cards/{card}/shipping/return",
+     "return_card"} => "return_card",
+    {"PostTestHelpersIssuingCardsCardShippingFail", "/v1/test_helpers/issuing/cards/{card}/shipping/fail", "fail_card"} =>
+      "fail_card",
     {"GetChargesChargeRefunds", "/v1/charges/{charge}/refunds", "list"} => "list",
-    {"GetChargesChargeRefundsRefund", "/v1/charges/{charge}/refunds/{refund}", "retrieve"} =>
-      "retrieve",
+    {"GetChargesChargeRefundsRefund", "/v1/charges/{charge}/refunds/{refund}", "retrieve"} => "retrieve",
     {"PostRefunds", "/v1/refunds", "create"} => "create",
     {"PostRefundsRefund", "/v1/refunds/{refund}", "update"} => "update",
     {"PostRefundsRefundCancel", "/v1/refunds/{refund}/cancel", "cancel"} => "cancel",
-    {"PostTestHelpersRefundsRefundExpire", "/v1/test_helpers/refunds/{refund}/expire", "expire"} =>
-      "expire",
+    {"PostTestHelpersRefundsRefundExpire", "/v1/test_helpers/refunds/{refund}/expire", "expire"} => "expire",
     {"GetBalanceTransactions", "/v1/balance_transactions", "list"} => "list",
     {"GetBalanceTransactionsId", "/v1/balance_transactions/{id}", "retrieve"} => "retrieve",
     {"PostAccountLinks", "/v1/account_links", "create"} => "create",
-    {"GetPromotionCodesPromotionCode", "/v1/promotion_codes/{promotion_code}", "retrieve"} =>
-      "retrieve",
+    {"GetPromotionCodesPromotionCode", "/v1/promotion_codes/{promotion_code}", "retrieve"} => "retrieve",
     {"PostPromotionCodes", "/v1/promotion_codes", "create"} => "create",
-    {"PostPromotionCodesPromotionCode", "/v1/promotion_codes/{promotion_code}", "update"} =>
-      "update",
+    {"PostPromotionCodesPromotionCode", "/v1/promotion_codes/{promotion_code}", "update"} => "update",
     {"GetPromotionCodes", "/v1/promotion_codes", "list"} => "list",
-    {"PostIdentityVerificationSessions", "/v1/identity/verification_sessions", "create"} =>
-      "create",
-    {"GetIdentityVerificationSessionsSession", "/v1/identity/verification_sessions/{session}",
-     "retrieve"} => "retrieve",
-    {"GetIdentityVerificationSessions", "/v1/identity/verification_sessions", "list"} => "list",
-    {"PostIdentityVerificationSessionsSessionCancel",
-     "/v1/identity/verification_sessions/{session}/cancel", "cancel"} => "cancel",
-    {"PostIdentityVerificationSessionsSessionRedact",
-     "/v1/identity/verification_sessions/{session}/redact", "redact"} => "redact",
-    {"PostIdentityVerificationSessionsSession", "/v1/identity/verification_sessions/{session}",
-     "update"} => "update",
-    {"GetTerminalLocationsLocation", "/v1/terminal/locations/{location}", "retrieve"} =>
+    {"PostIdentityVerificationSessions", "/v1/identity/verification_sessions", "create"} => "create",
+    {"GetIdentityVerificationSessionsSession", "/v1/identity/verification_sessions/{session}", "retrieve"} =>
       "retrieve",
+    {"GetIdentityVerificationSessions", "/v1/identity/verification_sessions", "list"} => "list",
+    {"PostIdentityVerificationSessionsSessionCancel", "/v1/identity/verification_sessions/{session}/cancel", "cancel"} =>
+      "cancel",
+    {"PostIdentityVerificationSessionsSessionRedact", "/v1/identity/verification_sessions/{session}/redact", "redact"} =>
+      "redact",
+    {"PostIdentityVerificationSessionsSession", "/v1/identity/verification_sessions/{session}", "update"} => "update",
+    {"GetTerminalLocationsLocation", "/v1/terminal/locations/{location}", "retrieve"} => "retrieve",
     {"PostTerminalLocations", "/v1/terminal/locations", "create"} => "create",
     {"PostTerminalLocationsLocation", "/v1/terminal/locations/{location}", "update"} => "update",
     {"GetTerminalLocations", "/v1/terminal/locations", "list"} => "list",
-    {"DeleteTerminalLocationsLocation", "/v1/terminal/locations/{location}", "delete"} =>
-      "delete",
+    {"DeleteTerminalLocationsLocation", "/v1/terminal/locations/{location}", "delete"} => "delete",
     {"GetAccount", "/v1/account", "retrieve"} => "retrieve",
     {"PostAccountsAccount", "/v1/accounts/{account}", "update"} => "update",
     {"GetAccounts", "/v1/accounts", "list"} => "list",
@@ -869,8 +818,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"DeleteAccountsAccount", "/v1/accounts/{account}", "delete"} => "delete",
     {"PostAccountsAccountReject", "/v1/accounts/{account}/reject", "reject"} => "reject",
     {"GetAccountsAccountPersons", "/v1/accounts/{account}/persons", "persons"} => "persons",
-    {"GetAccountsAccountCapabilities", "/v1/accounts/{account}/capabilities", "capabilities"} =>
-      "capabilities",
+    {"GetAccountsAccountCapabilities", "/v1/accounts/{account}/capabilities", "capabilities"} => "capabilities",
     {"GetProductsSearch", "/v1/products/search", "search"} => "search",
     {"PostProducts", "/v1/products", "create"} => "create",
     {"GetProductsId", "/v1/products/{id}", "retrieve"} => "retrieve",
@@ -890,55 +838,45 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"DeleteInvoiceitemsInvoiceitem", "/v1/invoiceitems/{invoiceitem}", "delete"} => "delete",
     {"GetClimateSuppliersSupplier", "/v1/climate/suppliers/{supplier}", "retrieve"} => "retrieve",
     {"GetClimateSuppliers", "/v1/climate/suppliers", "list"} => "list",
-    {"GetIdentityVerificationReportsReport", "/v1/identity/verification_reports/{report}",
-     "retrieve"} => "retrieve",
+    {"GetIdentityVerificationReportsReport", "/v1/identity/verification_reports/{report}", "retrieve"} => "retrieve",
     {"GetIdentityVerificationReports", "/v1/identity/verification_reports", "list"} => "list",
-    {"GetReportingReportRunsReportRun", "/v1/reporting/report_runs/{report_run}", "retrieve"} =>
-      "retrieve",
+    {"GetReportingReportRunsReportRun", "/v1/reporting/report_runs/{report_run}", "retrieve"} => "retrieve",
     {"PostReportingReportRuns", "/v1/reporting/report_runs", "create"} => "create",
     {"GetReportingReportRuns", "/v1/reporting/report_runs", "list"} => "list",
-    {"GetTestHelpersTestClocksTestClock", "/v1/test_helpers/test_clocks/{test_clock}", "retrieve"} =>
-      "retrieve",
+    {"GetTestHelpersTestClocksTestClock", "/v1/test_helpers/test_clocks/{test_clock}", "retrieve"} => "retrieve",
     {"PostTestHelpersTestClocks", "/v1/test_helpers/test_clocks", "create"} => "create",
-    {"DeleteTestHelpersTestClocksTestClock", "/v1/test_helpers/test_clocks/{test_clock}",
-     "delete"} => "delete",
-    {"PostTestHelpersTestClocksTestClockAdvance",
-     "/v1/test_helpers/test_clocks/{test_clock}/advance", "advance"} => "advance",
+    {"DeleteTestHelpersTestClocksTestClock", "/v1/test_helpers/test_clocks/{test_clock}", "delete"} => "delete",
+    {"PostTestHelpersTestClocksTestClockAdvance", "/v1/test_helpers/test_clocks/{test_clock}/advance", "advance"} =>
+      "advance",
     {"GetTestHelpersTestClocks", "/v1/test_helpers/test_clocks", "list"} => "list",
     {"GetCustomersCustomerBalanceTransactionsTransaction",
      "/v1/customers/{customer}/balance_transactions/{transaction}", "retrieve"} => "retrieve",
-    {"GetCustomersCustomerBalanceTransactions", "/v1/customers/{customer}/balance_transactions",
-     "list"} => "list",
-    {"PostCustomersCustomerBalanceTransactions", "/v1/customers/{customer}/balance_transactions",
-     "create"} => "create",
+    {"GetCustomersCustomerBalanceTransactions", "/v1/customers/{customer}/balance_transactions", "list"} => "list",
+    {"PostCustomersCustomerBalanceTransactions", "/v1/customers/{customer}/balance_transactions", "create"} => "create",
     {"PostCustomersCustomerBalanceTransactionsTransaction",
      "/v1/customers/{customer}/balance_transactions/{transaction}", "update"} => "update",
     {"GetExchangeRates", "/v1/exchange_rates", "list"} => "list",
     {"GetExchangeRatesRateId", "/v1/exchange_rates/{rate_id}", "retrieve"} => "retrieve",
-    {"DeleteCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "detach"} =>
-      "detach",
+    {"DeleteCustomersCustomerSourcesId", "/v1/customers/{customer}/sources/{id}", "detach"} => "detach",
     {"GetSourcesSource", "/v1/sources/{source}", "retrieve"} => "retrieve",
     {"PostSources", "/v1/sources", "create"} => "create",
     {"PostSourcesSource", "/v1/sources/{source}", "update"} => "update",
     {"PostSourcesSourceVerify", "/v1/sources/{source}/verify", "verify"} => "verify",
-    {"GetSourcesSourceSourceTransactions", "/v1/sources/{source}/source_transactions",
-     "source_transactions"} => "source_transactions",
+    {"GetSourcesSourceSourceTransactions", "/v1/sources/{source}/source_transactions", "source_transactions"} =>
+      "source_transactions",
     {"PostSetupIntents", "/v1/setup_intents", "create"} => "create",
     {"GetSetupIntents", "/v1/setup_intents", "list"} => "list",
     {"GetSetupIntentsIntent", "/v1/setup_intents/{intent}", "retrieve"} => "retrieve",
     {"PostSetupIntentsIntent", "/v1/setup_intents/{intent}", "update"} => "update",
-    {"PostSetupIntentsIntentConfirm", "/v1/setup_intents/{intent}/confirm", "confirm"} =>
-      "confirm",
+    {"PostSetupIntentsIntentConfirm", "/v1/setup_intents/{intent}/confirm", "confirm"} => "confirm",
     {"PostSetupIntentsIntentCancel", "/v1/setup_intents/{intent}/cancel", "cancel"} => "cancel",
-    {"PostSetupIntentsIntentVerifyMicrodeposits",
-     "/v1/setup_intents/{intent}/verify_microdeposits",
+    {"PostSetupIntentsIntentVerifyMicrodeposits", "/v1/setup_intents/{intent}/verify_microdeposits",
      "verify_microdeposits"} => "verify_microdeposits",
     {"GetIssuingDisputes", "/v1/issuing/disputes", "list"} => "list",
     {"PostIssuingDisputes", "/v1/issuing/disputes", "create"} => "create",
     {"PostIssuingDisputesDispute", "/v1/issuing/disputes/{dispute}", "update"} => "update",
     {"GetIssuingDisputesDispute", "/v1/issuing/disputes/{dispute}", "retrieve"} => "retrieve",
-    {"PostIssuingDisputesDisputeSubmit", "/v1/issuing/disputes/{dispute}/submit", "submit"} =>
-      "submit",
+    {"PostIssuingDisputesDisputeSubmit", "/v1/issuing/disputes/{dispute}/submit", "submit"} => "submit",
     {"GetFileLinksLink", "/v1/file_links/{link}", "retrieve"} => "retrieve",
     {"PostFileLinks", "/v1/file_links", "create"} => "create",
     {"PostFileLinksLink", "/v1/file_links/{link}", "update"} => "update",
@@ -947,65 +885,56 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"DeleteEphemeralKeysKey", "/v1/ephemeral_keys/{key}", "delete"} => "delete",
     {"PostApplicationFeesIdRefunds", "/v1/application_fees/{id}/refunds", "create"} => "create",
     {"GetApplicationFeesIdRefunds", "/v1/application_fees/{id}/refunds", "list"} => "list",
-    {"GetApplicationFeesFeeRefundsId", "/v1/application_fees/{fee}/refunds/{id}", "retrieve"} =>
-      "retrieve",
-    {"PostApplicationFeesFeeRefundsId", "/v1/application_fees/{fee}/refunds/{id}", "update"} =>
-      "update",
+    {"GetApplicationFeesFeeRefundsId", "/v1/application_fees/{fee}/refunds/{id}", "retrieve"} => "retrieve",
+    {"PostApplicationFeesFeeRefundsId", "/v1/application_fees/{fee}/refunds/{id}", "update"} => "update",
     {"GetBillingPortalConfigurations", "/v1/billing_portal/configurations", "list"} => "list",
-    {"PostBillingPortalConfigurations", "/v1/billing_portal/configurations", "create"} =>
-      "create",
-    {"PostBillingPortalConfigurationsConfiguration",
-     "/v1/billing_portal/configurations/{configuration}", "update"} => "update",
-    {"GetBillingPortalConfigurationsConfiguration",
-     "/v1/billing_portal/configurations/{configuration}", "retrieve"} => "retrieve",
+    {"PostBillingPortalConfigurations", "/v1/billing_portal/configurations", "create"} => "create",
+    {"PostBillingPortalConfigurationsConfiguration", "/v1/billing_portal/configurations/{configuration}", "update"} =>
+      "update",
+    {"GetBillingPortalConfigurationsConfiguration", "/v1/billing_portal/configurations/{configuration}", "retrieve"} =>
+      "retrieve",
     {"GetEvents", "/v1/events", "list"} => "list",
     {"GetEventsId", "/v1/events/{id}", "retrieve"} => "retrieve",
     {"PostCustomerSessions", "/v1/customer_sessions", "create"} => "create",
     {"GetIssuingCardholders", "/v1/issuing/cardholders", "list"} => "list",
     {"PostIssuingCardholders", "/v1/issuing/cardholders", "create"} => "create",
-    {"GetIssuingCardholdersCardholder", "/v1/issuing/cardholders/{cardholder}", "retrieve"} =>
-      "retrieve",
-    {"PostIssuingCardholdersCardholder", "/v1/issuing/cardholders/{cardholder}", "update"} =>
-      "update",
+    {"GetIssuingCardholdersCardholder", "/v1/issuing/cardholders/{cardholder}", "retrieve"} => "retrieve",
+    {"PostIssuingCardholdersCardholder", "/v1/issuing/cardholders/{cardholder}", "update"} => "update",
     {"GetCheckoutSessions", "/v1/checkout/sessions", "list"} => "list",
     {"GetCheckoutSessionsSession", "/v1/checkout/sessions/{session}", "retrieve"} => "retrieve",
     {"PostCheckoutSessions", "/v1/checkout/sessions", "create"} => "create",
-    {"GetCheckoutSessionsSessionLineItems", "/v1/checkout/sessions/{session}/line_items",
-     "list_line_items"} => "list_line_items",
-    {"PostCheckoutSessionsSessionExpire", "/v1/checkout/sessions/{session}/expire", "expire"} =>
-      "expire",
+    {"GetCheckoutSessionsSessionLineItems", "/v1/checkout/sessions/{session}/line_items", "list_line_items"} =>
+      "list_line_items",
+    {"PostCheckoutSessionsSessionExpire", "/v1/checkout/sessions/{session}/expire", "expire"} => "expire",
     {"GetSigmaScheduledQueryRuns", "/v1/sigma/scheduled_query_runs", "list"} => "list",
-    {"GetSigmaScheduledQueryRunsScheduledQueryRun",
-     "/v1/sigma/scheduled_query_runs/{scheduled_query_run}", "retrieve"} => "retrieve",
-    {"PostTreasuryOutboundPayments", "/v1/treasury/outbound_payments", "create"} => "create",
-    {"GetTreasuryOutboundPaymentsId", "/v1/treasury/outbound_payments/{id}", "retrieve"} =>
+    {"GetSigmaScheduledQueryRunsScheduledQueryRun", "/v1/sigma/scheduled_query_runs/{scheduled_query_run}", "retrieve"} =>
       "retrieve",
+    {"PostTreasuryOutboundPayments", "/v1/treasury/outbound_payments", "create"} => "create",
+    {"GetTreasuryOutboundPaymentsId", "/v1/treasury/outbound_payments/{id}", "retrieve"} => "retrieve",
     {"GetTreasuryOutboundPayments", "/v1/treasury/outbound_payments", "list"} => "list",
-    {"PostTreasuryOutboundPaymentsIdCancel", "/v1/treasury/outbound_payments/{id}/cancel",
-     "cancel"} => "cancel",
-    {"PostTestHelpersTreasuryOutboundPaymentsIdFail",
-     "/v1/test_helpers/treasury/outbound_payments/{id}/fail", "fail"} => "fail",
-    {"PostTestHelpersTreasuryOutboundPaymentsIdPost",
-     "/v1/test_helpers/treasury/outbound_payments/{id}/post", "post"} => "post",
-    {"PostTestHelpersTreasuryOutboundPaymentsIdReturn",
-     "/v1/test_helpers/treasury/outbound_payments/{id}/return",
+    {"PostTreasuryOutboundPaymentsIdCancel", "/v1/treasury/outbound_payments/{id}/cancel", "cancel"} => "cancel",
+    {"PostTestHelpersTreasuryOutboundPaymentsIdFail", "/v1/test_helpers/treasury/outbound_payments/{id}/fail", "fail"} =>
+      "fail",
+    {"PostTestHelpersTreasuryOutboundPaymentsIdPost", "/v1/test_helpers/treasury/outbound_payments/{id}/post", "post"} =>
+      "post",
+    {"PostTestHelpersTreasuryOutboundPaymentsIdReturn", "/v1/test_helpers/treasury/outbound_payments/{id}/return",
      "return_outbound_payment"} => "return_outbound_payment",
     {"GetFinancialConnectionsAccounts", "/v1/financial_connections/accounts", "list"} => "list",
-    {"GetFinancialConnectionsAccountsAccount", "/v1/financial_connections/accounts/{account}",
-     "retrieve"} => "retrieve",
-    {"GetFinancialConnectionsAccountsAccountOwners",
-     "/v1/financial_connections/accounts/{account}/owners", "list_owners"} => "list_owners",
-    {"PostFinancialConnectionsAccountsAccountRefresh",
-     "/v1/financial_connections/accounts/{account}/refresh", "refresh"} => "refresh",
-    {"PostFinancialConnectionsAccountsAccountDisconnect",
-     "/v1/financial_connections/accounts/{account}/disconnect", "disconnect"} => "disconnect",
-    {"PostFinancialConnectionsAccountsAccountSubscribe",
-     "/v1/financial_connections/accounts/{account}/subscribe", "subscribe"} => "subscribe",
-    {"PostFinancialConnectionsAccountsAccountUnsubscribe",
-     "/v1/financial_connections/accounts/{account}/unsubscribe", "unsubscribe"} => "unsubscribe",
+    {"GetFinancialConnectionsAccountsAccount", "/v1/financial_connections/accounts/{account}", "retrieve"} =>
+      "retrieve",
+    {"GetFinancialConnectionsAccountsAccountOwners", "/v1/financial_connections/accounts/{account}/owners",
+     "list_owners"} => "list_owners",
+    {"PostFinancialConnectionsAccountsAccountRefresh", "/v1/financial_connections/accounts/{account}/refresh",
+     "refresh"} => "refresh",
+    {"PostFinancialConnectionsAccountsAccountDisconnect", "/v1/financial_connections/accounts/{account}/disconnect",
+     "disconnect"} => "disconnect",
+    {"PostFinancialConnectionsAccountsAccountSubscribe", "/v1/financial_connections/accounts/{account}/subscribe",
+     "subscribe"} => "subscribe",
+    {"PostFinancialConnectionsAccountsAccountUnsubscribe", "/v1/financial_connections/accounts/{account}/unsubscribe",
+     "unsubscribe"} => "unsubscribe",
     {"PostTreasuryDebitReversals", "/v1/treasury/debit_reversals", "create"} => "create",
-    {"GetTreasuryDebitReversalsDebitReversal", "/v1/treasury/debit_reversals/{debit_reversal}",
-     "retrieve"} => "retrieve",
+    {"GetTreasuryDebitReversalsDebitReversal", "/v1/treasury/debit_reversals/{debit_reversal}", "retrieve"} =>
+      "retrieve",
     {"GetTreasuryDebitReversals", "/v1/treasury/debit_reversals", "list"} => "list",
     {"PostTransfers", "/v1/transfers", "create"} => "create",
     {"GetTransfers", "/v1/transfers", "list"} => "list",
@@ -1015,84 +944,68 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostQuotes", "/v1/quotes", "create"} => "create",
     {"PostQuotesQuote", "/v1/quotes/{quote}", "update"} => "update",
     {"PostQuotesQuoteCancel", "/v1/quotes/{quote}/cancel", "cancel"} => "cancel",
-    {"PostQuotesQuoteFinalize", "/v1/quotes/{quote}/finalize", "finalize_quote"} =>
-      "finalize_quote",
+    {"PostQuotesQuoteFinalize", "/v1/quotes/{quote}/finalize", "finalize_quote"} => "finalize_quote",
     {"PostQuotesQuoteAccept", "/v1/quotes/{quote}/accept", "accept"} => "accept",
     {"GetQuotes", "/v1/quotes", "list"} => "list",
-    {"GetQuotesQuoteLineItems", "/v1/quotes/{quote}/line_items", "list_line_items"} =>
-      "list_line_items",
+    {"GetQuotesQuoteLineItems", "/v1/quotes/{quote}/line_items", "list_line_items"} => "list_line_items",
     {"GetQuotesQuoteComputedUpfrontLineItems", "/v1/quotes/{quote}/computed_upfront_line_items",
      "list_computed_upfront_line_items"} => "list_computed_upfront_line_items",
     {"GetQuotesQuotePdf", "/v1/quotes/{quote}/pdf", "pdf"} => "pdf",
     {"GetRadarEarlyFraudWarnings", "/v1/radar/early_fraud_warnings", "list"} => "list",
-    {"GetRadarEarlyFraudWarningsEarlyFraudWarning",
-     "/v1/radar/early_fraud_warnings/{early_fraud_warning}", "retrieve"} => "retrieve",
+    {"GetRadarEarlyFraudWarningsEarlyFraudWarning", "/v1/radar/early_fraud_warnings/{early_fraud_warning}", "retrieve"} =>
+      "retrieve",
     {"GetTaxRates", "/v1/tax_rates", "list"} => "list",
     {"GetTaxRatesTaxRate", "/v1/tax_rates/{tax_rate}", "retrieve"} => "retrieve",
     {"PostTaxRates", "/v1/tax_rates", "create"} => "create",
     {"PostTaxRatesTaxRate", "/v1/tax_rates/{tax_rate}", "update"} => "update",
     {"GetPaymentMethodConfigurations", "/v1/payment_method_configurations", "list"} => "list",
-    {"GetPaymentMethodConfigurationsConfiguration",
-     "/v1/payment_method_configurations/{configuration}", "retrieve"} => "retrieve",
-    {"PostPaymentMethodConfigurationsConfiguration",
-     "/v1/payment_method_configurations/{configuration}", "update"} => "update",
-    {"PostPaymentMethodConfigurations", "/v1/payment_method_configurations", "create"} =>
-      "create",
+    {"GetPaymentMethodConfigurationsConfiguration", "/v1/payment_method_configurations/{configuration}", "retrieve"} =>
+      "retrieve",
+    {"PostPaymentMethodConfigurationsConfiguration", "/v1/payment_method_configurations/{configuration}", "update"} =>
+      "update",
+    {"PostPaymentMethodConfigurations", "/v1/payment_method_configurations", "create"} => "create",
     {"GetDisputes", "/v1/disputes", "list"} => "list",
     {"GetDisputesDispute", "/v1/disputes/{dispute}", "retrieve"} => "retrieve",
     {"PostDisputesDispute", "/v1/disputes/{dispute}", "update"} => "update",
     {"PostDisputesDisputeClose", "/v1/disputes/{dispute}/close", "close"} => "close",
     {"GetTaxCodes", "/v1/tax_codes", "list"} => "list",
     {"GetTaxCodesId", "/v1/tax_codes/{id}", "retrieve"} => "retrieve",
-    {"GetTaxTransactionsTransaction", "/v1/tax/transactions/{transaction}", "retrieve"} =>
-      "retrieve",
-    {"PostTaxTransactionsCreateReversal", "/v1/tax/transactions/create_reversal",
-     "create_reversal"} => "create_reversal",
+    {"GetTaxTransactionsTransaction", "/v1/tax/transactions/{transaction}", "retrieve"} => "retrieve",
+    {"PostTaxTransactionsCreateReversal", "/v1/tax/transactions/create_reversal", "create_reversal"} =>
+      "create_reversal",
     {"PostTaxTransactionsCreateFromCalculation", "/v1/tax/transactions/create_from_calculation",
      "create_from_calculation"} => "create_from_calculation",
-    {"GetTaxTransactionsTransactionLineItems", "/v1/tax/transactions/{transaction}/line_items",
-     "list_line_items"} => "list_line_items",
+    {"GetTaxTransactionsTransactionLineItems", "/v1/tax/transactions/{transaction}/line_items", "list_line_items"} =>
+      "list_line_items",
     {"GetSubscriptionsSearch", "/v1/subscriptions/search", "search"} => "search",
     {"GetSubscriptions", "/v1/subscriptions", "list"} => "list",
     {"PostSubscriptions", "/v1/subscriptions", "create"} => "create",
-    {"PostSubscriptionsSubscriptionExposedId", "/v1/subscriptions/{subscription_exposed_id}",
-     "update"} => "update",
-    {"GetSubscriptionsSubscriptionExposedId", "/v1/subscriptions/{subscription_exposed_id}",
-     "retrieve"} => "retrieve",
-    {"DeleteSubscriptionsSubscriptionExposedId", "/v1/subscriptions/{subscription_exposed_id}",
-     "cancel"} => "cancel",
-    {"PostSubscriptionsSubscriptionResume", "/v1/subscriptions/{subscription}/resume", "resume"} =>
-      "resume",
-    {"DeleteSubscriptionsSubscriptionExposedIdDiscount",
-     "/v1/subscriptions/{subscription_exposed_id}/discount",
+    {"PostSubscriptionsSubscriptionExposedId", "/v1/subscriptions/{subscription_exposed_id}", "update"} => "update",
+    {"GetSubscriptionsSubscriptionExposedId", "/v1/subscriptions/{subscription_exposed_id}", "retrieve"} => "retrieve",
+    {"DeleteSubscriptionsSubscriptionExposedId", "/v1/subscriptions/{subscription_exposed_id}", "cancel"} => "cancel",
+    {"PostSubscriptionsSubscriptionResume", "/v1/subscriptions/{subscription}/resume", "resume"} => "resume",
+    {"DeleteSubscriptionsSubscriptionExposedIdDiscount", "/v1/subscriptions/{subscription_exposed_id}/discount",
      "delete_discount"} => "delete_discount",
     {"GetShippingRates", "/v1/shipping_rates", "list"} => "list",
-    {"GetShippingRatesShippingRateToken", "/v1/shipping_rates/{shipping_rate_token}", "retrieve"} =>
-      "retrieve",
+    {"GetShippingRatesShippingRateToken", "/v1/shipping_rates/{shipping_rate_token}", "retrieve"} => "retrieve",
     {"PostShippingRates", "/v1/shipping_rates", "create"} => "create",
-    {"PostShippingRatesShippingRateToken", "/v1/shipping_rates/{shipping_rate_token}", "update"} =>
-      "update",
+    {"PostShippingRatesShippingRateToken", "/v1/shipping_rates/{shipping_rate_token}", "update"} => "update",
     {"GetTreasuryReceivedDebits", "/v1/treasury/received_debits", "list"} => "list",
-    {"GetTreasuryReceivedDebitsId", "/v1/treasury/received_debits/{id}", "retrieve"} =>
+    {"GetTreasuryReceivedDebitsId", "/v1/treasury/received_debits/{id}", "retrieve"} => "retrieve",
+    {"PostTestHelpersTreasuryReceivedDebits", "/v1/test_helpers/treasury/received_debits", "create"} => "create",
+    {"PostFinancialConnectionsSessions", "/v1/financial_connections/sessions", "create"} => "create",
+    {"GetFinancialConnectionsSessionsSession", "/v1/financial_connections/sessions/{session}", "retrieve"} =>
       "retrieve",
-    {"PostTestHelpersTreasuryReceivedDebits", "/v1/test_helpers/treasury/received_debits",
-     "create"} => "create",
-    {"PostFinancialConnectionsSessions", "/v1/financial_connections/sessions", "create"} =>
-      "create",
-    {"GetFinancialConnectionsSessionsSession", "/v1/financial_connections/sessions/{session}",
-     "retrieve"} => "retrieve",
-    {"PostTreasuryInboundTransfersInboundTransferCancel",
-     "/v1/treasury/inbound_transfers/{inbound_transfer}/cancel", "cancel"} => "cancel",
+    {"PostTreasuryInboundTransfersInboundTransferCancel", "/v1/treasury/inbound_transfers/{inbound_transfer}/cancel",
+     "cancel"} => "cancel",
     {"PostTreasuryInboundTransfers", "/v1/treasury/inbound_transfers", "create"} => "create",
-    {"GetTreasuryInboundTransfersId", "/v1/treasury/inbound_transfers/{id}", "retrieve"} =>
-      "retrieve",
+    {"GetTreasuryInboundTransfersId", "/v1/treasury/inbound_transfers/{id}", "retrieve"} => "retrieve",
     {"GetTreasuryInboundTransfers", "/v1/treasury/inbound_transfers", "list"} => "list",
-    {"PostTestHelpersTreasuryInboundTransfersIdSucceed",
-     "/v1/test_helpers/treasury/inbound_transfers/{id}/succeed", "succeed"} => "succeed",
-    {"PostTestHelpersTreasuryInboundTransfersIdFail",
-     "/v1/test_helpers/treasury/inbound_transfers/{id}/fail", "fail"} => "fail",
-    {"PostTestHelpersTreasuryInboundTransfersIdReturn",
-     "/v1/test_helpers/treasury/inbound_transfers/{id}/return",
+    {"PostTestHelpersTreasuryInboundTransfersIdSucceed", "/v1/test_helpers/treasury/inbound_transfers/{id}/succeed",
+     "succeed"} => "succeed",
+    {"PostTestHelpersTreasuryInboundTransfersIdFail", "/v1/test_helpers/treasury/inbound_transfers/{id}/fail", "fail"} =>
+      "fail",
+    {"PostTestHelpersTreasuryInboundTransfersIdReturn", "/v1/test_helpers/treasury/inbound_transfers/{id}/return",
      "return_inbound_transfer"} => "return_inbound_transfer",
     {"GetMandatesMandate", "/v1/mandates/{mandate}", "retrieve"} => "retrieve",
     {"GetRadarValueListItems", "/v1/radar/value_list_items", "list"} => "list",
@@ -1100,13 +1013,11 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostRadarValueListItems", "/v1/radar/value_list_items", "create"} => "create",
     {"DeleteRadarValueListItemsItem", "/v1/radar/value_list_items/{item}", "delete"} => "delete",
     {"GetTreasuryReceivedCredits", "/v1/treasury/received_credits", "list"} => "list",
-    {"GetTreasuryReceivedCreditsId", "/v1/treasury/received_credits/{id}", "retrieve"} =>
-      "retrieve",
-    {"PostTestHelpersTreasuryReceivedCredits", "/v1/test_helpers/treasury/received_credits",
-     "create"} => "create",
+    {"GetTreasuryReceivedCreditsId", "/v1/treasury/received_credits/{id}", "retrieve"} => "retrieve",
+    {"PostTestHelpersTreasuryReceivedCredits", "/v1/test_helpers/treasury/received_credits", "create"} => "create",
     {"PostTreasuryOutboundTransfers", "/v1/treasury/outbound_transfers", "create"} => "create",
-    {"GetTreasuryOutboundTransfersOutboundTransfer",
-     "/v1/treasury/outbound_transfers/{outbound_transfer}", "retrieve"} => "retrieve",
+    {"GetTreasuryOutboundTransfersOutboundTransfer", "/v1/treasury/outbound_transfers/{outbound_transfer}", "retrieve"} =>
+      "retrieve",
     {"GetTreasuryOutboundTransfers", "/v1/treasury/outbound_transfers", "list"} => "list",
     {"PostTreasuryOutboundTransfersOutboundTransferCancel",
      "/v1/treasury/outbound_transfers/{outbound_transfer}/cancel", "cancel"} => "cancel",
@@ -1115,62 +1026,50 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostTestHelpersTreasuryOutboundTransfersOutboundTransferPost",
      "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/post", "post"} => "post",
     {"PostTestHelpersTreasuryOutboundTransfersOutboundTransferReturn",
-     "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/return",
-     "return_outbound_transfer"} => "return_outbound_transfer",
+     "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/return", "return_outbound_transfer"} =>
+      "return_outbound_transfer",
     {"GetPayoutsPayout", "/v1/payouts/{payout}", "retrieve"} => "retrieve",
     {"GetPayouts", "/v1/payouts", "list"} => "list",
     {"PostPayouts", "/v1/payouts", "create"} => "create",
     {"PostPayoutsPayout", "/v1/payouts/{payout}", "update"} => "update",
     {"PostPayoutsPayoutCancel", "/v1/payouts/{payout}/cancel", "cancel"} => "cancel",
     {"PostPayoutsPayoutReverse", "/v1/payouts/{payout}/reverse", "reverse"} => "reverse",
-    {"GetTreasuryTransactionEntriesId", "/v1/treasury/transaction_entries/{id}", "retrieve"} =>
-      "retrieve",
+    {"GetTreasuryTransactionEntriesId", "/v1/treasury/transaction_entries/{id}", "retrieve"} => "retrieve",
     {"GetTreasuryTransactionEntries", "/v1/treasury/transaction_entries", "list"} => "list",
     {"PostCreditNotes", "/v1/credit_notes", "create"} => "create",
     {"GetCreditNotesPreview", "/v1/credit_notes/preview", "preview"} => "preview",
     {"GetCreditNotesId", "/v1/credit_notes/{id}", "retrieve"} => "retrieve",
     {"GetCreditNotes", "/v1/credit_notes", "list"} => "list",
     {"PostCreditNotesId", "/v1/credit_notes/{id}", "update"} => "update",
-    {"PostCreditNotesIdVoid", "/v1/credit_notes/{id}/void", "void_credit_note"} =>
-      "void_credit_note",
-    {"GetCreditNotesPreviewLines", "/v1/credit_notes/preview/lines", "preview_lines"} =>
-      "preview_lines",
+    {"PostCreditNotesIdVoid", "/v1/credit_notes/{id}/void", "void_credit_note"} => "void_credit_note",
+    {"GetCreditNotesPreviewLines", "/v1/credit_notes/preview/lines", "preview_lines"} => "preview_lines",
     {"GetInvoicesInvoiceLines", "/v1/invoices/{invoice}/lines", "list"} => "list",
-    {"PostInvoicesInvoiceLinesLineItemId", "/v1/invoices/{invoice}/lines/{line_item_id}",
-     "update"} => "update",
+    {"PostInvoicesInvoiceLinesLineItemId", "/v1/invoices/{invoice}/lines/{line_item_id}", "update"} => "update",
     {"GetIssuingTransactions", "/v1/issuing/transactions", "list"} => "list",
-    {"GetIssuingTransactionsTransaction", "/v1/issuing/transactions/{transaction}", "retrieve"} =>
-      "retrieve",
-    {"PostIssuingTransactionsTransaction", "/v1/issuing/transactions/{transaction}", "update"} =>
-      "update",
+    {"GetIssuingTransactionsTransaction", "/v1/issuing/transactions/{transaction}", "retrieve"} => "retrieve",
+    {"PostIssuingTransactionsTransaction", "/v1/issuing/transactions/{transaction}", "update"} => "update",
     {"PostTestHelpersIssuingTransactionsCreateForceCapture",
-     "/v1/test_helpers/issuing/transactions/create_force_capture",
-     "create_force_capture"} => "create_force_capture",
+     "/v1/test_helpers/issuing/transactions/create_force_capture", "create_force_capture"} => "create_force_capture",
     {"PostTestHelpersIssuingTransactionsCreateUnlinkedRefund",
-     "/v1/test_helpers/issuing/transactions/create_unlinked_refund",
-     "create_unlinked_refund"} => "create_unlinked_refund",
+     "/v1/test_helpers/issuing/transactions/create_unlinked_refund", "create_unlinked_refund"} =>
+      "create_unlinked_refund",
     {"PostTestHelpersIssuingTransactionsTransactionRefund",
      "/v1/test_helpers/issuing/transactions/{transaction}/refund", "refund"} => "refund",
-    {"PostSubscriptionItemsSubscriptionItemUsageRecords",
-     "/v1/subscription_items/{subscription_item}/usage_records", "create"} => "create",
+    {"PostSubscriptionItemsSubscriptionItemUsageRecords", "/v1/subscription_items/{subscription_item}/usage_records",
+     "create"} => "create",
     {"PostCustomersCustomerTaxIds", "/v1/customers/{customer}/tax_ids", "create"} => "create",
-    {"GetCustomersCustomerTaxIdsId", "/v1/customers/{customer}/tax_ids/{id}", "retrieve"} =>
-      "retrieve",
+    {"GetCustomersCustomerTaxIdsId", "/v1/customers/{customer}/tax_ids/{id}", "retrieve"} => "retrieve",
     {"GetCustomersCustomerTaxIds", "/v1/customers/{customer}/tax_ids", "list"} => "list",
-    {"DeleteCustomersCustomerTaxIdsId", "/v1/customers/{customer}/tax_ids/{id}", "delete"} =>
-      "delete",
+    {"DeleteCustomersCustomerTaxIdsId", "/v1/customers/{customer}/tax_ids/{id}", "delete"} => "delete",
     {"GetSubscriptionItemsSubscriptionItemUsageRecordSummaries",
      "/v1/subscription_items/{subscription_item}/usage_record_summaries", "list"} => "list",
     {"GetCountrySpecs", "/v1/country_specs", "list"} => "list",
     {"GetCountrySpecsCountry", "/v1/country_specs/{country}", "retrieve"} => "retrieve",
     {"GetAccountsAccountPersons", "/v1/accounts/{account}/persons", "list"} => "list",
-    {"GetAccountsAccountPersonsPerson", "/v1/accounts/{account}/persons/{person}", "retrieve"} =>
-      "retrieve",
+    {"GetAccountsAccountPersonsPerson", "/v1/accounts/{account}/persons/{person}", "retrieve"} => "retrieve",
     {"PostAccountsAccountPersons", "/v1/accounts/{account}/persons", "create"} => "create",
-    {"PostAccountsAccountPersonsPerson", "/v1/accounts/{account}/persons/{person}", "update"} =>
-      "update",
-    {"DeleteAccountsAccountPersonsPerson", "/v1/accounts/{account}/persons/{person}", "delete"} =>
-      "delete",
+    {"PostAccountsAccountPersonsPerson", "/v1/accounts/{account}/persons/{person}", "update"} => "update",
+    {"DeleteAccountsAccountPersonsPerson", "/v1/accounts/{account}/persons/{person}", "delete"} => "delete",
     {"PostBillingPortalSessions", "/v1/billing_portal/sessions", "create"} => "create",
     {"PostAccountSessions", "/v1/account_sessions", "create"} => "create",
     {"GetPlans", "/v1/plans", "list"} => "list",
@@ -1178,34 +1077,50 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"GetPlansPlan", "/v1/plans/{plan}", "retrieve"} => "retrieve",
     {"PostPlansPlan", "/v1/plans/{plan}", "update"} => "update",
     {"DeletePlansPlan", "/v1/plans/{plan}", "delete"} => "delete",
-    {"PostTestHelpersIssuingCardsCardShippingSubmit", "/v1/test_helpers/issuing/cards/{card}/shipping/submit", "submit_card"} => "submit_card",
-    {"GetConfirmationTokensConfirmationToken", "/v1/confirmation_tokens/{confirmation_token}", "retrieve"} => "retrieve",
+    {"PostTestHelpersIssuingCardsCardShippingSubmit", "/v1/test_helpers/issuing/cards/{card}/shipping/submit",
+     "submit_card"} => "submit_card",
+    {"GetConfirmationTokensConfirmationToken", "/v1/confirmation_tokens/{confirmation_token}", "retrieve"} =>
+      "retrieve",
     {"PostTestHelpersConfirmationTokens", "/v1/test_helpers/confirmation_tokens", "create"} => "create",
     {"PostSubscriptionsSubscriptionMigrate", "/v1/subscriptions/{subscription}/migrate", "migrate"} => "migrate",
     {"PostCheckoutSessionsSession", "/v1/checkout/sessions/{session}", "update"} => "update",
-    {"PostTestHelpersTreasuryOutboundPaymentsId", "/v1/test_helpers/treasury/outbound_payments/{id}", "update"} => "update",
+    {"PostTestHelpersTreasuryOutboundPaymentsId", "/v1/test_helpers/treasury/outbound_payments/{id}", "update"} =>
+      "update",
     {"GetBillingMetersIdEventSummaries", "/v1/billing/meters/{id}/event_summaries", "list"} => "list",
     {"GetEntitlementsFeatures", "/v1/entitlements/features", "list"} => "list",
     {"GetEntitlementsFeaturesId", "/v1/entitlements/features/{id}", "retrieve"} => "retrieve",
     {"PostEntitlementsFeatures", "/v1/entitlements/features", "create"} => "create",
     {"PostEntitlementsFeaturesId", "/v1/entitlements/features/{id}", "update"} => "update",
-    {"PostTerminalReadersReaderCollectInputs", "/v1/terminal/readers/{reader}/collect_inputs", "collect_inputs"} => "collect_inputs",
-    {"PostTerminalReadersReaderCollectPaymentMethod", "/v1/terminal/readers/{reader}/collect_payment_method", "collect_payment_method"} => "collect_payment_method",
-    {"PostTerminalReadersReaderConfirmPaymentIntent", "/v1/terminal/readers/{reader}/confirm_payment_intent", "confirm_payment_intent"} => "confirm_payment_intent",
-    {"PostTestHelpersTerminalReadersReaderSucceedInputCollection", "/v1/test_helpers/terminal/readers/{reader}/succeed_input_collection", "succeed_input_collection"} => "succeed_input_collection",
-    {"PostTestHelpersTerminalReadersReaderTimeoutInputCollection", "/v1/test_helpers/terminal/readers/{reader}/timeout_input_collection", "timeout_input_collection"} => "timeout_input_collection",
+    {"PostTerminalReadersReaderCollectInputs", "/v1/terminal/readers/{reader}/collect_inputs", "collect_inputs"} =>
+      "collect_inputs",
+    {"PostTerminalReadersReaderCollectPaymentMethod", "/v1/terminal/readers/{reader}/collect_payment_method",
+     "collect_payment_method"} => "collect_payment_method",
+    {"PostTerminalReadersReaderConfirmPaymentIntent", "/v1/terminal/readers/{reader}/confirm_payment_intent",
+     "confirm_payment_intent"} => "confirm_payment_intent",
+    {"PostTestHelpersTerminalReadersReaderSucceedInputCollection",
+     "/v1/test_helpers/terminal/readers/{reader}/succeed_input_collection", "succeed_input_collection"} =>
+      "succeed_input_collection",
+    {"PostTestHelpersTerminalReadersReaderTimeoutInputCollection",
+     "/v1/test_helpers/terminal/readers/{reader}/timeout_input_collection", "timeout_input_collection"} =>
+      "timeout_input_collection",
     {"PostBillingMeterEventAdjustments", "/v1/billing/meter_event_adjustments", "create"} => "create",
     {"GetBillingCreditBalanceSummary", "/v1/billing/credit_balance_summary", "retrieve"} => "retrieve",
     {"PostBillingMeterEvents", "/v1/billing/meter_events", "create"} => "create",
     {"GetInvoicePayments", "/v1/invoice_payments", "list"} => "list",
     {"GetInvoicePaymentsInvoicePayment", "/v1/invoice_payments/{invoice_payment}", "retrieve"} => "retrieve",
     {"GetIssuingPersonalizationDesigns", "/v1/issuing/personalization_designs", "list"} => "list",
-    {"GetIssuingPersonalizationDesignsPersonalizationDesign", "/v1/issuing/personalization_designs/{personalization_design}", "retrieve"} => "retrieve",
+    {"GetIssuingPersonalizationDesignsPersonalizationDesign",
+     "/v1/issuing/personalization_designs/{personalization_design}", "retrieve"} => "retrieve",
     {"PostIssuingPersonalizationDesigns", "/v1/issuing/personalization_designs", "create"} => "create",
-    {"PostIssuingPersonalizationDesignsPersonalizationDesign", "/v1/issuing/personalization_designs/{personalization_design}", "update"} => "update",
-    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivate", "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/activate", "activate"} => "activate",
-    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivate", "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/deactivate", "deactivate"} => "deactivate",
-    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReject", "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/reject", "reject"} => "reject",
+    {"PostIssuingPersonalizationDesignsPersonalizationDesign",
+     "/v1/issuing/personalization_designs/{personalization_design}", "update"} => "update",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivate",
+     "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/activate", "activate"} => "activate",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivate",
+     "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/deactivate", "deactivate"} =>
+      "deactivate",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReject",
+     "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/reject", "reject"} => "reject",
     {"PostInvoicesInvoiceAddLines", "/v1/invoices/{invoice}/add_lines", "add_lines"} => "add_lines",
     {"PostInvoicesInvoiceAttachPayment", "/v1/invoices/{invoice}/attach_payment", "attach_payment"} => "attach_payment",
     {"PostInvoicesInvoiceRemoveLines", "/v1/invoices/{invoice}/remove_lines", "remove_lines"} => "remove_lines",
@@ -1214,9 +1129,12 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"GetEntitlementsActiveEntitlements", "/v1/entitlements/active_entitlements", "list"} => "list",
     {"GetEntitlementsActiveEntitlementsId", "/v1/entitlements/active_entitlements/{id}", "retrieve"} => "retrieve",
     {"GetIssuingPhysicalBundles", "/v1/issuing/physical_bundles", "list"} => "list",
-    {"GetIssuingPhysicalBundlesPhysicalBundle", "/v1/issuing/physical_bundles/{physical_bundle}", "retrieve"} => "retrieve",
-    {"PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmount", "/v1/test_helpers/issuing/authorizations/{authorization}/finalize_amount", "finalize_amount"} => "finalize_amount",
-    {"PostTestHelpersIssuingAuthorizationsAuthorizationFraudChallengesRespond", "/v1/test_helpers/issuing/authorizations/{authorization}/fraud_challenges/respond", "respond"} => "respond",
+    {"GetIssuingPhysicalBundlesPhysicalBundle", "/v1/issuing/physical_bundles/{physical_bundle}", "retrieve"} =>
+      "retrieve",
+    {"PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmount",
+     "/v1/test_helpers/issuing/authorizations/{authorization}/finalize_amount", "finalize_amount"} => "finalize_amount",
+    {"PostTestHelpersIssuingAuthorizationsAuthorizationFraudChallengesRespond",
+     "/v1/test_helpers/issuing/authorizations/{authorization}/fraud_challenges/respond", "respond"} => "respond",
     {"GetBillingCreditBalanceTransactions", "/v1/billing/credit_balance_transactions", "list"} => "list",
     {"GetBillingCreditBalanceTransactionsId", "/v1/billing/credit_balance_transactions/{id}", "retrieve"} => "retrieve",
     {"GetBillingCreditGrants", "/v1/billing/credit_grants", "list"} => "list",
@@ -1225,9 +1143,10 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostBillingCreditGrantsId", "/v1/billing/credit_grants/{id}", "update"} => "update",
     {"PostBillingCreditGrantsIdExpire", "/v1/billing/credit_grants/{id}/expire", "expire"} => "expire",
     {"PostBillingCreditGrantsIdVoid", "/v1/billing/credit_grants/{id}/void", "void_grant"} => "void_grant",
-    {"PostTestHelpersTreasuryOutboundTransfersOutboundTransfer", "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}", "update"} => "update",
+    {"PostTestHelpersTreasuryOutboundTransfersOutboundTransfer",
+     "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}", "update"} => "update",
     {"GetTaxCalculationsCalculation", "/v1/tax/calculations/{calculation}", "retrieve"} => "retrieve",
-       {"GetBillingMeters", "/v1/billing/meters", "list"} => "list",
+    {"GetBillingMeters", "/v1/billing/meters", "list"} => "list",
     {"GetBillingMetersId", "/v1/billing/meters/{id}", "retrieve"} => "retrieve",
     {"PostBillingMeters", "/v1/billing/meters", "create"} => "create",
     {"PostBillingMetersId", "/v1/billing/meters/{id}", "update"} => "update",
@@ -1235,9 +1154,12 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostBillingMetersIdReactivate", "/v1/billing/meters/{id}/reactivate", "reactivate"} => "reactivate",
     {"GetInvoiceRenderingTemplates", "/v1/invoice_rendering_templates", "list"} => "list",
     {"GetInvoiceRenderingTemplatesTemplate", "/v1/invoice_rendering_templates/{template}", "retrieve"} => "retrieve",
-    {"PostInvoiceRenderingTemplatesTemplateArchive", "/v1/invoice_rendering_templates/{template}/archive", "archive"} => "archive",
-    {"PostInvoiceRenderingTemplatesTemplateUnarchive", "/v1/invoice_rendering_templates/{template}/unarchive", "unarchive"} => "unarchive",
-    {"PostTreasuryFinancialAccountsFinancialAccountClose", "/v1/treasury/financial_accounts/{financial_account}/close", "close"} => "close",
+    {"PostInvoiceRenderingTemplatesTemplateArchive", "/v1/invoice_rendering_templates/{template}/archive", "archive"} =>
+      "archive",
+    {"PostInvoiceRenderingTemplatesTemplateUnarchive", "/v1/invoice_rendering_templates/{template}/unarchive",
+     "unarchive"} => "unarchive",
+    {"PostTreasuryFinancialAccountsFinancialAccountClose", "/v1/treasury/financial_accounts/{financial_account}/close",
+     "close"} => "close",
     {"GetForwardingRequests", "/v1/forwarding/requests", "list"} => "list",
     {"GetForwardingRequestsId", "/v1/forwarding/requests/{id}", "retrieve"} => "retrieve",
     {"PostForwardingRequests", "/v1/forwarding/requests", "create"} => "create",
@@ -1253,14 +1175,21 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostProductsProductFeatures", "/v1/products/{product}/features", "create"} => "create",
     {"GetTaxAssociationsFind", "/v1/tax/associations/find", "find"} => "find",
     {"GetPaymentRecordsId", "/v1/payment_records/{id}", "retrieve"} => "retrieve",
-    {"PostPaymentRecordsIdReportPaymentAttempt", "/v1/payment_records/{id}/report_payment_attempt", "report_payment_attempt"} => "report_payment_attempt",
-    {"PostPaymentRecordsIdReportPaymentAttemptCanceled", "/v1/payment_records/{id}/report_payment_attempt_canceled", "report_payment_attempt_canceled"} => "report_payment_attempt_canceled",
-    {"PostPaymentRecordsIdReportPaymentAttemptFailed", "/v1/payment_records/{id}/report_payment_attempt_failed", "report_payment_attempt_failed"} => "report_payment_attempt_failed",
-    {"PostPaymentRecordsIdReportPaymentAttemptGuaranteed", "/v1/payment_records/{id}/report_payment_attempt_guaranteed", "report_payment_attempt_guaranteed"} => "report_payment_attempt_guaranteed",
-    {"PostPaymentRecordsIdReportPaymentAttemptInformational", "/v1/payment_records/{id}/report_payment_attempt_informational", "report_payment_attempt_informational"} => "report_payment_attempt_informational",
+    {"PostPaymentRecordsIdReportPaymentAttempt", "/v1/payment_records/{id}/report_payment_attempt",
+     "report_payment_attempt"} => "report_payment_attempt",
+    {"PostPaymentRecordsIdReportPaymentAttemptCanceled", "/v1/payment_records/{id}/report_payment_attempt_canceled",
+     "report_payment_attempt_canceled"} => "report_payment_attempt_canceled",
+    {"PostPaymentRecordsIdReportPaymentAttemptFailed", "/v1/payment_records/{id}/report_payment_attempt_failed",
+     "report_payment_attempt_failed"} => "report_payment_attempt_failed",
+    {"PostPaymentRecordsIdReportPaymentAttemptGuaranteed", "/v1/payment_records/{id}/report_payment_attempt_guaranteed",
+     "report_payment_attempt_guaranteed"} => "report_payment_attempt_guaranteed",
+    {"PostPaymentRecordsIdReportPaymentAttemptInformational",
+     "/v1/payment_records/{id}/report_payment_attempt_informational", "report_payment_attempt_informational"} =>
+      "report_payment_attempt_informational",
     {"PostPaymentRecordsIdReportRefund", "/v1/payment_records/{id}/report_refund", "report_refund"} => "report_refund",
     {"PostPaymentRecordsReportPayment", "/v1/payment_records/report_payment", "report_payment"} => "report_payment",
-    {"GetPaymentIntentsIntentAmountDetailsLineItems", "/v1/payment_intents/{intent}/amount_details_line_items", "list"} => "list",
+    {"GetPaymentIntentsIntentAmountDetailsLineItems", "/v1/payment_intents/{intent}/amount_details_line_items", "list"} =>
+      "list",
     {"GetPaymentAttemptRecords", "/v1/payment_attempt_records", "list"} => "list",
     {"GetPaymentAttemptRecordsId", "/v1/payment_attempt_records/{id}", "retrieve"} => "retrieve",
     {"GetBalanceSettings", "/v1/balance_settings", "retrieve"} => "retrieve",
@@ -1287,7 +1216,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
         - Suggested Mapping: "#{suggested_mapping}"
         """
 
-      # TODO: Fallback to old mapping when the operation is not registered.
+      # Fallback to old mapping when the operation is not registered.
       # Waiting until I can successfully codegen newer versions of the spec.
       # stripe_extension["method_name"]
 
@@ -1296,8 +1225,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
     end
   end
 
-
   defp safe_type_name(name) when is_atom(name) do
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
     if name in @reserved_type_names, do: String.to_atom("#{name}_field"), else: name
   end
 

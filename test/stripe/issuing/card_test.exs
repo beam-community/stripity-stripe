@@ -1,6 +1,8 @@
 defmodule Stripe.Issuing.CardTest do
   use Stripe.StripeCase, async: true
 
+  alias Stripe.Issuing.Card
+
   describe "create/2" do
     test "is creatable" do
       params = %{
@@ -8,7 +10,7 @@ defmodule Stripe.Issuing.CardTest do
         type: :virtual
       }
 
-      assert {:ok, %Stripe.Issuing.Card{}} = Stripe.Issuing.Card.create(params)
+      assert {:ok, %Card{}} = Card.create(params)
 
       assert_stripe_requested(:post, "/v1/issuing/cards")
     end
@@ -20,27 +22,27 @@ defmodule Stripe.Issuing.CardTest do
         cardholder: "ich_123"
       }
 
-      assert {:ok, %Stripe.Issuing.Card{}} = Stripe.Issuing.Card.create(params)
+      assert {:ok, %Card{}} = Card.create(params)
 
       assert_stripe_requested(:post, "/v1/issuing/cards")
     end
   end
 
   test "is retrievable" do
-    assert {:ok, %Stripe.Issuing.Card{}} = Stripe.Issuing.Card.retrieve("ic_123")
+    assert {:ok, %Card{}} = Card.retrieve("ic_123")
     assert_stripe_requested(:get, "/v1/issuing/cards/ic_123")
   end
 
   test "is updateable" do
     params = %{metadata: %{key: "value"}}
-    assert {:ok, %Stripe.Issuing.Card{}} = Stripe.Issuing.Card.update("ic_123", params)
+    assert {:ok, %Card{}} = Card.update("ic_123", params)
     assert_stripe_requested(:post, "/v1/issuing/cards/ic_123")
   end
 
   test "is listable" do
-    assert {:ok, %Stripe.List{data: cards}} = Stripe.Issuing.Card.list()
+    assert {:ok, %Stripe.List{data: cards}} = Card.list()
     assert_stripe_requested(:get, "/v1/issuing/cards")
     assert is_list(cards)
-    assert %Stripe.Issuing.Card{} = hd(cards)
+    assert %Card{} = hd(cards)
   end
 end

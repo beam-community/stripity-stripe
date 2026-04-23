@@ -31,7 +31,7 @@ defmodule Stripe.Util do
   def map_keys_to_atoms(m) do
     Enum.into(m, %{}, fn
       {k, v} when is_binary(k) ->
-        a = String.to_atom(k)
+        a = String.to_existing_atom(k)
         {a, v}
 
       entry ->
@@ -39,7 +39,7 @@ defmodule Stripe.Util do
     end)
   end
 
-  def atomize_keys(map = %{}) do
+  def atomize_keys(%{} = map) do
     Enum.into(map, %{}, fn {k, v} -> {atomize_key(k), atomize_keys(v)} end)
   end
 
@@ -47,7 +47,7 @@ defmodule Stripe.Util do
   # Default
   def atomize_keys(not_a_map), do: not_a_map
 
-  def atomize_key(k) when is_binary(k), do: String.to_atom(k)
+  def atomize_key(k) when is_binary(k), do: String.to_existing_atom(k)
   def atomize_key(k), do: k
 
   @spec object_name_to_module(String.t()) :: module
@@ -63,7 +63,7 @@ defmodule Stripe.Util do
         |> Enum.map_join("", &String.capitalize/1)
       end)
 
-    Module.concat([Stripe | module_parts])
+    Module.safe_concat([Stripe | module_parts])
   end
 
   @spec module_to_string(module) :: String.t()
@@ -79,6 +79,7 @@ defmodule Stripe.Util do
   def normalize_id(id) when is_binary(id), do: id
 
   defmacro log_deprecation(msg \\ "") do
+    # credo:disable-for-next-line Credo.Check.Warning.MixEnv
     if Mix.env() in [:test, :dev] do
       {fun, arity} = __CALLER__.function
       mod = __CALLER__.module
