@@ -18,6 +18,50 @@ defmodule Stripe.EphemeralKey do
   (
     nil
 
+    @doc "<p>Invalidates a short-lived API key for a given resource.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/ephemeral_keys/{key}`\n"
+    (
+      @spec delete(
+              key :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.EphemeralKey.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(key, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/ephemeral_keys/{key}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "key",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "key",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [key]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Creates a short-lived API key for a given resource.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/ephemeral_keys`\n"
     (
       @spec create(
@@ -38,48 +82,6 @@ defmodule Stripe.EphemeralKey do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Invalidates a short-lived API key for a given resource.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/ephemeral_keys/{key}`\n"
-    (
-      @spec delete(
-              key :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.EphemeralKey.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(key, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/ephemeral_keys/{key}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "key",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "key",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [key]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

@@ -20,7 +20,7 @@ defmodule Stripe.FinancialConnections.Session do
     @type t :: %__MODULE__{
             account_holder: term | nil,
             accounts: term,
-            client_secret: binary,
+            client_secret: binary | nil,
             filters: term,
             id: binary,
             livemode: boolean,
@@ -42,7 +42,57 @@ defmodule Stripe.FinancialConnections.Session do
 
   (
     @typedoc "Filters to restrict the kinds of accounts to collect."
-    @type filters :: %{optional(:countries) => list(binary)}
+    @type filters :: %{
+            optional(:account_subcategories) =>
+              list(:checking | :credit_card | :line_of_credit | :mortgage | :savings),
+            optional(:countries) => list(binary)
+          }
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the details of a Financial Connections <code>Session</code></p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/financial_connections/sessions/{session}`\n"
+    (
+      @spec retrieve(
+              session :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.FinancialConnections.Session.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(session, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/financial_connections/sessions/{session}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "session",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "session",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [session]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
   )
 
   (
@@ -73,50 +123,6 @@ defmodule Stripe.FinancialConnections.Session do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the details of a Financial Connections <code>Session</code></p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/financial_connections/sessions/{session}`\n"
-    (
-      @spec retrieve(
-              session :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.FinancialConnections.Session.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(session, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/financial_connections/sessions/{session}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "session",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "session",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [session]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

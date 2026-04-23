@@ -4,60 +4,83 @@ defmodule Stripe.PaymentMethod do
   @moduledoc "PaymentMethod objects represent your customer's payment instruments.\nYou can use them with [PaymentIntents](https://stripe.com/docs/payments/payment-intents) to collect payments or save them to\nCustomer objects to store instrument details for future payments.\n\nRelated guides: [Payment Methods](https://stripe.com/docs/payments/payment-methods) and [More Payment Scenarios](https://stripe.com/docs/payments/more-payment-scenarios)."
   (
     defstruct [
-      :eps,
-      :id,
-      :paynow,
-      :klarna,
-      :sepa_debit,
-      :card_present,
-      :customer_balance,
-      :au_becs_debit,
-      :bancontact,
-      :grabpay,
-      :type,
-      :afterpay_clearpay,
-      :created,
-      :p24,
-      :sofort,
-      :wechat_pay,
-      :blik,
-      :billing_details,
-      :konbini,
-      :object,
-      :boleto,
-      :paypal,
       :zip,
+      :swish,
       :us_bank_account,
-      :customer,
-      :interac_present,
-      :oxxo,
+      :allow_redisplay,
+      :payco,
+      :afterpay_clearpay,
+      :sepa_debit,
       :cashapp,
-      :promptpay,
-      :link,
-      :metadata,
       :radar_options,
-      :card,
-      :revolut_pay,
-      :ideal,
-      :giropay,
-      :alipay,
-      :bacs_debit,
-      :acss_debit,
+      :kakao_pay,
       :livemode,
-      :affirm,
+      :customer,
+      :samsung_pay,
+      :type,
+      :promptpay,
+      :wechat_pay,
+      :alma,
+      :paynow,
+      :oxxo,
+      :created,
       :fpx,
-      :pix
+      :custom,
+      :paypal,
+      :p24,
+      :blik,
+      :konbini,
+      :kr_card,
+      :link,
+      :acss_debit,
+      :id,
+      :crypto,
+      :naver_pay,
+      :twint,
+      :mb_way,
+      :card,
+      :klarna,
+      :revolut_pay,
+      :multibanco,
+      :giropay,
+      :object,
+      :pix,
+      :ideal,
+      :billie,
+      :eps,
+      :grabpay,
+      :nz_bank_account,
+      :pay_by_bank,
+      :mobilepay,
+      :billing_details,
+      :affirm,
+      :bacs_debit,
+      :interac_present,
+      :bancontact,
+      :card_present,
+      :metadata,
+      :amazon_pay,
+      :au_becs_debit,
+      :alipay,
+      :boleto,
+      :satispay,
+      :customer_balance,
+      :sofort
     ]
 
-    @typedoc "The `payment_method` type.\n\n  * `acss_debit` \n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `billing_details` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `card_present` \n  * `cashapp` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `customer` The ID of the Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.\n  * `customer_balance` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `interac_present` \n  * `klarna` \n  * `konbini` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `paynow` \n  * `paypal` \n  * `pix` \n  * `promptpay` \n  * `radar_options` \n  * `revolut_pay` \n  * `sepa_debit` \n  * `sofort` \n  * `type` The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.\n  * `us_bank_account` \n  * `wechat_pay` \n  * `zip` \n"
+    @typedoc "The `payment_method` type.\n\n  * `acss_debit` \n  * `affirm` \n  * `afterpay_clearpay` \n  * `alipay` \n  * `allow_redisplay` This field indicates whether this payment method can be shown again to its customer in a checkout flow. Stripe products such as Checkout and Elements use this field to determine whether a payment method can be shown as a saved payment method in a checkout flow. The field defaults to “unspecified”.\n  * `alma` \n  * `amazon_pay` \n  * `au_becs_debit` \n  * `bacs_debit` \n  * `bancontact` \n  * `billie` \n  * `billing_details` \n  * `blik` \n  * `boleto` \n  * `card` \n  * `card_present` \n  * `cashapp` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `crypto` \n  * `custom` \n  * `customer` The ID of the Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.\n  * `customer_balance` \n  * `eps` \n  * `fpx` \n  * `giropay` \n  * `grabpay` \n  * `id` Unique identifier for the object.\n  * `ideal` \n  * `interac_present` \n  * `kakao_pay` \n  * `klarna` \n  * `konbini` \n  * `kr_card` \n  * `link` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `mb_way` \n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `mobilepay` \n  * `multibanco` \n  * `naver_pay` \n  * `nz_bank_account` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `oxxo` \n  * `p24` \n  * `pay_by_bank` \n  * `payco` \n  * `paynow` \n  * `paypal` \n  * `pix` \n  * `promptpay` \n  * `radar_options` \n  * `revolut_pay` \n  * `samsung_pay` \n  * `satispay` \n  * `sepa_debit` \n  * `sofort` \n  * `swish` \n  * `twint` \n  * `type` The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.\n  * `us_bank_account` \n  * `wechat_pay` \n  * `zip` \n"
     @type t :: %__MODULE__{
             acss_debit: term,
             affirm: term,
             afterpay_clearpay: term,
             alipay: term,
+            allow_redisplay: binary,
+            alma: term,
+            amazon_pay: term,
             au_becs_debit: term,
             bacs_debit: term,
             bancontact: term,
+            billie: term,
             billing_details: term,
             blik: term,
             boleto: term,
@@ -65,6 +88,8 @@ defmodule Stripe.PaymentMethod do
             card_present: term,
             cashapp: term,
             created: integer,
+            crypto: term,
+            custom: term,
             customer: (binary | Stripe.Customer.t()) | nil,
             customer_balance: term,
             eps: term,
@@ -74,22 +99,35 @@ defmodule Stripe.PaymentMethod do
             id: binary,
             ideal: term,
             interac_present: term,
+            kakao_pay: term,
             klarna: term,
             konbini: term,
+            kr_card: term,
             link: term,
             livemode: boolean,
+            mb_way: term,
             metadata: term | nil,
+            mobilepay: term,
+            multibanco: term,
+            naver_pay: term,
+            nz_bank_account: term,
             object: binary,
             oxxo: term,
             p24: term,
+            pay_by_bank: term,
+            payco: term,
             paynow: term,
             paypal: term,
             pix: term,
             promptpay: term,
             radar_options: term,
             revolut_pay: term,
+            samsung_pay: term,
+            satispay: term,
             sepa_debit: term,
             sofort: term,
+            swish: term,
+            twint: term,
             type: binary,
             us_bank_account: term,
             wechat_pay: term,
@@ -134,7 +172,8 @@ defmodule Stripe.PaymentMethod do
             optional(:address) => address | binary,
             optional(:email) => binary | binary,
             optional(:name) => binary | binary,
-            optional(:phone) => binary | binary
+            optional(:phone) => binary | binary,
+            optional(:tax_id) => binary
           }
   )
 
@@ -149,8 +188,14 @@ defmodule Stripe.PaymentMethod do
             optional(:cvc) => binary,
             optional(:exp_month) => integer,
             optional(:exp_year) => integer,
+            optional(:networks) => networks,
             optional(:number) => binary
           }
+  )
+
+  (
+    @typedoc "If this is a `custom` PaymentMethod, this hash contains details about the Custom payment method."
+    @type custom :: %{optional(:type) => binary}
   )
 
   (
@@ -234,11 +279,14 @@ defmodule Stripe.PaymentMethod do
               :abn_amro
               | :asn_bank
               | :bunq
+              | :buut
+              | :finom
               | :handelsbanken
               | :ing
               | :knab
               | :moneyou
               | :n26
+              | :nn
               | :rabobank
               | :regiobank
               | :revolut
@@ -252,6 +300,28 @@ defmodule Stripe.PaymentMethod do
   (
     @typedoc "If this is a `klarna` PaymentMethod, this hash contains details about the Klarna payment method."
     @type klarna :: %{optional(:dob) => dob}
+  )
+
+  (
+    @typedoc "If this is a `naver_pay` PaymentMethod, this hash contains details about the Naver Pay payment method."
+    @type naver_pay :: %{optional(:funding) => :card | :points}
+  )
+
+  (
+    @typedoc "Contains information about card networks used to process the payment."
+    @type networks :: %{optional(:preferred) => :cartes_bancaires | :mastercard | :visa}
+  )
+
+  (
+    @typedoc "If this is an nz_bank_account PaymentMethod, this hash contains details about the nz_bank_account payment method."
+    @type nz_bank_account :: %{
+            optional(:account_holder_name) => binary,
+            optional(:account_number) => binary,
+            optional(:bank_code) => binary,
+            optional(:branch_code) => binary,
+            optional(:reference) => binary,
+            optional(:suffix) => binary
+          }
   )
 
   (
@@ -282,6 +352,7 @@ defmodule Stripe.PaymentMethod do
               | :santander_przelew24
               | :tmobile_usbugi_bankowe
               | :toyota_bank
+              | :velobank
               | :volkswagen_bank
           }
   )
@@ -315,192 +386,6 @@ defmodule Stripe.PaymentMethod do
   (
     nil
 
-    @doc "<p>Creates a PaymentMethod object. Read the <a href=\"/docs/stripe-js/reference#stripe-create-payment-method\">Stripe.js reference</a> to learn how to create PaymentMethods via Stripe.js.</p>\n\n<p>Instead of creating a PaymentMethod directly, we recommend using the <a href=\"/docs/payments/accept-a-payment\">PaymentIntents</a> API to accept a payment immediately or the <a href=\"/docs/payments/save-and-reuse\">SetupIntent</a> API to collect payment method details ahead of a future payment.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_methods`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:pix) => map(),
-                optional(:payment_method) => binary,
-                optional(:fpx) => fpx,
-                optional(:affirm) => map(),
-                optional(:acss_debit) => acss_debit,
-                optional(:bacs_debit) => bacs_debit,
-                optional(:alipay) => map(),
-                optional(:giropay) => map(),
-                optional(:ideal) => ideal,
-                optional(:revolut_pay) => map(),
-                optional(:expand) => list(binary),
-                optional(:card) => card | card,
-                optional(:radar_options) => radar_options,
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:link) => map(),
-                optional(:promptpay) => map(),
-                optional(:cashapp) => map(),
-                optional(:oxxo) => map(),
-                optional(:interac_present) => map(),
-                optional(:customer) => binary,
-                optional(:us_bank_account) => us_bank_account,
-                optional(:zip) => map(),
-                optional(:paypal) => map(),
-                optional(:boleto) => boleto,
-                optional(:konbini) => map(),
-                optional(:billing_details) => billing_details,
-                optional(:blik) => map(),
-                optional(:wechat_pay) => map(),
-                optional(:sofort) => sofort,
-                optional(:p24) => p24,
-                optional(:afterpay_clearpay) => map(),
-                optional(:type) =>
-                  :acss_debit
-                  | :affirm
-                  | :afterpay_clearpay
-                  | :alipay
-                  | :au_becs_debit
-                  | :bacs_debit
-                  | :bancontact
-                  | :blik
-                  | :boleto
-                  | :card
-                  | :cashapp
-                  | :customer_balance
-                  | :eps
-                  | :fpx
-                  | :giropay
-                  | :grabpay
-                  | :ideal
-                  | :klarna
-                  | :konbini
-                  | :link
-                  | :oxxo
-                  | :p24
-                  | :paynow
-                  | :paypal
-                  | :pix
-                  | :promptpay
-                  | :revolut_pay
-                  | :sepa_debit
-                  | :sofort
-                  | :us_bank_account
-                  | :wechat_pay
-                  | :zip,
-                optional(:grabpay) => map(),
-                optional(:bancontact) => map(),
-                optional(:au_becs_debit) => au_becs_debit,
-                optional(:customer_balance) => map(),
-                optional(:sepa_debit) => sepa_debit,
-                optional(:klarna) => klarna,
-                optional(:paynow) => map(),
-                optional(:eps) => eps
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.PaymentMethod.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/payment_methods", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves a PaymentMethod object attached to the StripeAccount. To retrieve a payment method attached to a Customer, you should use <a href=\"/docs/api/payment_methods/customer\">Retrieve a Customer’s PaymentMethods</a></p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_methods/{payment_method}`\n"
-    (
-      @spec retrieve(
-              payment_method :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.PaymentMethod.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(payment_method, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/payment_methods/{payment_method}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "payment_method",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_method",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [payment_method]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Updates a PaymentMethod object. A PaymentMethod must be attached a customer to be updated.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_methods/{payment_method}`\n"
-    (
-      @spec update(
-              payment_method :: binary(),
-              params :: %{
-                optional(:billing_details) => billing_details,
-                optional(:card) => card,
-                optional(:expand) => list(binary),
-                optional(:link) => map(),
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:us_bank_account) => us_bank_account
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.PaymentMethod.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def update(payment_method, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/payment_methods/{payment_method}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "payment_method",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_method",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [payment_method]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Returns a list of PaymentMethods for Treasury flows. If you want to list the PaymentMethods attached to a Customer for payments, you should use the <a href=\"/docs/api/payment_methods/customer_list\">List a Customer’s PaymentMethods</a> API instead.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_methods`\n"
     (
       @spec list(
@@ -515,31 +400,49 @@ defmodule Stripe.PaymentMethod do
                   | :affirm
                   | :afterpay_clearpay
                   | :alipay
+                  | :alma
+                  | :amazon_pay
                   | :au_becs_debit
                   | :bacs_debit
                   | :bancontact
+                  | :billie
                   | :blik
                   | :boleto
                   | :card
                   | :cashapp
+                  | :crypto
+                  | :custom
                   | :customer_balance
                   | :eps
                   | :fpx
                   | :giropay
                   | :grabpay
                   | :ideal
+                  | :kakao_pay
                   | :klarna
                   | :konbini
+                  | :kr_card
                   | :link
+                  | :mb_way
+                  | :mobilepay
+                  | :multibanco
+                  | :naver_pay
+                  | :nz_bank_account
                   | :oxxo
                   | :p24
+                  | :pay_by_bank
+                  | :payco
                   | :paynow
                   | :paypal
                   | :pix
                   | :promptpay
                   | :revolut_pay
+                  | :samsung_pay
+                  | :satispay
                   | :sepa_debit
                   | :sofort
+                  | :swish
+                  | :twint
                   | :us_bank_account
                   | :wechat_pay
                   | :zip
@@ -564,6 +467,233 @@ defmodule Stripe.PaymentMethod do
   (
     nil
 
+    @doc "<p>Retrieves a PaymentMethod object attached to the StripeAccount. To retrieve a payment method attached to a Customer, you should use <a href=\"/docs/api/payment_methods/customer\">Retrieve a Customer’s PaymentMethods</a></p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/payment_methods/{payment_method}`\n"
+    (
+      @spec retrieve(
+              payment_method :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.PaymentMethod.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(payment_method, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/payment_methods/{payment_method}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "payment_method",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "payment_method",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [payment_method]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a PaymentMethod object. Read the <a href=\"/docs/stripe-js/reference#stripe-create-payment-method\">Stripe.js reference</a> to learn how to create PaymentMethods via Stripe.js.</p>\n\n<p>Instead of creating a PaymentMethod directly, we recommend using the <a href=\"/docs/payments/accept-a-payment\">PaymentIntents</a> API to accept a payment immediately or the <a href=\"/docs/payments/save-and-reuse\">SetupIntent</a> API to collect payment method details ahead of a future payment.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_methods`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:sofort) => sofort,
+                optional(:customer_balance) => map(),
+                optional(:satispay) => map(),
+                optional(:boleto) => boleto,
+                optional(:alipay) => map(),
+                optional(:au_becs_debit) => au_becs_debit,
+                optional(:amazon_pay) => map(),
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:bancontact) => map(),
+                optional(:interac_present) => map(),
+                optional(:bacs_debit) => bacs_debit,
+                optional(:affirm) => map(),
+                optional(:billing_details) => billing_details,
+                optional(:mobilepay) => map(),
+                optional(:pay_by_bank) => map(),
+                optional(:nz_bank_account) => nz_bank_account,
+                optional(:grabpay) => map(),
+                optional(:eps) => eps,
+                optional(:billie) => map(),
+                optional(:ideal) => ideal,
+                optional(:pix) => map(),
+                optional(:giropay) => map(),
+                optional(:multibanco) => map(),
+                optional(:revolut_pay) => map(),
+                optional(:klarna) => klarna,
+                optional(:card) => card | card,
+                optional(:mb_way) => map(),
+                optional(:twint) => map(),
+                optional(:naver_pay) => naver_pay,
+                optional(:crypto) => map(),
+                optional(:acss_debit) => acss_debit,
+                optional(:link) => map(),
+                optional(:kr_card) => map(),
+                optional(:konbini) => map(),
+                optional(:blik) => map(),
+                optional(:p24) => p24,
+                optional(:paypal) => map(),
+                optional(:custom) => custom,
+                optional(:fpx) => fpx,
+                optional(:payment_method) => binary,
+                optional(:oxxo) => map(),
+                optional(:paynow) => map(),
+                optional(:alma) => map(),
+                optional(:wechat_pay) => map(),
+                optional(:promptpay) => map(),
+                optional(:type) =>
+                  :acss_debit
+                  | :affirm
+                  | :afterpay_clearpay
+                  | :alipay
+                  | :alma
+                  | :amazon_pay
+                  | :au_becs_debit
+                  | :bacs_debit
+                  | :bancontact
+                  | :billie
+                  | :blik
+                  | :boleto
+                  | :card
+                  | :cashapp
+                  | :crypto
+                  | :custom
+                  | :customer_balance
+                  | :eps
+                  | :fpx
+                  | :giropay
+                  | :grabpay
+                  | :ideal
+                  | :kakao_pay
+                  | :klarna
+                  | :konbini
+                  | :kr_card
+                  | :link
+                  | :mb_way
+                  | :mobilepay
+                  | :multibanco
+                  | :naver_pay
+                  | :nz_bank_account
+                  | :oxxo
+                  | :p24
+                  | :pay_by_bank
+                  | :payco
+                  | :paynow
+                  | :paypal
+                  | :pix
+                  | :promptpay
+                  | :revolut_pay
+                  | :samsung_pay
+                  | :satispay
+                  | :sepa_debit
+                  | :sofort
+                  | :swish
+                  | :twint
+                  | :us_bank_account
+                  | :wechat_pay
+                  | :zip,
+                optional(:samsung_pay) => map(),
+                optional(:customer) => binary,
+                optional(:kakao_pay) => map(),
+                optional(:expand) => list(binary),
+                optional(:radar_options) => radar_options,
+                optional(:cashapp) => map(),
+                optional(:sepa_debit) => sepa_debit,
+                optional(:afterpay_clearpay) => map(),
+                optional(:payco) => map(),
+                optional(:allow_redisplay) => :always | :limited | :unspecified,
+                optional(:us_bank_account) => us_bank_account,
+                optional(:swish) => map(),
+                optional(:zip) => map()
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.PaymentMethod.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/payment_methods", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Updates a PaymentMethod object. A PaymentMethod must be attached to a customer to be updated.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_methods/{payment_method}`\n"
+    (
+      @spec update(
+              payment_method :: binary(),
+              params :: %{
+                optional(:allow_redisplay) => :always | :limited | :unspecified,
+                optional(:billing_details) => billing_details,
+                optional(:card) => card,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:us_bank_account) => us_bank_account
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.PaymentMethod.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def update(payment_method, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/payment_methods/{payment_method}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "payment_method",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "payment_method",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [payment_method]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Attaches a PaymentMethod object to a Customer.</p>\n\n<p>To attach a new PaymentMethod to a customer for future payments, we recommend you use a <a href=\"/docs/api/setup_intents\">SetupIntent</a>\nor a PaymentIntent with <a href=\"/docs/api/payment_intents/create#create_payment_intent-setup_future_usage\">setup_future_usage</a>.\nThese approaches will perform any necessary steps to set up the PaymentMethod for future payments. Using the <code>/v1/payment_methods/:id/attach</code>\nendpoint without first using a SetupIntent or PaymentIntent with <code>setup_future_usage</code> does not optimize the PaymentMethod for\nfuture use, which makes later declines and payment friction more likely.\nSee <a href=\"/docs/payments/payment-intents#future-usage\">Optimizing cards for future payments</a> for more information about setting up\nfuture payments.</p>\n\n<p>To use this PaymentMethod as the default for invoice or subscription payments,\nset <a href=\"/docs/api/customers/update#update_customer-invoice_settings-default_payment_method\"><code>invoice_settings.default_payment_method</code></a>,\non the Customer to the PaymentMethod’s ID.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/payment_methods/{payment_method}/attach`\n"
     (
       @spec attach(
@@ -577,17 +707,19 @@ defmodule Stripe.PaymentMethod do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_methods/{payment_method}/attach",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "payment_method",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_method",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "payment_method",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -619,17 +751,19 @@ defmodule Stripe.PaymentMethod do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_methods/{payment_method}/detach",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "payment_method",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_method",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "payment_method",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

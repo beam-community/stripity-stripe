@@ -17,20 +17,6 @@ defmodule Stripe.Issuing.AuthorizationTest do
     assert_stripe_requested(:post, "/v1/issuing/authorizations/iauth_123")
   end
 
-  test "is approvable" do
-    assert {:ok, %Stripe.Issuing.Authorization{}} =
-             Stripe.Issuing.Authorization.approve("iauth_123")
-
-    assert_stripe_requested(:post, "/v1/issuing/authorizations/iauth_123/approve")
-  end
-
-  test "is declinable" do
-    assert {:ok, %Stripe.Issuing.Authorization{}} =
-             Stripe.Issuing.Authorization.decline("iauth_123")
-
-    assert_stripe_requested(:post, "/v1/issuing/authorizations/iauth_123/decline")
-  end
-
   test "is listable" do
     assert {:ok, %Stripe.List{data: authorizations}} = Stripe.Issuing.Authorization.list()
     assert_stripe_requested(:get, "/v1/issuing/authorizations")

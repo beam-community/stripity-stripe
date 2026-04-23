@@ -1,7 +1,7 @@
 defmodule Stripe.Balance do
   use Stripe.Entity
 
-  @moduledoc "This is an object representing your Stripe balance. You can retrieve it to see\nthe balance currently on your Stripe account.\n\nYou can also retrieve the balance history, which contains a list of\n[transactions](https://stripe.com/docs/reporting/balance-transaction-types) that contributed to the balance\n(charges, payouts, and so forth).\n\nThe available and pending amounts for each currency are broken down further by\npayment source types.\n\nRelated guide: [Understanding Connect account balances](https://stripe.com/docs/connect/account-balances)"
+  @moduledoc "This is an object representing your Stripe balance. You can retrieve it to see\nthe balance currently on your Stripe account.\n\nThe top-level `available` and `pending` comprise your \"payments balance.\"\n\nRelated guide: [Balances and settlement time](https://stripe.com/docs/payments/balances), [Understanding Connect account balances](https://stripe.com/docs/connect/account-balances)"
   (
     defstruct [
       :available,
@@ -10,10 +10,11 @@ defmodule Stripe.Balance do
       :issuing,
       :livemode,
       :object,
-      :pending
+      :pending,
+      :refund_and_dispute_prefunding
     ]
 
-    @typedoc "The `balance` type.\n\n  * `available` Available funds that you can transfer or pay out automatically by Stripe or explicitly through the [Transfers API](https://stripe.com/docs/api#transfers) or [Payouts API](https://stripe.com/docs/api#payouts). You can find the available balance for each currency and payment type in the `source_types` property.\n  * `connect_reserved` Funds held due to negative balances on connected Custom accounts. You can find the connect reserve balance for each currency and payment type in the `source_types` property.\n  * `instant_available` Funds that you can pay out using Instant Payouts.\n  * `issuing` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `pending` Funds that aren't available in the balance yet. You can find the pending balance for each currency and each payment type in the `source_types` property.\n"
+    @typedoc "The `balance` type.\n\n  * `available` Available funds that you can transfer or pay out automatically by Stripe or explicitly through the [Transfers API](https://stripe.com/docs/api#transfers) or [Payouts API](https://stripe.com/docs/api#payouts). You can find the available balance for each currency and payment type in the `source_types` property.\n  * `connect_reserved` Funds held due to negative balances on connected accounts where [account.controller.requirement_collection](/api/accounts/object#account_object-controller-requirement_collection) is `application`, which includes Custom accounts. You can find the connect reserve balance for each currency and payment type in the `source_types` property.\n  * `instant_available` Funds that you can pay out using Instant Payouts.\n  * `issuing` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `pending` Funds that aren't available in the balance yet. You can find the pending balance for each currency and each payment type in the `source_types` property.\n  * `refund_and_dispute_prefunding` \n"
     @type t :: %__MODULE__{
             available: term,
             connect_reserved: term,
@@ -21,7 +22,8 @@ defmodule Stripe.Balance do
             issuing: term,
             livemode: boolean,
             object: binary,
-            pending: term
+            pending: term,
+            refund_and_dispute_prefunding: term
           }
   )
 

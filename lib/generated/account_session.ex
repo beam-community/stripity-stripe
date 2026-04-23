@@ -17,42 +17,139 @@ defmodule Stripe.AccountSession do
   )
 
   (
-    @typedoc "Configuration for the account onboarding embedded component."
-    @type account_onboarding :: %{optional(:enabled) => boolean, optional(:features) => map()}
+    @typedoc "Configuration for the [account management](/connect/supported-embedded-components/account-management/) embedded component."
+    @type account_management :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the [account onboarding](/connect/supported-embedded-components/account-onboarding/) embedded component."
+    @type account_onboarding :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the [balances](/connect/supported-embedded-components/balances/) embedded component."
+    @type balances :: %{optional(:enabled) => boolean, optional(:features) => features}
   )
 
   (
     @typedoc "Each key of the dictionary represents an embedded component, and each embedded component maps to its configuration (e.g. whether it has been enabled or not)."
     @type components :: %{
+            optional(:account_management) => account_management,
             optional(:account_onboarding) => account_onboarding,
+            optional(:balances) => balances,
+            optional(:disputes_list) => disputes_list,
+            optional(:documents) => documents,
+            optional(:financial_account) => financial_account,
+            optional(:financial_account_transactions) => financial_account_transactions,
+            optional(:instant_payouts_promotion) => instant_payouts_promotion,
+            optional(:issuing_card) => issuing_card,
+            optional(:issuing_cards_list) => issuing_cards_list,
+            optional(:notification_banner) => notification_banner,
             optional(:payment_details) => payment_details,
+            optional(:payment_disputes) => payment_disputes,
             optional(:payments) => payments,
-            optional(:payouts) => payouts
+            optional(:payout_details) => payout_details,
+            optional(:payouts) => payouts,
+            optional(:payouts_list) => payouts_list,
+            optional(:tax_registrations) => tax_registrations,
+            optional(:tax_settings) => tax_settings
           }
+  )
+
+  (
+    @typedoc "Configuration for the [disputes list](/connect/supported-embedded-components/disputes-list/) embedded component."
+    @type disputes_list :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the [documents](/connect/supported-embedded-components/documents/) embedded component."
+    @type documents :: %{optional(:enabled) => boolean, optional(:features) => map()}
   )
 
   (
     @typedoc "The list of features enabled in the embedded component."
     @type features :: %{
             optional(:capture_payments) => boolean,
+            optional(:destination_on_behalf_of_charge_management) => boolean,
             optional(:dispute_management) => boolean,
             optional(:refund_management) => boolean
           }
   )
 
   (
-    @typedoc "Configuration for the payment details embedded component."
+    @typedoc "Configuration for the [financial account](/connect/supported-embedded-components/financial-account/) embedded component."
+    @type financial_account :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the [financial account transactions](/connect/supported-embedded-components/financial-account-transactions/) embedded component."
+    @type financial_account_transactions :: %{
+            optional(:enabled) => boolean,
+            optional(:features) => features
+          }
+  )
+
+  (
+    @typedoc "Configuration for the [instant payouts promotion](/connect/supported-embedded-components/instant-payouts-promotion/) embedded component."
+    @type instant_payouts_promotion :: %{
+            optional(:enabled) => boolean,
+            optional(:features) => features
+          }
+  )
+
+  (
+    @typedoc "Configuration for the [issuing card](/connect/supported-embedded-components/issuing-card/) embedded component."
+    @type issuing_card :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the [issuing cards list](/connect/supported-embedded-components/issuing-cards-list/) embedded component."
+    @type issuing_cards_list :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the [notification banner](/connect/supported-embedded-components/notification-banner/) embedded component."
+    @type notification_banner :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the [payment details](/connect/supported-embedded-components/payment-details/) embedded component."
     @type payment_details :: %{optional(:enabled) => boolean, optional(:features) => features}
   )
 
   (
-    @typedoc "Configuration for the payments embedded component."
+    @typedoc "Configuration for the [payment disputes](/connect/supported-embedded-components/payment-disputes/) embedded component."
+    @type payment_disputes :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the [payments](/connect/supported-embedded-components/payments/) embedded component."
     @type payments :: %{optional(:enabled) => boolean, optional(:features) => features}
   )
 
   (
-    @typedoc "Configuration for the payouts embedded component."
+    @typedoc "Configuration for the [payout details](/connect/supported-embedded-components/payout-details/) embedded component."
+    @type payout_details :: %{optional(:enabled) => boolean, optional(:features) => map()}
+  )
+
+  (
+    @typedoc "Configuration for the [payouts](/connect/supported-embedded-components/payouts/) embedded component."
     @type payouts :: %{optional(:enabled) => boolean, optional(:features) => features}
+  )
+
+  (
+    @typedoc "Configuration for the [payouts list](/connect/supported-embedded-components/payouts-list/) embedded component."
+    @type payouts_list :: %{optional(:enabled) => boolean, optional(:features) => map()}
+  )
+
+  (
+    @typedoc "Configuration for the [tax registrations](/connect/supported-embedded-components/tax-registrations/) embedded component."
+    @type tax_registrations :: %{optional(:enabled) => boolean, optional(:features) => map()}
+  )
+
+  (
+    @typedoc "Configuration for the [tax settings](/connect/supported-embedded-components/tax-settings/) embedded component."
+    @type tax_settings :: %{optional(:enabled) => boolean, optional(:features) => map()}
   )
 
   (

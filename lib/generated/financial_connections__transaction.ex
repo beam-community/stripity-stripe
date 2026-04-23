@@ -53,50 +53,6 @@ defmodule Stripe.FinancialConnections.Transaction do
   (
     nil
 
-    @doc "<p>Retrieves the details of a Financial Connections <code>Transaction</code></p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/financial_connections/transactions/{transaction}`\n"
-    (
-      @spec retrieve(
-              transaction :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.FinancialConnections.Transaction.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(transaction, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/financial_connections/transactions/{transaction}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "transaction",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "transaction",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [transaction]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Returns a list of Financial Connections <code>Transaction</code> objects.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/financial_connections/transactions`\n"
     (
       @spec list(
@@ -120,6 +76,52 @@ defmodule Stripe.FinancialConnections.Transaction do
             "/v1/financial_connections/transactions",
             [],
             []
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the details of a Financial Connections <code>Transaction</code></p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/financial_connections/transactions/{transaction}`\n"
+    (
+      @spec retrieve(
+              transaction :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.FinancialConnections.Transaction.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(transaction, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/financial_connections/transactions/{transaction}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "transaction",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "transaction",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [transaction]
           )
 
         Stripe.Request.new_request(opts)

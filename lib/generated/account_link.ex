@@ -10,6 +10,14 @@ defmodule Stripe.AccountLink do
   )
 
   (
+    @typedoc "Specifies the requirements that Stripe collects from connected accounts in the Connect Onboarding flow."
+    @type collection_options :: %{
+            optional(:fields) => :currently_due | :eventually_due,
+            optional(:future_requirements) => :include | :omit
+          }
+  )
+
+  (
     nil
 
     @doc "<p>Creates an AccountLink object that includes a single-use Stripe URL that the platform can redirect their user to in order to take them through the Connect Onboarding flow.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/account_links`\n"
@@ -18,6 +26,7 @@ defmodule Stripe.AccountLink do
               params :: %{
                 optional(:account) => binary,
                 optional(:collect) => :currently_due | :eventually_due,
+                optional(:collection_options) => collection_options,
                 optional(:expand) => list(binary),
                 optional(:refresh_url) => binary,
                 optional(:return_url) => binary,

@@ -1,7 +1,7 @@
 defmodule Stripe.TransferReversal do
   use Stripe.Entity
 
-  @moduledoc "[Stripe Connect](https://stripe.com/docs/connect) platforms can reverse transfers made to a\nconnected account, either entirely or partially, and can also specify whether\nto refund any related application fees. Transfer reversals add to the\nplatform's balance and subtract from the destination account's balance.\n\nReversing a transfer that was made for a [destination\ncharge](/docs/connect/destination-charges) is allowed only up to the amount of\nthe charge. It is possible to reverse a\n[transfer_group](https://stripe.com/docs/connect/separate-charges-and-transfers#transfer-options)\ntransfer only if the destination account has enough balance to cover the\nreversal.\n\nRelated guide: [Reversing transfers](https://stripe.com/docs/connect/separate-charges-and-transfers#reversing-transfers)"
+  @moduledoc "[Stripe Connect](https://stripe.com/docs/connect) platforms can reverse transfers made to a\nconnected account, either entirely or partially, and can also specify whether\nto refund any related application fees. Transfer reversals add to the\nplatform's balance and subtract from the destination account's balance.\n\nReversing a transfer that was made for a [destination\ncharge](/docs/connect/destination-charges) is allowed only up to the amount of\nthe charge. It is possible to reverse a\n[transfer_group](https://stripe.com/docs/connect/separate-charges-and-transfers#transfer-options)\ntransfer only if the destination account has enough balance to cover the\nreversal.\n\nRelated guide: [Reverse transfers](https://stripe.com/docs/connect/separate-charges-and-transfers#reverse-transfers)"
   (
     defstruct [
       :amount,
@@ -34,56 +34,6 @@ defmodule Stripe.TransferReversal do
   (
     nil
 
-    @doc "<p>When you create a new reversal, you must specify a transfer to create it on.</p>\n\n<p>When reversing transfers, you can optionally reverse part of the transfer. You can do so as many times as you wish until the entire transfer has been reversed.</p>\n\n<p>Once entirely reversed, a transfer can’t be reversed again. This method will return an error when called on an already-reversed transfer, or when trying to reverse more money than is left on a transfer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/transfers/{id}/reversals`\n"
-    (
-      @spec create(
-              id :: binary(),
-              params :: %{
-                optional(:amount) => integer,
-                optional(:description) => binary,
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary} | binary,
-                optional(:refund_application_fee) => boolean
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.TransferReversal.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(id, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/transfers/{id}/reversals",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "id",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [id]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>You can see a list of the reversals belonging to a specific transfer. Note that the 10 most recent reversals are always available by default on the transfer object. If you need more than those 10, you can use this API method and the <code>limit</code> and <code>starting_after</code> parameters to page through additional reversals.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/transfers/{id}/reversals`\n"
     (
       @spec list(
@@ -104,17 +54,19 @@ defmodule Stripe.TransferReversal do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/transfers/{id}/reversals",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -149,30 +101,34 @@ defmodule Stripe.TransferReversal do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/transfers/{transfer}/reversals/{id}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "transfer",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "transfer",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "transfer",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -183,6 +139,58 @@ defmodule Stripe.TransferReversal do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>When you create a new reversal, you must specify a transfer to create it on.</p>\n\n<p>When reversing transfers, you can optionally reverse part of the transfer. You can do so as many times as you wish until the entire transfer has been reversed.</p>\n\n<p>Once entirely reversed, a transfer can’t be reversed again. This method will return an error when called on an already-reversed transfer, or when trying to reverse more money than is left on a transfer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/transfers/{id}/reversals`\n"
+    (
+      @spec create(
+              id :: binary(),
+              params :: %{
+                optional(:amount) => integer,
+                optional(:description) => binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:refund_application_fee) => boolean
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.TransferReversal.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(id, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/transfers/{id}/reversals",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "id",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "id",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [id]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -210,30 +218,34 @@ defmodule Stripe.TransferReversal do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/transfers/{transfer}/reversals/{id}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "transfer",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "transfer",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "transfer",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

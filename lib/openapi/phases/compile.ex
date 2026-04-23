@@ -1,5 +1,10 @@
 defmodule Stripe.OpenApi.Phases.Compile do
   @moduledoc false
+
+  @reserved_type_names ~w(
+    after and catch do else end false fn for if in nil not or receive rescue true try when with
+  )a
+
   def run(blueprint, _options) do
     modules = Enum.map(blueprint.components, fn {_k, component} -> component.module end)
 
@@ -91,7 +96,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
                   path =
                     Stripe.OpenApi.Path.replace_path_params(
                       unquote(operation_definition.path),
-                      unquote(operation_definition.path_parameters),
+                      unquote(Macro.escape(operation_definition.path_parameters)),
                       unquote(argument_names)
                     )
 
@@ -139,7 +144,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
                     path =
                       Stripe.OpenApi.Path.replace_path_params(
                         unquote(operation_definition.path),
-                        unquote(operation_definition.path_parameters),
+                        unquote(Macro.escape(operation_definition.path_parameters)),
                         unquote(argument_values)
                       )
 
@@ -300,10 +305,9 @@ defmodule Stripe.OpenApi.Phases.Compile do
   end
 
   defp type_spec_name(name) do
-    if name in [:reference] do
-      :reference_0
-    else
-      name
+    cond do
+      name in [:reference] -> :reference_0
+      true -> safe_type_name(name)   # <- sanitize reserved words like :end
     end
   end
 
@@ -359,7 +363,7 @@ defmodule Stripe.OpenApi.Phases.Compile do
   end
 
   def to_type({:ref, meta, _}) do
-    Macro.var(meta[:name], __MODULE__)
+    Macro.var(type_spec_name(meta[:name]), __MODULE__)
   end
 
   def to_type({:array, _meta, [type]}) do
@@ -1173,7 +1177,95 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostPlans", "/v1/plans", "create"} => "create",
     {"GetPlansPlan", "/v1/plans/{plan}", "retrieve"} => "retrieve",
     {"PostPlansPlan", "/v1/plans/{plan}", "update"} => "update",
-    {"DeletePlansPlan", "/v1/plans/{plan}", "delete"} => "delete"
+    {"DeletePlansPlan", "/v1/plans/{plan}", "delete"} => "delete",
+    {"PostTestHelpersIssuingCardsCardShippingSubmit", "/v1/test_helpers/issuing/cards/{card}/shipping/submit", "submit_card"} => "submit_card",
+    {"GetConfirmationTokensConfirmationToken", "/v1/confirmation_tokens/{confirmation_token}", "retrieve"} => "retrieve",
+    {"PostTestHelpersConfirmationTokens", "/v1/test_helpers/confirmation_tokens", "create"} => "create",
+    {"PostSubscriptionsSubscriptionMigrate", "/v1/subscriptions/{subscription}/migrate", "migrate"} => "migrate",
+    {"PostCheckoutSessionsSession", "/v1/checkout/sessions/{session}", "update"} => "update",
+    {"PostTestHelpersTreasuryOutboundPaymentsId", "/v1/test_helpers/treasury/outbound_payments/{id}", "update"} => "update",
+    {"GetBillingMetersIdEventSummaries", "/v1/billing/meters/{id}/event_summaries", "list"} => "list",
+    {"GetEntitlementsFeatures", "/v1/entitlements/features", "list"} => "list",
+    {"GetEntitlementsFeaturesId", "/v1/entitlements/features/{id}", "retrieve"} => "retrieve",
+    {"PostEntitlementsFeatures", "/v1/entitlements/features", "create"} => "create",
+    {"PostEntitlementsFeaturesId", "/v1/entitlements/features/{id}", "update"} => "update",
+    {"PostTerminalReadersReaderCollectInputs", "/v1/terminal/readers/{reader}/collect_inputs", "collect_inputs"} => "collect_inputs",
+    {"PostTerminalReadersReaderCollectPaymentMethod", "/v1/terminal/readers/{reader}/collect_payment_method", "collect_payment_method"} => "collect_payment_method",
+    {"PostTerminalReadersReaderConfirmPaymentIntent", "/v1/terminal/readers/{reader}/confirm_payment_intent", "confirm_payment_intent"} => "confirm_payment_intent",
+    {"PostTestHelpersTerminalReadersReaderSucceedInputCollection", "/v1/test_helpers/terminal/readers/{reader}/succeed_input_collection", "succeed_input_collection"} => "succeed_input_collection",
+    {"PostTestHelpersTerminalReadersReaderTimeoutInputCollection", "/v1/test_helpers/terminal/readers/{reader}/timeout_input_collection", "timeout_input_collection"} => "timeout_input_collection",
+    {"PostBillingMeterEventAdjustments", "/v1/billing/meter_event_adjustments", "create"} => "create",
+    {"GetBillingCreditBalanceSummary", "/v1/billing/credit_balance_summary", "retrieve"} => "retrieve",
+    {"PostBillingMeterEvents", "/v1/billing/meter_events", "create"} => "create",
+    {"GetInvoicePayments", "/v1/invoice_payments", "list"} => "list",
+    {"GetInvoicePaymentsInvoicePayment", "/v1/invoice_payments/{invoice_payment}", "retrieve"} => "retrieve",
+    {"GetIssuingPersonalizationDesigns", "/v1/issuing/personalization_designs", "list"} => "list",
+    {"GetIssuingPersonalizationDesignsPersonalizationDesign", "/v1/issuing/personalization_designs/{personalization_design}", "retrieve"} => "retrieve",
+    {"PostIssuingPersonalizationDesigns", "/v1/issuing/personalization_designs", "create"} => "create",
+    {"PostIssuingPersonalizationDesignsPersonalizationDesign", "/v1/issuing/personalization_designs/{personalization_design}", "update"} => "update",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivate", "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/activate", "activate"} => "activate",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivate", "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/deactivate", "deactivate"} => "deactivate",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReject", "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/reject", "reject"} => "reject",
+    {"PostInvoicesInvoiceAddLines", "/v1/invoices/{invoice}/add_lines", "add_lines"} => "add_lines",
+    {"PostInvoicesInvoiceAttachPayment", "/v1/invoices/{invoice}/attach_payment", "attach_payment"} => "attach_payment",
+    {"PostInvoicesInvoiceRemoveLines", "/v1/invoices/{invoice}/remove_lines", "remove_lines"} => "remove_lines",
+    {"PostInvoicesInvoiceUpdateLines", "/v1/invoices/{invoice}/update_lines", "update_lines"} => "update_lines",
+    {"PostInvoicesCreatePreview", "/v1/invoices/create_preview", "create_preview"} => "create_preview",
+    {"GetEntitlementsActiveEntitlements", "/v1/entitlements/active_entitlements", "list"} => "list",
+    {"GetEntitlementsActiveEntitlementsId", "/v1/entitlements/active_entitlements/{id}", "retrieve"} => "retrieve",
+    {"GetIssuingPhysicalBundles", "/v1/issuing/physical_bundles", "list"} => "list",
+    {"GetIssuingPhysicalBundlesPhysicalBundle", "/v1/issuing/physical_bundles/{physical_bundle}", "retrieve"} => "retrieve",
+    {"PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmount", "/v1/test_helpers/issuing/authorizations/{authorization}/finalize_amount", "finalize_amount"} => "finalize_amount",
+    {"PostTestHelpersIssuingAuthorizationsAuthorizationFraudChallengesRespond", "/v1/test_helpers/issuing/authorizations/{authorization}/fraud_challenges/respond", "respond"} => "respond",
+    {"GetBillingCreditBalanceTransactions", "/v1/billing/credit_balance_transactions", "list"} => "list",
+    {"GetBillingCreditBalanceTransactionsId", "/v1/billing/credit_balance_transactions/{id}", "retrieve"} => "retrieve",
+    {"GetBillingCreditGrants", "/v1/billing/credit_grants", "list"} => "list",
+    {"GetBillingCreditGrantsId", "/v1/billing/credit_grants/{id}", "retrieve"} => "retrieve",
+    {"PostBillingCreditGrants", "/v1/billing/credit_grants", "create"} => "create",
+    {"PostBillingCreditGrantsId", "/v1/billing/credit_grants/{id}", "update"} => "update",
+    {"PostBillingCreditGrantsIdExpire", "/v1/billing/credit_grants/{id}/expire", "expire"} => "expire",
+    {"PostBillingCreditGrantsIdVoid", "/v1/billing/credit_grants/{id}/void", "void_grant"} => "void_grant",
+    {"PostTestHelpersTreasuryOutboundTransfersOutboundTransfer", "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}", "update"} => "update",
+    {"GetTaxCalculationsCalculation", "/v1/tax/calculations/{calculation}", "retrieve"} => "retrieve",
+       {"GetBillingMeters", "/v1/billing/meters", "list"} => "list",
+    {"GetBillingMetersId", "/v1/billing/meters/{id}", "retrieve"} => "retrieve",
+    {"PostBillingMeters", "/v1/billing/meters", "create"} => "create",
+    {"PostBillingMetersId", "/v1/billing/meters/{id}", "update"} => "update",
+    {"PostBillingMetersIdDeactivate", "/v1/billing/meters/{id}/deactivate", "deactivate"} => "deactivate",
+    {"PostBillingMetersIdReactivate", "/v1/billing/meters/{id}/reactivate", "reactivate"} => "reactivate",
+    {"GetInvoiceRenderingTemplates", "/v1/invoice_rendering_templates", "list"} => "list",
+    {"GetInvoiceRenderingTemplatesTemplate", "/v1/invoice_rendering_templates/{template}", "retrieve"} => "retrieve",
+    {"PostInvoiceRenderingTemplatesTemplateArchive", "/v1/invoice_rendering_templates/{template}/archive", "archive"} => "archive",
+    {"PostInvoiceRenderingTemplatesTemplateUnarchive", "/v1/invoice_rendering_templates/{template}/unarchive", "unarchive"} => "unarchive",
+    {"PostTreasuryFinancialAccountsFinancialAccountClose", "/v1/treasury/financial_accounts/{financial_account}/close", "close"} => "close",
+    {"GetForwardingRequests", "/v1/forwarding/requests", "list"} => "list",
+    {"GetForwardingRequestsId", "/v1/forwarding/requests/{id}", "retrieve"} => "retrieve",
+    {"PostForwardingRequests", "/v1/forwarding/requests", "create"} => "create",
+    {"GetBillingAlerts", "/v1/billing/alerts", "list"} => "list",
+    {"GetBillingAlertsId", "/v1/billing/alerts/{id}", "retrieve"} => "retrieve",
+    {"PostBillingAlerts", "/v1/billing/alerts", "create"} => "create",
+    {"PostBillingAlertsIdActivate", "/v1/billing/alerts/{id}/activate", "activate"} => "activate",
+    {"PostBillingAlertsIdArchive", "/v1/billing/alerts/{id}/archive", "archive"} => "archive",
+    {"PostBillingAlertsIdDeactivate", "/v1/billing/alerts/{id}/deactivate", "deactivate"} => "deactivate",
+    {"DeleteProductsProductFeaturesId", "/v1/products/{product}/features/{id}", "delete"} => "delete",
+    {"GetProductsProductFeatures", "/v1/products/{product}/features", "list"} => "list",
+    {"GetProductsProductFeaturesId", "/v1/products/{product}/features/{id}", "retrieve"} => "retrieve",
+    {"PostProductsProductFeatures", "/v1/products/{product}/features", "create"} => "create",
+    {"GetTaxAssociationsFind", "/v1/tax/associations/find", "find"} => "find",
+    {"GetPaymentRecordsId", "/v1/payment_records/{id}", "retrieve"} => "retrieve",
+    {"PostPaymentRecordsIdReportPaymentAttempt", "/v1/payment_records/{id}/report_payment_attempt", "report_payment_attempt"} => "report_payment_attempt",
+    {"PostPaymentRecordsIdReportPaymentAttemptCanceled", "/v1/payment_records/{id}/report_payment_attempt_canceled", "report_payment_attempt_canceled"} => "report_payment_attempt_canceled",
+    {"PostPaymentRecordsIdReportPaymentAttemptFailed", "/v1/payment_records/{id}/report_payment_attempt_failed", "report_payment_attempt_failed"} => "report_payment_attempt_failed",
+    {"PostPaymentRecordsIdReportPaymentAttemptGuaranteed", "/v1/payment_records/{id}/report_payment_attempt_guaranteed", "report_payment_attempt_guaranteed"} => "report_payment_attempt_guaranteed",
+    {"PostPaymentRecordsIdReportPaymentAttemptInformational", "/v1/payment_records/{id}/report_payment_attempt_informational", "report_payment_attempt_informational"} => "report_payment_attempt_informational",
+    {"PostPaymentRecordsIdReportRefund", "/v1/payment_records/{id}/report_refund", "report_refund"} => "report_refund",
+    {"PostPaymentRecordsReportPayment", "/v1/payment_records/report_payment", "report_payment"} => "report_payment",
+    {"GetPaymentIntentsIntentAmountDetailsLineItems", "/v1/payment_intents/{intent}/amount_details_line_items", "list"} => "list",
+    {"GetPaymentAttemptRecords", "/v1/payment_attempt_records", "list"} => "list",
+    {"GetPaymentAttemptRecordsId", "/v1/payment_attempt_records/{id}", "retrieve"} => "retrieve",
+    {"GetBalanceSettings", "/v1/balance_settings", "retrieve"} => "retrieve",
+    {"PostBalanceSettings", "/v1/balance_settings", "update"} => "update",
+    {"PostTerminalOnboardingLinks", "/v1/terminal/onboarding_links", "create"} => "create"
   }
 
   defp to_func_name(operation, stripe_extension) do
@@ -1202,5 +1294,16 @@ defmodule Stripe.OpenApi.Phases.Compile do
       name ->
         name
     end
+  end
+
+
+  defp safe_type_name(name) when is_atom(name) do
+    if name in @reserved_type_names, do: String.to_atom("#{name}_field"), else: name
+  end
+
+  defp safe_type_name(name) when is_binary(name) do
+    if name in Enum.map(@reserved_type_names, &Atom.to_string/1),
+      do: "#{name}_field",
+      else: name
   end
 end

@@ -5,23 +5,33 @@ defmodule Stripe.Terminal.Location do
   (
     defstruct [
       :address,
+      :address_kana,
+      :address_kanji,
       :configuration_overrides,
       :display_name,
+      :display_name_kana,
+      :display_name_kanji,
       :id,
       :livemode,
       :metadata,
-      :object
+      :object,
+      :phone
     ]
 
-    @typedoc "The `terminal.location` type.\n\n  * `address` \n  * `configuration_overrides` The ID of a configuration that will be used to customize all readers in this location.\n  * `display_name` The display name of the location.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n"
+    @typedoc "The `terminal.location` type.\n\n  * `address` \n  * `address_kana` \n  * `address_kanji` \n  * `configuration_overrides` The ID of a configuration that will be used to customize all readers in this location.\n  * `display_name` The display name of the location.\n  * `display_name_kana` The Kana variation of the display name of the location.\n  * `display_name_kanji` The Kanji variation of the display name of the location.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `phone` The phone number of the location.\n"
     @type t :: %__MODULE__{
             address: term,
+            address_kana: term,
+            address_kanji: term,
             configuration_overrides: binary,
             display_name: binary,
+            display_name_kana: binary,
+            display_name_kanji: binary,
             id: binary,
             livemode: boolean,
             metadata: term,
-            object: binary
+            object: binary,
+            phone: binary
           }
   )
 
@@ -38,34 +48,58 @@ defmodule Stripe.Terminal.Location do
   )
 
   (
+    @typedoc "The Kana variation of the full address of the location (Japan only)."
+    @type address_kana :: %{
+            optional(:city) => binary,
+            optional(:country) => binary,
+            optional(:line1) => binary,
+            optional(:line2) => binary,
+            optional(:postal_code) => binary,
+            optional(:state) => binary,
+            optional(:town) => binary
+          }
+  )
+
+  (
+    @typedoc "The Kanji variation of the full address of the location (Japan only)."
+    @type address_kanji :: %{
+            optional(:city) => binary,
+            optional(:country) => binary,
+            optional(:line1) => binary,
+            optional(:line2) => binary,
+            optional(:postal_code) => binary,
+            optional(:state) => binary,
+            optional(:town) => binary
+          }
+  )
+
+  (
     nil
 
-    @doc "<p>Retrieves a <code>Location</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/terminal/locations/{location}`\n"
+    @doc "<p>Deletes a <code>Location</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/locations/{location}`\n"
     (
-      @spec retrieve(
-              location :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Terminal.Location.t() | Stripe.DeletedTerminal.Location.t()}
+      @spec delete(location :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedTerminal.Location.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def retrieve(location, params \\ %{}, opts \\ []) do
+      def delete(location, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/locations/{location}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "location",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "location",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "location",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -74,88 +108,7 @@ defmodule Stripe.Terminal.Location do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Creates a new <code>Location</code> object.\nFor further details, including which address fields are required in each country, see the <a href=\"/docs/terminal/fleet/locations\">Manage locations</a> guide.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/locations`\n"
-    (
-      @spec create(
-              params :: %{
-                optional(:address) => address,
-                optional(:configuration_overrides) => binary,
-                optional(:display_name) => binary,
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary} | binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Terminal.Location.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def create(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/locations", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Updates a <code>Location</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/locations/{location}`\n"
-    (
-      @spec update(
-              location :: binary(),
-              params :: %{
-                optional(:address) => address,
-                optional(:configuration_overrides) => binary | binary,
-                optional(:display_name) => binary,
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary} | binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Terminal.Location.t() | Stripe.DeletedTerminal.Location.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def update(location, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/terminal/locations/{location}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "location",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "location",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [location]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
@@ -193,28 +146,34 @@ defmodule Stripe.Terminal.Location do
   (
     nil
 
-    @doc "<p>Deletes a <code>Location</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/locations/{location}`\n"
+    @doc "<p>Retrieves a <code>Location</code> object.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/terminal/locations/{location}`\n"
     (
-      @spec delete(location :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedTerminal.Location.t()}
+      @spec retrieve(
+              location :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Location.t() | Stripe.DeletedTerminal.Location.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def delete(location, opts \\ []) do
+      def retrieve(location, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/locations/{location}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "location",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "location",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "location",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -223,7 +182,100 @@ defmodule Stripe.Terminal.Location do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new <code>Location</code> object.\nFor further details, including which address fields are required in each country, see the <a href=\"/docs/terminal/fleet/locations\">Manage locations</a> guide.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/locations`\n"
+    (
+      @spec create(
+              params :: %{
+                optional(:address) => address,
+                optional(:address_kana) => address_kana,
+                optional(:address_kanji) => address_kanji,
+                optional(:configuration_overrides) => binary,
+                optional(:display_name) => binary,
+                optional(:display_name_kana) => binary,
+                optional(:display_name_kanji) => binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:phone) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Location.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def create(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/locations", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Updates a <code>Location</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/locations/{location}`\n"
+    (
+      @spec update(
+              location :: binary(),
+              params :: %{
+                optional(:address) => address,
+                optional(:address_kana) => address_kana,
+                optional(:address_kanji) => address_kanji,
+                optional(:configuration_overrides) => binary | binary,
+                optional(:display_name) => binary | binary,
+                optional(:display_name_kana) => binary | binary,
+                optional(:display_name_kanji) => binary | binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary} | binary,
+                optional(:phone) => binary | binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Location.t() | Stripe.DeletedTerminal.Location.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def update(location, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/terminal/locations/{location}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "location",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "location",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [location]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )

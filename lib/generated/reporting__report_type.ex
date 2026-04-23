@@ -32,6 +32,27 @@ defmodule Stripe.Reporting.ReportType do
   (
     nil
 
+    @doc "<p>Returns a full list of Report Types.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/reporting/report_types`\n"
+    (
+      @spec list(params :: %{optional(:expand) => list(binary)}, opts :: Keyword.t()) ::
+              {:ok, Stripe.List.t(Stripe.Reporting.ReportType.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/reporting/report_types", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Retrieves the details of a Report Type. (Certain report types require a <a href=\"https://stripe.com/docs/keys#test-live-modes\">live-mode API key</a>.)</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/reporting/report_types/{report_type}`\n"
     (
       @spec retrieve(
@@ -47,43 +68,24 @@ defmodule Stripe.Reporting.ReportType do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/reporting/report_types/{report_type}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "report_type",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "report_type",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "report_type",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
             [report_type]
           )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a full list of Report Types.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/reporting/report_types`\n"
-    (
-      @spec list(params :: %{optional(:expand) => list(binary)}, opts :: Keyword.t()) ::
-              {:ok, Stripe.List.t(Stripe.Reporting.ReportType.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/reporting/report_types", [], [])
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)

@@ -16,7 +16,7 @@ defmodule Stripe.Radar.ValueList do
       :object
     ]
 
-    @typedoc "The `radar.value_list` type.\n\n  * `alias` The name of the value list for use in rules.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `created_by` The name or email address of the user who created this value list.\n  * `id` Unique identifier for the object.\n  * `item_type` The type of items in the value list. One of `card_fingerprint`, `us_bank_account_fingerprint`, `sepa_debit_fingerprint`, `card_bin`, `email`, `ip_address`, `country`, `string`, `case_sensitive_string`, or `customer_id`.\n  * `list_items` List of items contained within this value list.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name` The name of the value list.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n"
+    @typedoc "The `radar.value_list` type.\n\n  * `alias` The name of the value list for use in rules.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `created_by` The name or email address of the user who created this value list.\n  * `id` Unique identifier for the object.\n  * `item_type` The type of items in the value list. One of `card_fingerprint`, `card_bin`, `email`, `ip_address`, `country`, `string`, `case_sensitive_string`, `customer_id`, `sepa_debit_fingerprint`, or `us_bank_account_fingerprint`.\n  * `list_items` List of items contained within this value list.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name` The name of the value list.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n"
     @type t :: %__MODULE__{
             alias: binary,
             created: integer,
@@ -39,6 +39,47 @@ defmodule Stripe.Radar.ValueList do
             optional(:lt) => integer,
             optional(:lte) => integer
           }
+  )
+
+  (
+    nil
+
+    @doc "<p>Deletes a <code>ValueList</code> object, also deleting any items contained within the value list. To be deleted, a value list must not be referenced in any rules.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/radar/value_lists/{value_list}`\n"
+    (
+      @spec delete(value_list :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedRadar.ValueList.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(value_list, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/radar/value_lists/{value_list}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "value_list",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "value_list",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [value_list]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
   )
 
   (
@@ -91,17 +132,19 @@ defmodule Stripe.Radar.ValueList do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/radar/value_lists/{value_list}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "value_list",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "value_list",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "value_list",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -180,17 +223,19 @@ defmodule Stripe.Radar.ValueList do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/radar/value_lists/{value_list}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "value_list",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "value_list",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "value_list",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -201,45 +246,6 @@ defmodule Stripe.Radar.ValueList do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes a <code>ValueList</code> object, also deleting any items contained within the value list. To be deleted, a value list must not be referenced in any rules.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/radar/value_lists/{value_list}`\n"
-    (
-      @spec delete(value_list :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedRadar.ValueList.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(value_list, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/radar/value_lists/{value_list}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "value_list",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "value_list",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [value_list]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

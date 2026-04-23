@@ -8,7 +8,6 @@ defmodule Stripe.CardTest do
              {:__struct__, 1},
              delete: 2,
              delete: 3,
-             delete: 4,
              update: 2,
              update: 3,
              update: 4
@@ -17,15 +16,15 @@ defmodule Stripe.CardTest do
 
   describe "update/2" do
     test "updates a card" do
-      assert {:ok, _} = Stripe.Card.update("cus_123", "card_123", %{name: "sco"})
-      assert_stripe_requested(:post, "/v1/customers/cus_123/sources/card_123")
+      assert {:ok, _} = Stripe.Card.update("acct_123", "card_123", %{name: "sco"})
+      assert_stripe_requested(:post, "/v1/accounts/acct_123/external_accounts/card_123")
     end
   end
 
   describe "delete/2" do
     test "deletes a card" do
-      assert {:ok, _} = Stripe.Card.delete("cus_123", "card_123")
-      assert_stripe_requested(:delete, "/v1/customers/cus_123/sources/card_123")
+      assert {:ok, _} = Stripe.Card.delete("acct_123", "card_123")
+      assert_stripe_requested(:delete, "/v1/accounts/acct_123/external_accounts/card_123")
     end
   end
 end

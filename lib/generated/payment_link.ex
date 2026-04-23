@@ -4,42 +4,44 @@ defmodule Stripe.PaymentLink do
   @moduledoc "A payment link is a shareable URL that will take your customers to a hosted payment page. A payment link can be shared and used multiple times.\n\nWhen a customer opens a payment link it will open a new [checkout session](https://stripe.com/docs/api/checkout/sessions) to render the payment page. You can use [checkout session events](https://stripe.com/docs/api/events/types#event_types-checkout.session.completed) to track payments through payment links.\n\nRelated guide: [Payment Links API](https://stripe.com/docs/payment-links)"
   (
     defstruct [
-      :shipping_options,
-      :restrictions,
-      :id,
-      :transfer_data,
-      :application_fee_amount,
-      :payment_intent_data,
-      :billing_address_collection,
-      :allow_promotion_codes,
-      :url,
-      :payment_method_collection,
-      :currency,
-      :tax_id_collection,
-      :automatic_tax,
-      :object,
-      :application,
-      :after_completion,
-      :custom_text,
-      :submit_type,
-      :invoice_creation,
-      :on_behalf_of,
-      :phone_number_collection,
-      :inactive_message,
-      :consent_collection,
-      :shipping_address_collection,
-      :payment_method_types,
-      :active,
-      :subscription_data,
-      :metadata,
-      :customer_creation,
-      :custom_fields,
       :line_items,
+      :allow_promotion_codes,
+      :consent_collection,
       :livemode,
+      :billing_address_collection,
+      :subscription_data,
+      :transfer_data,
+      :application,
+      :inactive_message,
+      :customer_creation,
+      :id,
+      :automatic_tax,
+      :restrictions,
+      :phone_number_collection,
+      :invoice_creation,
+      :application_fee_amount,
+      :currency,
+      :optional_items,
+      :url,
+      :object,
+      :payment_method_collection,
+      :on_behalf_of,
+      :payment_method_types,
+      :tax_id_collection,
+      :payment_intent_data,
+      :shipping_options,
+      :after_completion,
+      :name_collection,
+      :active,
+      :custom_fields,
+      :metadata,
+      :custom_text,
+      :shipping_address_collection,
+      :submit_type,
       :application_fee_percent
     ]
 
-    @typedoc "The `payment_link` type.\n\n  * `active` Whether the payment link's `url` is active. If `false`, customers visiting the URL will be shown a page saying that the link has been deactivated.\n  * `after_completion` \n  * `allow_promotion_codes` Whether user redeemable promotion codes are enabled.\n  * `application` The ID of the Connect application that created the Payment Link.\n  * `application_fee_amount` The amount of the application fee (if any) that will be requested to be applied to the payment and transferred to the application owner's Stripe account.\n  * `application_fee_percent` This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account.\n  * `automatic_tax` \n  * `billing_address_collection` Configuration for collecting the customer's billing address.\n  * `consent_collection` When set, provides configuration to gather active consent from customers.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `custom_fields` Collect additional information from your customer using custom fields. Up to 2 fields are supported.\n  * `custom_text` \n  * `customer_creation` Configuration for Customer creation during checkout.\n  * `id` Unique identifier for the object.\n  * `inactive_message` The custom message to be displayed to a customer when a payment link is no longer active.\n  * `invoice_creation` Configuration for creating invoice for payment mode payment links.\n  * `line_items` The line items representing what is being sold.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account on behalf of which to charge. See the [Connect documentation](https://support.stripe.com/questions/sending-invoices-on-behalf-of-connected-accounts) for details.\n  * `payment_intent_data` Indicates the parameters to be passed to PaymentIntent creation during checkout.\n  * `payment_method_collection` Configuration for collecting a payment method during checkout.\n  * `payment_method_types` The list of payment method types that customers can use. When `null`, Stripe will dynamically show relevant payment methods you've enabled in your [payment method settings](https://dashboard.stripe.com/settings/payment_methods).\n  * `phone_number_collection` \n  * `restrictions` Settings that restrict the usage of a payment link.\n  * `shipping_address_collection` Configuration for collecting the customer's shipping address.\n  * `shipping_options` The shipping rate options applied to the session.\n  * `submit_type` Indicates the type of transaction being performed which customizes relevant text on the page, such as the submit button.\n  * `subscription_data` When creating a subscription, the specified configuration data will be used. There must be at least one line item with a recurring price to use `subscription_data`.\n  * `tax_id_collection` \n  * `transfer_data` The account (if any) the payments will be attributed to for tax reporting, and where funds from each payment will be transferred to.\n  * `url` The public URL that can be shared with customers.\n"
+    @typedoc "The `payment_link` type.\n\n  * `active` Whether the payment link's `url` is active. If `false`, customers visiting the URL will be shown a page saying that the link has been deactivated.\n  * `after_completion` \n  * `allow_promotion_codes` Whether user redeemable promotion codes are enabled.\n  * `application` The ID of the Connect application that created the Payment Link.\n  * `application_fee_amount` The amount of the application fee (if any) that will be requested to be applied to the payment and transferred to the application owner's Stripe account.\n  * `application_fee_percent` This represents the percentage of the subscription invoice total that will be transferred to the application owner's Stripe account.\n  * `automatic_tax` \n  * `billing_address_collection` Configuration for collecting the customer's billing address. Defaults to `auto`.\n  * `consent_collection` When set, provides configuration to gather active consent from customers.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `custom_fields` Collect additional information from your customer using custom fields. Up to 3 fields are supported.\n  * `custom_text` \n  * `customer_creation` Configuration for Customer creation during checkout.\n  * `id` Unique identifier for the object.\n  * `inactive_message` The custom message to be displayed to a customer when a payment link is no longer active.\n  * `invoice_creation` Configuration for creating invoice for payment mode payment links.\n  * `line_items` The line items representing what is being sold.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name_collection` \n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `on_behalf_of` The account on behalf of which to charge. See the [Connect documentation](https://support.stripe.com/questions/sending-invoices-on-behalf-of-connected-accounts) for details.\n  * `optional_items` The optional items presented to the customer at checkout.\n  * `payment_intent_data` Indicates the parameters to be passed to PaymentIntent creation during checkout.\n  * `payment_method_collection` Configuration for collecting a payment method during checkout. Defaults to `always`.\n  * `payment_method_types` The list of payment method types that customers can use. When `null`, Stripe will dynamically show relevant payment methods you've enabled in your [payment method settings](https://dashboard.stripe.com/settings/payment_methods).\n  * `phone_number_collection` \n  * `restrictions` Settings that restrict the usage of a payment link.\n  * `shipping_address_collection` Configuration for collecting the customer's shipping address.\n  * `shipping_options` The shipping rate options applied to the session.\n  * `submit_type` Indicates the type of transaction being performed which customizes relevant text on the page, such as the submit button.\n  * `subscription_data` When creating a subscription, the specified configuration data will be used. There must be at least one line item with a recurring price to use `subscription_data`.\n  * `tax_id_collection` \n  * `transfer_data` The account (if any) the payments will be attributed to for tax reporting, and where funds from each payment will be transferred to.\n  * `url` The public URL that can be shared with customers.\n"
     @type t :: %__MODULE__{
             active: boolean,
             after_completion: term,
@@ -60,8 +62,10 @@ defmodule Stripe.PaymentLink do
             line_items: term,
             livemode: boolean,
             metadata: term,
+            name_collection: term,
             object: binary,
             on_behalf_of: (binary | Stripe.Account.t()) | nil,
+            optional_items: term | nil,
             payment_intent_data: term | nil,
             payment_method_collection: binary,
             payment_method_types: term | nil,
@@ -78,7 +82,7 @@ defmodule Stripe.PaymentLink do
   )
 
   (
-    @typedoc "When set, provides configuration for this item’s quantity to be adjusted by the customer during checkout."
+    @typedoc "When set, provides configuration for the customer to adjust the quantity of the line item created when a customer chooses to add this optional item to their order."
     @type adjustable_quantity :: %{
             optional(:enabled) => boolean,
             optional(:maximum) => integer,
@@ -102,7 +106,12 @@ defmodule Stripe.PaymentLink do
 
   (
     @typedoc "Configuration for automatic tax collection."
-    @type automatic_tax :: %{optional(:enabled) => boolean}
+    @type automatic_tax :: %{optional(:enabled) => boolean, optional(:liability) => liability}
+  )
+
+  (
+    @typedoc "Controls settings applied for collecting the customer's business name."
+    @type business :: %{optional(:enabled) => boolean, optional(:optional) => boolean}
   )
 
   (
@@ -144,7 +153,7 @@ defmodule Stripe.PaymentLink do
 
   (
     @typedoc "Configuration for `type=dropdown` fields."
-    @type dropdown :: %{optional(:options) => list(options)}
+    @type dropdown :: %{optional(:default_value) => binary, optional(:options) => list(options)}
   )
 
   (
@@ -157,6 +166,11 @@ defmodule Stripe.PaymentLink do
   (
     @typedoc "Configuration when `type=hosted_confirmation`."
     @type hosted_confirmation :: %{optional(:custom_message) => binary}
+  )
+
+  (
+    @typedoc "Controls settings applied for collecting the customer's individual name."
+    @type individual :: %{optional(:enabled) => boolean, optional(:optional) => boolean}
   )
 
   (
@@ -174,9 +188,20 @@ defmodule Stripe.PaymentLink do
             optional(:custom_fields) => list(custom_fields) | binary,
             optional(:description) => binary,
             optional(:footer) => binary,
+            optional(:issuer) => issuer,
             optional(:metadata) => %{optional(binary) => binary} | binary,
             optional(:rendering_options) => rendering_options | binary
           }
+  )
+
+  (
+    @typedoc "All invoices will be billed using the specified settings."
+    @type invoice_settings :: %{optional(:issuer) => issuer}
+  )
+
+  (
+    @typedoc "The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account."
+    @type issuer :: %{optional(:account) => binary, optional(:type) => :account | :self}
   )
 
   (
@@ -185,17 +210,44 @@ defmodule Stripe.PaymentLink do
   )
 
   (
+    @typedoc "The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account."
+    @type liability :: %{optional(:account) => binary, optional(:type) => :account | :self}
+  )
+
+  (
     @typedoc nil
     @type line_items :: %{
             optional(:adjustable_quantity) => adjustable_quantity,
             optional(:price) => binary,
+            optional(:price_data) => price_data,
             optional(:quantity) => integer
           }
   )
 
   (
+    @typedoc "Controls settings applied for collecting the customer's name."
+    @type name_collection :: %{
+            optional(:business) => business,
+            optional(:individual) => individual
+          }
+  )
+
+  (
     @typedoc "Configuration for `type=numeric` fields."
-    @type numeric :: %{optional(:maximum_length) => integer, optional(:minimum_length) => integer}
+    @type numeric :: %{
+            optional(:default_value) => binary,
+            optional(:maximum_length) => integer,
+            optional(:minimum_length) => integer
+          }
+  )
+
+  (
+    @typedoc nil
+    @type optional_items :: %{
+            optional(:adjustable_quantity) => adjustable_quantity,
+            optional(:price) => binary,
+            optional(:quantity) => integer
+          }
   )
 
   (
@@ -227,6 +279,39 @@ defmodule Stripe.PaymentLink do
   )
 
   (
+    @typedoc "Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline. One of `price` or `price_data` is required."
+    @type price_data :: %{
+            optional(:currency) => binary,
+            optional(:product) => binary,
+            optional(:product_data) => product_data,
+            optional(:recurring) => recurring,
+            optional(:tax_behavior) => :exclusive | :inclusive | :unspecified,
+            optional(:unit_amount) => integer,
+            optional(:unit_amount_decimal) => binary
+          }
+  )
+
+  (
+    @typedoc "Data used to generate a new [Product](https://docs.stripe.com/api/products) object inline. One of `product` or `product_data` is required."
+    @type product_data :: %{
+            optional(:description) => binary,
+            optional(:images) => list(binary),
+            optional(:metadata) => %{optional(binary) => binary},
+            optional(:name) => binary,
+            optional(:tax_code) => binary,
+            optional(:unit_label) => binary
+          }
+  )
+
+  (
+    @typedoc "The recurring components of a price such as `interval` and `interval_count`."
+    @type recurring :: %{
+            optional(:interval) => :day | :month | :week | :year,
+            optional(:interval_count) => integer
+          }
+  )
+
+  (
     @typedoc "Configuration when `type=redirect`."
     @type redirect :: %{optional(:url) => binary}
   )
@@ -234,7 +319,8 @@ defmodule Stripe.PaymentLink do
   (
     @typedoc nil
     @type rendering_options :: %{
-            optional(:amount_tax_display) => :exclude_tax | :include_inclusive_tax
+            optional(:amount_tax_display) => :exclude_tax | :include_inclusive_tax,
+            optional(:template) => binary
           }
   )
 
@@ -437,6 +523,7 @@ defmodule Stripe.PaymentLink do
                 | :SA
                 | :SB
                 | :SC
+                | :SD
                 | :SE
                 | :SG
                 | :SH
@@ -508,6 +595,7 @@ defmodule Stripe.PaymentLink do
     @typedoc "When creating a subscription, the specified configuration data will be used. There must be at least one line item with a recurring price to use `subscription_data`."
     @type subscription_data :: %{
             optional(:description) => binary,
+            optional(:invoice_settings) => invoice_settings,
             optional(:metadata) => %{optional(binary) => binary},
             optional(:trial_period_days) => integer,
             optional(:trial_settings) => trial_settings
@@ -516,7 +604,10 @@ defmodule Stripe.PaymentLink do
 
   (
     @typedoc "Controls tax ID collection during checkout."
-    @type tax_id_collection :: %{optional(:enabled) => boolean}
+    @type tax_id_collection :: %{
+            optional(:enabled) => boolean,
+            optional(:required) => :if_supported | :never
+          }
   )
 
   (
@@ -526,7 +617,11 @@ defmodule Stripe.PaymentLink do
 
   (
     @typedoc "Configuration for `type=text` fields."
-    @type text :: %{optional(:maximum_length) => integer, optional(:minimum_length) => integer}
+    @type text :: %{
+            optional(:default_value) => binary,
+            optional(:maximum_length) => integer,
+            optional(:minimum_length) => integer
+          }
   )
 
   (
@@ -584,17 +679,19 @@ defmodule Stripe.PaymentLink do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_links/{payment_link}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "payment_link",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_link",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "payment_link",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -633,17 +730,19 @@ defmodule Stripe.PaymentLink do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_links/{payment_link}/line_items",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "payment_link",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_link",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "payment_link",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -682,7 +781,9 @@ defmodule Stripe.PaymentLink do
                 optional(:invoice_creation) => invoice_creation,
                 optional(:line_items) => list(line_items),
                 optional(:metadata) => %{optional(binary) => binary},
+                optional(:name_collection) => name_collection,
                 optional(:on_behalf_of) => binary,
+                optional(:optional_items) => list(optional_items),
                 optional(:payment_intent_data) => payment_intent_data,
                 optional(:payment_method_collection) => :always | :if_required,
                 optional(:payment_method_types) =>
@@ -690,9 +791,11 @@ defmodule Stripe.PaymentLink do
                     :affirm
                     | :afterpay_clearpay
                     | :alipay
+                    | :alma
                     | :au_becs_debit
                     | :bacs_debit
                     | :bancontact
+                    | :billie
                     | :blik
                     | :boleto
                     | :card
@@ -705,22 +808,30 @@ defmodule Stripe.PaymentLink do
                     | :klarna
                     | :konbini
                     | :link
+                    | :mb_way
+                    | :mobilepay
+                    | :multibanco
                     | :oxxo
                     | :p24
+                    | :pay_by_bank
                     | :paynow
                     | :paypal
                     | :pix
                     | :promptpay
+                    | :satispay
                     | :sepa_debit
                     | :sofort
+                    | :swish
+                    | :twint
                     | :us_bank_account
                     | :wechat_pay
+                    | :zip
                   ),
                 optional(:phone_number_collection) => phone_number_collection,
                 optional(:restrictions) => restrictions,
                 optional(:shipping_address_collection) => shipping_address_collection,
                 optional(:shipping_options) => list(shipping_options),
-                optional(:submit_type) => :auto | :book | :donate | :pay,
+                optional(:submit_type) => :auto | :book | :donate | :pay | :subscribe,
                 optional(:subscription_data) => subscription_data,
                 optional(:tax_id_collection) => tax_id_collection,
                 optional(:transfer_data) => transfer_data
@@ -760,6 +871,7 @@ defmodule Stripe.PaymentLink do
                 optional(:invoice_creation) => invoice_creation,
                 optional(:line_items) => list(line_items),
                 optional(:metadata) => %{optional(binary) => binary},
+                optional(:name_collection) => name_collection | binary,
                 optional(:payment_intent_data) => payment_intent_data,
                 optional(:payment_method_collection) => :always | :if_required,
                 optional(:payment_method_types) =>
@@ -767,9 +879,11 @@ defmodule Stripe.PaymentLink do
                     :affirm
                     | :afterpay_clearpay
                     | :alipay
+                    | :alma
                     | :au_becs_debit
                     | :bacs_debit
                     | :bancontact
+                    | :billie
                     | :blik
                     | :boleto
                     | :card
@@ -782,21 +896,32 @@ defmodule Stripe.PaymentLink do
                     | :klarna
                     | :konbini
                     | :link
+                    | :mb_way
+                    | :mobilepay
+                    | :multibanco
                     | :oxxo
                     | :p24
+                    | :pay_by_bank
                     | :paynow
                     | :paypal
                     | :pix
                     | :promptpay
+                    | :satispay
                     | :sepa_debit
                     | :sofort
+                    | :swish
+                    | :twint
                     | :us_bank_account
                     | :wechat_pay
+                    | :zip
                   )
                   | binary,
+                optional(:phone_number_collection) => phone_number_collection,
                 optional(:restrictions) => restrictions | binary,
                 optional(:shipping_address_collection) => shipping_address_collection | binary,
-                optional(:subscription_data) => subscription_data
+                optional(:submit_type) => :auto | :book | :donate | :pay | :subscribe,
+                optional(:subscription_data) => subscription_data,
+                optional(:tax_id_collection) => tax_id_collection
               },
               opts :: Keyword.t()
             ) :: {:ok, Stripe.PaymentLink.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
@@ -805,17 +930,19 @@ defmodule Stripe.PaymentLink do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/payment_links/{payment_link}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "payment_link",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "payment_link",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "payment_link",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

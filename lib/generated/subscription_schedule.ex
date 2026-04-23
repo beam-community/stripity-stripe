@@ -5,6 +5,7 @@ defmodule Stripe.SubscriptionSchedule do
   (
     defstruct [
       :application,
+      :billing_mode,
       :canceled_at,
       :completed_at,
       :created,
@@ -24,9 +25,10 @@ defmodule Stripe.SubscriptionSchedule do
       :test_clock
     ]
 
-    @typedoc "The `subscription_schedule` type.\n\n  * `application` ID of the Connect Application that created the schedule.\n  * `canceled_at` Time at which the subscription schedule was canceled. Measured in seconds since the Unix epoch.\n  * `completed_at` Time at which the subscription schedule was completed. Measured in seconds since the Unix epoch.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `current_phase` Object representing the start and end dates for the current phase of the subscription schedule, if it is `active`.\n  * `customer` ID of the customer who owns the subscription schedule.\n  * `default_settings` \n  * `end_behavior` Behavior of the subscription schedule and underlying subscription when it ends. Possible values are `release` or `cancel` with the default being `release`. `release` will end the subscription schedule and keep the underlying subscription running. `cancel` will end the subscription schedule and cancel the underlying subscription.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `phases` Configuration for the subscription schedule's phases.\n  * `released_at` Time at which the subscription schedule was released. Measured in seconds since the Unix epoch.\n  * `released_subscription` ID of the subscription once managed by the subscription schedule (if it is released).\n  * `status` The present status of the subscription schedule. Possible values are `not_started`, `active`, `completed`, `released`, and `canceled`. You can read more about the different states in our [behavior guide](https://stripe.com/docs/billing/subscriptions/subscription-schedules).\n  * `subscription` ID of the subscription managed by the subscription schedule.\n  * `test_clock` ID of the test clock this subscription schedule belongs to.\n"
+    @typedoc "The `subscription_schedule` type.\n\n  * `application` ID of the Connect Application that created the schedule.\n  * `billing_mode` \n  * `canceled_at` Time at which the subscription schedule was canceled. Measured in seconds since the Unix epoch.\n  * `completed_at` Time at which the subscription schedule was completed. Measured in seconds since the Unix epoch.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `current_phase` Object representing the start and end dates for the current phase of the subscription schedule, if it is `active`.\n  * `customer` ID of the customer who owns the subscription schedule.\n  * `default_settings` \n  * `end_behavior` Behavior of the subscription schedule and underlying subscription when it ends. Possible values are `release` or `cancel` with the default being `release`. `release` will end the subscription schedule and keep the underlying subscription running. `cancel` will end the subscription schedule and cancel the underlying subscription.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `phases` Configuration for the subscription schedule's phases.\n  * `released_at` Time at which the subscription schedule was released. Measured in seconds since the Unix epoch.\n  * `released_subscription` ID of the subscription once managed by the subscription schedule (if it is released).\n  * `status` The present status of the subscription schedule. Possible values are `not_started`, `active`, `completed`, `released`, and `canceled`. You can read more about the different states in our [behavior guide](https://stripe.com/docs/billing/subscriptions/subscription-schedules).\n  * `subscription` ID of the subscription managed by the subscription schedule.\n  * `test_clock` ID of the test clock this subscription schedule belongs to.\n"
     @type t :: %__MODULE__{
             application: (binary | term | term) | nil,
+            billing_mode: term,
             canceled_at: integer | nil,
             completed_at: integer | nil,
             created: integer,
@@ -50,6 +52,9 @@ defmodule Stripe.SubscriptionSchedule do
   (
     @typedoc nil
     @type add_invoice_items :: %{
+            optional(:discounts) => list(discounts),
+            optional(:metadata) => %{optional(binary) => binary},
+            optional(:period) => period,
             optional(:price) => binary,
             optional(:price_data) => price_data,
             optional(:quantity) => integer,
@@ -59,7 +64,15 @@ defmodule Stripe.SubscriptionSchedule do
 
   (
     @typedoc "Automatic tax settings for this phase."
-    @type automatic_tax :: %{optional(:enabled) => boolean}
+    @type automatic_tax :: %{optional(:enabled) => boolean, optional(:liability) => liability}
+  )
+
+  (
+    @typedoc "Controls how prorations and invoices for subscriptions are calculated and orchestrated."
+    @type billing_mode :: %{
+            optional(:flexible) => flexible,
+            optional(:type) => :classic | :flexible
+          }
   )
 
   (
@@ -117,14 +130,54 @@ defmodule Stripe.SubscriptionSchedule do
   )
 
   (
+    @typedoc nil
+    @type discounts :: %{
+            optional(:coupon) => binary,
+            optional(:discount) => binary,
+            optional(:promotion_code) => binary
+          }
+  )
+
+  (
+    @typedoc "The number of intervals the phase should last. If set, `end_date` must not be set."
+    @type duration :: %{
+            optional(:interval) => :day | :month | :week | :year,
+            optional(:interval_count) => integer
+          }
+  )
+
+  (
+    @typedoc "End of the invoice item period."
+    @type end_field :: %{
+            optional(:timestamp) => integer,
+            optional(:type) => :min_item_period_end | :phase_end | :timestamp
+          }
+  )
+
+  (
+    @typedoc "Configure behavior for flexible billing mode."
+    @type flexible :: %{optional(:proration_discounts) => :included | :itemized}
+  )
+
+  (
     @typedoc "All invoices will be billed using the specified settings."
-    @type invoice_settings :: %{optional(:days_until_due) => integer}
+    @type invoice_settings :: %{
+            optional(:account_tax_ids) => list(binary) | binary,
+            optional(:days_until_due) => integer,
+            optional(:issuer) => issuer
+          }
+  )
+
+  (
+    @typedoc "The connected account that issues the invoice. The invoice is presented with the branding and support information of the specified account."
+    @type issuer :: %{optional(:account) => binary, optional(:type) => :account | :self}
   )
 
   (
     @typedoc nil
     @type items :: %{
             optional(:billing_thresholds) => billing_thresholds | binary,
+            optional(:discounts) => list(discounts) | binary,
             optional(:metadata) => %{optional(binary) => binary},
             optional(:plan) => binary,
             optional(:price) => binary,
@@ -132,6 +185,16 @@ defmodule Stripe.SubscriptionSchedule do
             optional(:quantity) => integer,
             optional(:tax_rates) => list(binary) | binary
           }
+  )
+
+  (
+    @typedoc "The account that's liable for tax. If set, the business address and tax registrations required to perform the tax calculation are loaded from this account. The tax transaction is returned in the report of the connected account."
+    @type liability :: %{optional(:account) => binary, optional(:type) => :account | :self}
+  )
+
+  (
+    @typedoc "The period associated with this invoice item. If not set, `period.start.type` defaults to `max_item_period_start` and `period.end.type` defaults to `min_item_period_end`."
+    @type period :: %{optional(:end) => end_field, optional(:start) => start}
   )
 
   (
@@ -143,15 +206,15 @@ defmodule Stripe.SubscriptionSchedule do
             optional(:billing_cycle_anchor) => :automatic | :phase_start,
             optional(:billing_thresholds) => billing_thresholds | binary,
             optional(:collection_method) => :charge_automatically | :send_invoice,
-            optional(:coupon) => binary,
             optional(:currency) => binary,
             optional(:default_payment_method) => binary,
             optional(:default_tax_rates) => list(binary) | binary,
             optional(:description) => binary | binary,
+            optional(:discounts) => list(discounts) | binary,
+            optional(:duration) => duration,
             optional(:end_date) => integer,
             optional(:invoice_settings) => invoice_settings,
             optional(:items) => list(items),
-            optional(:iterations) => integer,
             optional(:metadata) => %{optional(binary) => binary},
             optional(:on_behalf_of) => binary,
             optional(:proration_behavior) => :always_invoice | :create_prorations | :none,
@@ -188,6 +251,14 @@ defmodule Stripe.SubscriptionSchedule do
             optional(:gte) => integer,
             optional(:lt) => integer,
             optional(:lte) => integer
+          }
+  )
+
+  (
+    @typedoc "Start of the invoice item period."
+    @type start :: %{
+            optional(:timestamp) => integer,
+            optional(:type) => :max_item_period_start | :phase_start | :timestamp
           }
   )
 
@@ -237,10 +308,57 @@ defmodule Stripe.SubscriptionSchedule do
   (
     nil
 
+    @doc "<p>Retrieves the details of an existing subscription schedule. You only need to supply the unique subscription schedule identifier that was returned upon subscription schedule creation.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscription_schedules/{schedule}`\n"
+    (
+      @spec retrieve(
+              schedule :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.SubscriptionSchedule.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(schedule, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/subscription_schedules/{schedule}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "schedule",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "schedule",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [schedule]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/subscription_schedules`\n"
     (
       @spec create(
               params :: %{
+                optional(:billing_mode) => billing_mode,
                 optional(:customer) => binary,
                 optional(:default_settings) => default_settings,
                 optional(:end_behavior) => :cancel | :none | :release | :renew,
@@ -262,50 +380,6 @@ defmodule Stripe.SubscriptionSchedule do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the details of an existing subscription schedule. You only need to supply the unique subscription schedule identifier that was returned upon subscription schedule creation.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/subscription_schedules/{schedule}`\n"
-    (
-      @spec retrieve(
-              schedule :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.SubscriptionSchedule.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(schedule, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/subscription_schedules/{schedule}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "schedule",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "schedule",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [schedule]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -336,17 +410,19 @@ defmodule Stripe.SubscriptionSchedule do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/subscription_schedules/{schedule}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "schedule",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "schedule",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "schedule",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -384,17 +460,19 @@ defmodule Stripe.SubscriptionSchedule do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/subscription_schedules/{schedule}/cancel",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "schedule",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "schedule",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "schedule",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -431,17 +509,19 @@ defmodule Stripe.SubscriptionSchedule do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/subscription_schedules/{schedule}/release",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "schedule",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "schedule",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "schedule",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

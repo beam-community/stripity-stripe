@@ -10,6 +10,7 @@ defmodule Stripe.Terminal.Reader do
       :id,
       :ip_address,
       :label,
+      :last_seen_at,
       :livemode,
       :location,
       :metadata,
@@ -18,7 +19,7 @@ defmodule Stripe.Terminal.Reader do
       :status
     ]
 
-    @typedoc "The `terminal.reader` type.\n\n  * `action` The most recent action performed by the reader.\n  * `device_sw_version` The current software version of the reader.\n  * `device_type` Type of reader, one of `bbpos_wisepad3`, `stripe_m2`, `bbpos_chipper2x`, `bbpos_wisepos_e`, `verifone_P400`, or `simulated_wisepos_e`.\n  * `id` Unique identifier for the object.\n  * `ip_address` The local IP address of the reader.\n  * `label` Custom label given to the reader for easier identification.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `location` The location identifier of the reader.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `serial_number` Serial number of the reader.\n  * `status` The networking status of the reader.\n"
+    @typedoc "The `terminal.reader` type.\n\n  * `action` The most recent action performed by the reader.\n  * `device_sw_version` The current software version of the reader.\n  * `device_type` Device type of the reader.\n  * `id` Unique identifier for the object.\n  * `ip_address` The local IP address of the reader.\n  * `label` Custom label given to the reader for easier identification.\n  * `last_seen_at` The last time this reader reported to Stripe backend.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `location` The location identifier of the reader.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `serial_number` Serial number of the reader.\n  * `status` The networking status of the reader. We do not recommend using this field in flows that may block taking payments.\n"
     @type t :: %__MODULE__{
             action: term | nil,
             device_sw_version: binary | nil,
@@ -26,6 +27,7 @@ defmodule Stripe.Terminal.Reader do
             id: binary,
             ip_address: binary | nil,
             label: binary,
+            last_seen_at: integer | nil,
             livemode: boolean,
             location: (binary | Stripe.Terminal.Location.t()) | nil,
             metadata: term,
@@ -36,17 +38,72 @@ defmodule Stripe.Terminal.Reader do
   )
 
   (
+    @typedoc "Simulated data for the card payment method."
+    @type card :: %{
+            optional(:cvc) => binary,
+            optional(:exp_month) => integer,
+            optional(:exp_year) => integer,
+            optional(:number) => binary
+          }
+  )
+
+  (
     @typedoc "Simulated data for the card_present payment method."
     @type card_present :: %{optional(:number) => binary}
   )
 
   (
-    @typedoc "Cart"
+    @typedoc "Cart details to display on the reader screen, including line items, amounts, and currency."
     @type cart :: %{
             optional(:currency) => binary,
             optional(:line_items) => list(line_items),
             optional(:tax) => integer,
             optional(:total) => integer
+          }
+  )
+
+  (
+    @typedoc nil
+    @type choices :: %{
+            optional(:id) => binary,
+            optional(:style) => :primary | :secondary,
+            optional(:text) => binary
+          }
+  )
+
+  (
+    @typedoc "Configuration overrides for this collection, such as tipping, surcharging, and customer cancellation settings."
+    @type collect_config :: %{
+            optional(:allow_redisplay) => :always | :limited | :unspecified,
+            optional(:enable_customer_cancellation) => boolean,
+            optional(:skip_tipping) => boolean,
+            optional(:tipping) => tipping
+          }
+  )
+
+  (
+    @typedoc "Configuration overrides for this confirmation, such as surcharge settings and return URL."
+    @type confirm_config :: %{optional(:return_url) => binary}
+  )
+
+  (
+    @typedoc "Customize the text which will be displayed while collecting this input"
+    @type custom_text :: %{
+            optional(:description) => binary,
+            optional(:skip_button) => binary,
+            optional(:submit_button) => binary,
+            optional(:title) => binary
+          }
+  )
+
+  (
+    @typedoc nil
+    @type inputs :: %{
+            optional(:custom_text) => custom_text,
+            optional(:required) => boolean,
+            optional(:selection) => selection,
+            optional(:toggles) => list(toggles),
+            optional(:type) => :email | :numeric | :phone | :selection | :signature | :text
           }
   )
 
@@ -65,8 +122,24 @@ defmodule Stripe.Terminal.Reader do
   )
 
   (
-    @typedoc "Configuration overrides"
-    @type process_config :: %{optional(:skip_tipping) => boolean, optional(:tipping) => tipping}
+    @typedoc "Configuration overrides for this transaction, such as tipping and customer cancellation settings."
+    @type process_config :: %{
+            optional(:allow_redisplay) => :always | :limited | :unspecified,
+            optional(:enable_customer_cancellation) => boolean,
+            optional(:return_url) => binary,
+            optional(:skip_tipping) => boolean,
+            optional(:tipping) => tipping
+          }
+  )
+
+  (
+    @typedoc "Configuration overrides for this refund, such as customer cancellation settings."
+    @type refund_payment_config :: %{optional(:enable_customer_cancellation) => boolean}
+  )
+
+  (
+    @typedoc "Options for the `selection` input"
+    @type selection :: %{optional(:choices) => list(choices)}
   )
 
   (
@@ -75,38 +148,41 @@ defmodule Stripe.Terminal.Reader do
   )
 
   (
+    @typedoc nil
+    @type toggles :: %{
+            optional(:default_value) => :disabled | :enabled,
+            optional(:description) => binary,
+            optional(:title) => binary
+          }
+  )
+
+  (
     nil
 
-    @doc "<p>Updates a <code>Reader</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}`\n"
+    @doc "<p>Deletes a <code>Reader</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/readers/{reader}`\n"
     (
-      @spec update(
-              reader :: binary(),
-              params :: %{
-                optional(:expand) => list(binary),
-                optional(:label) => binary | binary,
-                optional(:metadata) => %{optional(binary) => binary} | binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Terminal.Reader.t() | Stripe.DeletedTerminal.Reader.t()}
+      @spec delete(reader :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedTerminal.Reader.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def update(reader, params \\ %{}, opts \\ []) do
+      def delete(reader, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/readers/{reader}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "reader",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "reader",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "reader",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -115,8 +191,49 @@ defmodule Stripe.Terminal.Reader do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Returns a list of <code>Reader</code> objects.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/terminal/readers`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:device_type) =>
+                  :bbpos_chipper2x
+                  | :bbpos_wisepad3
+                  | :bbpos_wisepos_e
+                  | :mobile_phone_reader
+                  | :simulated_stripe_s700
+                  | :simulated_wisepos_e
+                  | :stripe_m2
+                  | :stripe_s700
+                  | :verifone_P400,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:location) => binary,
+                optional(:serial_number) => binary,
+                optional(:starting_after) => binary,
+                optional(:status) => :offline | :online
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Terminal.Reader.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/readers", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )
@@ -140,17 +257,19 @@ defmodule Stripe.Terminal.Reader do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/readers/{reader}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "reader",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "reader",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "reader",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -199,67 +318,38 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Returns a list of <code>Reader</code> objects.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/terminal/readers`\n"
+    @doc "<p>Updates a <code>Reader</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}`\n"
     (
-      @spec list(
+      @spec update(
+              reader :: binary(),
               params :: %{
-                optional(:device_type) =>
-                  :bbpos_chipper2x
-                  | :bbpos_wisepad3
-                  | :bbpos_wisepos_e
-                  | :simulated_wisepos_e
-                  | :stripe_m2
-                  | :verifone_P400,
-                optional(:ending_before) => binary,
                 optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:location) => binary,
-                optional(:serial_number) => binary,
-                optional(:starting_after) => binary,
-                optional(:status) => :offline | :online
+                optional(:label) => binary | binary,
+                optional(:metadata) => %{optional(binary) => binary} | binary
               },
               opts :: Keyword.t()
             ) ::
-              {:ok, Stripe.List.t(Stripe.Terminal.Reader.t())}
+              {:ok, Stripe.Terminal.Reader.t() | Stripe.DeletedTerminal.Reader.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/terminal/readers", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Deletes a <code>Reader</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/terminal/readers/{reader}`\n"
-    (
-      @spec delete(reader :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedTerminal.Reader.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(reader, opts \\ []) do
+      def update(reader, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/readers/{reader}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "reader",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "reader",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "reader",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -268,7 +358,8 @@ defmodule Stripe.Terminal.Reader do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
@@ -277,7 +368,203 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Initiates a payment flow on a Reader.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/process_payment_intent`\n"
+    @doc "<p>Cancels the current reader action. See <a href=\"/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven#programmatic-cancellation\">Programmatic Cancellation</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/cancel_action`\n"
+    (
+      @spec cancel_action(
+              reader :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Reader.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def cancel_action(reader, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/terminal/readers/{reader}/cancel_action",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "reader",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "reader",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [reader]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Initiates an <a href=\"/docs/terminal/features/collect-inputs\">input collection flow</a> on a Reader to display input forms and collect information from your customers.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/collect_inputs`\n"
+    (
+      @spec collect_inputs(
+              reader :: binary(),
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:inputs) => list(inputs),
+                optional(:metadata) => %{optional(binary) => binary}
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Reader.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def collect_inputs(reader, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/terminal/readers/{reader}/collect_inputs",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "reader",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "reader",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [reader]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Initiates a payment flow on a Reader and updates the PaymentIntent with card details before manual confirmation. See <a href=\"/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=inspect#collect-a-paymentmethod\">Collecting a Payment method</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/collect_payment_method`\n"
+    (
+      @spec collect_payment_method(
+              reader :: binary(),
+              params :: %{
+                optional(:collect_config) => collect_config,
+                optional(:expand) => list(binary),
+                optional(:payment_intent) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Reader.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def collect_payment_method(reader, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/terminal/readers/{reader}/collect_payment_method",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "reader",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "reader",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [reader]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Finalizes a payment on a Reader. See <a href=\"/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=inspect#confirm-the-paymentintent\">Confirming a Payment</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/confirm_payment_intent`\n"
+    (
+      @spec confirm_payment_intent(
+              reader :: binary(),
+              params :: %{
+                optional(:confirm_config) => confirm_config,
+                optional(:expand) => list(binary),
+                optional(:payment_intent) => binary
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Reader.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def confirm_payment_intent(reader, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/terminal/readers/{reader}/confirm_payment_intent",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "reader",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "reader",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [reader]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Initiates a payment flow on a Reader. See <a href=\"/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=immediately#process-payment\">process the payment</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/process_payment_intent`\n"
     (
       @spec process_payment_intent(
               reader :: binary(),
@@ -296,17 +583,19 @@ defmodule Stripe.Terminal.Reader do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/readers/{reader}/process_payment_intent",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "reader",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "reader",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "reader",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -325,14 +614,14 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Initiates a setup intent flow on a Reader.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/process_setup_intent`\n"
+    @doc "<p>Initiates a SetupIntent flow on a Reader. See <a href=\"/docs/terminal/features/saving-payment-details/save-directly\">Save directly without charging</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/process_setup_intent`\n"
     (
       @spec process_setup_intent(
               reader :: binary(),
               params :: %{
-                optional(:customer_consent_collected) => boolean,
+                optional(:allow_redisplay) => :always | :limited | :unspecified,
                 optional(:expand) => list(binary),
-                optional(:process_config) => map(),
+                optional(:process_config) => process_config,
                 optional(:setup_intent) => binary
               },
               opts :: Keyword.t()
@@ -345,17 +634,19 @@ defmodule Stripe.Terminal.Reader do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/readers/{reader}/process_setup_intent",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "reader",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "reader",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "reader",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -374,32 +665,43 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Cancels the current reader action.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/cancel_action`\n"
+    @doc "<p>Initiates an in-person refund on a Reader. See <a href=\"/docs/terminal/payments/regional?integration-country=CA#refund-an-interac-payment\">Refund an Interac Payment</a> for more details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/refund_payment`\n"
     (
-      @spec cancel_action(
+      @spec refund_payment(
               reader :: binary(),
-              params :: %{optional(:expand) => list(binary)},
+              params :: %{
+                optional(:amount) => integer,
+                optional(:charge) => binary,
+                optional(:expand) => list(binary),
+                optional(:metadata) => %{optional(binary) => binary},
+                optional(:payment_intent) => binary,
+                optional(:refund_application_fee) => boolean,
+                optional(:refund_payment_config) => refund_payment_config,
+                optional(:reverse_transfer) => boolean
+              },
               opts :: Keyword.t()
             ) ::
               {:ok, Stripe.Terminal.Reader.t()}
               | {:error, Stripe.ApiErrors.t()}
               | {:error, term()}
-      def cancel_action(reader, params \\ %{}, opts \\ []) do
+      def refund_payment(reader, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
-            "/v1/terminal/readers/{reader}/cancel_action",
+            "/v1/terminal/readers/{reader}/refund_payment",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "reader",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "reader",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "reader",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -418,7 +720,7 @@ defmodule Stripe.Terminal.Reader do
   (
     nil
 
-    @doc "<p>Sets reader display to show cart details.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/set_reader_display`\n"
+    @doc "<p>Sets the reader display to show <a href=\"/docs/terminal/features/display\">cart details</a>.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/set_reader_display`\n"
     (
       @spec set_reader_display(
               reader :: binary(),
@@ -437,69 +739,19 @@ defmodule Stripe.Terminal.Reader do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/terminal/readers/{reader}/set_reader_display",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "reader",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "reader",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [reader]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Initiates a refund on a Reader</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/terminal/readers/{reader}/refund_payment`\n"
-    (
-      @spec refund_payment(
-              reader :: binary(),
-              params :: %{
-                optional(:amount) => integer,
-                optional(:charge) => binary,
-                optional(:expand) => list(binary),
-                optional(:metadata) => %{optional(binary) => binary},
-                optional(:payment_intent) => binary,
-                optional(:refund_application_fee) => boolean,
-                optional(:reverse_transfer) => boolean
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Terminal.Reader.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def refund_payment(reader, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/terminal/readers/{reader}/refund_payment",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "reader",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
                   name: "reader",
-                  title: nil,
-                  type: "string",
-                  items: [],
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -524,10 +776,11 @@ defmodule Stripe.Terminal.Reader do
               reader :: binary(),
               params :: %{
                 optional(:amount_tip) => integer,
+                optional(:card) => card,
                 optional(:card_present) => card_present,
                 optional(:expand) => list(binary),
                 optional(:interac_present) => interac_present,
-                optional(:type) => :card_present | :interac_present
+                optional(:type) => :card | :card_present | :interac_present
               },
               opts :: Keyword.t()
             ) ::
@@ -539,17 +792,114 @@ defmodule Stripe.Terminal.Reader do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/test_helpers/terminal/readers/{reader}/present_payment_method",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "reader",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "reader",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "reader",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [reader]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Use this endpoint to trigger a successful input collection on a simulated reader.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/terminal/readers/{reader}/succeed_input_collection`\n"
+    (
+      @spec succeed_input_collection(
+              reader :: binary(),
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:skip_non_required_inputs) => :all | :none
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Reader.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def succeed_input_collection(reader, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/terminal/readers/{reader}/succeed_input_collection",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "reader",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "reader",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [reader]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Use this endpoint to complete an input collection with a timeout error on a simulated reader.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/test_helpers/terminal/readers/{reader}/timeout_input_collection`\n"
+    (
+      @spec timeout_input_collection(
+              reader :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Terminal.Reader.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def timeout_input_collection(reader, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/test_helpers/terminal/readers/{reader}/timeout_input_collection",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "reader",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "reader",
+                  properties: [],
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

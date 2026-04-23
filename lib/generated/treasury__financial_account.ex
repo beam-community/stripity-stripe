@@ -11,8 +11,10 @@ defmodule Stripe.Treasury.FinancialAccount do
       :features,
       :financial_addresses,
       :id,
+      :is_default,
       :livemode,
       :metadata,
+      :nickname,
       :object,
       :pending_features,
       :platform_restrictions,
@@ -22,7 +24,7 @@ defmodule Stripe.Treasury.FinancialAccount do
       :supported_currencies
     ]
 
-    @typedoc "The `treasury.financial_account` type.\n\n  * `active_features` The array of paths to active Features in the Features hash.\n  * `balance` \n  * `country` Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `features` \n  * `financial_addresses` The set of credentials that resolve to a FinancialAccount.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `pending_features` The array of paths to pending Features in the Features hash.\n  * `platform_restrictions` The set of functionalities that the platform can restrict on the FinancialAccount.\n  * `restricted_features` The array of paths to restricted Features in the Features hash.\n  * `status` The enum specifying what state the account is in.\n  * `status_details` \n  * `supported_currencies` The currencies the FinancialAccount can hold a balance in. Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.\n"
+    @typedoc "The `treasury.financial_account` type.\n\n  * `active_features` The array of paths to active Features in the Features hash.\n  * `balance` \n  * `country` Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `features` \n  * `financial_addresses` The set of credentials that resolve to a FinancialAccount.\n  * `id` Unique identifier for the object.\n  * `is_default` \n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `nickname` The nickname for the FinancialAccount.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `pending_features` The array of paths to pending Features in the Features hash.\n  * `platform_restrictions` The set of functionalities that the platform can restrict on the FinancialAccount.\n  * `restricted_features` The array of paths to restricted Features in the Features hash.\n  * `status` Status of this FinancialAccount.\n  * `status_details` \n  * `supported_currencies` The currencies the FinancialAccount can hold a balance in. Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.\n"
     @type t :: %__MODULE__{
             active_features: term,
             balance: term,
@@ -31,8 +33,10 @@ defmodule Stripe.Treasury.FinancialAccount do
             features: Stripe.Treasury.FinancialAccountFeatures.t(),
             financial_addresses: term,
             id: binary,
+            is_default: boolean,
             livemode: boolean,
             metadata: term | nil,
+            nickname: binary | nil,
             object: binary,
             pending_features: term,
             platform_restrictions: term | nil,
@@ -92,6 +96,15 @@ defmodule Stripe.Treasury.FinancialAccount do
   )
 
   (
+    @typedoc "A different bank account where funds can be deposited/debited in order to get the closing FA's balance to $0"
+    @type forwarding_settings :: %{
+            optional(:financial_account) => binary,
+            optional(:payment_method) => binary,
+            optional(:type) => :financial_account | :payment_method
+          }
+  )
+
+  (
     @typedoc "Contains settings related to adding funds to a FinancialAccount from another Account with the same owner."
     @type inbound_transfers :: %{optional(:ach) => ach}
   )
@@ -133,13 +146,137 @@ defmodule Stripe.Treasury.FinancialAccount do
   (
     nil
 
-    @doc "<p>Creates a new FinancialAccount. For now, each connected account can only have one FinancialAccount.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/financial_accounts`\n"
+    @doc "<p>Returns a list of FinancialAccounts.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/financial_accounts`\n"
+    (
+      @spec list(
+              params :: %{
+                optional(:created) => created | integer,
+                optional(:ending_before) => binary,
+                optional(:expand) => list(binary),
+                optional(:limit) => integer,
+                optional(:starting_after) => binary,
+                optional(:status) => :closed | :open
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.List.t(Stripe.Treasury.FinancialAccount.t())}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def list(params \\ %{}, opts \\ []) do
+        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/financial_accounts", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the details of a FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/financial_accounts/{financial_account}`\n"
+    (
+      @spec retrieve(
+              financial_account :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.FinancialAccount.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve(financial_account, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/treasury/financial_accounts/{financial_account}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "financial_account",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "financial_account",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [financial_account]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves Features information associated with the FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/financial_accounts/{financial_account}/features`\n"
+    (
+      @spec retrieve_features(
+              financial_account :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.FinancialAccountFeatures.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def retrieve_features(financial_account, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/treasury/financial_accounts/{financial_account}/features",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "financial_account",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "financial_account",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [financial_account]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new FinancialAccount. Each connected account can have up to three FinancialAccounts by default.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/financial_accounts`\n"
     (
       @spec create(
               params :: %{
                 optional(:expand) => list(binary),
                 optional(:features) => features,
                 optional(:metadata) => %{optional(binary) => binary},
+                optional(:nickname) => binary | binary,
                 optional(:platform_restrictions) => platform_restrictions,
                 optional(:supported_currencies) => list(binary)
               },
@@ -170,7 +307,9 @@ defmodule Stripe.Treasury.FinancialAccount do
               params :: %{
                 optional(:expand) => list(binary),
                 optional(:features) => features,
+                optional(:forwarding_settings) => forwarding_settings,
                 optional(:metadata) => %{optional(binary) => binary},
+                optional(:nickname) => binary | binary,
                 optional(:platform_restrictions) => platform_restrictions
               },
               opts :: Keyword.t()
@@ -183,17 +322,68 @@ defmodule Stripe.Treasury.FinancialAccount do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/treasury/financial_accounts/{financial_account}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "financial_account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "financial_account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "financial_account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [financial_account]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Closes a FinancialAccount. A FinancialAccount can only be closed if it has a zero balance, has no pending InboundTransfers, and has canceled all attached Issuing cards.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/treasury/financial_accounts/{financial_account}/close`\n"
+    (
+      @spec close(
+              financial_account :: binary(),
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:forwarding_settings) => forwarding_settings
+              },
+              opts :: Keyword.t()
+            ) ::
+              {:ok, Stripe.Treasury.FinancialAccount.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def close(financial_account, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/treasury/financial_accounts/{financial_account}/close",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "financial_account",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "financial_account",
+                  properties: [],
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -236,17 +426,19 @@ defmodule Stripe.Treasury.FinancialAccount do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/treasury/financial_accounts/{financial_account}/features",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "financial_account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "financial_account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "financial_account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -257,124 +449,6 @@ defmodule Stripe.Treasury.FinancialAccount do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Returns a list of FinancialAccounts.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/financial_accounts`\n"
-    (
-      @spec list(
-              params :: %{
-                optional(:created) => created | integer,
-                optional(:ending_before) => binary,
-                optional(:expand) => list(binary),
-                optional(:limit) => integer,
-                optional(:starting_after) => binary
-              },
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.List.t(Stripe.Treasury.FinancialAccount.t())}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def list(params \\ %{}, opts \\ []) do
-        path = Stripe.OpenApi.Path.replace_path_params("/v1/treasury/financial_accounts", [], [])
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the details of a FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/financial_accounts/{financial_account}`\n"
-    (
-      @spec retrieve(
-              financial_account :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Treasury.FinancialAccount.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve(financial_account, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/treasury/financial_accounts/{financial_account}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "financial_account",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "financial_account",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [financial_account]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves Features information associated with the FinancialAccount.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/treasury/financial_accounts/{financial_account}/features`\n"
-    (
-      @spec retrieve_features(
-              financial_account :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) ::
-              {:ok, Stripe.Treasury.FinancialAccountFeatures.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def retrieve_features(financial_account, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/treasury/financial_accounts/{financial_account}/features",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "financial_account",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "financial_account",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [financial_account]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
         |> Stripe.Request.make_request()
       end
     )

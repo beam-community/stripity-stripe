@@ -14,7 +14,7 @@ defmodule Stripe.Capability do
       :status
     ]
 
-    @typedoc "The `capability` type.\n\n  * `account` The account for which the capability enables functionality.\n  * `future_requirements` \n  * `id` The identifier for the capability.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `requested` Whether the capability has been requested.\n  * `requested_at` Time at which the capability was requested. Measured in seconds since the Unix epoch.\n  * `requirements` \n  * `status` The status of the capability. Can be `active`, `inactive`, `pending`, or `unrequested`.\n"
+    @typedoc "The `capability` type.\n\n  * `account` The account for which the capability enables functionality.\n  * `future_requirements` \n  * `id` The identifier for the capability.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `requested` Whether the capability has been requested.\n  * `requested_at` Time at which the capability was requested. Measured in seconds since the Unix epoch.\n  * `requirements` \n  * `status` The status of the capability.\n"
     @type t :: %__MODULE__{
             account: binary | Stripe.Account.t(),
             future_requirements: term,
@@ -45,17 +45,19 @@ defmodule Stripe.Capability do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/capabilities",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -87,30 +89,34 @@ defmodule Stripe.Capability do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/capabilities/{capability}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "capability",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "capability",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "capability",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -142,30 +148,34 @@ defmodule Stripe.Capability do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/accounts/{account}/capabilities/{capability}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "account",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "account",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "account",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "capability",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "capability",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "capability",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

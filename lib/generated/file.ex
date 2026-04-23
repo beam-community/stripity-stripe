@@ -63,12 +63,16 @@ defmodule Stripe.File do
                   | :dispute_evidence
                   | :document_provider_identity_document
                   | :finance_report_run
+                  | :financial_account_statement
                   | :identity_document
                   | :identity_document_downloadable
+                  | :issuing_regulatory_reporting
                   | :pci_document
+                  | :platform_terms_of_service
                   | :selfie
                   | :sigma_scheduled_query
                   | :tax_document_user_upload
+                  | :terminal_android_apk
                   | :terminal_reader_splashscreen,
                 optional(:starting_after) => binary
               },
@@ -104,17 +108,19 @@ defmodule Stripe.File do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/files/{file}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "file",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "file",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "file",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

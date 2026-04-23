@@ -9,6 +9,7 @@ defmodule Stripe.Dispute do
       :charge,
       :created,
       :currency,
+      :enhanced_eligibility_types,
       :evidence,
       :evidence_details,
       :id,
@@ -23,13 +24,14 @@ defmodule Stripe.Dispute do
       :status
     ]
 
-    @typedoc "The `dispute` type.\n\n  * `amount` Disputed amount. Usually the amount of the charge, but it can differ (usually because of currency fluctuation or because only part of the order is disputed).\n  * `balance_transactions` List of zero, one, or two balance transactions that show funds withdrawn and reinstated to your Stripe account as a result of this dispute.\n  * `charge` ID of the charge that's disputed.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `evidence` \n  * `evidence_details` \n  * `id` Unique identifier for the object.\n  * `is_charge_refundable` If true, it's still possible to refund the disputed payment. After the payment has been fully refunded, no further funds are withdrawn from your Stripe account as a result of this dispute.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `network_reason_code` Network-dependent reason code for the dispute.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `payment_intent` ID of the PaymentIntent that's disputed.\n  * `payment_method_details` \n  * `reason` Reason given by cardholder for dispute. Possible values are `bank_cannot_process`, `check_returned`, `credit_not_processed`, `customer_initiated`, `debit_not_authorized`, `duplicate`, `fraudulent`, `general`, `incorrect_account_details`, `insufficient_funds`, `product_not_received`, `product_unacceptable`, `subscription_canceled`, or `unrecognized`. Learn more about [dispute reasons](https://stripe.com/docs/disputes/categories).\n  * `status` Current status of dispute. Possible values are `warning_needs_response`, `warning_under_review`, `warning_closed`, `needs_response`, `under_review`, `won`, or `lost`.\n"
+    @typedoc "The `dispute` type.\n\n  * `amount` Disputed amount. Usually the amount of the charge, but it can differ (usually because of currency fluctuation or because only part of the order is disputed).\n  * `balance_transactions` List of zero, one, or two balance transactions that show funds withdrawn and reinstated to your Stripe account as a result of this dispute.\n  * `charge` ID of the charge that's disputed.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `enhanced_eligibility_types` List of eligibility types that are included in `enhanced_evidence`.\n  * `evidence` \n  * `evidence_details` \n  * `id` Unique identifier for the object.\n  * `is_charge_refundable` If true, it's still possible to refund the disputed payment. After the payment has been fully refunded, no further funds are withdrawn from your Stripe account as a result of this dispute.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `network_reason_code` Network-dependent reason code for the dispute.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `payment_intent` ID of the PaymentIntent that's disputed.\n  * `payment_method_details` \n  * `reason` Reason given by cardholder for dispute. Possible values are `bank_cannot_process`, `check_returned`, `credit_not_processed`, `customer_initiated`, `debit_not_authorized`, `duplicate`, `fraudulent`, `general`, `incorrect_account_details`, `insufficient_funds`, `noncompliant`, `product_not_received`, `product_unacceptable`, `subscription_canceled`, or `unrecognized`. Learn more about [dispute reasons](https://stripe.com/docs/disputes/categories).\n  * `status` The current status of a dispute. Possible values include:`warning_needs_response`, `warning_under_review`, `warning_closed`, `needs_response`, `under_review`, `won`, `lost`, or `prevented`.\n"
     @type t :: %__MODULE__{
             amount: integer,
             balance_transactions: term,
             charge: binary | Stripe.Charge.t(),
             created: integer,
             currency: binary,
+            enhanced_eligibility_types: term,
             evidence: term,
             evidence_details: term,
             id: binary,
@@ -56,6 +58,28 @@ defmodule Stripe.Dispute do
   )
 
   (
+    @typedoc "Disputed transaction details for Visa Compelling Evidence 3.0 evidence submission."
+    @type disputed_transaction :: %{
+            optional(:customer_account_id) => binary | binary,
+            optional(:customer_device_fingerprint) => binary | binary,
+            optional(:customer_device_id) => binary | binary,
+            optional(:customer_email_address) => binary | binary,
+            optional(:customer_purchase_ip) => binary | binary,
+            optional(:merchandise_or_services) => :merchandise | :services,
+            optional(:product_description) => binary | binary,
+            optional(:shipping_address) => shipping_address
+          }
+  )
+
+  (
+    @typedoc nil
+    @type enhanced_evidence :: %{
+            optional(:visa_compelling_evidence_3) => visa_compelling_evidence_3,
+            optional(:visa_compliance) => visa_compliance
+          }
+  )
+
+  (
     @typedoc "Evidence to upload, to respond to a dispute. Updating any field in the hash will submit all fields in the hash for review. The combined character count of all fields is limited to 150,000."
     @type evidence :: %{
             optional(:access_activity_log) => binary,
@@ -71,6 +95,7 @@ defmodule Stripe.Dispute do
             optional(:duplicate_charge_documentation) => binary,
             optional(:duplicate_charge_explanation) => binary,
             optional(:duplicate_charge_id) => binary,
+            optional(:enhanced_evidence) => enhanced_evidence | binary,
             optional(:product_description) => binary,
             optional(:receipt) => binary,
             optional(:refund_policy) => binary,
@@ -86,6 +111,45 @@ defmodule Stripe.Dispute do
             optional(:uncategorized_file) => binary,
             optional(:uncategorized_text) => binary
           }
+  )
+
+  (
+    @typedoc nil
+    @type prior_undisputed_transactions :: %{
+            optional(:charge) => binary,
+            optional(:customer_account_id) => binary | binary,
+            optional(:customer_device_fingerprint) => binary | binary,
+            optional(:customer_device_id) => binary | binary,
+            optional(:customer_email_address) => binary | binary,
+            optional(:customer_purchase_ip) => binary | binary,
+            optional(:product_description) => binary | binary,
+            optional(:shipping_address) => shipping_address
+          }
+  )
+
+  (
+    @typedoc "The address to which a physical product was shipped. All fields are required for Visa Compelling Evidence 3.0 evidence submission."
+    @type shipping_address :: %{
+            optional(:city) => binary | binary,
+            optional(:country) => binary | binary,
+            optional(:line1) => binary | binary,
+            optional(:line2) => binary | binary,
+            optional(:postal_code) => binary | binary,
+            optional(:state) => binary | binary
+          }
+  )
+
+  (
+    @typedoc "Evidence provided for Visa Compelling Evidence 3.0 evidence submission."
+    @type visa_compelling_evidence_3 :: %{
+            optional(:disputed_transaction) => disputed_transaction,
+            optional(:prior_undisputed_transactions) => list(prior_undisputed_transactions)
+          }
+  )
+
+  (
+    @typedoc "Evidence provided for Visa compliance evidence submission."
+    @type visa_compliance :: %{optional(:fee_acknowledged) => boolean}
   )
 
   (
@@ -135,17 +199,19 @@ defmodule Stripe.Dispute do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/disputes/{dispute}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "dispute",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "dispute",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "dispute",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -181,17 +247,19 @@ defmodule Stripe.Dispute do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/disputes/{dispute}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "dispute",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "dispute",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "dispute",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -222,17 +290,19 @@ defmodule Stripe.Dispute do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/disputes/{dispute}/close",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "dispute",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "dispute",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "dispute",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

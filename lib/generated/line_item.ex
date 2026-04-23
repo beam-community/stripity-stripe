@@ -1,66 +1,59 @@
 defmodule Stripe.LineItem do
   use Stripe.Entity
-  @moduledoc ""
+
+  @moduledoc "Invoice Line Items represent the individual lines within an [invoice](https://stripe.com/docs/api/invoices) and only exist within the context of an invoice.\n\nEach line item is backed by either an [invoice item](https://stripe.com/docs/api/invoiceitems) or a [subscription item](https://stripe.com/docs/api/subscription_items)."
   (
     defstruct [
       :amount,
-      :amount_excluding_tax,
       :currency,
       :description,
       :discount_amounts,
       :discountable,
       :discounts,
       :id,
-      :invoice_item,
+      :invoice,
       :livemode,
       :metadata,
       :object,
+      :parent,
       :period,
-      :plan,
-      :price,
-      :proration,
-      :proration_details,
+      :pretax_credit_amounts,
+      :pricing,
       :quantity,
       :subscription,
-      :subscription_item,
-      :tax_amounts,
-      :tax_rates,
-      :type,
-      :unit_amount_excluding_tax
+      :taxes
     ]
 
-    @typedoc "The `line_item` type.\n\n  * `amount` The amount, in cents (or local equivalent).\n  * `amount_excluding_tax` The integer amount in cents (or local equivalent) representing the amount for this line item, excluding all tax and discounts.\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `discount_amounts` The amount of discount calculated per discount for this line item.\n  * `discountable` If true, discounts will apply to this line item. Always false for prorations.\n  * `discounts` The discounts applied to the invoice line item. Line item discounts are applied before invoice discounts. Use `expand[]=discounts` to expand each discount.\n  * `id` Unique identifier for the object.\n  * `invoice_item` The ID of the [invoice item](https://stripe.com/docs/api/invoiceitems) associated with this line item if any.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Note that for line items with `type=subscription` this will reflect the metadata of the subscription that caused the line item to be created.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `period` \n  * `plan` The plan of the subscription, if the line item is a subscription or a proration.\n  * `price` The price of the line item.\n  * `proration` Whether this is a proration.\n  * `proration_details` Additional details for proration line items\n  * `quantity` The quantity of the subscription, if the line item is a subscription or a proration.\n  * `subscription` The subscription that the invoice item pertains to, if any.\n  * `subscription_item` The subscription item that generated this line item. Left empty if the line item is not an explicit result of a subscription.\n  * `tax_amounts` The amount of tax calculated per tax rate for this line item\n  * `tax_rates` The tax rates which apply to the line item.\n  * `type` A string identifying the type of the source of this line item, either an `invoiceitem` or a `subscription`.\n  * `unit_amount_excluding_tax` The amount in cents (or local equivalent) representing the unit amount for this line item, excluding all tax and discounts.\n"
+    @typedoc "The `line_item` type.\n\n  * `amount` The amount, in cents (or local equivalent).\n  * `currency` Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).\n  * `description` An arbitrary string attached to the object. Often useful for displaying to users.\n  * `discount_amounts` The amount of discount calculated per discount for this line item.\n  * `discountable` If true, discounts will apply to this line item. Always false for prorations.\n  * `discounts` The discounts applied to the invoice line item. Line item discounts are applied before invoice discounts. Use `expand[]=discounts` to expand each discount.\n  * `id` Unique identifier for the object.\n  * `invoice` The ID of the invoice that contains this line item.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Note that for line items with `type=subscription`, `metadata` reflects the current metadata from the subscription associated with the line item, unless the invoice line was directly updated with different metadata after creation.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `parent` The parent that generated this line item.\n  * `period` \n  * `pretax_credit_amounts` Contains pretax credit amounts (ex: discount, credit grants, etc) that apply to this line item.\n  * `pricing` The pricing information of the line item.\n  * `quantity` The quantity of the subscription, if the line item is a subscription or a proration.\n  * `subscription` \n  * `taxes` The tax information of the line item.\n"
     @type t :: %__MODULE__{
             amount: integer,
-            amount_excluding_tax: integer | nil,
             currency: binary,
             description: binary | nil,
             discount_amounts: term | nil,
             discountable: boolean,
-            discounts: term | nil,
+            discounts: term,
             id: binary,
-            invoice_item: binary | Stripe.Invoiceitem.t(),
+            invoice: binary | nil,
             livemode: boolean,
             metadata: term,
             object: binary,
+            parent: term | nil,
             period: term,
-            plan: Stripe.Plan.t() | nil,
-            price: Stripe.Price.t() | nil,
-            proration: boolean,
-            proration_details: term | nil,
+            pretax_credit_amounts: term | nil,
+            pricing: term | nil,
             quantity: integer | nil,
             subscription: (binary | Stripe.Subscription.t()) | nil,
-            subscription_item: binary | Stripe.SubscriptionItem.t(),
-            tax_amounts: term,
-            tax_rates: term,
-            type: binary,
-            unit_amount_excluding_tax: binary | nil
+            taxes: term | nil
           }
   )
 
   (
     @typedoc nil
-    @type discounts :: %{optional(:coupon) => binary, optional(:discount) => binary}
+    @type discounts :: %{
+            optional(:coupon) => binary,
+            optional(:discount) => binary,
+            optional(:promotion_code) => binary
+          }
   )
 
   (
@@ -81,13 +74,19 @@ defmodule Stripe.LineItem do
   )
 
   (
-    @typedoc "Data used to generate a new product object inline. One of `product` or `product_data` is required."
+    @typedoc "The pricing information for the invoice item."
+    @type pricing :: %{optional(:price) => binary}
+  )
+
+  (
+    @typedoc "Data used to generate a new [Product](https://docs.stripe.com/api/products) object inline. One of `product` or `product_data` is required."
     @type product_data :: %{
             optional(:description) => binary,
             optional(:images) => list(binary),
             optional(:metadata) => %{optional(binary) => binary},
             optional(:name) => binary,
-            optional(:tax_code) => binary
+            optional(:tax_code) => binary,
+            optional(:unit_label) => binary
           }
   )
 
@@ -96,6 +95,22 @@ defmodule Stripe.LineItem do
     @type tax_amounts :: %{
             optional(:amount) => integer,
             optional(:tax_rate_data) => tax_rate_data,
+            optional(:taxability_reason) =>
+              :customer_exempt
+              | :not_collecting
+              | :not_subject_to_tax
+              | :not_supported
+              | :portion_product_exempt
+              | :portion_reduced_rated
+              | :portion_standard_rated
+              | :product_exempt
+              | :product_exempt_holiday
+              | :proportionally_rated
+              | :reduced_rated
+              | :reverse_charge
+              | :standard_rated
+              | :taxable_basis_reduced
+              | :zero_rated,
             optional(:taxable_amount) => integer
           }
   )
@@ -108,6 +123,8 @@ defmodule Stripe.LineItem do
             optional(:display_name) => binary,
             optional(:inclusive) => boolean,
             optional(:jurisdiction) => binary,
+            optional(:jurisdiction_level) =>
+              :city | :country | :county | :district | :multiple | :state,
             optional(:percentage) => number,
             optional(:state) => binary,
             optional(:tax_type) =>
@@ -120,6 +137,7 @@ defmodule Stripe.LineItem do
               | :lease_tax
               | :pst
               | :qst
+              | :retail_delivery_fee
               | :rst
               | :sales_tax
               | :service_tax
@@ -150,17 +168,19 @@ defmodule Stripe.LineItem do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/invoices/{invoice}/lines",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "invoice",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "invoice",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "invoice",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -192,8 +212,8 @@ defmodule Stripe.LineItem do
                 optional(:expand) => list(binary),
                 optional(:metadata) => %{optional(binary) => binary} | binary,
                 optional(:period) => period,
-                optional(:price) => binary,
                 optional(:price_data) => price_data,
+                optional(:pricing) => pricing,
                 optional(:quantity) => integer,
                 optional(:tax_amounts) => list(tax_amounts) | binary,
                 optional(:tax_rates) => list(binary) | binary
@@ -205,30 +225,34 @@ defmodule Stripe.LineItem do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/invoices/{invoice}/lines/{line_item_id}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "invoice",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "invoice",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "invoice",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "line_item_id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "line_item_id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "line_item_id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],

@@ -1,7 +1,7 @@
 defmodule Stripe.WebhookEndpoint do
   use Stripe.Entity
 
-  @moduledoc "You can configure [webhook endpoints](https://stripe.com/docs/webhooks/) via the API to be\nnotified about events that happen in your Stripe account or connected\naccounts.\n\nMost users configure webhooks from [the dashboard](https://dashboard.stripe.com/webhooks), which provides a user interface for registering and testing your webhook endpoints.\n\nRelated guide: [Setting up webhooks](https://stripe.com/docs/webhooks/configure)"
+  @moduledoc "You can configure [webhook endpoints](https://docs.stripe.com/webhooks/) via the API to be\nnotified about events that happen in your Stripe account or connected\naccounts.\n\nMost users configure webhooks from [the dashboard](https://dashboard.stripe.com/webhooks), which provides a user interface for registering and testing your webhook endpoints.\n\nRelated guide: [Setting up webhooks](https://docs.stripe.com/webhooks/configure)"
   (
     defstruct [
       :api_version,
@@ -18,7 +18,7 @@ defmodule Stripe.WebhookEndpoint do
       :url
     ]
 
-    @typedoc "The `webhook_endpoint` type.\n\n  * `api_version` The API version events are rendered as for this webhook endpoint.\n  * `application` The ID of the associated Connect application.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `description` An optional description of what the webhook is used for.\n  * `enabled_events` The list of events to enable for this endpoint. `['*']` indicates that all events are enabled, except those that require explicit selection.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `secret` The endpoint's secret, used to generate [webhook signatures](https://stripe.com/docs/webhooks/signatures). Only returned at creation.\n  * `status` The status of the webhook. It can be `enabled` or `disabled`.\n  * `url` The URL of the webhook endpoint.\n"
+    @typedoc "The `webhook_endpoint` type.\n\n  * `api_version` The API version events are rendered as for this webhook endpoint.\n  * `application` The ID of the associated Connect application.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `description` An optional description of what the webhook is used for.\n  * `enabled_events` The list of events to enable for this endpoint. `['*']` indicates that all events are enabled, except those that require explicit selection.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `secret` The endpoint's secret, used to generate [webhook signatures](https://docs.stripe.com/webhooks/signatures). Only returned at creation.\n  * `status` The status of the webhook. It can be `enabled` or `disabled`.\n  * `url` The URL of the webhook endpoint.\n"
     @type t :: %__MODULE__{
             api_version: binary | nil,
             application: binary | nil,
@@ -33,6 +33,47 @@ defmodule Stripe.WebhookEndpoint do
             status: binary,
             url: binary
           }
+  )
+
+  (
+    nil
+
+    @doc "<p>You can also delete webhook endpoints via the <a href=\"https://dashboard.stripe.com/account/webhooks\">webhook endpoint management</a> page of the Stripe dashboard.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/webhook_endpoints/{webhook_endpoint}`\n"
+    (
+      @spec delete(webhook_endpoint :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedWebhookEndpoint.t()}
+              | {:error, Stripe.ApiErrors.t()}
+              | {:error, term()}
+      def delete(webhook_endpoint, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/webhook_endpoints/{webhook_endpoint}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "webhook_endpoint",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "webhook_endpoint",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [webhook_endpoint]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
   )
 
   (
@@ -82,17 +123,19 @@ defmodule Stripe.WebhookEndpoint do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/webhook_endpoints/{webhook_endpoint}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "webhook_endpoint",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "webhook_endpoint",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "webhook_endpoint",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -215,7 +258,25 @@ defmodule Stripe.WebhookEndpoint do
                   | :"2022-08-01"
                   | :"2022-11-15"
                   | :"2023-08-16"
-                  | :"2023-10-16",
+                  | :"2023-10-16"
+                  | :"2024-04-10"
+                  | :"2024-06-20"
+                  | :"2024-09-30.acacia"
+                  | :"2024-10-28.acacia"
+                  | :"2024-11-20.acacia"
+                  | :"2024-12-18.acacia"
+                  | :"2025-01-27.acacia"
+                  | :"2025-02-24.acacia"
+                  | :"2025-03-01.dashboard"
+                  | :"2025-03-31.basil"
+                  | :"2025-04-30.basil"
+                  | :"2025-05-28.basil"
+                  | :"2025-06-30.basil"
+                  | :"2025-07-30.basil"
+                  | :"2025-08-27.basil"
+                  | :"2025-09-30.clover"
+                  | :"2025-10-29.clover"
+                  | :"2025-11-17.clover",
                 optional(:connect) => boolean,
                 optional(:description) => binary | binary,
                 optional(:enabled_events) =>
@@ -231,6 +292,8 @@ defmodule Stripe.WebhookEndpoint do
                     | :"application_fee.refund.updated"
                     | :"application_fee.refunded"
                     | :"balance.available"
+                    | :"balance_settings.updated"
+                    | :"billing.alert.triggered"
                     | :"billing_portal.configuration.created"
                     | :"billing_portal.configuration.updated"
                     | :"billing_portal.session.created"
@@ -288,13 +351,17 @@ defmodule Stripe.WebhookEndpoint do
                     | :"customer.tax_id.updated"
                     | :"customer.updated"
                     | :"customer_cash_balance_transaction.created"
+                    | :"entitlements.active_entitlement_summary.updated"
                     | :"file.created"
+                    | :"financial_connections.account.account_numbers_updated"
                     | :"financial_connections.account.created"
                     | :"financial_connections.account.deactivated"
                     | :"financial_connections.account.disconnected"
                     | :"financial_connections.account.reactivated"
                     | :"financial_connections.account.refreshed_balance"
+                    | :"financial_connections.account.refreshed_ownership"
                     | :"financial_connections.account.refreshed_transactions"
+                    | :"financial_connections.account.upcoming_account_number_expiry"
                     | :"identity.verification_session.canceled"
                     | :"identity.verification_session.created"
                     | :"identity.verification_session.processing"
@@ -306,14 +373,19 @@ defmodule Stripe.WebhookEndpoint do
                     | :"invoice.finalization_failed"
                     | :"invoice.finalized"
                     | :"invoice.marked_uncollectible"
+                    | :"invoice.overdue"
+                    | :"invoice.overpaid"
                     | :"invoice.paid"
                     | :"invoice.payment_action_required"
+                    | :"invoice.payment_attempt_required"
                     | :"invoice.payment_failed"
                     | :"invoice.payment_succeeded"
                     | :"invoice.sent"
                     | :"invoice.upcoming"
                     | :"invoice.updated"
                     | :"invoice.voided"
+                    | :"invoice.will_be_due"
+                    | :"invoice_payment.paid"
                     | :"invoiceitem.created"
                     | :"invoiceitem.deleted"
                     | :"issuing_authorization.created"
@@ -326,11 +398,17 @@ defmodule Stripe.WebhookEndpoint do
                     | :"issuing_dispute.closed"
                     | :"issuing_dispute.created"
                     | :"issuing_dispute.funds_reinstated"
+                    | :"issuing_dispute.funds_rescinded"
                     | :"issuing_dispute.submitted"
                     | :"issuing_dispute.updated"
+                    | :"issuing_personalization_design.activated"
+                    | :"issuing_personalization_design.deactivated"
+                    | :"issuing_personalization_design.rejected"
+                    | :"issuing_personalization_design.updated"
                     | :"issuing_token.created"
                     | :"issuing_token.updated"
                     | :"issuing_transaction.created"
+                    | :"issuing_transaction.purchase_details_receipt_updated"
                     | :"issuing_transaction.updated"
                     | :"mandate.updated"
                     | :"payment_intent.amount_capturable_updated"
@@ -374,6 +452,7 @@ defmodule Stripe.WebhookEndpoint do
                     | :"radar.early_fraud_warning.created"
                     | :"radar.early_fraud_warning.updated"
                     | :"refund.created"
+                    | :"refund.failed"
                     | :"refund.updated"
                     | :"reporting.report_run.failed"
                     | :"reporting.report_run.succeeded"
@@ -405,6 +484,7 @@ defmodule Stripe.WebhookEndpoint do
                     | :"tax_rate.updated"
                     | :"terminal.reader.action_failed"
                     | :"terminal.reader.action_succeeded"
+                    | :"terminal.reader.action_updated"
                     | :"test_helpers.test_clock.advancing"
                     | :"test_helpers.test_clock.created"
                     | :"test_helpers.test_clock.deleted"
@@ -436,12 +516,14 @@ defmodule Stripe.WebhookEndpoint do
                     | :"treasury.outbound_payment.failed"
                     | :"treasury.outbound_payment.posted"
                     | :"treasury.outbound_payment.returned"
+                    | :"treasury.outbound_payment.tracking_details_updated"
                     | :"treasury.outbound_transfer.canceled"
                     | :"treasury.outbound_transfer.created"
                     | :"treasury.outbound_transfer.expected_arrival_date_updated"
                     | :"treasury.outbound_transfer.failed"
                     | :"treasury.outbound_transfer.posted"
                     | :"treasury.outbound_transfer.returned"
+                    | :"treasury.outbound_transfer.tracking_details_updated"
                     | :"treasury.received_credit.created"
                     | :"treasury.received_credit.failed"
                     | :"treasury.received_credit.succeeded"
@@ -491,6 +573,8 @@ defmodule Stripe.WebhookEndpoint do
                     | :"application_fee.refund.updated"
                     | :"application_fee.refunded"
                     | :"balance.available"
+                    | :"balance_settings.updated"
+                    | :"billing.alert.triggered"
                     | :"billing_portal.configuration.created"
                     | :"billing_portal.configuration.updated"
                     | :"billing_portal.session.created"
@@ -548,13 +632,17 @@ defmodule Stripe.WebhookEndpoint do
                     | :"customer.tax_id.updated"
                     | :"customer.updated"
                     | :"customer_cash_balance_transaction.created"
+                    | :"entitlements.active_entitlement_summary.updated"
                     | :"file.created"
+                    | :"financial_connections.account.account_numbers_updated"
                     | :"financial_connections.account.created"
                     | :"financial_connections.account.deactivated"
                     | :"financial_connections.account.disconnected"
                     | :"financial_connections.account.reactivated"
                     | :"financial_connections.account.refreshed_balance"
+                    | :"financial_connections.account.refreshed_ownership"
                     | :"financial_connections.account.refreshed_transactions"
+                    | :"financial_connections.account.upcoming_account_number_expiry"
                     | :"identity.verification_session.canceled"
                     | :"identity.verification_session.created"
                     | :"identity.verification_session.processing"
@@ -566,14 +654,19 @@ defmodule Stripe.WebhookEndpoint do
                     | :"invoice.finalization_failed"
                     | :"invoice.finalized"
                     | :"invoice.marked_uncollectible"
+                    | :"invoice.overdue"
+                    | :"invoice.overpaid"
                     | :"invoice.paid"
                     | :"invoice.payment_action_required"
+                    | :"invoice.payment_attempt_required"
                     | :"invoice.payment_failed"
                     | :"invoice.payment_succeeded"
                     | :"invoice.sent"
                     | :"invoice.upcoming"
                     | :"invoice.updated"
                     | :"invoice.voided"
+                    | :"invoice.will_be_due"
+                    | :"invoice_payment.paid"
                     | :"invoiceitem.created"
                     | :"invoiceitem.deleted"
                     | :"issuing_authorization.created"
@@ -586,11 +679,17 @@ defmodule Stripe.WebhookEndpoint do
                     | :"issuing_dispute.closed"
                     | :"issuing_dispute.created"
                     | :"issuing_dispute.funds_reinstated"
+                    | :"issuing_dispute.funds_rescinded"
                     | :"issuing_dispute.submitted"
                     | :"issuing_dispute.updated"
+                    | :"issuing_personalization_design.activated"
+                    | :"issuing_personalization_design.deactivated"
+                    | :"issuing_personalization_design.rejected"
+                    | :"issuing_personalization_design.updated"
                     | :"issuing_token.created"
                     | :"issuing_token.updated"
                     | :"issuing_transaction.created"
+                    | :"issuing_transaction.purchase_details_receipt_updated"
                     | :"issuing_transaction.updated"
                     | :"mandate.updated"
                     | :"payment_intent.amount_capturable_updated"
@@ -634,6 +733,7 @@ defmodule Stripe.WebhookEndpoint do
                     | :"radar.early_fraud_warning.created"
                     | :"radar.early_fraud_warning.updated"
                     | :"refund.created"
+                    | :"refund.failed"
                     | :"refund.updated"
                     | :"reporting.report_run.failed"
                     | :"reporting.report_run.succeeded"
@@ -665,6 +765,7 @@ defmodule Stripe.WebhookEndpoint do
                     | :"tax_rate.updated"
                     | :"terminal.reader.action_failed"
                     | :"terminal.reader.action_succeeded"
+                    | :"terminal.reader.action_updated"
                     | :"test_helpers.test_clock.advancing"
                     | :"test_helpers.test_clock.created"
                     | :"test_helpers.test_clock.deleted"
@@ -696,12 +797,14 @@ defmodule Stripe.WebhookEndpoint do
                     | :"treasury.outbound_payment.failed"
                     | :"treasury.outbound_payment.posted"
                     | :"treasury.outbound_payment.returned"
+                    | :"treasury.outbound_payment.tracking_details_updated"
                     | :"treasury.outbound_transfer.canceled"
                     | :"treasury.outbound_transfer.created"
                     | :"treasury.outbound_transfer.expected_arrival_date_updated"
                     | :"treasury.outbound_transfer.failed"
                     | :"treasury.outbound_transfer.posted"
                     | :"treasury.outbound_transfer.returned"
+                    | :"treasury.outbound_transfer.tracking_details_updated"
                     | :"treasury.received_credit.created"
                     | :"treasury.received_credit.failed"
                     | :"treasury.received_credit.succeeded"
@@ -721,17 +824,19 @@ defmodule Stripe.WebhookEndpoint do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/webhook_endpoints/{webhook_endpoint}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "webhook_endpoint",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "webhook_endpoint",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "webhook_endpoint",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -742,45 +847,6 @@ defmodule Stripe.WebhookEndpoint do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>You can also delete webhook endpoints via the <a href=\"https://dashboard.stripe.com/account/webhooks\">webhook endpoint management</a> page of the Stripe dashboard.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/webhook_endpoints/{webhook_endpoint}`\n"
-    (
-      @spec delete(webhook_endpoint :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedWebhookEndpoint.t()}
-              | {:error, Stripe.ApiErrors.t()}
-              | {:error, term()}
-      def delete(webhook_endpoint, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/webhook_endpoints/{webhook_endpoint}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "webhook_endpoint",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "webhook_endpoint",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [webhook_endpoint]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

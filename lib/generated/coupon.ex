@@ -23,7 +23,7 @@ defmodule Stripe.Coupon do
       :valid
     ]
 
-    @typedoc "The `coupon` type.\n\n  * `amount_off` Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.\n  * `applies_to` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` If `amount_off` has been set, the three-letter [ISO code for the currency](https://stripe.com/docs/currencies) of the amount to take off.\n  * `currency_options` Coupons defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).\n  * `duration` One of `forever`, `once`, and `repeating`. Describes how long a customer who applies this coupon will get the discount.\n  * `duration_in_months` If `duration` is `repeating`, the number of months the coupon applies. Null if coupon `duration` is `forever` or `once`.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `max_redemptions` Maximum number of times this coupon can be redeemed, in total, across all customers, before it is no longer valid.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name` Name of the coupon displayed to customers on for instance invoices or receipts.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `percent_off` Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percent_off of 50 will make a $ (or local equivalent)100 invoice $ (or local equivalent)50 instead.\n  * `redeem_by` Date after which the coupon can no longer be redeemed.\n  * `times_redeemed` Number of times this coupon has been applied to a customer.\n  * `valid` Taking account of the above properties, whether this coupon can still be applied to a customer.\n"
+    @typedoc "The `coupon` type.\n\n  * `amount_off` Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.\n  * `applies_to` \n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `currency` If `amount_off` has been set, the three-letter [ISO code for the currency](https://stripe.com/docs/currencies) of the amount to take off.\n  * `currency_options` Coupons defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).\n  * `duration` One of `forever`, `once`, or `repeating`. Describes how long a customer who applies this coupon will get the discount.\n  * `duration_in_months` If `duration` is `repeating`, the number of months the coupon applies. Null if coupon `duration` is `forever` or `once`.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `max_redemptions` Maximum number of times this coupon can be redeemed, in total, across all customers, before it is no longer valid.\n  * `metadata` Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.\n  * `name` Name of the coupon displayed to customers on for instance invoices or receipts.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `percent_off` Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percent_off of 50 will make a $ (or local equivalent)100 invoice $ (or local equivalent)50 instead.\n  * `redeem_by` Date after which the coupon can no longer be redeemed.\n  * `times_redeemed` Number of times this coupon has been applied to a customer.\n  * `valid` Taking account of the above properties, whether this coupon can still be applied to a customer.\n"
     @type t :: %__MODULE__{
             amount_off: integer | nil,
             applies_to: term,
@@ -63,6 +63,45 @@ defmodule Stripe.Coupon do
   (
     nil
 
+    @doc "<p>You can delete coupons via the <a href=\"https://dashboard.stripe.com/coupons\">coupon management</a> page of the Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means that new customers can’t redeem the coupon. You can also delete coupons via the API.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/coupons/{coupon}`\n"
+    (
+      @spec delete(coupon :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedCoupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(coupon, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/coupons/{coupon}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "coupon",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "coupon",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [coupon]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
     @doc "<p>Returns a list of your coupons.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/coupons`\n"
     (
       @spec list(
@@ -80,6 +119,49 @@ defmodule Stripe.Coupon do
               | {:error, term()}
       def list(params \\ %{}, opts \\ []) do
         path = Stripe.OpenApi.Path.replace_path_params("/v1/coupons", [], [])
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Retrieves the coupon with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/coupons/{coupon}`\n"
+    (
+      @spec retrieve(
+              coupon :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.Coupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(coupon, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/coupons/{coupon}",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "coupon",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "coupon",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [coupon]
+          )
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
@@ -128,47 +210,6 @@ defmodule Stripe.Coupon do
   (
     nil
 
-    @doc "<p>Retrieves the coupon with the given ID.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/coupons/{coupon}`\n"
-    (
-      @spec retrieve(
-              coupon :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.Coupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(coupon, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/coupons/{coupon}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "coupon",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "coupon",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [coupon]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
     @doc "<p>Updates the metadata of a coupon. Other coupon details (currency, duration, amount_off) are, by design, not editable.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/coupons/{coupon}`\n"
     (
       @spec update(
@@ -186,17 +227,19 @@ defmodule Stripe.Coupon do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/coupons/{coupon}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "coupon",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "coupon",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "coupon",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -207,43 +250,6 @@ defmodule Stripe.Coupon do
         |> Stripe.Request.put_endpoint(path)
         |> Stripe.Request.put_params(params)
         |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>You can delete coupons via the <a href=\"https://dashboard.stripe.com/coupons\">coupon management</a> page of the Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means that new customers can’t redeem the coupon. You can also delete coupons via the API.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/coupons/{coupon}`\n"
-    (
-      @spec delete(coupon :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedCoupon.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(coupon, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/coupons/{coupon}",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "coupon",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "coupon",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [coupon]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )

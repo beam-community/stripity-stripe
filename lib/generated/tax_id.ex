@@ -10,12 +10,13 @@ defmodule Stripe.TaxId do
       :id,
       :livemode,
       :object,
+      :owner,
       :type,
       :value,
       :verification
     ]
 
-    @typedoc "The `tax_id` type.\n\n  * `country` Two-letter ISO code representing the country of the tax ID.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `customer` ID of the customer.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `type` Type of the tax ID, one of `ad_nrt`, `ae_trn`, `ar_cuit`, `au_abn`, `au_arn`, `bg_uic`, `bo_tin`, `br_cnpj`, `br_cpf`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `ch_vat`, `cl_tin`, `cn_tin`, `co_nit`, `cr_tin`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `hk_br`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kr_brn`, `li_uid`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `no_vat`, `nz_gst`, `pe_ruc`, `ph_tin`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sv_nit`, `th_vat`, `tr_tin`, `tw_vat`, `ua_vat`, `us_ein`, `uy_ruc`, `ve_rif`, `vn_tin`, or `za_vat`. Note that some legacy tax IDs have type `unknown`\n  * `value` Value of the tax ID.\n  * `verification` Tax ID verification information.\n"
+    @typedoc "The `tax_id` type.\n\n  * `country` Two-letter ISO code representing the country of the tax ID.\n  * `created` Time at which the object was created. Measured in seconds since the Unix epoch.\n  * `customer` ID of the customer.\n  * `id` Unique identifier for the object.\n  * `livemode` Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.\n  * `object` String representing the object's type. Objects of the same type share the same value.\n  * `owner` The account or customer the tax ID belongs to.\n  * `type` Type of the tax ID, one of `ad_nrt`, `ae_trn`, `al_tin`, `am_tin`, `ao_tin`, `ar_cuit`, `au_abn`, `au_arn`, `aw_tin`, `az_tin`, `ba_tin`, `bb_tin`, `bd_bin`, `bf_ifu`, `bg_uic`, `bh_vat`, `bj_ifu`, `bo_tin`, `br_cnpj`, `br_cpf`, `bs_tin`, `by_tin`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `cd_nif`, `ch_uid`, `ch_vat`, `cl_tin`, `cm_niu`, `cn_tin`, `co_nit`, `cr_tin`, `cv_nif`, `de_stn`, `do_rcn`, `ec_ruc`, `eg_tin`, `es_cif`, `et_tin`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `gn_nif`, `hk_br`, `hr_oib`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `jp_trn`, `ke_pin`, `kg_tin`, `kh_tin`, `kr_brn`, `kz_bin`, `la_tin`, `li_uid`, `li_vat`, `ma_vat`, `md_vat`, `me_pib`, `mk_vat`, `mr_nif`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `ng_tin`, `no_vat`, `no_voec`, `np_pan`, `nz_gst`, `om_vat`, `pe_ruc`, `ph_tin`, `ro_tin`, `rs_pib`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `sn_ninea`, `sr_fin`, `sv_nit`, `th_vat`, `tj_tin`, `tr_tin`, `tw_vat`, `tz_vat`, `ua_vat`, `ug_tin`, `us_ein`, `uy_ruc`, `uz_tin`, `uz_vat`, `ve_rif`, `vn_tin`, `za_vat`, `zm_tin`, or `zw_tin`. Note that some legacy tax IDs have type `unknown`\n  * `value` Value of the tax ID.\n  * `verification` Tax ID verification information.\n"
     @type t :: %__MODULE__{
             country: binary | nil,
             created: integer,
@@ -23,6 +24,7 @@ defmodule Stripe.TaxId do
             id: binary,
             livemode: boolean,
             object: binary,
+            owner: term | nil,
             type: binary,
             value: binary,
             verification: term | nil
@@ -32,154 +34,43 @@ defmodule Stripe.TaxId do
   (
     nil
 
-    @doc "<p>Creates a new <code>tax_id</code> object for a customer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers/{customer}/tax_ids`\n"
+    @doc "<p>Deletes an existing <code>tax_id</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
     (
-      @spec create(
-              customer :: binary(),
-              params :: %{
-                optional(:expand) => list(binary),
-                optional(:type) =>
-                  :ad_nrt
-                  | :ae_trn
-                  | :ar_cuit
-                  | :au_abn
-                  | :au_arn
-                  | :bg_uic
-                  | :bo_tin
-                  | :br_cnpj
-                  | :br_cpf
-                  | :ca_bn
-                  | :ca_gst_hst
-                  | :ca_pst_bc
-                  | :ca_pst_mb
-                  | :ca_pst_sk
-                  | :ca_qst
-                  | :ch_vat
-                  | :cl_tin
-                  | :cn_tin
-                  | :co_nit
-                  | :cr_tin
-                  | :do_rcn
-                  | :ec_ruc
-                  | :eg_tin
-                  | :es_cif
-                  | :eu_oss_vat
-                  | :eu_vat
-                  | :gb_vat
-                  | :ge_vat
-                  | :hk_br
-                  | :hu_tin
-                  | :id_npwp
-                  | :il_vat
-                  | :in_gst
-                  | :is_vat
-                  | :jp_cn
-                  | :jp_rn
-                  | :jp_trn
-                  | :ke_pin
-                  | :kr_brn
-                  | :li_uid
-                  | :mx_rfc
-                  | :my_frp
-                  | :my_itn
-                  | :my_sst
-                  | :no_vat
-                  | :nz_gst
-                  | :pe_ruc
-                  | :ph_tin
-                  | :ro_tin
-                  | :rs_pib
-                  | :ru_inn
-                  | :ru_kpp
-                  | :sa_vat
-                  | :sg_gst
-                  | :sg_uen
-                  | :si_tin
-                  | :sv_nit
-                  | :th_vat
-                  | :tr_tin
-                  | :tw_vat
-                  | :ua_vat
-                  | :us_ein
-                  | :uy_ruc
-                  | :ve_rif
-                  | :vn_tin
-                  | :za_vat,
-                optional(:value) => binary
-              },
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.TaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def create(customer, params \\ %{}, opts \\ []) do
-        path =
-          Stripe.OpenApi.Path.replace_path_params(
-            "/v1/customers/{customer}/tax_ids",
-            [
-              %OpenApiGen.Blueprint.Parameter{
-                in: "path",
-                name: "customer",
-                required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
-                  items: [],
-                  properties: [],
-                  any_of: []
-                }
-              }
-            ],
-            [customer]
-          )
-
-        Stripe.Request.new_request(opts)
-        |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:post)
-        |> Stripe.Request.make_request()
-      end
-    )
-  )
-
-  (
-    nil
-
-    @doc "<p>Retrieves the <code>tax_id</code> object with the given identifier.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
-    (
-      @spec retrieve(
-              customer :: binary(),
-              id :: binary(),
-              params :: %{optional(:expand) => list(binary)},
-              opts :: Keyword.t()
-            ) :: {:ok, Stripe.TaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def retrieve(customer, id, params \\ %{}, opts \\ []) do
+      @spec delete(customer :: binary(), id :: binary(), opts :: Keyword.t()) ::
+              {:ok, Stripe.DeletedTaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def delete(customer, id, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/customers/{customer}/tax_ids/{id}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "customer",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "customer",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -188,8 +79,7 @@ defmodule Stripe.TaxId do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_params(params)
-        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.put_method(:delete)
         |> Stripe.Request.make_request()
       end
     )
@@ -218,17 +108,19 @@ defmodule Stripe.TaxId do
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/customers/{customer}/tax_ids",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "customer",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "customer",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -247,39 +139,47 @@ defmodule Stripe.TaxId do
   (
     nil
 
-    @doc "<p>Deletes an existing <code>tax_id</code> object.</p>\n\n#### Details\n\n * Method: `delete`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
+    @doc "<p>Retrieves the <code>tax_id</code> object with the given identifier.</p>\n\n#### Details\n\n * Method: `get`\n * Path: `/v1/customers/{customer}/tax_ids/{id}`\n"
     (
-      @spec delete(customer :: binary(), id :: binary(), opts :: Keyword.t()) ::
-              {:ok, Stripe.DeletedTaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
-      def delete(customer, id, opts \\ []) do
+      @spec retrieve(
+              customer :: binary(),
+              id :: binary(),
+              params :: %{optional(:expand) => list(binary)},
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.TaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def retrieve(customer, id, params \\ %{}, opts \\ []) do
         path =
           Stripe.OpenApi.Path.replace_path_params(
             "/v1/customers/{customer}/tax_ids/{id}",
             [
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "customer",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "customer",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "customer",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               },
-              %OpenApiGen.Blueprint.Parameter{
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
                 in: "path",
                 name: "id",
                 required: true,
-                schema: %OpenApiGen.Blueprint.Parameter.Schema{
-                  name: "id",
-                  title: nil,
-                  type: "string",
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
                   items: [],
+                  name: "id",
                   properties: [],
-                  any_of: []
+                  title: nil,
+                  type: "string"
                 }
               }
             ],
@@ -288,7 +188,165 @@ defmodule Stripe.TaxId do
 
         Stripe.Request.new_request(opts)
         |> Stripe.Request.put_endpoint(path)
-        |> Stripe.Request.put_method(:delete)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:get)
+        |> Stripe.Request.make_request()
+      end
+    )
+  )
+
+  (
+    nil
+
+    @doc "<p>Creates a new <code>tax_id</code> object for a customer.</p>\n\n#### Details\n\n * Method: `post`\n * Path: `/v1/customers/{customer}/tax_ids`\n"
+    (
+      @spec create(
+              customer :: binary(),
+              params :: %{
+                optional(:expand) => list(binary),
+                optional(:type) =>
+                  :ad_nrt
+                  | :ae_trn
+                  | :al_tin
+                  | :am_tin
+                  | :ao_tin
+                  | :ar_cuit
+                  | :au_abn
+                  | :au_arn
+                  | :aw_tin
+                  | :az_tin
+                  | :ba_tin
+                  | :bb_tin
+                  | :bd_bin
+                  | :bf_ifu
+                  | :bg_uic
+                  | :bh_vat
+                  | :bj_ifu
+                  | :bo_tin
+                  | :br_cnpj
+                  | :br_cpf
+                  | :bs_tin
+                  | :by_tin
+                  | :ca_bn
+                  | :ca_gst_hst
+                  | :ca_pst_bc
+                  | :ca_pst_mb
+                  | :ca_pst_sk
+                  | :ca_qst
+                  | :cd_nif
+                  | :ch_uid
+                  | :ch_vat
+                  | :cl_tin
+                  | :cm_niu
+                  | :cn_tin
+                  | :co_nit
+                  | :cr_tin
+                  | :cv_nif
+                  | :de_stn
+                  | :do_rcn
+                  | :ec_ruc
+                  | :eg_tin
+                  | :es_cif
+                  | :et_tin
+                  | :eu_oss_vat
+                  | :eu_vat
+                  | :gb_vat
+                  | :ge_vat
+                  | :gn_nif
+                  | :hk_br
+                  | :hr_oib
+                  | :hu_tin
+                  | :id_npwp
+                  | :il_vat
+                  | :in_gst
+                  | :is_vat
+                  | :jp_cn
+                  | :jp_rn
+                  | :jp_trn
+                  | :ke_pin
+                  | :kg_tin
+                  | :kh_tin
+                  | :kr_brn
+                  | :kz_bin
+                  | :la_tin
+                  | :li_uid
+                  | :li_vat
+                  | :ma_vat
+                  | :md_vat
+                  | :me_pib
+                  | :mk_vat
+                  | :mr_nif
+                  | :mx_rfc
+                  | :my_frp
+                  | :my_itn
+                  | :my_sst
+                  | :ng_tin
+                  | :no_vat
+                  | :no_voec
+                  | :np_pan
+                  | :nz_gst
+                  | :om_vat
+                  | :pe_ruc
+                  | :ph_tin
+                  | :ro_tin
+                  | :rs_pib
+                  | :ru_inn
+                  | :ru_kpp
+                  | :sa_vat
+                  | :sg_gst
+                  | :sg_uen
+                  | :si_tin
+                  | :sn_ninea
+                  | :sr_fin
+                  | :sv_nit
+                  | :th_vat
+                  | :tj_tin
+                  | :tr_tin
+                  | :tw_vat
+                  | :tz_vat
+                  | :ua_vat
+                  | :ug_tin
+                  | :us_ein
+                  | :uy_ruc
+                  | :uz_tin
+                  | :uz_vat
+                  | :ve_rif
+                  | :vn_tin
+                  | :za_vat
+                  | :zm_tin
+                  | :zw_tin,
+                optional(:value) => binary
+              },
+              opts :: Keyword.t()
+            ) :: {:ok, Stripe.TaxId.t()} | {:error, Stripe.ApiErrors.t()} | {:error, term()}
+      def create(customer, params \\ %{}, opts \\ []) do
+        path =
+          Stripe.OpenApi.Path.replace_path_params(
+            "/v1/customers/{customer}/tax_ids",
+            [
+              %{
+                __struct__: OpenApiGen.Blueprint.Parameter,
+                in: "path",
+                name: "customer",
+                required: true,
+                schema: %{
+                  __struct__: OpenApiGen.Blueprint.Parameter.Schema,
+                  any_of: [],
+                  items: [],
+                  name: "customer",
+                  properties: [],
+                  title: nil,
+                  type: "string"
+                }
+              }
+            ],
+            [customer]
+          )
+
+        Stripe.Request.new_request(opts)
+        |> Stripe.Request.put_endpoint(path)
+        |> Stripe.Request.put_params(params)
+        |> Stripe.Request.put_method(:post)
         |> Stripe.Request.make_request()
       end
     )
