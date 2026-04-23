@@ -2,8 +2,8 @@
 
 [
   import_deps: [:plug],
+  excludes: ["lib/generated/*.ex"],
   inputs: ["*.{heex,ex,exs}", "{config,lib,priv,test}/**/*.{heex,ex,exs}"],
-  exlude: ["lib/generated/*.ex"],
   line_length: 120,
   plugins: []
 ]
