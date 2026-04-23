@@ -1,5 +1,5 @@
+# credo:disable-for-this-file
 defmodule Stripe.AccountLink do
-  # credo:disable-for-this-file
   use Stripe.Entity
 
   @moduledoc "Account Links are the means by which a Connect platform grants a connected account permission to access\nStripe-hosted applications, such as Connect Onboarding.\n\nRelated guide: [Connect Onboarding](https://stripe.com/docs/connect/custom/hosted-onboarding)"

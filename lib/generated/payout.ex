@@ -45,7 +45,8 @@ defmodule Stripe.Payout do
             created: integer,
             currency: binary,
             description: binary | nil,
-            destination: (binary | Stripe.ExternalAccount.t() | Stripe.DeletedExternalAccount.t()) | nil,
+            destination:
+              (binary | Stripe.ExternalAccount.t() | Stripe.DeletedExternalAccount.t()) | nil,
             failure_balance_transaction: (binary | Stripe.BalanceTransaction.t()) | nil,
             failure_code: binary | nil,
             failure_message: binary | nil,

@@ -33,7 +33,8 @@ defmodule Stripe.BalanceSettings do
     @type schedule :: %{
             optional(:interval) => :daily | :manual | :monthly | :weekly,
             optional(:monthly_payout_days) => list(integer),
-            optional(:weekly_payout_days) => list(:friday | :monday | :thursday | :tuesday | :wednesday)
+            optional(:weekly_payout_days) =>
+              list(:friday | :monday | :thursday | :tuesday | :wednesday)
           }
   )
 

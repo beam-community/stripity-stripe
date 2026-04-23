@@ -1014,7 +1014,8 @@ defmodule Stripe.Issuing.Cardholder do
                 | :womens_ready_to_wear_stores
                 | :wrecking_and_salvage_yards
               ),
-            optional(:interval) => :all_time | :daily | :monthly | :per_authorization | :weekly | :yearly
+            optional(:interval) =>
+              :all_time | :daily | :monthly | :per_authorization | :weekly | :yearly
           }
   )
 

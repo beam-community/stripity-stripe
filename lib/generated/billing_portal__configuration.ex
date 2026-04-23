@@ -85,7 +85,8 @@ defmodule Stripe.BillingPortal.Configuration do
   (
     @typedoc "Information about updating the customer details in the portal."
     @type customer_update :: %{
-            optional(:allowed_updates) => list(:address | :email | :name | :phone | :shipping | :tax_id) | binary,
+            optional(:allowed_updates) =>
+              list(:address | :email | :name | :phone | :shipping | :tax_id) | binary,
             optional(:enabled) => boolean
           }
   )
@@ -146,7 +147,8 @@ defmodule Stripe.BillingPortal.Configuration do
   (
     @typedoc "Information about updating subscriptions in the portal."
     @type subscription_update :: %{
-            optional(:default_allowed_updates) => list(:price | :promotion_code | :quantity) | binary,
+            optional(:default_allowed_updates) =>
+              list(:price | :promotion_code | :quantity) | binary,
             optional(:enabled) => boolean,
             optional(:products) => list(products) | binary,
             optional(:proration_behavior) => :always_invoice | :create_prorations | :none,

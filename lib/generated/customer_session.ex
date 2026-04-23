@@ -42,7 +42,8 @@ defmodule Stripe.CustomerSession do
   (
     @typedoc "This hash defines whether the Payment Element supports certain features."
     @type features :: %{
-            optional(:payment_method_allow_redisplay_filters) => list(:always | :limited | :unspecified),
+            optional(:payment_method_allow_redisplay_filters) =>
+              list(:always | :limited | :unspecified),
             optional(:payment_method_redisplay) => :disabled | :enabled,
             optional(:payment_method_redisplay_limit) => integer,
             optional(:payment_method_remove) => :disabled | :enabled,

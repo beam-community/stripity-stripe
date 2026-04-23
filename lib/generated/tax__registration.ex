@@ -332,7 +332,8 @@ defmodule Stripe.Tax.Registration do
     @typedoc nil
     @type elections :: %{
             optional(:jurisdiction) => binary,
-            optional(:type) => :local_use_tax | :simplified_sellers_use_tax | :single_local_use_tax
+            optional(:type) =>
+              :local_use_tax | :simplified_sellers_use_tax | :single_local_use_tax
           }
   )
 
