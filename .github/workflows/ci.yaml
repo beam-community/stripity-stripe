@@ -106,6 +106,16 @@ jobs:
 
     env:
       MIX_ENV: test
+      STRIPE_SECRET_KEY: non_empty_string
+      SKIP_STRIPE_MOCK_RUN: true
+      SHELL: /bin/bash
+
+    services:
+      stripe-mock:
+        image: stripe/stripe-mock:v0.144.0
+        ports:
+          - 12111:12111
+          - 12112:12112
 
     steps:
       - name: Checkout
