@@ -24,7 +24,7 @@
         # In the latter case `**/*.{ex,exs}` will be used.
         #
         included: ["config/", "lib/", "priv/", "test/"],
-        excluded: [~r"/_build/", ~r"/deps/", ~r"/node_modules/"]
+        excluded: [~r"lib/generated/", ~r"/_build/", ~r"/deps/", ~r"/node_modules/"]
       },
       #
       # Load and configure plugins here:
