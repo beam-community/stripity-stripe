@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Entitlements.ActiveEntitlement do
   use Stripe.Entity
   @moduledoc "An active entitlement describes access to a feature for a customer."

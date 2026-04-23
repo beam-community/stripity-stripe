@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.PaymentAttemptRecord do
   use Stripe.Entity
 

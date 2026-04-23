@@ -92,9 +92,7 @@ defmodule Stripe.APITest do
   end
 
   test "can set custom api version" do
-    Stripe.API.request(%{}, :get, "/v1/products", %{},
-      api_version: "2019-05-16; checkout_sessions_beta=v1"
-    )
+    Stripe.API.request(%{}, :get, "/v1/products", %{}, api_version: "2019-05-16; checkout_sessions_beta=v1")
 
     assert_stripe_requested(:get, "/v1/products", headers: {"Stripe-Version", "2019-05-16; checkout_sessions_beta=v1"})
   end

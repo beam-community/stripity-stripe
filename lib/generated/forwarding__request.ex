@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Forwarding.Request do
   use Stripe.Entity
 

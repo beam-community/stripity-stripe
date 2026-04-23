@@ -124,8 +124,7 @@ defmodule Stripe.LineItem do
             optional(:display_name) => binary,
             optional(:inclusive) => boolean,
             optional(:jurisdiction) => binary,
-            optional(:jurisdiction_level) =>
-              :city | :country | :county | :district | :multiple | :state,
+            optional(:jurisdiction_level) => :city | :country | :county | :district | :multiple | :state,
             optional(:percentage) => number,
             optional(:state) => binary,
             optional(:tax_type) =>

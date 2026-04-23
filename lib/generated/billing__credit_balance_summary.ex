@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Billing.CreditBalanceSummary do
   use Stripe.Entity
   @moduledoc "Indicates the billing credit balance for billing credits granted to a customer."

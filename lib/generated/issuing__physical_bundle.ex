@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Issuing.PhysicalBundle do
   use Stripe.Entity
 

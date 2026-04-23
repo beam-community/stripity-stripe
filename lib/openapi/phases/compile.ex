@@ -314,10 +314,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
   end
 
   defp type_spec_name(name) do
-    cond do
-      name in [:reference] -> :reference_0
-      true -> safe_type_name(name)   # <- sanitize reserved words like :end
-    end
+    # sanitize reserved words like :end
+    if name in [:reference], do: :reference_0, else: safe_type_name(name)
   end
 
   defp to_inline_spec({_, _meta, children}) do
@@ -372,7 +370,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
   end
 
   def to_type({:ref, meta, _}) do
-    Macro.var(type_spec_name(meta[:name]), __MODULE__)
+    spec_name = type_spec_name(meta[:name])
+    Macro.var(spec_name, __MODULE__)
   end
 
   def to_type({:array, _meta, [type]}) do
@@ -1078,34 +1077,50 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"GetPlansPlan", "/v1/plans/{plan}", "retrieve"} => "retrieve",
     {"PostPlansPlan", "/v1/plans/{plan}", "update"} => "update",
     {"DeletePlansPlan", "/v1/plans/{plan}", "delete"} => "delete",
-    {"PostTestHelpersIssuingCardsCardShippingSubmit", "/v1/test_helpers/issuing/cards/{card}/shipping/submit", "submit_card"} => "submit_card",
-    {"GetConfirmationTokensConfirmationToken", "/v1/confirmation_tokens/{confirmation_token}", "retrieve"} => "retrieve",
+    {"PostTestHelpersIssuingCardsCardShippingSubmit", "/v1/test_helpers/issuing/cards/{card}/shipping/submit",
+     "submit_card"} => "submit_card",
+    {"GetConfirmationTokensConfirmationToken", "/v1/confirmation_tokens/{confirmation_token}", "retrieve"} =>
+      "retrieve",
     {"PostTestHelpersConfirmationTokens", "/v1/test_helpers/confirmation_tokens", "create"} => "create",
     {"PostSubscriptionsSubscriptionMigrate", "/v1/subscriptions/{subscription}/migrate", "migrate"} => "migrate",
     {"PostCheckoutSessionsSession", "/v1/checkout/sessions/{session}", "update"} => "update",
-    {"PostTestHelpersTreasuryOutboundPaymentsId", "/v1/test_helpers/treasury/outbound_payments/{id}", "update"} => "update",
+    {"PostTestHelpersTreasuryOutboundPaymentsId", "/v1/test_helpers/treasury/outbound_payments/{id}", "update"} =>
+      "update",
     {"GetBillingMetersIdEventSummaries", "/v1/billing/meters/{id}/event_summaries", "list"} => "list",
     {"GetEntitlementsFeatures", "/v1/entitlements/features", "list"} => "list",
     {"GetEntitlementsFeaturesId", "/v1/entitlements/features/{id}", "retrieve"} => "retrieve",
     {"PostEntitlementsFeatures", "/v1/entitlements/features", "create"} => "create",
     {"PostEntitlementsFeaturesId", "/v1/entitlements/features/{id}", "update"} => "update",
-    {"PostTerminalReadersReaderCollectInputs", "/v1/terminal/readers/{reader}/collect_inputs", "collect_inputs"} => "collect_inputs",
-    {"PostTerminalReadersReaderCollectPaymentMethod", "/v1/terminal/readers/{reader}/collect_payment_method", "collect_payment_method"} => "collect_payment_method",
-    {"PostTerminalReadersReaderConfirmPaymentIntent", "/v1/terminal/readers/{reader}/confirm_payment_intent", "confirm_payment_intent"} => "confirm_payment_intent",
-    {"PostTestHelpersTerminalReadersReaderSucceedInputCollection", "/v1/test_helpers/terminal/readers/{reader}/succeed_input_collection", "succeed_input_collection"} => "succeed_input_collection",
-    {"PostTestHelpersTerminalReadersReaderTimeoutInputCollection", "/v1/test_helpers/terminal/readers/{reader}/timeout_input_collection", "timeout_input_collection"} => "timeout_input_collection",
+    {"PostTerminalReadersReaderCollectInputs", "/v1/terminal/readers/{reader}/collect_inputs", "collect_inputs"} =>
+      "collect_inputs",
+    {"PostTerminalReadersReaderCollectPaymentMethod", "/v1/terminal/readers/{reader}/collect_payment_method",
+     "collect_payment_method"} => "collect_payment_method",
+    {"PostTerminalReadersReaderConfirmPaymentIntent", "/v1/terminal/readers/{reader}/confirm_payment_intent",
+     "confirm_payment_intent"} => "confirm_payment_intent",
+    {"PostTestHelpersTerminalReadersReaderSucceedInputCollection",
+     "/v1/test_helpers/terminal/readers/{reader}/succeed_input_collection", "succeed_input_collection"} =>
+      "succeed_input_collection",
+    {"PostTestHelpersTerminalReadersReaderTimeoutInputCollection",
+     "/v1/test_helpers/terminal/readers/{reader}/timeout_input_collection", "timeout_input_collection"} =>
+      "timeout_input_collection",
     {"PostBillingMeterEventAdjustments", "/v1/billing/meter_event_adjustments", "create"} => "create",
     {"GetBillingCreditBalanceSummary", "/v1/billing/credit_balance_summary", "retrieve"} => "retrieve",
     {"PostBillingMeterEvents", "/v1/billing/meter_events", "create"} => "create",
     {"GetInvoicePayments", "/v1/invoice_payments", "list"} => "list",
     {"GetInvoicePaymentsInvoicePayment", "/v1/invoice_payments/{invoice_payment}", "retrieve"} => "retrieve",
     {"GetIssuingPersonalizationDesigns", "/v1/issuing/personalization_designs", "list"} => "list",
-    {"GetIssuingPersonalizationDesignsPersonalizationDesign", "/v1/issuing/personalization_designs/{personalization_design}", "retrieve"} => "retrieve",
+    {"GetIssuingPersonalizationDesignsPersonalizationDesign",
+     "/v1/issuing/personalization_designs/{personalization_design}", "retrieve"} => "retrieve",
     {"PostIssuingPersonalizationDesigns", "/v1/issuing/personalization_designs", "create"} => "create",
-    {"PostIssuingPersonalizationDesignsPersonalizationDesign", "/v1/issuing/personalization_designs/{personalization_design}", "update"} => "update",
-    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivate", "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/activate", "activate"} => "activate",
-    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivate", "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/deactivate", "deactivate"} => "deactivate",
-    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReject", "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/reject", "reject"} => "reject",
+    {"PostIssuingPersonalizationDesignsPersonalizationDesign",
+     "/v1/issuing/personalization_designs/{personalization_design}", "update"} => "update",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivate",
+     "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/activate", "activate"} => "activate",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivate",
+     "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/deactivate", "deactivate"} =>
+      "deactivate",
+    {"PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReject",
+     "/v1/test_helpers/issuing/personalization_designs/{personalization_design}/reject", "reject"} => "reject",
     {"PostInvoicesInvoiceAddLines", "/v1/invoices/{invoice}/add_lines", "add_lines"} => "add_lines",
     {"PostInvoicesInvoiceAttachPayment", "/v1/invoices/{invoice}/attach_payment", "attach_payment"} => "attach_payment",
     {"PostInvoicesInvoiceRemoveLines", "/v1/invoices/{invoice}/remove_lines", "remove_lines"} => "remove_lines",
@@ -1114,9 +1129,12 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"GetEntitlementsActiveEntitlements", "/v1/entitlements/active_entitlements", "list"} => "list",
     {"GetEntitlementsActiveEntitlementsId", "/v1/entitlements/active_entitlements/{id}", "retrieve"} => "retrieve",
     {"GetIssuingPhysicalBundles", "/v1/issuing/physical_bundles", "list"} => "list",
-    {"GetIssuingPhysicalBundlesPhysicalBundle", "/v1/issuing/physical_bundles/{physical_bundle}", "retrieve"} => "retrieve",
-    {"PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmount", "/v1/test_helpers/issuing/authorizations/{authorization}/finalize_amount", "finalize_amount"} => "finalize_amount",
-    {"PostTestHelpersIssuingAuthorizationsAuthorizationFraudChallengesRespond", "/v1/test_helpers/issuing/authorizations/{authorization}/fraud_challenges/respond", "respond"} => "respond",
+    {"GetIssuingPhysicalBundlesPhysicalBundle", "/v1/issuing/physical_bundles/{physical_bundle}", "retrieve"} =>
+      "retrieve",
+    {"PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmount",
+     "/v1/test_helpers/issuing/authorizations/{authorization}/finalize_amount", "finalize_amount"} => "finalize_amount",
+    {"PostTestHelpersIssuingAuthorizationsAuthorizationFraudChallengesRespond",
+     "/v1/test_helpers/issuing/authorizations/{authorization}/fraud_challenges/respond", "respond"} => "respond",
     {"GetBillingCreditBalanceTransactions", "/v1/billing/credit_balance_transactions", "list"} => "list",
     {"GetBillingCreditBalanceTransactionsId", "/v1/billing/credit_balance_transactions/{id}", "retrieve"} => "retrieve",
     {"GetBillingCreditGrants", "/v1/billing/credit_grants", "list"} => "list",
@@ -1125,9 +1143,10 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostBillingCreditGrantsId", "/v1/billing/credit_grants/{id}", "update"} => "update",
     {"PostBillingCreditGrantsIdExpire", "/v1/billing/credit_grants/{id}/expire", "expire"} => "expire",
     {"PostBillingCreditGrantsIdVoid", "/v1/billing/credit_grants/{id}/void", "void_grant"} => "void_grant",
-    {"PostTestHelpersTreasuryOutboundTransfersOutboundTransfer", "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}", "update"} => "update",
+    {"PostTestHelpersTreasuryOutboundTransfersOutboundTransfer",
+     "/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}", "update"} => "update",
     {"GetTaxCalculationsCalculation", "/v1/tax/calculations/{calculation}", "retrieve"} => "retrieve",
-       {"GetBillingMeters", "/v1/billing/meters", "list"} => "list",
+    {"GetBillingMeters", "/v1/billing/meters", "list"} => "list",
     {"GetBillingMetersId", "/v1/billing/meters/{id}", "retrieve"} => "retrieve",
     {"PostBillingMeters", "/v1/billing/meters", "create"} => "create",
     {"PostBillingMetersId", "/v1/billing/meters/{id}", "update"} => "update",
@@ -1135,9 +1154,12 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostBillingMetersIdReactivate", "/v1/billing/meters/{id}/reactivate", "reactivate"} => "reactivate",
     {"GetInvoiceRenderingTemplates", "/v1/invoice_rendering_templates", "list"} => "list",
     {"GetInvoiceRenderingTemplatesTemplate", "/v1/invoice_rendering_templates/{template}", "retrieve"} => "retrieve",
-    {"PostInvoiceRenderingTemplatesTemplateArchive", "/v1/invoice_rendering_templates/{template}/archive", "archive"} => "archive",
-    {"PostInvoiceRenderingTemplatesTemplateUnarchive", "/v1/invoice_rendering_templates/{template}/unarchive", "unarchive"} => "unarchive",
-    {"PostTreasuryFinancialAccountsFinancialAccountClose", "/v1/treasury/financial_accounts/{financial_account}/close", "close"} => "close",
+    {"PostInvoiceRenderingTemplatesTemplateArchive", "/v1/invoice_rendering_templates/{template}/archive", "archive"} =>
+      "archive",
+    {"PostInvoiceRenderingTemplatesTemplateUnarchive", "/v1/invoice_rendering_templates/{template}/unarchive",
+     "unarchive"} => "unarchive",
+    {"PostTreasuryFinancialAccountsFinancialAccountClose", "/v1/treasury/financial_accounts/{financial_account}/close",
+     "close"} => "close",
     {"GetForwardingRequests", "/v1/forwarding/requests", "list"} => "list",
     {"GetForwardingRequestsId", "/v1/forwarding/requests/{id}", "retrieve"} => "retrieve",
     {"PostForwardingRequests", "/v1/forwarding/requests", "create"} => "create",
@@ -1153,14 +1175,21 @@ defmodule Stripe.OpenApi.Phases.Compile do
     {"PostProductsProductFeatures", "/v1/products/{product}/features", "create"} => "create",
     {"GetTaxAssociationsFind", "/v1/tax/associations/find", "find"} => "find",
     {"GetPaymentRecordsId", "/v1/payment_records/{id}", "retrieve"} => "retrieve",
-    {"PostPaymentRecordsIdReportPaymentAttempt", "/v1/payment_records/{id}/report_payment_attempt", "report_payment_attempt"} => "report_payment_attempt",
-    {"PostPaymentRecordsIdReportPaymentAttemptCanceled", "/v1/payment_records/{id}/report_payment_attempt_canceled", "report_payment_attempt_canceled"} => "report_payment_attempt_canceled",
-    {"PostPaymentRecordsIdReportPaymentAttemptFailed", "/v1/payment_records/{id}/report_payment_attempt_failed", "report_payment_attempt_failed"} => "report_payment_attempt_failed",
-    {"PostPaymentRecordsIdReportPaymentAttemptGuaranteed", "/v1/payment_records/{id}/report_payment_attempt_guaranteed", "report_payment_attempt_guaranteed"} => "report_payment_attempt_guaranteed",
-    {"PostPaymentRecordsIdReportPaymentAttemptInformational", "/v1/payment_records/{id}/report_payment_attempt_informational", "report_payment_attempt_informational"} => "report_payment_attempt_informational",
+    {"PostPaymentRecordsIdReportPaymentAttempt", "/v1/payment_records/{id}/report_payment_attempt",
+     "report_payment_attempt"} => "report_payment_attempt",
+    {"PostPaymentRecordsIdReportPaymentAttemptCanceled", "/v1/payment_records/{id}/report_payment_attempt_canceled",
+     "report_payment_attempt_canceled"} => "report_payment_attempt_canceled",
+    {"PostPaymentRecordsIdReportPaymentAttemptFailed", "/v1/payment_records/{id}/report_payment_attempt_failed",
+     "report_payment_attempt_failed"} => "report_payment_attempt_failed",
+    {"PostPaymentRecordsIdReportPaymentAttemptGuaranteed", "/v1/payment_records/{id}/report_payment_attempt_guaranteed",
+     "report_payment_attempt_guaranteed"} => "report_payment_attempt_guaranteed",
+    {"PostPaymentRecordsIdReportPaymentAttemptInformational",
+     "/v1/payment_records/{id}/report_payment_attempt_informational", "report_payment_attempt_informational"} =>
+      "report_payment_attempt_informational",
     {"PostPaymentRecordsIdReportRefund", "/v1/payment_records/{id}/report_refund", "report_refund"} => "report_refund",
     {"PostPaymentRecordsReportPayment", "/v1/payment_records/report_payment", "report_payment"} => "report_payment",
-    {"GetPaymentIntentsIntentAmountDetailsLineItems", "/v1/payment_intents/{intent}/amount_details_line_items", "list"} => "list",
+    {"GetPaymentIntentsIntentAmountDetailsLineItems", "/v1/payment_intents/{intent}/amount_details_line_items", "list"} =>
+      "list",
     {"GetPaymentAttemptRecords", "/v1/payment_attempt_records", "list"} => "list",
     {"GetPaymentAttemptRecordsId", "/v1/payment_attempt_records/{id}", "retrieve"} => "retrieve",
     {"GetBalanceSettings", "/v1/balance_settings", "retrieve"} => "retrieve",
@@ -1196,8 +1225,8 @@ defmodule Stripe.OpenApi.Phases.Compile do
     end
   end
 
-
   defp safe_type_name(name) when is_atom(name) do
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
     if name in @reserved_type_names, do: String.to_atom("#{name}_field"), else: name
   end
 

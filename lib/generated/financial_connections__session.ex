@@ -44,8 +44,7 @@ defmodule Stripe.FinancialConnections.Session do
   (
     @typedoc "Filters to restrict the kinds of accounts to collect."
     @type filters :: %{
-            optional(:account_subcategories) =>
-              list(:checking | :credit_card | :line_of_credit | :mortgage | :savings),
+            optional(:account_subcategories) => list(:checking | :credit_card | :line_of_credit | :mortgage | :savings),
             optional(:countries) => list(binary)
           }
   )

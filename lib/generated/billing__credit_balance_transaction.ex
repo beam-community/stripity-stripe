@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Stripe.Billing.CreditBalanceTransaction do
   use Stripe.Entity
 
