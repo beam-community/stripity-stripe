@@ -92,12 +92,16 @@ defmodule Stripe.APITest do
 
   describe "telemetry" do
     test "requests emit :start, :stop telemetry events", %{test: test} do
+      handler_id = "#{test}"
+
       :telemetry.attach_many(
-        "#{test}",
+        handler_id,
         [[:stripe, :request, :start], [:stripe, :request, :stop]],
         &__MODULE__.telemetry_handler_fn/4,
         nil
       )
+
+      on_exit(fn -> :telemetry.detach(handler_id) end)
 
       Stripe.API.request(%{query: ~s|email: "test@example.com"|}, :get, "/v1/customers/search", %{}, [])
 

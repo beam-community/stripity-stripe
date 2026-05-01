@@ -389,13 +389,16 @@ defmodule Stripe.API do
   end
 
   defp do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, attempts}) do
-    telemetry_meta = Keyword.get(opts, :telemetry_metadata, %{})
+    telemetry_meta =
+      opts
+      |> Keyword.get(:telemetry_metadata, %{})
+      |> Map.put(:http_retry_count, attempts)
 
     response =
       :telemetry.span(~w[stripe request]a, telemetry_meta, fn ->
         case http_module().request(method, url, Map.to_list(headers), body, opts) do
           {:ok, status, _, _} = resp ->
-            {resp, Map.merge(telemetry_meta, %{http_status_code: status, http_retry_count: attempts})}
+            {resp, Map.put(telemetry_meta, :http_status_code, status)}
 
           error ->
             {error, telemetry_meta}

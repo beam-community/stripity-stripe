@@ -190,12 +190,16 @@ defmodule Stripe.WebhookPlugTest do
     end
 
     test "emits :start, :exception telemetry events on exception", %{conn: conn, test: test} do
+      handler_id = "#{test}"
+
       :telemetry.attach_many(
-        "#{test}",
+        handler_id,
         [[:stripe, :webhook, :start], [:stripe, :webhook, :exception]],
         &__MODULE__.telemetry_handler_fn/4,
         nil
       )
+
+      on_exit(fn -> :telemetry.detach(handler_id) end)
 
       opts =
         WebhookPlug.init(
@@ -224,12 +228,16 @@ defmodule Stripe.WebhookPlugTest do
     end
 
     test "emits :start, :stop telemetry events on soft failure", %{conn: conn, test: test} do
+      handler_id = "#{test}"
+
       :telemetry.attach_many(
-        "#{test}",
+        handler_id,
         [[:stripe, :webhook, :start], [:stripe, :webhook, :stop]],
         &__MODULE__.telemetry_handler_fn/4,
         nil
       )
+
+      on_exit(fn -> :telemetry.detach(handler_id) end)
 
       opts =
         WebhookPlug.init(
@@ -256,12 +264,16 @@ defmodule Stripe.WebhookPlugTest do
     end
 
     test "emits :start, :stop telemetry events on success", %{conn: conn, test: test} do
+      handler_id = "#{test}"
+
       :telemetry.attach_many(
-        "#{test}",
+        handler_id,
         [[:stripe, :webhook, :start], [:stripe, :webhook, :stop]],
         &__MODULE__.telemetry_handler_fn/4,
         nil
       )
+
+      on_exit(fn -> :telemetry.detach(handler_id) end)
 
       WebhookPlug.call(conn, @opts)
 

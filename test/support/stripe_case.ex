@@ -6,31 +6,33 @@ defmodule Stripe.StripeCase do
   use ExUnit.CaseTemplate
 
   def assert_stripe_requested(expected_method, path, extra \\ []) do
-    expected_params = Keyword.get(extra, :query, %{})
-    expected_path = URI.parse(path).path
+    expected_params = normalize_query(Keyword.get(extra, :query, %{}))
+    expected_uri = URI.parse(stripe_base_url() <> path)
     expected_body = Keyword.get(extra, :body)
     expected_headers = Keyword.get(extra, :headers)
 
     assert_received({method, url, headers, body, _})
 
     actual_uri = URI.parse(url)
-
-    actual_query_params =
-      actual_uri.query
-      |> to_string()
-      |> URI.query_decoder()
-      |> Enum.into(%{})
-
-    Enum.each(expected_params, fn {key, value} ->
-      actual_val = Map.get(actual_query_params, to_string(key))
-      assert actual_val == to_string(value)
-    end)
+    actual_params = normalize_query(actual_uri.query || "")
 
     assert expected_method == method
-    assert expected_path == actual_uri.path
+    assert expected_uri.scheme == actual_uri.scheme
+    assert expected_uri.host == actual_uri.host
+    assert expected_uri.port == actual_uri.port
+    assert expected_uri.path == actual_uri.path
+    assert expected_params == actual_params
 
     assert_stripe_request_body(expected_body, body)
     assert_stripe_request_headers(expected_headers, headers)
+  end
+
+  defp normalize_query(query) when is_binary(query) do
+    query |> URI.query_decoder() |> Enum.into(%{})
+  end
+
+  defp normalize_query(query) when is_map(query) or is_list(query) do
+    Map.new(query, fn {k, v} -> {to_string(k), to_string(v)} end)
   end
 
   def get_stripe_request_headers do
