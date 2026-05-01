@@ -13,8 +13,6 @@ defmodule Stripe.PromotionCodeTest do
     assert_stripe_requested(:get, "/v1/promotion_codes/FALL20")
   end
 
-  # stripe-mock v0.144.0 doesn't recognize the `promotion` body param yet
-  @tag :skip
   test "is creatable" do
     params = %{code: "FALL21", max_redemptions: 2, promotion: %{coupon: "25OFF", type: :coupon}}
     assert {:ok, %Stripe.PromotionCode{}} = Stripe.PromotionCode.create(params)
