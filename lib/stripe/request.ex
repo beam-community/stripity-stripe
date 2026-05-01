@@ -219,7 +219,9 @@ defmodule Stripe.Request do
 
   defp format_response(result, :struct), do: Converter.convert_result(result)
   defp format_response(result, :map), do: result
-  defp format_response(result, :raw), do: Stripe.API.json_library().encode!(result)
+
+  defp format_response(result, :raw),
+    do: result |> Stripe.API.json_library().encode!() |> IO.iodata_to_binary()
 
   defp do_cast_to_id(params, cast_to_id) do
     to_cast = MapSet.to_list(cast_to_id)

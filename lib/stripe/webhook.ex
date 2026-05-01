@@ -22,6 +22,21 @@ defmodule Stripe.Webhook do
   `tolerance` is the allowed deviation in seconds from the current system time
   to the timestamp found in `signature`. Defaults to 300 seconds (5 minutes).
 
+  `opts` is a keyword list of options. Supported options:
+
+    * `:response_as` - controls the shape of the value returned in the `:ok`
+      tuple. One of:
+      * `:struct` (default) - returns a `Stripe.Event.t()`.
+      * `:map` - returns the decoded payload as a map with string keys (useful
+        when persisting webhooks for later replay or struct conversion via
+        `Stripe.Converter.convert_result/1`).
+      * `:raw` - returns the original `payload` string verbatim.
+
+  When `tolerance` is omitted, `opts` may be passed directly as the 4th
+  argument:
+
+      Stripe.Webhook.construct_event(payload, signature, secret, response_as: :map)
+
   Stripe API reference:
   https://stripe.com/docs/webhooks/signatures#verify-manually
 
