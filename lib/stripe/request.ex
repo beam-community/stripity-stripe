@@ -201,11 +201,7 @@ defmodule Stripe.Request do
     with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
          {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
          {:ok, result} <- API.request(params, method, endpoint, headers, opts) do
-      if Keyword.get(opts, :response_as_json, false) do
-        {:ok, result}
-      else
-        {:ok, Converter.convert_result(result)}
-      end
+      {:ok, format_response(result, Keyword.get(opts, :response_as, :struct))}
     end
   end
 
@@ -217,13 +213,13 @@ defmodule Stripe.Request do
     with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
          {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
          {:ok, result} <- API.request_file_upload(params, method, endpoint, %{}, opts) do
-      if Keyword.get(opts, :response_as_json, false) do
-        {:ok, result}
-      else
-        {:ok, Converter.convert_result(result)}
-      end
+      {:ok, format_response(result, Keyword.get(opts, :response_as, :struct))}
     end
   end
+
+  defp format_response(result, :struct), do: Converter.convert_result(result)
+  defp format_response(result, :map), do: result
+  defp format_response(result, :raw), do: Stripe.API.json_library().encode!(result)
 
   defp do_cast_to_id(params, cast_to_id) do
     to_cast = MapSet.to_list(cast_to_id)

@@ -35,6 +35,33 @@ defmodule Stripe.WebhookTest do
     assert {:ok, %Stripe.Event{}} = construct_event(payload, signature_header, @secret)
   end
 
+  test "payload with response_as: :struct returns a Stripe.Event struct" do
+    timestamp = System.system_time(:second)
+    signature = generate_signature(timestamp, @valid_payload)
+    signature_header = create_signature_header(timestamp, @valid_scheme, signature)
+
+    assert {:ok, %Stripe.Event{}} =
+             construct_event(@valid_payload, signature_header, @secret, 300, response_as: :struct)
+  end
+
+  test "payload with response_as: :map returns a plain map with string keys" do
+    timestamp = System.system_time(:second)
+    signature = generate_signature(timestamp, @valid_payload)
+    signature_header = create_signature_header(timestamp, @valid_scheme, signature)
+
+    assert {:ok, %{"object" => "event"}} =
+             construct_event(@valid_payload, signature_header, @secret, 300, response_as: :map)
+  end
+
+  test "payload with response_as: :raw returns the original payload string" do
+    timestamp = System.system_time(:second)
+    signature = generate_signature(timestamp, @valid_payload)
+    signature_header = create_signature_header(timestamp, @valid_scheme, signature)
+
+    assert {:ok, @valid_payload} =
+             construct_event(@valid_payload, signature_header, @secret, 300, response_as: :raw)
+  end
+
   test "payload with an invalid signature should fail" do
     timestamp = System.system_time(:second)
     payload = @valid_payload

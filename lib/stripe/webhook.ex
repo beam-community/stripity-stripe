@@ -41,16 +41,14 @@ defmodule Stripe.Webhook do
           {:ok, Stripe.Event.t()} | {:error, any}
   def construct_event(payload, signature_header, secret, tolerance \\ @default_tolerance, opts \\ []) do
     case verify_header(payload, signature_header, secret, tolerance) do
-      :ok ->
-        if Keyword.get(opts, :response_as_json, false) do
-          {:ok, convert_to_json!(payload)}
-        else
-          {:ok, convert_to_event!(payload)}
-        end
-      error ->
-        error
+      :ok -> {:ok, format_response(payload, Keyword.get(opts, :response_as, :struct))}
+      error -> error
     end
   end
+
+  defp format_response(payload, :struct), do: convert_to_event!(payload)
+  defp format_response(payload, :map), do: convert_to_map!(payload)
+  defp format_response(payload, :raw), do: payload
 
   defp verify_header(payload, signature_header, secret, tolerance) do
     case get_timestamp_and_signatures(signature_header, @expected_scheme) do
@@ -149,11 +147,11 @@ defmodule Stripe.Webhook do
     |> secure_compare(input, expected)
   end
 
-  defp convert_to_json!(payload) do
+  defp convert_to_map!(payload) do
     payload |> Stripe.API.json_library().decode!()
   end
 
   defp convert_to_event!(payload) do
-    payload |> convert_to_json!() |> Stripe.Converter.convert_result()
+    payload |> convert_to_map!() |> Stripe.Converter.convert_result()
   end
 end
