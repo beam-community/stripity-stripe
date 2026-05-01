@@ -193,7 +193,7 @@ defmodule Stripe.Request do
   @doc """
   Executes the request and returns the response.
   """
-  @spec make_request(t) :: {:ok, struct} | {:error, Stripe.Error.t()}
+  @spec make_request(t) :: {:ok, struct() | map() | String.t()} | {:error, Stripe.Error.t()}
   def make_request(
         %Request{params: params, endpoint: endpoint, method: method, headers: headers, opts: opts} =
           request
@@ -208,7 +208,7 @@ defmodule Stripe.Request do
   @doc """
   Executes the request and returns the response for file uploads
   """
-  @spec make_file_upload_request(t) :: {:ok, struct} | {:error, Stripe.Error.t()}
+  @spec make_file_upload_request(t) :: {:ok, struct() | map() | String.t()} | {:error, Stripe.Error.t()}
   def make_file_upload_request(%Request{params: params, endpoint: endpoint, method: method, opts: opts} = request) do
     with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
          {:ok, endpoint} <- consolidate_endpoint(endpoint, params),

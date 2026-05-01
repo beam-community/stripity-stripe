@@ -37,9 +37,20 @@ defmodule Stripe.Webhook do
           # Reject webhook by responding with non-2XX
       end
   """
-  @spec construct_event(String.t(), String.t(), String.t(), integer, opts :: Keyword.t()) ::
-          {:ok, Stripe.Event.t()} | {:error, any}
-  def construct_event(payload, signature_header, secret, tolerance \\ @default_tolerance, opts \\ []) do
+  @spec construct_event(
+          String.t(),
+          String.t(),
+          String.t(),
+          integer | Keyword.t(),
+          Keyword.t()
+        ) :: {:ok, Stripe.Event.t() | map() | String.t()} | {:error, any}
+  def construct_event(payload, signature_header, secret, tolerance_or_opts \\ @default_tolerance, opts \\ [])
+
+  def construct_event(payload, signature_header, secret, opts, []) when is_list(opts) do
+    construct_event(payload, signature_header, secret, @default_tolerance, opts)
+  end
+
+  def construct_event(payload, signature_header, secret, tolerance, opts) when is_integer(tolerance) do
     case verify_header(payload, signature_header, secret, tolerance) do
       :ok -> {:ok, format_response(payload, Keyword.get(opts, :response_as, :struct))}
       error -> error

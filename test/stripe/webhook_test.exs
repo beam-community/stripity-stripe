@@ -62,6 +62,15 @@ defmodule Stripe.WebhookTest do
              construct_event(@valid_payload, signature_header, @secret, 300, response_as: :raw)
   end
 
+  test "opts can be passed as the 4th argument when tolerance is omitted" do
+    timestamp = System.system_time(:second)
+    signature = generate_signature(timestamp, @valid_payload)
+    signature_header = create_signature_header(timestamp, @valid_scheme, signature)
+
+    assert {:ok, %{"object" => "event"}} =
+             construct_event(@valid_payload, signature_header, @secret, response_as: :map)
+  end
+
   test "payload with an invalid signature should fail" do
     timestamp = System.system_time(:second)
     payload = @valid_payload
