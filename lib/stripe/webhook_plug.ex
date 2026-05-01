@@ -106,12 +106,12 @@ if Code.ensure_loaded?(Plug) do
     ```
     """
 
+    @behaviour Plug
+
     import Plug.Conn
     alias Plug.Conn
 
-    @behaviour Plug
-
-    @impl true
+    @impl Plug
     def init(opts) do
       path_info = String.split(opts[:at], "/", trim: true)
 
@@ -120,7 +120,7 @@ if Code.ensure_loaded?(Plug) do
       |> Map.put_new(:path_info, path_info)
     end
 
-    @impl true
+    @impl Plug
     def call(
           %Conn{method: "POST", path_info: path_info} = conn,
           %{
@@ -135,19 +135,19 @@ if Code.ensure_loaded?(Plug) do
            {:ok, payload, conn} = Conn.read_body(conn),
            {:ok, %Stripe.Event{} = event} <- construct_event(payload, signature, secret, opts),
            :ok <- handle_event!(handler, event) do
-        send_resp(conn, 200, "Webhook received.") |> halt()
+        halt(send_resp(conn, 200, "Webhook received."))
       else
-        {:handle_error, reason} -> send_resp(conn, 400, reason) |> halt()
-        _ -> send_resp(conn, 400, "Bad request.") |> halt()
+        {:handle_error, reason} -> halt(send_resp(conn, 400, reason))
+        _ -> halt(send_resp(conn, 400, "Bad request."))
       end
     end
 
-    @impl true
+    @impl Plug
     def call(%Conn{path_info: path_info} = conn, %{path_info: path_info}) do
-      send_resp(conn, 400, "Bad request.") |> halt()
+      halt(send_resp(conn, 400, "Bad request."))
     end
 
-    @impl true
+    @impl Plug
     def call(conn, _), do: conn
 
     defp construct_event(payload, signature, secret, %{tolerance: tolerance}) do

@@ -17,7 +17,7 @@ defmodule Stripe.RefundTest do
   # test "refund is retrievable" do
   #   # /v1/refunds/{refund}" && /v1/charges/{charge}/refunds/{refund}"
   #   # IO.inspect Stripe.Refund.__info__(:functions)
-  #  TODO: retrieve_refund doesn't exist
+  #  retrieve_refund operation doesn't exist in the API
   #   assert {:ok, %Stripe.Refund{}} = Stripe.Refund.retrieve_refund("re_123")
   #   assert_stripe_requested(:get, "/v1/refunds/re_123")
   # end

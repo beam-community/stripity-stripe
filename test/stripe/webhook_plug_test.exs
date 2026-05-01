@@ -15,28 +15,28 @@ defmodule Stripe.WebhookPlugTest do
   defmodule Handler do
     @behaviour Stripe.WebhookHandler
 
-    @impl true
+    @impl Stripe.WebhookHandler
     def handle_event(%Stripe.Event{object: "event"}), do: :ok
   end
 
   defmodule ErrorTupleStringHandler do
     @behaviour Stripe.WebhookHandler
 
-    @impl true
+    @impl Stripe.WebhookHandler
     def handle_event(%Stripe.Event{object: "event"}), do: {:error, "string error message"}
   end
 
   defmodule ErrorTupleAtomHandler do
     @behaviour Stripe.WebhookHandler
 
-    @impl true
+    @impl Stripe.WebhookHandler
     def handle_event(%Stripe.Event{object: "event"}), do: {:error, :atom_error_message}
   end
 
   defmodule ErrorAtomHandler do
     @behaviour Stripe.WebhookHandler
 
-    @impl true
+    @impl Stripe.WebhookHandler
     def handle_event(%Stripe.Event{object: "event"}), do: :error
   end
 
@@ -49,16 +49,14 @@ defmodule Stripe.WebhookPlugTest do
   defp generate_signature_header(payload) do
     timestamp = System.system_time(:second)
 
-    # TODO: remove when we require OTP 22
+    # Remove when OTP 22 compatibility is no longer needed
     code =
       case System.otp_release() >= "22" do
         true -> :crypto.mac(:hmac, :sha256, @secret, "#{timestamp}.#{payload}")
         false -> :crypto.mac(:sha256, @secret, "#{timestamp}.#{payload}")
       end
 
-    signature =
-      code
-      |> Base.encode16(case: :lower)
+    signature = Base.encode16(code, case: :lower)
 
     "t=#{timestamp},v1=#{signature}"
   end
@@ -68,7 +66,8 @@ defmodule Stripe.WebhookPlugTest do
       signature_header = generate_signature_header(@valid_payload)
 
       conn =
-        conn(:post, "/webhook/stripe", @valid_payload)
+        :post
+        |> conn("/webhook/stripe", @valid_payload)
         |> put_req_header("stripe-signature", signature_header)
 
       {:ok, %{conn: conn}}

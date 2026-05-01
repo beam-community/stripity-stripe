@@ -56,9 +56,7 @@ defmodule Stripe.ExternalAccountTest do
       {:ok, %Stripe.List{data: bank_accounts}} =
         Stripe.ExternalAccount.list("acct_123", %{object: :bank_account})
 
-      assert_stripe_requested(:get, "/v1/accounts/acct_123/external_accounts",
-        query: %{object: "bank_account"}
-      )
+      assert_stripe_requested(:get, "/v1/accounts/acct_123/external_accounts", query: %{object: "bank_account"})
 
       assert is_list(bank_accounts)
     end
@@ -67,9 +65,7 @@ defmodule Stripe.ExternalAccountTest do
       {:ok, %Stripe.List{data: cards}} =
         Stripe.ExternalAccount.list("acct_123", %{object: :card})
 
-      assert_stripe_requested(:get, "/v1/accounts/acct_123/external_accounts",
-        query: %{object: "card"}
-      )
+      assert_stripe_requested(:get, "/v1/accounts/acct_123/external_accounts", query: %{object: "card"})
 
       assert is_list(cards)
     end

@@ -139,7 +139,7 @@ defmodule Stripe.Error do
       code: code_from_status(status),
       request_id: request_id,
       extra: %{http_status: status},
-      message: status |> message_from_status()
+      message: message_from_status(status)
     }
   end
 
@@ -150,7 +150,7 @@ defmodule Stripe.Error do
         from_stripe_error(status, nil, request_id)
 
       type ->
-        stripe_message = error_data |> Map.get("message")
+        stripe_message = Map.get(error_data, "message")
 
         user_message =
           case type do
@@ -163,9 +163,9 @@ defmodule Stripe.Error do
         extra =
           %{raw_error: error_data, http_status: status}
           |> maybe_put(:card_code, error_data |> Map.get("code") |> maybe_to_atom())
-          |> maybe_put(:decline_code, error_data |> Map.get("decline_code"))
+          |> maybe_put(:decline_code, Map.get(error_data, "decline_code"))
           |> maybe_put(:param, Map.get(error_data, "param"))
-          |> maybe_put(:charge_id, error_data |> Map.get("charge"))
+          |> maybe_put(:charge_id, Map.get(error_data, "charge"))
 
         %__MODULE__{
           source: :stripe,
@@ -195,12 +195,10 @@ defmodule Stripe.Error do
   defp message_from_status(404), do: "The requested resource doesn't exist."
 
   defp message_from_status(409),
-    do:
-      "The request conflicts with another request (perhaps due to using the same idempotent key)."
+    do: "The request conflicts with another request (perhaps due to using the same idempotent key)."
 
   defp message_from_status(429),
-    do:
-      "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
+    do: "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
 
   defp message_from_status(s) when s in [500, 502, 503, 504],
     do: "Something went wrong on Stripe's end."
@@ -219,15 +217,15 @@ defmodule Stripe.Error do
   defp message_from_type(:invalid_request_error), do: "Your request had invalid parameters."
 
   defp message_from_type(:rate_limit_error),
-    do:
-      "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
+    do: "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests."
 
   defp message_from_type(:validation_error),
     do: "A client-side library failed to validate a field."
 
   defp maybe_put(map, _key, nil), do: map
-  defp maybe_put(map, key, value), do: map |> Map.put(key, value)
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 
   defp maybe_to_atom(nil), do: nil
-  defp maybe_to_atom(string) when is_binary(string), do: string |> String.to_atom()
+  # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
+  defp maybe_to_atom(string) when is_binary(string), do: String.to_atom(string)
 end

@@ -6,8 +6,7 @@ defmodule Stripe.EntityTest do
     use Stripe.Entity
 
     from_json data do
-      data
-      |> cast_to_atom(:foo)
+      cast_to_atom(data, :foo)
     end
   end
 

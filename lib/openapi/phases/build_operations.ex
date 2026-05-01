@@ -9,15 +9,16 @@ defmodule Stripe.OpenApi.Phases.BuildOperations do
           map["operationId"]
           |> String.replace(["/", "-"], "_")
           |> Macro.underscore()
+          # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
           |> String.to_atom()
 
+        # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
         method = String.to_atom(method)
 
         parameters = parameters(map["parameters"])
 
         path_params =
-          parameters
-          |> Enum.filter(&(&1.in == "path"))
+          Enum.filter(parameters, &(&1.in == "path"))
 
         query_params =
           {:object, [],
@@ -27,7 +28,7 @@ defmodule Stripe.OpenApi.Phases.BuildOperations do
              to_ast(param, name: param["name"], required: param["required"])
            end)}
 
-        # TODO handle file upload
+        # File upload handling is not yet implemented
         schema =
           map["requestBody"]["content"]["application/x-www-form-urlencoded"]["schema"] || %{}
 
@@ -35,7 +36,9 @@ defmodule Stripe.OpenApi.Phases.BuildOperations do
 
         body_parameters =
           {:object, metadata,
-           Enum.map(Map.get(schema, "properties", %{}), fn {key, value} ->
+           schema
+           |> Map.get("properties", %{})
+           |> Enum.map(fn {key, value} ->
              required = key in (schema["required"] || [])
 
              to_ast(
@@ -59,8 +62,7 @@ defmodule Stripe.OpenApi.Phases.BuildOperations do
           query_parameters: query_params,
           body_parameters: body_parameters,
           path: path,
-          success_response:
-            response_type(map["responses"]["200"]["content"]["application/json"]["schema"])
+          success_response: response_type(map["responses"]["200"]["content"]["application/json"]["schema"])
         }
 
         {{operation.path, operation.method}, operation}
@@ -115,6 +117,7 @@ defmodule Stripe.OpenApi.Phases.BuildOperations do
 
   defp to_ast(%{"type" => type} = schema, metadata) do
     {
+      # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
       String.to_atom(type),
       [
         name: build_name(metadata[:name]),
@@ -144,6 +147,7 @@ defmodule Stripe.OpenApi.Phases.BuildOperations do
   end
 
   defp build_name(name) when is_binary(name) do
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
     String.to_atom(name)
   end
 
@@ -216,15 +220,14 @@ defmodule Stripe.OpenApi.Phases.BuildOperations do
     %OpenApiGen.Blueprint.Parameter.Schema{
       type: schema["type"],
       name: name,
-      properties:
-        (schema["properties"] || []) |> Enum.map(&build_schema(elem(&1, 1), elem(&1, 0)))
+      properties: Enum.map(schema["properties"] || [], &build_schema(elem(&1, 1), elem(&1, 0)))
     }
   end
 
   defp build_schema(%{"anyOf" => any_of} = _schema, name) do
     %OpenApiGen.Blueprint.Parameter.Schema{
       type: :any_of,
-      any_of: any_of |> Enum.map(&build_schema(&1, name)),
+      any_of: Enum.map(any_of, &build_schema(&1, name)),
       name: name
     }
   end

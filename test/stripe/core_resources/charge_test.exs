@@ -75,26 +75,20 @@ defmodule Stripe.ChargeTest do
 
     assert {:ok, %Stripe.Charge{}} = Stripe.Charge.capture(charge.id, %{amount: 1000}, opts)
 
-    assert_stripe_requested(:post, "/v1/charges/ch_123/capture",
-      headers: {"Idempotency-Key", "test"}
-    )
+    assert_stripe_requested(:post, "/v1/charges/ch_123/capture", headers: {"Idempotency-Key", "test"})
   end
 
   test "is retrievable with expansions opts" do
     opts = %{expand: ["balance_transaction"]}
     assert {:ok, %Stripe.Charge{}} = Stripe.Charge.retrieve("ch_123", opts)
 
-    assert_stripe_requested(:get, "/v1/charges/ch_123",
-      query: %{"expand[0]": "balance_transaction"}
-    )
+    assert_stripe_requested(:get, "/v1/charges/ch_123", query: %{"expand[0]": "balance_transaction"})
   end
 
   test "is retrievable with expansions opts as list" do
     opts = [expand: ["balance_transaction"]]
     assert {:ok, %Stripe.Charge{}} = Stripe.Charge.retrieve("ch_123", opts)
 
-    assert_stripe_requested(:get, "/v1/charges/ch_123",
-      query: %{"expand[0]": "balance_transaction"}
-    )
+    assert_stripe_requested(:get, "/v1/charges/ch_123", query: %{"expand[0]": "balance_transaction"})
   end
 end

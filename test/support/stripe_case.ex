@@ -19,13 +19,13 @@ defmodule Stripe.StripeCase do
     assert_stripe_request_headers(expected_headers, headers)
   end
 
-  def get_stripe_request_headers() do
+  def get_stripe_request_headers do
     assert_received({_method, _url, headers, _body, _})
 
     Enum.into(headers, %{})
   end
 
-  def stripe_base_url() do
+  def stripe_base_url do
     Application.get_env(:stripity_stripe, :api_base_url)
   end
 
