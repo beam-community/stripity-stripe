@@ -6,7 +6,7 @@ An Elixir library for working with [Stripe](https://stripe.com/).
 
 ## 2.x.x status
 
-[![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe) [![Inline docs](http://inch-ci.org/github/beam-community/stripity_stripe.svg?branch=master)](http://inch-ci.org/github/beam-community/stripity_stripe?branch=master) [![Coverage Status](https://coveralls.io/repos/github/beam-community/stripity_stripe/badge.svg?branch=master)](https://coveralls.io/github/beam-community/stripity_stripe?branch=master)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-9768d1.svg)](https://hexdocs.pm/stripity_stripe) [![Inline docs](https://inch-ci.org/github/beam-community/stripity_stripe.svg?branch=main)](https://inch-ci.org/github/beam-community/stripity_stripe?branch=main) [![Coverage Status](https://coveralls.io/repos/github/beam-community/stripity_stripe/badge.svg?branch=main)](https://coveralls.io/github/beam-community/stripity_stripe?branch=main)
 
 # Which version should I use?
 
