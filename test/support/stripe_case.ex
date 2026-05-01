@@ -6,17 +6,33 @@ defmodule Stripe.StripeCase do
   use ExUnit.CaseTemplate
 
   def assert_stripe_requested(expected_method, path, extra \\ []) do
-    expected_url = build_url(path, Keyword.get(extra, :query))
+    expected_params = normalize_query(Keyword.get(extra, :query, %{}))
+    expected_uri = URI.parse(stripe_base_url() <> path)
     expected_body = Keyword.get(extra, :body)
     expected_headers = Keyword.get(extra, :headers)
 
     assert_received({method, url, headers, body, _})
 
+    actual_uri = URI.parse(url)
+    actual_params = normalize_query(actual_uri.query || "")
+
     assert expected_method == method
-    assert expected_url == url
+    assert expected_uri.scheme == actual_uri.scheme
+    assert expected_uri.host == actual_uri.host
+    assert expected_uri.port == actual_uri.port
+    assert expected_uri.path == actual_uri.path
+    assert expected_params == actual_params
 
     assert_stripe_request_body(expected_body, body)
     assert_stripe_request_headers(expected_headers, headers)
+  end
+
+  defp normalize_query(query) when is_binary(query) do
+    query |> URI.query_decoder() |> Enum.into(%{})
+  end
+
+  defp normalize_query(query) when is_map(query) or is_list(query) do
+    Map.new(query, fn {k, v} -> {to_string(k), to_string(v)} end)
   end
 
   def get_stripe_request_headers do
@@ -49,14 +65,6 @@ defmodule Stripe.StripeCase do
 
   defp assert_stripe_request_body(expected_body, body) do
     assert body == Stripe.URI.encode_query(expected_body)
-  end
-
-  defp build_url(path, nil) do
-    stripe_base_url() <> path
-  end
-
-  defp build_url(path, query_params) do
-    stripe_base_url() <> path <> "?" <> URI.encode_query(query_params)
   end
 
   defmodule HackneyMock do
