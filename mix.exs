@@ -60,7 +60,7 @@ defmodule Stripe.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.18"},
+      {:hackney, "~> 4.0"},
       {:jason, "~> 1.1"},
       {:telemetry, "~> 1.1"},
       {:uri_query, "~> 0.2.0"},
