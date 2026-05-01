@@ -193,7 +193,7 @@ defmodule Stripe.Request do
   @doc """
   Executes the request and returns the response.
   """
-  @spec make_request(t) :: {:ok, struct} | {:error, Stripe.Error.t()}
+  @spec make_request(t) :: {:ok, struct() | map() | String.t()} | {:error, Stripe.Error.t()}
   def make_request(
         %Request{params: params, endpoint: endpoint, method: method, headers: headers, opts: opts} =
           request
@@ -201,21 +201,27 @@ defmodule Stripe.Request do
     with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
          {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
          {:ok, result} <- API.request(params, method, endpoint, headers, opts) do
-      {:ok, Converter.convert_result(result)}
+      {:ok, format_response(result, Keyword.get(opts, :response_as, :struct))}
     end
   end
 
   @doc """
   Executes the request and returns the response for file uploads
   """
-  @spec make_file_upload_request(t) :: {:ok, struct} | {:error, Stripe.Error.t()}
+  @spec make_file_upload_request(t) :: {:ok, struct() | map() | String.t()} | {:error, Stripe.Error.t()}
   def make_file_upload_request(%Request{params: params, endpoint: endpoint, method: method, opts: opts} = request) do
     with {:ok, params} <- do_cast_to_id(params, request.cast_to_id),
          {:ok, endpoint} <- consolidate_endpoint(endpoint, params),
          {:ok, result} <- API.request_file_upload(params, method, endpoint, %{}, opts) do
-      {:ok, Converter.convert_result(result)}
+      {:ok, format_response(result, Keyword.get(opts, :response_as, :struct))}
     end
   end
+
+  defp format_response(result, :struct), do: Converter.convert_result(result)
+  defp format_response(result, :map), do: result
+
+  defp format_response(result, :raw),
+    do: result |> Stripe.API.json_library().encode!() |> IO.iodata_to_binary()
 
   defp do_cast_to_id(params, cast_to_id) do
     to_cast = MapSet.to_list(cast_to_id)

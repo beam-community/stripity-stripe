@@ -22,6 +22,21 @@ defmodule Stripe.Webhook do
   `tolerance` is the allowed deviation in seconds from the current system time
   to the timestamp found in `signature`. Defaults to 300 seconds (5 minutes).
 
+  `opts` is a keyword list of options. Supported options:
+
+    * `:response_as` - controls the shape of the value returned in the `:ok`
+      tuple. One of:
+      * `:struct` (default) - returns a `Stripe.Event.t()`.
+      * `:map` - returns the decoded payload as a map with string keys (useful
+        when persisting webhooks for later replay or struct conversion via
+        `Stripe.Converter.convert_result/1`).
+      * `:raw` - returns the original `payload` string verbatim.
+
+  When `tolerance` is omitted, `opts` may be passed directly as the 4th
+  argument:
+
+      Stripe.Webhook.construct_event(payload, signature, secret, response_as: :map)
+
   Stripe API reference:
   https://stripe.com/docs/webhooks/signatures#verify-manually
 
@@ -37,17 +52,29 @@ defmodule Stripe.Webhook do
           # Reject webhook by responding with non-2XX
       end
   """
-  @spec construct_event(String.t(), String.t(), String.t(), integer) ::
-          {:ok, Stripe.Event.t()} | {:error, any}
-  def construct_event(payload, signature_header, secret, tolerance \\ @default_tolerance) do
-    case verify_header(payload, signature_header, secret, tolerance) do
-      :ok ->
-        {:ok, convert_to_event!(payload)}
+  @spec construct_event(
+          String.t(),
+          String.t(),
+          String.t(),
+          integer | Keyword.t(),
+          Keyword.t()
+        ) :: {:ok, Stripe.Event.t() | map() | String.t()} | {:error, any}
+  def construct_event(payload, signature_header, secret, tolerance_or_opts \\ @default_tolerance, opts \\ [])
 
-      error ->
-        error
+  def construct_event(payload, signature_header, secret, opts, []) when is_list(opts) do
+    construct_event(payload, signature_header, secret, @default_tolerance, opts)
+  end
+
+  def construct_event(payload, signature_header, secret, tolerance, opts) when is_integer(tolerance) do
+    case verify_header(payload, signature_header, secret, tolerance) do
+      :ok -> {:ok, format_response(payload, Keyword.get(opts, :response_as, :struct))}
+      error -> error
     end
   end
+
+  defp format_response(payload, :struct), do: convert_to_event!(payload)
+  defp format_response(payload, :map), do: convert_to_map!(payload)
+  defp format_response(payload, :raw), do: payload
 
   defp verify_header(payload, signature_header, secret, tolerance) do
     case get_timestamp_and_signatures(signature_header, @expected_scheme) do
@@ -146,9 +173,11 @@ defmodule Stripe.Webhook do
     |> secure_compare(input, expected)
   end
 
+  defp convert_to_map!(payload) do
+    Stripe.API.json_library().decode!(payload)
+  end
+
   defp convert_to_event!(payload) do
-    payload
-    |> Stripe.API.json_library().decode!()
-    |> Stripe.Converter.convert_result()
+    payload |> convert_to_map!() |> Stripe.Converter.convert_result()
   end
 end

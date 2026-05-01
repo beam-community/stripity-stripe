@@ -33,6 +33,12 @@ defmodule Stripe do
       from Stripe. See [https://stripe.com/docs/api/expanding_objects](https://stripe.com/docs/api/expanding_objects)
     * `:idempotency_key` - A string that is passed through as the "Idempotency-Key" header on all POST requests. This is used by Stripe's idempotency layer to manage
       duplicate requests to the stripe API. See [https://stripe.com/docs/api/idempotent_requests](https://stripe.com/docs/api/idempotent_requests)
+    * `:response_as` - Controls the format of the response. Accepts `:struct`
+      (default), `:map`, or `:raw`. `:struct` converts the response into typed
+      Stripe structs. `:map` returns the decoded response as a plain map with
+      string keys, useful for serializing and storing the response; later you can
+      convert it back with `Stripe.Converter.convert_result/1`. `:raw` returns
+      the raw JSON string.
 
   ### HTTP Connection Pool
 
@@ -79,6 +85,7 @@ defmodule Stripe do
           optional(:lte) => integer
         }
   @type options :: Keyword.t()
+  @type response_as :: :struct | :map | :raw
   @type timestamp :: pos_integer
 
   @doc """
