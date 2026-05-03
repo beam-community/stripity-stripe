@@ -132,12 +132,9 @@ if Code.ensure_loaded?(Plug) do
       secret = parse_secret!(secret)
 
       with [signature] <- get_req_header(conn, "stripe-signature"),
-           {:ok, payload, conn} <- Conn.read_body(conn),
-           {:ok, %Stripe.Event{} = event} <- construct_event(payload, signature, secret, opts),
-           :ok <- handle_event!(handler, event) do
-        halt(send_resp(conn, 200, "Webhook received."))
+           {:ok, payload, conn} <- Conn.read_body(conn) do
+        process_event(conn, payload, signature, secret, handler, opts)
       else
-        {:handle_error, reason} -> halt(send_resp(conn, 400, reason))
         _ -> halt(send_resp(conn, 400, "Bad request."))
       end
     end
@@ -149,6 +146,20 @@ if Code.ensure_loaded?(Plug) do
 
     @impl Plug
     def call(conn, _), do: conn
+
+    # Body has been read; `conn` here is the post-`read_body` conn passed as a
+    # parameter, so it stays in scope for both the success and error branches.
+    # Sending the response on the pre-`read_body` conn confuses Bandit's
+    # connection state on keep-alive HTTP/1.1 and can corrupt the next request.
+    defp process_event(conn, payload, signature, secret, handler, opts) do
+      with {:ok, %Stripe.Event{} = event} <- construct_event(payload, signature, secret, opts),
+           :ok <- handle_event!(handler, event) do
+        halt(send_resp(conn, 200, "Webhook received."))
+      else
+        {:handle_error, reason} -> halt(send_resp(conn, 400, reason))
+        _ -> halt(send_resp(conn, 400, "Bad request."))
+      end
+    end
 
     defp construct_event(payload, signature, secret, %{tolerance: tolerance}) do
       Stripe.Webhook.construct_event(payload, signature, secret, tolerance)
