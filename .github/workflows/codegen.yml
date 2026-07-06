@@ -21,7 +21,7 @@ jobs:
       latest_tag: ${{ steps.latest-tag.outputs.LATEST_TAG }}
 
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7
       - name: Get tag used for generated files
         id: current-tag
         run: |
@@ -53,7 +53,7 @@ jobs:
            - 12111:12111
            - 12112:12112
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7
 
       - uses: erlef/setup-beam@v1.24.0
         with:
@@ -61,7 +61,7 @@ jobs:
           elixir-version: "1.16"
 
       - name: Checkout stripe/openapi (official OpenApi definitions)
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7
         with:
           repository: stripe/openapi
           path: tmp/openapi
