@@ -113,7 +113,11 @@ defmodule Stripe.Converter do
   defp object_type_to_struct(object) do
     module = object |> String.split(".") |> Enum.map(&Macro.camelize/1)
     Module.safe_concat(["Stripe" | module])
+  rescue
+    ArgumentError -> nil
   end
+
+  defp known_struct?(nil), do: false
 
   defp known_struct?(struct) do
     Code.ensure_loaded?(struct) && function_exported?(struct, :__struct__, 0)

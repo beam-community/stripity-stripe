@@ -375,6 +375,35 @@ defmodule Stripe.ConverterTest do
              pending_webhooks: 2,
              request: %{id: nil, idempotency_key: nil},
              type: "tax.settings.updated"
-           } = Converter.convert_result(object)
+            } = Converter.convert_result(object)
+  end
+
+  test "converts an unknown object type without crashing" do
+    result =
+      Converter.convert_result(%{
+        "object" => "some_future_stripe_object",
+        "id" => "test_123",
+        "metadata" => %{"key" => "value"}
+      })
+
+    assert result == %{id: "test_123", metadata: %{key: "value"}, object: "some_future_stripe_object"}
+  end
+
+  test "converts a nested unknown object inside a known one without crashing" do
+    result =
+      Converter.convert_result(%{
+        "object" => "event",
+        "id" => "evt_123",
+        "data" => %{
+          "object" => %{
+            "object" => "some_future_nested_object",
+            "nested_field" => "value"
+          }
+        }
+      })
+
+    assert result.id == "evt_123"
+    assert result.data.object.nested_field == "value"
+    assert result.data.object.object == "some_future_nested_object"
   end
 end
