@@ -4,7 +4,7 @@ defmodule Stripe.Converter do
   struct (e.g. `%Stripe.Card{}`) or list of structs.
 
   If the result is not a supported Stripe object, it just returns a plain map
-  with atomized keys.
+  with string keys.
   """
 
   @no_convert_maps ~w(metadata supported_bank_account_currencies)
@@ -20,7 +20,7 @@ defmodule Stripe.Converter do
 
       false ->
         warn_unknown_object(value)
-        convert_map(value)
+        value
     end
   end
 

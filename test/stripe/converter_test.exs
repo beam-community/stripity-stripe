@@ -393,6 +393,25 @@ defmodule Stripe.ConverterTest do
            } = Converter.convert_result(object)
   end
 
+  test "converts a discount response properly" do
+    fixture = Helper.load_fixture("discount.json")
+
+    assert %Stripe.Discount{
+             checkout_session: nil,
+             customer: "cus_DCUJlLSyrGaqab",
+             end: 1_595_517_288,
+             id: nil,
+             invoice: nil,
+             invoice_item: nil,
+             object: "discount",
+             promotion_code: "promo_1HuRNuKKEsQW5O8UAfIZ33ox",
+             source: nil,
+             start: 1_532_358_888,
+             subscription: "sub_DG9Uq9WOevR9Uo",
+             subscription_item: nil
+           } = Converter.convert_result(fixture)
+  end
+
   test "converts an unknown object type without crashing" do
     result =
       Converter.convert_result(%{
@@ -401,7 +420,7 @@ defmodule Stripe.ConverterTest do
         "metadata" => %{"key" => "value"}
       })
 
-    assert result == %{id: "test_123", metadata: %{key: "value"}, object: "some_future_stripe_object"}
+    assert result == %{"id" => "test_123", "metadata" => %{"key" => "value"}, "object" => "some_future_stripe_object"}
   end
 
   test "converts a nested unknown object inside a known one without crashing" do
@@ -418,7 +437,7 @@ defmodule Stripe.ConverterTest do
       })
 
     assert result.id == "evt_123"
-    assert result.data.object.nested_field == "value"
-    assert result.data.object.object == "some_future_nested_object"
+    assert result.data.object["nested_field"] == "value"
+    assert result.data.object["object"] == "some_future_nested_object"
   end
 end
