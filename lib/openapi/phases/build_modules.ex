@@ -18,8 +18,8 @@ defmodule Stripe.OpenApi.Phases.BuildModules do
              # see connect/account_test.exs
              |> Enum.uniq_by(& &1["method_name"])
              |> Enum.map(&%{&1 | "method_name" => Macro.underscore(&1["method_name"])}),
-            # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
-            module: Module.concat(["Stripe" | resource]),
+           # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
+           module: Module.concat(["Stripe" | resource]),
            properties: map["properties"] || %{},
            expandable_fields:
              map

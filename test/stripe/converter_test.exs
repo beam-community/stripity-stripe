@@ -390,7 +390,7 @@ defmodule Stripe.ConverterTest do
              pending_webhooks: 2,
              request: %{id: nil, idempotency_key: nil},
              type: "tax.settings.updated"
-            } = Converter.convert_result(object)
+           } = Converter.convert_result(object)
   end
 
   test "converts an unknown object type without crashing" do
