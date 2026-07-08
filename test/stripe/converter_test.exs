@@ -3,6 +3,20 @@ defmodule Stripe.ConverterTest do
 
   alias Stripe.Converter
 
+  test "Module.concat creates an atom for a module that has never been compiled" do
+    module_name = "NonExistent" <> Integer.to_string(:erlang.unique_integer([:positive]))
+
+    assert Module.concat(["Stripe", module_name]) |> is_atom()
+  end
+
+  test "Module.safe_concat raises for a module that has never been compiled" do
+    module_name = "NonExistent" <> Integer.to_string(:erlang.unique_integer([:positive]))
+
+    assert_raise ArgumentError, fn ->
+      Module.safe_concat(["Stripe", module_name])
+    end
+  end
+
   test "converts a 'customer.updated' event response properly" do
     expected_result = %Stripe.Event{
       account: "acct_0000000000000000",
