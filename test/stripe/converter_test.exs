@@ -4,13 +4,14 @@ defmodule Stripe.ConverterTest do
   alias Stripe.Converter
 
   test "Module.concat creates an atom for a module that has never been compiled" do
-    module_name = "NonExistent" <> Integer.to_string(:erlang.unique_integer([:positive]))
+    module_name = "NonExistent#{:erlang.unique_integer([:positive])}"
 
-    assert Module.concat(["Stripe", module_name]) |> is_atom()
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
+    assert is_atom(Module.concat(["Stripe", module_name]))
   end
 
   test "Module.safe_concat raises for a module that has never been compiled" do
-    module_name = "NonExistent" <> Integer.to_string(:erlang.unique_integer([:positive]))
+    module_name = "NonExistent#{:erlang.unique_integer([:positive])}"
 
     assert_raise ArgumentError, fn ->
       Module.safe_concat(["Stripe", module_name])
