@@ -3,6 +3,21 @@ defmodule Stripe.ConverterTest do
 
   alias Stripe.Converter
 
+  test "Module.concat creates an atom for a module that has never been compiled" do
+    module_name = "NonExistent#{:erlang.unique_integer([:positive])}"
+
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
+    assert is_atom(Module.concat(["Stripe", module_name]))
+  end
+
+  test "Module.safe_concat raises for a module that has never been compiled" do
+    module_name = "NonExistent#{:erlang.unique_integer([:positive])}"
+
+    assert_raise ArgumentError, fn ->
+      Module.safe_concat(["Stripe", module_name])
+    end
+  end
+
   test "converts a 'customer.updated' event response properly" do
     expected_result = %Stripe.Event{
       account: "acct_0000000000000000",
@@ -376,5 +391,53 @@ defmodule Stripe.ConverterTest do
              request: %{id: nil, idempotency_key: nil},
              type: "tax.settings.updated"
            } = Converter.convert_result(object)
+  end
+
+  test "converts a discount response properly" do
+    fixture = Helper.load_fixture("discount.json")
+
+    assert %Stripe.Discount{
+             checkout_session: nil,
+             customer: "cus_DCUJlLSyrGaqab",
+             end: 1_595_517_288,
+             id: nil,
+             invoice: nil,
+             invoice_item: nil,
+             object: "discount",
+             promotion_code: "promo_1HuRNuKKEsQW5O8UAfIZ33ox",
+             source: nil,
+             start: 1_532_358_888,
+             subscription: "sub_DG9Uq9WOevR9Uo",
+             subscription_item: nil
+           } = Converter.convert_result(fixture)
+  end
+
+  test "converts an unknown object type without crashing" do
+    result =
+      Converter.convert_result(%{
+        "object" => "some_future_stripe_object",
+        "id" => "test_123",
+        "metadata" => %{"key" => "value"}
+      })
+
+    assert result == %{"id" => "test_123", "metadata" => %{"key" => "value"}, "object" => "some_future_stripe_object"}
+  end
+
+  test "converts a nested unknown object inside a known one without crashing" do
+    result =
+      Converter.convert_result(%{
+        "object" => "event",
+        "id" => "evt_123",
+        "data" => %{
+          "object" => %{
+            "object" => "some_future_nested_object",
+            "nested_field" => "value"
+          }
+        }
+      })
+
+    assert result.id == "evt_123"
+    assert result.data.object["nested_field"] == "value"
+    assert result.data.object["object"] == "some_future_nested_object"
   end
 end

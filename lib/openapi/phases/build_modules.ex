@@ -4,7 +4,7 @@ defmodule Stripe.OpenApi.Phases.BuildModules do
     components =
       for {name, map} <- blueprint.source["components"]["schemas"],
           # map["x-stripeOperations"] != nil,
-          map["x-resourceId"] != nil || name == "api_errors",
+          map["x-resourceId"] != nil || map["x-stripeResource"] != nil || name == "api_errors",
           into: %{} do
         resource =
           (map["x-resourceId"] || name) |> String.split(".") |> Enum.map(&Macro.camelize/1)
@@ -18,7 +18,8 @@ defmodule Stripe.OpenApi.Phases.BuildModules do
              # see connect/account_test.exs
              |> Enum.uniq_by(& &1["method_name"])
              |> Enum.map(&%{&1 | "method_name" => Macro.underscore(&1["method_name"])}),
-           module: Module.safe_concat(["Stripe" | resource]),
+           # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
+           module: Module.concat(["Stripe" | resource]),
            properties: map["properties"] || %{},
            expandable_fields:
              map
