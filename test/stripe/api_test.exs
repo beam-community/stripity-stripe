@@ -143,16 +143,20 @@ defmodule Stripe.APITest do
     assert_stripe_requested(:get, "/v1/products", headers: {"Stripe-Version", "2019-05-16; checkout_sessions_beta=v1"})
   end
 
-  test "oauth_request sets authorization header for deauthorize request" do
-    defmodule HackneyMock1 do
-      def request(_, _, headers, _, _) do
-        kv_headers = Enum.reduce(headers, %{}, fn {k, v}, acc -> Map.put(acc, k, v) end)
+  defmodule HackneyHeaderMock do
+    def request(_, _, headers, _, _) do
+      kv_headers = Enum.reduce(headers, %{}, fn {k, v}, acc -> Map.put(acc, k, v) end)
 
-        {:ok, 200, headers, Jason.encode!(kv_headers)}
-      end
+      {:ok, 200, headers, Jason.encode!(kv_headers)}
     end
+  end
 
-    Application.put_env(:stripity_stripe, :http_module, HackneyMock1)
+  test "oauth_request sets authorization header for deauthorize request" do
+    prev_mod = Application.get_env(:stripity_stripe, :http_module)
+
+    Application.put_env(:stripity_stripe, :http_module, HackneyHeaderMock)
+
+    on_exit(fn -> Application.put_env(:stripity_stripe, :http_module, prev_mod) end)
 
     {:ok, body} = Stripe.API.oauth_request(:post, "deauthorize", %{})
     assert body["Authorization"] == "Bearer sk_test_123"
@@ -162,6 +166,22 @@ defmodule Stripe.APITest do
 
     {:ok, body} = Stripe.API.oauth_request(:post, "token", %{})
     refute Map.has_key?(body, "Authorization")
+  end
+
+  test "requests do not set the connection header" do
+    prev_mod = Application.get_env(:stripity_stripe, :http_module)
+
+    Application.put_env(:stripity_stripe, :http_module, HackneyHeaderMock)
+
+    on_exit(fn -> Application.put_env(:stripity_stripe, :http_module, prev_mod) end)
+
+    {:ok, body} = Stripe.API.request(%{}, :get, "/v1/products", %{}, [])
+
+    refute Map.has_key?(body, "Connection")
+    refute Map.has_key?(body, "connection")
+
+    assert Map.has_key?(body, "Accept")
+    assert Map.has_key?(body, "Accept-Encoding")
   end
 
   test "reads hackney timeout opts from config" do
@@ -183,7 +203,11 @@ defmodule Stripe.APITest do
       end
     end
 
+    prev_mod = Application.get_env(:stripity_stripe, :http_module)
+
     Application.put_env(:stripity_stripe, :http_module, HackneyMock2)
+
+    on_exit(fn -> Application.put_env(:stripity_stripe, :http_module, prev_mod) end)
 
     {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
     refute Map.has_key?(request_opts, "connect_timeout")
