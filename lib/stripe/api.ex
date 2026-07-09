@@ -120,8 +120,7 @@ defmodule Stripe.API do
   defp add_common_headers(existing_headers) do
     Map.merge(existing_headers, %{
       "Accept" => "application/json; charset=utf8",
-      "Accept-Encoding" => "gzip",
-      "Connection" => "keep-alive"
+      "Accept-Encoding" => "gzip"
     })
   end
 
