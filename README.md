@@ -71,18 +71,13 @@ config :stripity_stripe, api_key: {MyApp.Secrets, :stripe_secret, []}
 config :stripity_stripe, api_key: fn -> System.get_env("STRIPE_SECRET") end
 ```
 
-Moreover, if you are using Poison instead of Jason, you can configure the library to use Poison like so:
-
-```elixir
-config :stripity_stripe, json_library: Poison
-```
-
 ### Timeout
 
-To set timeouts, pass opts for the http client. The default one is Hackney.
+To set timeouts, pass options for the HTTP client. Requests are made with
+[Req](https://hexdocs.pm/req), and any of its options can be set here.
 
 ```elixir
-config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}]
+config :stripity_stripe, req_options: [connect_options: [timeout: 1000], receive_timeout: 5000]
 ```
 
 ### Request Retries

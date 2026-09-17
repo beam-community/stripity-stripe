@@ -139,7 +139,7 @@ defmodule Stripe.InvoiceTest do
 
       assert {:ok, %Stripe.Invoice{} = _sent_invoice} = Stripe.Invoice.delete(invoice.id)
 
-      refute Map.has_key?(get_stripe_request_headers(), "Idempotency-Key")
+      refute Map.has_key?(get_stripe_request_headers(), "idempotency-key")
     end
   end
 

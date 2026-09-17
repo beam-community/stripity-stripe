@@ -37,8 +37,7 @@ defmodule Stripe.Mixfile do
   def application do
     [
       extra_applications: [],
-      env: env(),
-      mod: {Stripe, []}
+      env: env()
     ]
   end
 
@@ -49,18 +48,13 @@ defmodule Stripe.Mixfile do
   defp env do
     [
       api_base_url: "https://api.stripe.com",
-      api_upload_url: "https://files.stripe.com",
-      pool_options: [
-        timeout: 5_000,
-        max_connections: 10
-      ],
-      use_connection_pool: true
+      api_upload_url: "https://files.stripe.com"
     ]
   end
 
   defp deps do
     [
-      {:hackney, "~> 4.0"},
+      {:req, "~> 0.7"},
       {:jason, "~> 1.1"},
       {:telemetry, "~> 1.1"},
       {:uri_query, "~> 0.2.0"},

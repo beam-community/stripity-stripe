@@ -1,23 +1,25 @@
 defmodule Stripe.Connect.OAuthTest do
   use ExUnit.Case
 
-  import Mox
+  alias Stripe.Connect.OAuth
 
-  alias Stripe.Connect.{OAuth, OAuthMock}
+  setup {Req.Test, :verify_on_exit!}
 
   test "oauth methods works" do
-    verify_on_exit!()
+    Req.Test.expect(Stripe.API, fn conn ->
+      assert conn.method == "POST"
+      assert conn.host == "connect.stripe.com"
+      assert conn.request_path == "/oauth/token"
 
-    expect(Stripe.APIMock, :oauth_request, fn method, _endpoint, _body -> method end)
+      {:ok, body, conn} = Plug.Conn.read_body(conn)
+      assert body =~ "code=1234"
+      assert body =~ "grant_type=authorization_code"
 
-    OAuthMock
-    |> expect(:token, fn url -> Stripe.APIMock.oauth_request(:post, url, %{body: "body"}) end)
-    |> expect(:deauthorize_url, fn url -> url end)
-    |> expect(:authorize_url, fn %{url: url} -> url end)
+      Req.Test.json(conn, %{"access_token" => "sk_test_123"})
+    end)
 
-    assert OAuthMock.token("1234") == :post
-    assert OAuthMock.authorize_url(%{url: "www"}) == "www"
-    assert OAuthMock.deauthorize_url("www.google.com") == "www.google.com"
+    assert {:ok, %{access_token: "sk_test_123"}} =
+             OAuth.token("1234", plug: {Req.Test, Stripe.API})
   end
 
   describe "authorize_url/2" do

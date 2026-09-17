@@ -24,10 +24,6 @@ defmodule Stripe.Connect.OAuth do
     :stripe_user
   ]
 
-  @callback token(code :: String.t()) :: {:ok, map}
-  @callback authorize_url(map) :: String.t()
-  @callback deauthorize_url(url :: String.t()) :: {:ok, map}
-
   defmodule AuthorizeResponse do
     defstruct [
       :access_token,
@@ -79,7 +75,7 @@ defmodule Stripe.Connect.OAuth do
   @spec token(String.t(), Stripe.options()) :: {:ok, map} | {:error, Stripe.Error.t()}
   def token(code, opts \\ []) do
     endpoint = "token"
-    {api_key, _} = Keyword.pop(opts, :api_key)
+    {api_key, opts} = Keyword.pop(opts, :api_key)
 
     body = %{
       client_secret: api_key || get_client_secret(),
@@ -87,7 +83,7 @@ defmodule Stripe.Connect.OAuth do
       grant_type: "authorization_code"
     }
 
-    case Stripe.API.oauth_request(:post, endpoint, body) do
+    case Stripe.API.oauth_request(:post, endpoint, body, nil, opts) do
       {:ok, result} -> {:ok, Converter.convert_result(result)}
       {:error, error} -> {:error, error}
     end

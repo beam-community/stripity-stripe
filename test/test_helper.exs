@@ -18,15 +18,19 @@ Application.put_env(:stripity_stripe, :api_upload_url, api_upload_url)
 Application.put_env(:stripity_stripe, :api_key, "sk_test_123")
 Application.put_env(:stripity_stripe, :log_level, :debug)
 
-Mox.defmock(Stripe.Connect.OAuthMock, for: Stripe.Connect.OAuth)
-Mox.defmock(Stripe.APIMock, for: Stripe.API)
+:telemetry.attach(
+  "stripe-case-requests",
+  [:finch, :request, :start],
+  &Stripe.StripeCase.send_request_to_test_process/4,
+  nil
+)
 
 defmodule Helper do
   @fixture_path "./test/fixtures/"
 
   def load_fixture(filename) do
     contents = File.read!(@fixture_path <> filename)
-    Stripe.API.json_library().decode!(contents)
+    Jason.decode!(contents)
   end
 
   def wait_until_stripe_mock_launch do

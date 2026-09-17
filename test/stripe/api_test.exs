@@ -1,6 +1,5 @@
 defmodule Stripe.APITest do
   use Stripe.StripeCase
-  import Mox
 
   def telemetry_handler_fn(name, measurements, metadata, _config) do
     send(self(), {:telemetry_event, name, measurements, metadata})
@@ -16,77 +15,47 @@ defmodule Stripe.APITest do
   end
 
   test "oauth_request works" do
-    verify_on_exit!()
+    Req.Test.verify_on_exit!()
 
-    expect(Stripe.APIMock, :oauth_request, fn method, _endpoint, _body -> method end)
+    Req.Test.expect(Stripe.API, fn conn ->
+      assert conn.method == "POST"
+      assert conn.host == "connect.stripe.com"
+      assert conn.request_path == "/oauth/token"
 
-    assert Stripe.APIMock.oauth_request(:post, "www", %{body: "body"}) == :post
+      {:ok, body, conn} = Plug.Conn.read_body(conn)
+      assert body == "code=abc"
+
+      Req.Test.json(conn, %{"access_token" => "sk_test_123"})
+    end)
+
+    assert {:ok, %{"access_token" => "sk_test_123"}} =
+             Stripe.API.oauth_request(:post, "token", %{code: "abc"}, nil, plug: {Req.Test, Stripe.API})
   end
 
-  describe "generate_idempotency_key" do
-    test "returns string value" do
-      key = Stripe.API.generate_idempotency_key()
+  describe "retries" do
+    test "retries idempotent requests on HTTP 429" do
+      Req.Test.verify_on_exit!()
 
-      assert key
-      assert is_binary(key)
+      Req.Test.expect(Stripe.API, fn conn -> Plug.Conn.send_resp(conn, 429, "") end)
+      Req.Test.expect(Stripe.API, fn conn -> Req.Test.json(conn, %{}) end)
+
+      assert {:ok, %{}} =
+               Stripe.API.request(%{}, :post, "/v1/products", %{},
+                 plug: {Req.Test, Stripe.API},
+                 retry_delay: 0
+               )
     end
 
-    test "returns unique value" do
-      key1 = Stripe.API.generate_idempotency_key()
-      key2 = Stripe.API.generate_idempotency_key()
+    test "does not retry requests without an idempotency key" do
+      Req.Test.verify_on_exit!()
 
-      assert key1 != key2
-    end
-  end
+      Req.Test.expect(Stripe.API, fn conn -> Plug.Conn.send_resp(conn, 429, "") end)
 
-  describe "should_retry?" do
-    test "given timeout error" do
-      assert Stripe.API.should_retry?({:error, :timeout})
-    end
-
-    test "given connection timeout error" do
-      assert Stripe.API.should_retry?({:error, :connect_timeout})
-    end
-
-    test "given connection refused error" do
-      assert Stripe.API.should_retry?({:error, :econnrefused})
-    end
-
-    test "given other error" do
-      refute Stripe.API.should_retry?({:error, :unknown})
-    end
-
-    test "given HTTP 200 response" do
-      refute Stripe.API.should_retry?({:ok, 200, [], ""})
-    end
-
-    test "given attempts greater than max_attempts" do
-      refute Stripe.API.should_retry?({:error, :timeout}, 2, max_attempts: 1)
-    end
-
-    test "given attempts less than max_attempts" do
-      assert Stripe.API.should_retry?({:error, :timeout}, 0, max_attempts: 1)
-    end
-
-    test "given attempts equals to max_attempts" do
-      refute Stripe.API.should_retry?({:error, :timeout}, 1, max_attempts: 1)
-    end
-  end
-
-  describe "backoff" do
-    test "given attempts = 0" do
-      backoff = Stripe.API.backoff(0, base_backoff: 10, max_backoff: 100)
-      assert backoff == 10
-    end
-
-    test "given attempts = 1" do
-      backoff = Stripe.API.backoff(1, base_backoff: 10, max_backoff: 100)
-      assert backoff in 10..20
-    end
-
-    test "given attempts = 2" do
-      backoff = Stripe.API.backoff(2, base_backoff: 10, max_backoff: 100)
-      assert backoff in 20..40
+      assert {:error, %Stripe.Error{extra: %{http_status: 429}}} =
+               Stripe.API.request(%{}, :get, "/v1/products", %{},
+                 plug: {Req.Test, Stripe.API},
+                 retry_delay: 0
+               )
     end
   end
 
@@ -143,87 +112,63 @@ defmodule Stripe.APITest do
     assert_stripe_requested(:get, "/v1/products", headers: {"Stripe-Version", "2019-05-16; checkout_sessions_beta=v1"})
   end
 
-  defmodule HackneyHeaderMock do
-    def request(_, _, headers, _, _) do
-      kv_headers = Enum.reduce(headers, %{}, fn {k, v}, acc -> Map.put(acc, k, v) end)
-
-      {:ok, 200, headers, Jason.encode!(kv_headers)}
-    end
-  end
-
   test "oauth_request sets authorization header for deauthorize request" do
-    prev_mod = Application.get_env(:stripity_stripe, :http_module)
+    Req.Test.verify_on_exit!()
+    opts = [plug: {Req.Test, Stripe.API}]
 
-    Application.put_env(:stripity_stripe, :http_module, HackneyHeaderMock)
+    Req.Test.expect(Stripe.API, fn conn ->
+      assert Plug.Conn.get_req_header(conn, "authorization") == ["Bearer sk_test_123"]
+      Req.Test.json(conn, %{})
+    end)
 
-    on_exit(fn -> Application.put_env(:stripity_stripe, :http_module, prev_mod) end)
+    assert {:ok, %{}} = Stripe.API.oauth_request(:post, "deauthorize", %{}, nil, opts)
 
-    {:ok, body} = Stripe.API.oauth_request(:post, "deauthorize", %{})
-    assert body["Authorization"] == "Bearer sk_test_123"
+    Req.Test.expect(Stripe.API, fn conn ->
+      assert Plug.Conn.get_req_header(conn, "authorization") == ["Bearer 1234"]
+      Req.Test.json(conn, %{})
+    end)
 
-    {:ok, body} = Stripe.API.oauth_request(:post, "deauthorize", %{}, "1234")
-    assert body["Authorization"] == "Bearer 1234"
+    assert {:ok, %{}} = Stripe.API.oauth_request(:post, "deauthorize", %{}, "1234", opts)
 
-    {:ok, body} = Stripe.API.oauth_request(:post, "token", %{})
-    refute Map.has_key?(body, "Authorization")
+    Req.Test.expect(Stripe.API, fn conn ->
+      assert Plug.Conn.get_req_header(conn, "authorization") == []
+      Req.Test.json(conn, %{})
+    end)
+
+    assert {:ok, %{}} = Stripe.API.oauth_request(:post, "token", %{}, nil, opts)
   end
 
   test "requests do not set the connection header" do
-    prev_mod = Application.get_env(:stripity_stripe, :http_module)
+    Req.Test.verify_on_exit!()
 
-    Application.put_env(:stripity_stripe, :http_module, HackneyHeaderMock)
+    Req.Test.expect(Stripe.API, fn conn ->
+      assert Plug.Conn.get_req_header(conn, "connection") == []
+      assert [accept_encoding] = Plug.Conn.get_req_header(conn, "accept-encoding")
+      assert accept_encoding =~ "gzip"
 
-    on_exit(fn -> Application.put_env(:stripity_stripe, :http_module, prev_mod) end)
+      Req.Test.json(conn, %{})
+    end)
 
-    {:ok, body} = Stripe.API.request(%{}, :get, "/v1/products", %{}, [])
-
-    refute Map.has_key?(body, "Connection")
-    refute Map.has_key?(body, "connection")
-
-    assert Map.has_key?(body, "Accept")
-    assert Map.has_key?(body, "Accept-Encoding")
+    assert {:ok, %{}} =
+             Stripe.API.request(%{}, :get, "/v1/products", %{}, plug: {Req.Test, Stripe.API})
   end
 
-  test "reads hackney timeout opts from config" do
-    # Return request opts as response body
-    defmodule HackneyMock2 do
-      def request(_, _, headers, _, opts) do
-        kv_opts =
-          Enum.reduce(opts, %{}, fn opt, acc ->
-            case opt do
-              {k, v} ->
-                Map.put(acc, k, v)
+  test "reads req options from config" do
+    Req.Test.verify_on_exit!()
 
-              _ ->
-                Map.put(acc, opt, opt)
-            end
-          end)
+    Application.put_env(:stripity_stripe, :req_options,
+      plug: {Req.Test, Stripe.API},
+      headers: %{"X-Custom" => "1"}
+    )
 
-        {:ok, 200, headers, Jason.encode!(kv_opts)}
-      end
-    end
+    on_exit(fn -> Application.delete_env(:stripity_stripe, :req_options) end)
 
-    prev_mod = Application.get_env(:stripity_stripe, :http_module)
+    Req.Test.expect(Stripe.API, 2, fn conn ->
+      assert Plug.Conn.get_req_header(conn, "x-custom") == ["1"]
+      Req.Test.json(conn, %{})
+    end)
 
-    Application.put_env(:stripity_stripe, :http_module, HackneyMock2)
-
-    on_exit(fn -> Application.put_env(:stripity_stripe, :http_module, prev_mod) end)
-
-    {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
-    refute Map.has_key?(request_opts, "connect_timeout")
-    refute Map.has_key?(request_opts, "recv_timeout")
-
-    Application.put_env(:stripity_stripe, :hackney_opts, [
-      {:connect_timeout, 1000},
-      {:recv_timeout, 5000}
-    ])
-
-    {:ok, request_opts} = Stripe.API.oauth_request(:post, "token", %{})
-    assert request_opts["connect_timeout"] == 1000
-    assert request_opts["recv_timeout"] == 5000
-
-    {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
-    assert request_opts["connect_timeout"] == 1000
-    assert request_opts["recv_timeout"] == 5000
+    assert {:ok, %{}} = Stripe.API.oauth_request(:post, "token", %{})
+    assert {:ok, %{}} = Stripe.API.request(%{}, :get, "/", %{}, [])
   end
 end

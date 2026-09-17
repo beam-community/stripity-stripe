@@ -40,35 +40,17 @@ defmodule Stripe do
       convert it back with `Stripe.Converter.convert_result/1`. `:raw` returns
       the raw JSON string.
 
-  ### HTTP Connection Pool
+  ### Request options
 
-  Stripity Stripe is set up to use an HTTP connection pool by default. This
-  means that it will reuse already opened HTTP connections in order to
-  minimize the overhead of establishing connections. The pool is directly
-  supervised by Stripity Stripe. Two configuration options are
-  available to tune how this pool works: `:timeout` and `:max_connections`.
+  Requests are made with `Req`, which pools connections through `Finch` by
+  default. Any `Req` option can be set for every request through the
+  `:req_options` key in your application configuration:
 
-  `:timeout` is the amount of time that a connection will be allowed
-  to remain open but idle (no data passing over it) before it is closed
-  and cleaned up. This defaults to 5 seconds.
-
-  `:max_connections` is the maximum number of connections that can be
-  open at any time. This defaults to 10.
-
-  Both these settings are located under the `:pool_options` key in
-  your application configuration:
-
-      config :stripity_stripe, :pool_options,
-        timeout: 5_000,
-        max_connections: 10
-
-  If you prefer, you can also turn pooling off completely using
-  the `:use_connection_pool` setting:
-
-      config :stripity_stripe, use_connection_pool: false
+      config :stripity_stripe, :req_options,
+        receive_timeout: 5_000,
+        finch: [size: 10]
 
   """
-  use Application
 
   @type id :: String.t()
   @type search_query :: String.t()
@@ -87,27 +69,4 @@ defmodule Stripe do
   @type options :: Keyword.t()
   @type response_as :: :struct | :map | :raw
   @type timestamp :: pos_integer
-
-  @doc """
-  Callback for the application
-
-  Start the supervision tree including the supervised
-  HTTP connection pool (if it's being used) when
-  the VM loads the application pool.
-
-  Note that we are taking advantage of the BEAM application
-  standard in order to start the pool when the application is
-  started. While we do start a supervisor, the supervisor is only
-  to comply with the expectations of the BEAM application standard.
-  It is not given any children to supervise.
-  """
-  @spec start(Application.start_type(), any) :: {:error, any} | {:ok, pid} | {:ok, pid, any}
-  def start(_start_type, _args) do
-    import Supervisor.Spec, warn: false
-
-    children = Stripe.API.supervisor_children()
-
-    opts = [strategy: :one_for_one, name: Stripe.Supervisor]
-    Supervisor.start_link(children, opts)
-  end
 end

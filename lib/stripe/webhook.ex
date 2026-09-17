@@ -174,7 +174,7 @@ defmodule Stripe.Webhook do
   end
 
   defp convert_to_map!(payload) do
-    Stripe.API.json_library().decode!(payload)
+    Jason.decode!(payload)
   end
 
   defp convert_to_event!(payload) do

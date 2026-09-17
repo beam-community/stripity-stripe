@@ -11,20 +11,21 @@ defmodule Stripe.StripeCase do
     expected_body = Keyword.get(extra, :body)
     expected_headers = Keyword.get(extra, :headers)
 
-    assert_received({method, url, headers, body, _})
+    assert_received(%Finch.Request{} = request)
 
-    actual_uri = URI.parse(url)
-    actual_params = normalize_query(actual_uri.query || "")
+    assert expected_method == normalize_method(request.method)
+    assert expected_uri.scheme == to_string(request.scheme)
+    assert expected_uri.host == request.host
+    assert expected_uri.port == request.port
+    assert expected_uri.path == request.path
+    assert expected_params == normalize_query(request.query || "")
 
-    assert expected_method == method
-    assert expected_uri.scheme == actual_uri.scheme
-    assert expected_uri.host == actual_uri.host
-    assert expected_uri.port == actual_uri.port
-    assert expected_uri.path == actual_uri.path
-    assert expected_params == actual_params
+    assert_stripe_request_body(expected_body, request.body)
+    assert_stripe_request_headers(expected_headers, request.headers)
+  end
 
-    assert_stripe_request_body(expected_body, body)
-    assert_stripe_request_headers(expected_headers, headers)
+  defp normalize_method(method) do
+    method |> String.downcase() |> String.to_existing_atom()
   end
 
   defp normalize_query(query) when is_binary(query) do
@@ -36,9 +37,9 @@ defmodule Stripe.StripeCase do
   end
 
   def get_stripe_request_headers do
-    assert_received({_method, _url, headers, _body, _})
+    assert_received(%Finch.Request{} = request)
 
-    Enum.into(headers, %{})
+    Map.new(request.headers)
   end
 
   def stripe_base_url do
@@ -51,8 +52,8 @@ defmodule Stripe.StripeCase do
     assert Enum.all?(expected_headers, &assert_stripe_request_headers(&1, headers))
   end
 
-  defp assert_stripe_request_headers(expected_header, headers) do
-    assert Enum.any?(headers, fn header -> expected_header == header end),
+  defp assert_stripe_request_headers({expected_name, expected_value} = expected_header, headers) do
+    assert {String.downcase(expected_name), expected_value} in headers,
            """
            Expected the header `#{inspect(expected_header)}` to be in the headers of the request.
 
@@ -67,17 +68,11 @@ defmodule Stripe.StripeCase do
     assert body == Stripe.URI.encode_query(expected_body)
   end
 
-  defmodule HackneyMock do
-    @doc """
-    Send message to the owning process for each request so we can assert that
-    the request was made.
-
-    """
-    def request(method, path, headers, body, opts) do
-      send(self(), {method, path, headers, body, opts})
-
-      :hackney.request(method, path, headers, body, opts)
-    end
+  @doc false
+  # Send message to the owning process for each request so we can assert that
+  # the request was made.
+  def send_request_to_test_process(_event, _measurements, %{request: request}, _config) do
+    send(self(), request)
   end
 
   using do
@@ -89,8 +84,6 @@ defmodule Stripe.StripeCase do
           get_stripe_request_headers: 0,
           stripe_base_url: 0
         ]
-
-      Application.put_env(:stripity_stripe, :http_module, HackneyMock)
     end
   end
 end
