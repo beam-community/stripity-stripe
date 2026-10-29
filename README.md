@@ -32,7 +32,7 @@ Starting with stripity_stripe version 2.5.0, you can specify the Stripe API Vers
 Install the dependency by version:
 
 ```elixir
-{:stripity_stripe, "~> 2.0"}
+{:stripity_stripe, "~> 3.3"}
 ```
 
 Or by commit reference:
