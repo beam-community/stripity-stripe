@@ -67,16 +67,28 @@ defmodule Stripe.StripeCase do
     assert body == Stripe.URI.encode_query(expected_body)
   end
 
-  defmodule HackneyMock do
-    @doc """
-    Send message to the owning process for each request so we can assert that
-    the request was made.
-
+  defmodule RecordingClient do
+    @moduledoc """
+    Sends a message to the owning process for each request so we can assert that
+    the request was made, then forwards it to the client under test (see
+    `config/config.exs`).
     """
+    @behaviour Stripe.HTTPClient
+
+    @impl Stripe.HTTPClient
     def request(method, path, headers, body, opts) do
       send(self(), {method, path, headers, body, opts})
 
-      :hackney.request(method, path, headers, body, opts)
+      client().request(method, path, headers, body, opts)
+    end
+
+    @impl Stripe.HTTPClient
+    def supervisor_children do
+      client().supervisor_children()
+    end
+
+    defp client do
+      Application.get_env(:stripity_stripe, :test_http_client, Stripe.HTTPClient.Hackney)
     end
   end
 
@@ -89,8 +101,6 @@ defmodule Stripe.StripeCase do
           get_stripe_request_headers: 0,
           stripe_base_url: 0
         ]
-
-      Application.put_env(:stripity_stripe, :http_module, HackneyMock)
     end
   end
 end

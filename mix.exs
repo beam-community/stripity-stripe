@@ -65,6 +65,7 @@ defmodule Stripe.Mixfile do
       {:telemetry, "~> 1.1"},
       {:uri_query, "~> 0.2.0"},
       {:plug, "~> 1.14", optional: true},
+      {:req, "~> 0.7.3", optional: true},
       # Non-production dependencies
       {:inch_ex, ">= 0.0.0", only: [:dev, :test]},
       {:mox, ">= 0.0.0", only: :test},
@@ -115,6 +116,9 @@ defmodule Stripe.Mixfile do
         Stripe.API,
         Stripe.ApiErrors,
         Stripe.Entity,
+        Stripe.HTTPClient,
+        Stripe.HTTPClient.Hackney,
+        Stripe.HTTPClient.Req,
         Stripe.List,
         Stripe.Request,
         Stripe.SearchResult

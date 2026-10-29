@@ -7,8 +7,6 @@ defmodule Stripe.API do
   """
   alias Stripe.{Config, Error}
 
-  @pool_name __MODULE__
-
   @api_version "2025-11-17.clover"
   @idempotency_key_header "Idempotency-Key"
   @default_max_attempts 3
@@ -33,16 +31,13 @@ defmodule Stripe.API do
   end
 
   def supervisor_children do
-    if use_pool?() do
-      [:hackney_pool.child_spec(@pool_name, get_pool_options())]
+    client = http_client()
+
+    if Code.ensure_loaded?(client) and function_exported?(client, :supervisor_children, 0) do
+      client.supervisor_children()
     else
       []
     end
-  end
-
-  @spec get_pool_options() :: Keyword.t()
-  defp get_pool_options do
-    Config.resolve(:pool_options)
   end
 
   @spec get_base_url() :: String.t()
@@ -66,14 +61,9 @@ defmodule Stripe.API do
     Config.resolve(:api_version, @api_version)
   end
 
-  @spec use_pool?() :: boolean
-  defp use_pool? do
-    Config.resolve(:use_connection_pool)
-  end
-
-  @spec http_module() :: module
-  defp http_module do
-    Config.resolve(:http_module, :hackney)
+  @spec http_client() :: module
+  defp http_client do
+    Config.resolve(:http_client, Stripe.HTTPClient.Hackney)
   end
 
   @spec retry_config() :: Keyword.t()
@@ -187,29 +177,6 @@ defmodule Stripe.API do
       "User-Agent" => "Stripe/v1 stripe-elixir/#{api_version}",
       "Stripe-Version" => api_version
     })
-  end
-
-  @spec add_default_options(list) :: list
-  defp add_default_options(opts) do
-    [:with_body | opts]
-  end
-
-  @spec add_pool_option(list) :: list
-  defp add_pool_option(opts) do
-    if use_pool?() do
-      [{:pool, @pool_name} | opts]
-    else
-      opts
-    end
-  end
-
-  @spec add_options_from_config(list) :: list
-  defp add_options_from_config(opts) do
-    if is_list(Stripe.Config.resolve(:hackney_opts)) do
-      opts ++ Stripe.Config.resolve(:hackney_opts)
-    else
-      opts
-    end
   end
 
   @spec add_telemetry_metadata(list, map) :: list
@@ -331,13 +298,7 @@ defmodule Stripe.API do
       |> add_api_version(api_version)
       |> add_idempotency_headers(method)
 
-    req_opts =
-      []
-      |> add_default_options()
-      |> add_pool_option()
-      |> add_options_from_config()
-
-    do_perform_request(method, req_url, req_headers, req_body, req_opts)
+    do_perform_request(method, req_url, req_headers, req_body, [])
   end
 
   @spec perform_request(String.t(), method, body, headers, list) ::
@@ -356,11 +317,7 @@ defmodule Stripe.API do
       |> add_idempotency_headers(method)
 
     req_opts =
-      opts
-      |> add_default_options()
-      |> add_pool_option()
-      |> add_options_from_config()
-      |> add_telemetry_metadata(%{
+      add_telemetry_metadata(opts, %{
         method: method,
         req_headers: req_headers,
         req_url: req_url
@@ -388,14 +345,12 @@ defmodule Stripe.API do
   end
 
   defp do_perform_request_and_retry(method, url, headers, body, opts, {:attempts, attempts}) do
-    telemetry_meta =
-      opts
-      |> Keyword.get(:telemetry_metadata, %{})
-      |> Map.put(:http_retry_count, attempts)
+    {telemetry_meta, client_opts} = Keyword.pop(opts, :telemetry_metadata, %{})
+    telemetry_meta = Map.put(telemetry_meta, :http_retry_count, attempts)
 
     response =
       :telemetry.span(~w[stripe request]a, telemetry_meta, fn ->
-        case http_module().request(method, url, Map.to_list(headers), body, opts) do
+        case http_client().request(method, url, Map.to_list(headers), body, client_opts) do
           {:ok, status, _, _} = resp ->
             {resp, Map.put(telemetry_meta, :http_status_code, status)}
 
@@ -479,11 +434,7 @@ defmodule Stripe.API do
   end
 
   defp handle_response({:ok, status, headers, body}) when status >= 300 and status <= 599 do
-    request_id =
-      Enum.find_value(headers, fn
-        {"Request-Id", request_id} -> request_id
-        _header -> nil
-      end)
+    request_id = get_header(headers, "request-id")
 
     error =
       case json_library().decode(body) do
@@ -507,13 +458,18 @@ defmodule Stripe.API do
   end
 
   defp decompress_body(body, headers) do
-    headers_dict = :hackney_headers.new(headers)
-
-    case :hackney_headers.get_value("Content-Encoding", headers_dict) do
+    case get_header(headers, "content-encoding") do
       "gzip" -> :zlib.gunzip(body)
       "deflate" -> :zlib.unzip(body)
       _ -> body
     end
+  end
+
+  # Header names are case-insensitive, and clients differ in how they return them.
+  defp get_header(headers, name) do
+    Enum.find_value(headers, fn {key, value} ->
+      if String.downcase(key) == name, do: value
+    end)
   end
 
   defp prepend_url("", url), do: url

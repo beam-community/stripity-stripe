@@ -67,6 +67,18 @@ defmodule Stripe do
 
       config :stripity_stripe, use_connection_pool: false
 
+  These settings apply to the bundled HTTP clients; see `Stripe.HTTPClient.Hackney`
+  and `Stripe.HTTPClient.Req` for how each one uses them.
+
+  ### HTTP Client
+
+  Requests are sent with hackney by default. To use Req instead, add `:req`
+  to your dependencies and set:
+
+      config :stripity_stripe, http_client: Stripe.HTTPClient.Req
+
+  See `Stripe.HTTPClient` to use a client of your own.
+
   """
   use Application
 

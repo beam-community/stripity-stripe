@@ -77,12 +77,28 @@ Moreover, if you are using Poison instead of Jason, you can configure the librar
 config :stripity_stripe, json_library: Poison
 ```
 
+### HTTP client
+
+Requests are sent with [Hackney](https://hex.pm/packages/hackney) by default. To use [Req](https://hex.pm/packages/req) instead, add `{:req, "~> 0.7.3"}` to your dependencies and configure:
+
+```elixir
+config :stripity_stripe, http_client: Stripe.HTTPClient.Req
+```
+
+You can also implement the `Stripe.HTTPClient` behaviour to use a client of your own.
+
 ### Timeout
 
-To set timeouts, pass opts for the http client. The default one is Hackney.
+To set timeouts, pass opts for the http client. With Hackney:
 
 ```elixir
 config :stripity_stripe, hackney_opts: [{:connect_timeout, 1000}, {:recv_timeout, 5000}]
+```
+
+With Req:
+
+```elixir
+config :stripity_stripe, req_opts: [connect_options: [timeout: 1000], receive_timeout: 5000]
 ```
 
 ### Request Retries

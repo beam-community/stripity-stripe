@@ -143,7 +143,10 @@ defmodule Stripe.APITest do
     assert_stripe_requested(:get, "/v1/products", headers: {"Stripe-Version", "2019-05-16; checkout_sessions_beta=v1"})
   end
 
-  defmodule HackneyHeaderMock do
+  defmodule HeaderEchoClient do
+    @behaviour Stripe.HTTPClient
+
+    @impl Stripe.HTTPClient
     def request(_, _, headers, _, _) do
       kv_headers = Enum.reduce(headers, %{}, fn {k, v}, acc -> Map.put(acc, k, v) end)
 
@@ -152,11 +155,11 @@ defmodule Stripe.APITest do
   end
 
   test "oauth_request sets authorization header for deauthorize request" do
-    prev_mod = Application.get_env(:stripity_stripe, :http_module)
+    prev_client = Application.get_env(:stripity_stripe, :http_client)
 
-    Application.put_env(:stripity_stripe, :http_module, HackneyHeaderMock)
+    Application.put_env(:stripity_stripe, :http_client, HeaderEchoClient)
 
-    on_exit(fn -> Application.put_env(:stripity_stripe, :http_module, prev_mod) end)
+    on_exit(fn -> Application.put_env(:stripity_stripe, :http_client, prev_client) end)
 
     {:ok, body} = Stripe.API.oauth_request(:post, "deauthorize", %{})
     assert body["Authorization"] == "Bearer sk_test_123"
@@ -169,11 +172,11 @@ defmodule Stripe.APITest do
   end
 
   test "requests do not set the connection header" do
-    prev_mod = Application.get_env(:stripity_stripe, :http_module)
+    prev_client = Application.get_env(:stripity_stripe, :http_client)
 
-    Application.put_env(:stripity_stripe, :http_module, HackneyHeaderMock)
+    Application.put_env(:stripity_stripe, :http_client, HeaderEchoClient)
 
-    on_exit(fn -> Application.put_env(:stripity_stripe, :http_module, prev_mod) end)
+    on_exit(fn -> Application.put_env(:stripity_stripe, :http_client, prev_client) end)
 
     {:ok, body} = Stripe.API.request(%{}, :get, "/v1/products", %{}, [])
 
@@ -203,11 +206,16 @@ defmodule Stripe.APITest do
       end
     end
 
+    prev_client = Application.get_env(:stripity_stripe, :http_client)
     prev_mod = Application.get_env(:stripity_stripe, :http_module)
 
+    Application.put_env(:stripity_stripe, :http_client, Stripe.HTTPClient.Hackney)
     Application.put_env(:stripity_stripe, :http_module, HackneyMock2)
 
-    on_exit(fn -> Application.put_env(:stripity_stripe, :http_module, prev_mod) end)
+    on_exit(fn ->
+      Application.put_env(:stripity_stripe, :http_client, prev_client)
+      Application.put_env(:stripity_stripe, :http_module, prev_mod)
+    end)
 
     {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
     refute Map.has_key?(request_opts, "connect_timeout")
@@ -225,5 +233,39 @@ defmodule Stripe.APITest do
     {:ok, request_opts} = Stripe.API.request(%{}, :get, "/", %{}, [])
     assert request_opts["connect_timeout"] == 1000
     assert request_opts["recv_timeout"] == 5000
+  end
+
+  describe "responses with lowercase header names" do
+    defmodule LowercaseHeadersClient do
+      @behaviour Stripe.HTTPClient
+
+      @impl Stripe.HTTPClient
+      def request(_method, url, _headers, _body, _opts) do
+        case URI.parse(url).path do
+          "/v1/gzipped" ->
+            {:ok, 200, [{"content-encoding", "gzip"}], :zlib.gzip(~s({"id":"cus_123"}))}
+
+          _ ->
+            {:ok, 404, [{"request-id", "req_123"}], ~s({"error":{"type":"invalid_request_error"}})}
+        end
+      end
+    end
+
+    setup do
+      prev_client = Application.get_env(:stripity_stripe, :http_client)
+
+      Application.put_env(:stripity_stripe, :http_client, LowercaseHeadersClient)
+
+      on_exit(fn -> Application.put_env(:stripity_stripe, :http_client, prev_client) end)
+    end
+
+    test "reads the request id" do
+      assert {:error, %Stripe.Error{request_id: "req_123"}} =
+               Stripe.API.request(%{}, :get, "/v1/missing", %{}, [])
+    end
+
+    test "decompresses the body" do
+      assert {:ok, %{"id" => "cus_123"}} = Stripe.API.request(%{}, :get, "/v1/gzipped", %{}, [])
+    end
   end
 end
